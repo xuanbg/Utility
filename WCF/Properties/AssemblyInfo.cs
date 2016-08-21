@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Utils 公共模块")]
-[assembly: AssemblyDescription("Insight Utils 公共模块")]
+[assembly: AssemblyTitle("WCF 服务模块")]
+[assembly: AssemblyDescription("Insight Utils WCF 服务模块")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Insight Software Ltd.")]
 [assembly: AssemblyProduct("Insight Utils")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("0c3f2f08-6816-49fd-bb13-8526e43accc6")]
+[assembly: Guid("4bb72af9-eadb-418a-9764-18dc29be749d")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
