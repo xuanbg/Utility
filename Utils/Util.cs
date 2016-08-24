@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.IO.Compression;
@@ -6,11 +7,17 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
+using Insight.Utils.Entity;
 
 namespace Insight.Utils
 {
     public static class Util
     {
+
+        /// <summary>
+        /// 接口调用时间记录
+        /// </summary>
+        public static Dictionary<string, DateTime> Requests = new Dictionary<string, DateTime>();
 
         #region 常用方法
 
@@ -46,6 +53,18 @@ namespace Insight.Utils
             var json = Serialize(obj);
             var buff = Encoding.UTF8.GetBytes(json);
             return Convert.ToBase64String(buff);
+        }
+
+        /// <summary>
+        /// 将Result对象复制为其派生类
+        /// </summary>
+        /// <typeparam name="T">Result的派生类型</typeparam>
+        /// <param name="input">输入的Result对象</param>
+        /// <returns>T Result的派生类</returns>
+        public static T Copy<T>(Result input) where T:Result
+        {
+            var str = Serialize(input);
+            return Deserialize<T>(str);
         }
 
         #endregion

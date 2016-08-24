@@ -11,7 +11,7 @@ namespace Insight.Utils
         /// <summary>
         /// 返回结果
         /// </summary>
-        public Result Result;
+        public Result Result = new Result();
 
         /// <summary>
         /// HttpRequest方法
@@ -71,7 +71,7 @@ namespace Insight.Utils
                 var responseStream = response.GetResponseStream();
                 if (responseStream == null)
                 {
-                    Result = new Result().BadRequest("Response was not received data!");
+                    Result.BadRequest("Response was not received data!");
                     return;
                 }
 
@@ -84,7 +84,7 @@ namespace Insight.Utils
             }
             catch (Exception ex)
             {
-                Result = new Result().BadRequest(ex.ToString());
+                Result.BadRequest(ex.ToString());
             }
         }
     }
