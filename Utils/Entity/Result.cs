@@ -43,7 +43,7 @@
         #region 接口返回信息
 
         /// <summary>
-        /// 返回接口调用成功（200）的成功信息
+        /// 接口调用成功（200）
         /// </summary>
         /// <param name="data">承载的数据（可选）</param>
         /// <returns>JsonResult</returns>
@@ -57,21 +57,21 @@
         }
 
         /// <summary>
-        /// 返回资源创建成功（201）的成功信息
+        /// 资源创建成功（201）
         /// </summary>
         /// <param name="data">承载的数据（可选）</param>
         /// <returns>JsonResult</returns>
-        public void Created(string data = null)
+        public void Created(object data = null)
         {
             Successful = true;
             Code = "201";
             Name = "Created";
             Message = "资源创建成功";
-            Data = data;
+            Data = Util.Serialize(data);
         }
 
         /// <summary>
-        /// 返回用户多地登录（202）的错误信息
+        /// 用户多地登录（202）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void Multiple()
@@ -83,7 +83,7 @@
         }
 
         /// <summary>
-        /// 返回无可用内容（204）的成功信息
+        /// 无可用内容（204）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void NoContent()
@@ -95,7 +95,7 @@
         }
 
         /// <summary>
-        /// 返回请求参数错误（400）的错误信息
+        /// 请求参数错误（400）
         /// </summary>
         /// <param name="data">承载的数据（可选）</param>
         /// <returns>JsonResult</returns>
@@ -109,7 +109,7 @@
         }
 
         /// <summary>
-        /// 返回身份验证失败（401）的错误信息
+        /// 身份验证失败（401）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void InvalidAuth()
@@ -121,7 +121,7 @@
         }
 
         /// <summary>
-        /// 返回调用接口过于频繁（402）的错误信息
+        /// 调用接口过于频繁（402）
         /// </summary>
         /// <param name="data"></param>
         /// <returns>JsonResult</returns>
@@ -135,7 +135,7 @@
         }
 
         /// <summary>
-        /// 返回用户未取得授权（403）的错误信息
+        /// 用户未取得授权（403）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void Forbidden()
@@ -147,7 +147,7 @@
         }
 
         /// <summary>
-        /// 返回未找到指定资源（404）的错误信息
+        /// 指定的资源不存在（404）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void NotFound()
@@ -159,7 +159,7 @@
         }
 
         /// <summary>
-        /// 返回Guid转换失败（406）的错误信息
+        /// 转换为Guid失败（406）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void InvalidGuid()
@@ -167,11 +167,11 @@
             Successful = false;
             Code = "406";
             Name = "InvalidGUID";
-            Message = "非法的GUID";
+            Message = "转换为Guid失败";
         }
 
         /// <summary>
-        /// 返回更新数据失败（407）的错误信息
+        /// 未更新任何数据（407）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void NotUpdate()
@@ -183,7 +183,7 @@
         }
 
         /// <summary>
-        /// 返回数据库操作失败（501）的错误信息
+        /// 写数据库失败（501）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void DataBaseError()
@@ -191,11 +191,11 @@
             Successful = false;
             Code = "501";
             Name = "DataBaseError";
-            Message = "写入数据失败";
+            Message = "写数据库失败";
         }
 
         /// <summary>
-        /// 返回数据已存在（502）的错误信息
+        /// 数据已存在（502）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void DataAlreadyExists()
@@ -207,7 +207,7 @@
         }
 
         /// <summary>
-        /// 返回服务不可用（503）的错误信息
+        /// 当前服务不可用（503）
         /// </summary>
         /// <returns>JsonResult</returns>
         public void ServiceUnavailable()

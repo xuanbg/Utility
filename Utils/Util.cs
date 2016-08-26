@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Web.Script.Serialization;
 using Insight.Utils.Entity;
@@ -17,7 +19,7 @@ namespace Insight.Utils
         /// <summary>
         /// 接口调用时间记录
         /// </summary>
-        public static Dictionary<string, DateTime> Requests = new Dictionary<string, DateTime>();
+        private static readonly Dictionary<string, DateTime> Requests = new Dictionary<string, DateTime>();
 
         #region 常用方法
 
@@ -56,6 +58,17 @@ namespace Insight.Utils
         }
 
         /// <summary>
+        /// 忽略大小写情况下比较两个字符串
+        /// </summary>
+        /// <param name="s1">字符串1</param>
+        /// <param name="s2">字符串2</param>
+        /// <returns>bool 是否相同</returns>
+        public static bool StringCompare(string s1, string s2)
+        {
+            return string.Equals(s1, s2, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        /// <summary>
         /// 将Result对象复制为其派生类
         /// </summary>
         /// <typeparam name="T">Result的派生类型</typeparam>
@@ -65,6 +78,40 @@ namespace Insight.Utils
         {
             var str = Serialize(input);
             return Deserialize<T>(str);
+        }
+
+        /// <summary>
+        /// 根据传入的时长返回当前调用的剩余限制时间（秒）
+        /// </summary>
+        /// <param name="seconds">限制访问时长（秒）</param>
+        /// <returns>int 剩余限制时间（秒）</returns>
+        public static int LimitCall(int seconds)
+        {
+            if (seconds <= 0) return 0;
+
+            var properties = OperationContext.Current.IncomingMessageProperties;
+            var endpoint = properties[RemoteEndpointMessageProperty.Name] as RemoteEndpointMessageProperty;
+            if (endpoint == null) return 0;
+
+            var ip = endpoint.Address;
+            if (!Requests.ContainsKey(ip))
+            {
+                Requests.Add(ip, DateTime.Now);
+                return 0;
+            }
+
+            var span = Requests[ip].AddSeconds(seconds) - DateTime.Now;
+            var surplus = (int)Math.Floor(span.TotalSeconds);
+            if (seconds - surplus > 0 && seconds - surplus < 3)
+            {
+                Requests[ip] = DateTime.Now;
+                return seconds;
+            }
+
+            if (surplus > 0) return surplus;
+
+            Requests[ip] = DateTime.Now;
+            return 0;
         }
 
         #endregion
