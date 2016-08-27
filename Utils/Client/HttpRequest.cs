@@ -2,9 +2,10 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils
+namespace Insight.Utils.Client
 {
     public class HttpRequest
     {

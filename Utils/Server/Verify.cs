@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.ServiceModel.Web;
+using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils
+namespace Insight.Utils.Server
 {
     public class Verify
     {

@@ -11,7 +11,7 @@ using System.Text;
 using System.Web.Script.Serialization;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils
+namespace Insight.Utils.Common
 {
     public static class Util
     {
@@ -46,7 +46,7 @@ namespace Insight.Utils
         }
 
         /// <summary>
-        /// 将对象转换为Base64编码的字符串
+        /// 将对象序列化为Json后再进行Base64编码
         /// </summary>
         /// <param name="obj">用于转换的数据对象</param>
         /// <returns>string Base64编码的字符串</returns>
