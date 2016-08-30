@@ -3,7 +3,9 @@ namespace Insight.WCF.Entity
 {
     public class ServiceInfo
     {
+        private string _Port;
         private string _Path;
+        private string _Version;
 
         /// <summary>
         /// 服务基地址
@@ -13,7 +15,11 @@ namespace Insight.WCF.Entity
         /// <summary>
         /// 服务端口号
         /// </summary>
-        public string Port { get; set; }
+        public string Port
+        {
+            get { return _Port ?? "80"; }
+            set { _Port = value; }
+        }
 
         /// <summary>
         /// 访问路径
@@ -22,6 +28,15 @@ namespace Insight.WCF.Entity
         {
             get { return _Path ?? ""; }
             set { _Path = value; }
+        }
+
+        /// <summary>
+        /// 服务版本号
+        /// </summary>
+        public string Version
+        {
+            get { return _Version ?? ""; }
+            set { _Version = value; }
         }
 
         /// <summary>

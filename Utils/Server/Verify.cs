@@ -22,17 +22,20 @@ namespace Insight.Utils.Server
         /// <summary>
         /// 通过Access Token校验是否有权限访问
         /// </summary>
-        /// <param name="server">验证服务URL</param>
+        /// <param name="verifyurl">验证服务URL</param>
         /// <param name="limit">限制调用时间间隔（秒），默认不启用</param>
         /// <param name="anonymous">是否允许匿名访问（默认不允许）</param>
-        public Verify(string server, int limit = 0, bool anonymous = false)
+        public Verify(string verifyurl, int limit = 0, bool anonymous = false)
         {
             if (anonymous)
             {
-                Result.InvalidAuth();
-                if (!GetToken()) return;
+                if (!GetToken())
+                {
+                    Result.InvalidAuth();
+                    return;
+                }
 
-                Result = new HttpRequest(server, "GET", Token).Result;
+                Result = new HttpRequest(verifyurl, "GET", Token).Result;
                 if (Result.Successful) return;
 
                 var time = Util.LimitCall(limit <= 0 ? 60 : limit);
@@ -53,20 +56,23 @@ namespace Insight.Utils.Server
                     return;
                 }
 
-                Result.InvalidAuth();
-                if (!GetToken()) return;
+                if (!GetToken())
+                {
+                    Result.InvalidAuth();
+                    return;
+                }
 
-                Result = new HttpRequest(server, "GET", Token).Result;
+                Result = new HttpRequest(verifyurl, "GET", Token).Result;
             }
         }
 
         /// <summary>
         /// 带鉴权的会话合法性验证
         /// </summary>
-        /// <param name="server">验证服务URL</param>
+        /// <param name="verifyurl">验证服务URL</param>
         /// <param name="aid">操作ID</param>
         /// <param name="limit">限制调用时间间隔（秒），默认不启用</param>
-        public Verify(string server, Guid aid, int limit = 0)
+        public Verify(string verifyurl, Guid aid, int limit = 0)
         {
             var time = Util.LimitCall(limit);
             if (time > 0)
@@ -81,7 +87,7 @@ namespace Insight.Utils.Server
                 return;
             }
 
-            var url =  $"{server}/auth?action={aid}";
+            var url =  $"{verifyurl}/auth?action={aid}";
             Result = new HttpRequest(url, "GET", Token).Result;
         }
 

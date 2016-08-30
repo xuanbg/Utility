@@ -21,14 +21,15 @@ namespace Insight.WCF
         /// 创建WCF服务主机
         /// </summary>
         /// <param name="info">ServiceInfo</param>
-        /// <param name="ver"></param>
-        public void CreateHost(ServiceInfo info, string ver)
+        public void CreateHost(ServiceInfo info)
         {
-            var path = $"{Application.StartupPath}\\{info.ServiceFile}";
-            if (!File.Exists(path)) return;
+            var file = $"{Application.StartupPath}\\{info.ServiceFile}";
+            if (!File.Exists(file)) return;
 
-            var asm = Assembly.LoadFrom(path);
-            var address = new Uri($"{info.BaseAddress}:{info.Port}/{ver}/{info.Path}");
+            var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
+            var path = string.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
+            var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
+            var asm = Assembly.LoadFrom(file);
             var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
             var binding = InitBinding();
             var inter = $"{info.NameSpace}.{info.Interface}";
