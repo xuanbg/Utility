@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management;
 using System.Security.Cryptography;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -112,6 +113,46 @@ namespace Insight.Utils.Common
 
             Requests[ip] = DateTime.Now;
             return 0;
+        }
+
+        #endregion
+
+        #region Management
+
+        /// <summary>
+        /// 获取CPU序列号
+        /// </summary>
+        /// <returns>String 序列号</returns>
+        public static string GetCpuId()
+        {
+            var myCpu = new ManagementClass("win32_Processor").GetInstances();
+            var data = from ManagementObject cpu in myCpu
+                       select cpu.Properties["Processorid"].Value;
+            return data.Aggregate("", (current, val) => current + (val?.ToString() ?? ""));
+        }
+
+        /// <summary>
+        /// 获取主板序列号
+        /// </summary>
+        /// <returns>String 序列号</returns>
+        public static string GetMbId()
+        {
+            var myMb = new ManagementClass("Win32_BaseBoard").GetInstances();
+            var data = from ManagementObject mb in myMb
+                       select mb.Properties["SerialNumber"].Value;
+            return data.Aggregate("", (current, val) => current + (val?.ToString() ?? ""));
+        }
+
+        /// <summary>
+        /// 获取硬盘序列号
+        /// </summary>
+        /// <returns>String 序列号</returns>
+        public static string GetHdId()
+        {
+            var lpm = new ManagementClass("Win32_PhysicalMedia").GetInstances();
+            var data = from ManagementObject hd in lpm
+                       select hd.Properties["SerialNumber"].Value;
+            return data.Aggregate("", (current, val) => current + (val?.ToString().Trim() ?? ""));
         }
 
         #endregion

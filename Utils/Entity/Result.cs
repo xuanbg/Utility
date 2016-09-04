@@ -145,17 +145,6 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
-        /// 用户未取得授权（403）
-        /// </summary>
-        public void Forbidden()
-        {
-            Successful = false;
-            Code = "403";
-            Name = "Forbidden";
-            Message = "当前用户未取得授权";
-        }
-
-        /// <summary>
         /// 指定的资源不存在（404）
         /// </summary>
         public void NotFound()
@@ -164,17 +153,6 @@ namespace Insight.Utils.Entity
             Code = "404";
             Name = "ResourceNotFound";
             Message = "指定的资源不存在";
-        }
-
-        /// <summary>
-        /// 版本不兼容（407）
-        /// </summary>
-        public void Incompatible()
-        {
-            Successful = false;
-            Code = "405";
-            Name = "IncompatibleVersions";
-            Message = "客户端版本不兼容";
         }
 
         /// <summary>
