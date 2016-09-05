@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Insight.Utils.Entity
 {
     /// <summary>

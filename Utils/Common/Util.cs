@@ -86,7 +86,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="session">用户Session</param>
         /// <returns>string 序列化为Json的Token数据</returns>
-        public static string CreatorKey(Session session)
+        public static object CreatorKey(Session session)
         {
             var obj = new AccessToken
             {
@@ -100,7 +100,7 @@ namespace Insight.Utils.Common
             obj.Secret = session.RefreshKey;
             var rt = Base64(obj);
 
-            return Serialize(new {AccessToken = at, session.Expired, RefreshToken = rt, session.FailureTime});
+            return new {AccessToken = at, session.Expired, RefreshToken = rt, session.FailureTime};
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using Insight.Utils.Common;
+﻿
+using Insight.Utils.Common;
 
 namespace Insight.Utils.Entity
 {
@@ -47,21 +48,8 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 接口调用成功（200）
         /// </summary>
-        /// <param name="data">承载的数据（可选）</param>
-        public void Success(string data = null)
-        {
-            Successful = true;
-            Code = "200";
-            Name = "OK";
-            Message = "接口调用成功";
-            Data = data;
-        }
-
-        /// <summary>
-        /// 接口调用成功（200）
-        /// </summary>
         /// <param name="data">承载的数据</param>
-        public void Success(object data)
+        public void Success(object data = null)
         {
             Successful = true;
             Code = "200";
@@ -74,20 +62,7 @@ namespace Insight.Utils.Entity
         /// 资源创建成功（201）
         /// </summary>
         /// <param name="data">承载的数据（可选）</param>
-        public void Created(string data = null)
-        {
-            Successful = true;
-            Code = "201";
-            Name = "Created";
-            Message = "资源创建成功";
-            Data = data;
-        }
-
-        /// <summary>
-        /// 资源创建成功（201）
-        /// </summary>
-        /// <param name="data">承载的数据</param>
-        public void Created(object data)
+        public void Created(object data = null)
         {
             Successful = true;
             Code = "201";
@@ -111,13 +86,13 @@ namespace Insight.Utils.Entity
         /// 请求参数错误（400）
         /// </summary>
         /// <param name="data">错误详细信息（可选）</param>
-        public void BadRequest(string data = null)
+        public void BadRequest(object data = null)
         {
             Successful = false;
             Code = "400";
             Name = "BadRequest";
             Message = "请求参数错误";
-            Data = data;
+            Data = Util.Serialize(data);
         }
 
         /// <summary>
@@ -135,13 +110,13 @@ namespace Insight.Utils.Entity
         /// 调用接口过于频繁（402）
         /// </summary>
         /// <param name="data"></param>
-        public void TooFrequent(string data)
+        public void TooFrequent(object data)
         {
             Successful = false;
             Code = "402";
             Name = "CallInterfaceTooFrequent";
             Message = "调用接口过于频繁";
-            Data = data;
+            Data = Util.Serialize(data);
         }
 
         /// <summary>

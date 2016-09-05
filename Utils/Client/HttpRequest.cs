@@ -85,7 +85,7 @@ namespace Insight.Utils.Client
             }
             catch (Exception ex)
             {
-                Result.BadRequest(ex.ToString());
+                Result.BadRequest(ex);
             }
         }
     }

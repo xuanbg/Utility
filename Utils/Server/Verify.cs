@@ -41,7 +41,7 @@ namespace Insight.Utils.Server
                 var time = Util.LimitCall(limit <= 0 ? 60 : limit);
                 if (time > 0)
                 {
-                    Result.TooFrequent(time.ToString());
+                    Result.TooFrequent(time);
                     return;
                 }
 
@@ -52,7 +52,7 @@ namespace Insight.Utils.Server
                 var time = Util.LimitCall(limit);
                 if (time > 0)
                 {
-                    Result.TooFrequent(time.ToString());
+                    Result.TooFrequent(time);
                     return;
                 }
 
@@ -77,7 +77,7 @@ namespace Insight.Utils.Server
             var time = Util.LimitCall(limit);
             if (time > 0)
             {
-                Result.TooFrequent(time.ToString());
+                Result.TooFrequent(time);
                 return;
             }
 

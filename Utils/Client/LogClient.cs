@@ -74,7 +74,7 @@ namespace Insight.Utils.Client
             }
             catch (ArgumentException ex)
             {
-                Result.BadRequest(ex.Message);
+                Result.BadRequest(ex);
             }
         }
     }
