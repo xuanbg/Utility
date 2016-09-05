@@ -31,10 +31,5 @@ namespace Insight.Utils.Entity
         /// 随机密码
         /// </summary>
         public string Secret { get; set; }
-
-        /// <summary>
-        /// Secret失效时间
-        /// </summary>
-        public DateTime FailureTime { get; set; }
     }
 }

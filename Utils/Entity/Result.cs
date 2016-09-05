@@ -156,23 +156,23 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
-        /// 转换为Guid失败（419）
+        /// 转换为Guid失败（420）
         /// </summary>
         public void InvalidGuid()
         {
             Successful = false;
-            Code = "406";
+            Code = "420";
             Name = "InvalidGUID";
             Message = "转换为Guid失败";
         }
 
         /// <summary>
-        /// 未更新任何数据（420）
+        /// 未更新任何数据（421）
         /// </summary>
         public void NotUpdate()
         {
             Successful = false;
-            Code = "407";
+            Code = "421";
             Name = "DataNotUpdate";
             Message = "未更新任何数据";
         }

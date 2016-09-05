@@ -9,8 +9,8 @@ using System.Security.Cryptography;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
-using System.Web.Script.Serialization;
 using Insight.Utils.Entity;
+using Newtonsoft.Json;
 
 namespace Insight.Utils.Common
 {
@@ -79,6 +79,28 @@ namespace Insight.Utils.Common
         {
             var str = Serialize(input);
             return Deserialize<T>(str);
+        }
+
+        /// <summary>
+        /// 生成Token返回数据
+        /// </summary>
+        /// <param name="session">用户Session</param>
+        /// <returns>string 序列化为Json的Token数据</returns>
+        public static string CreatorKey(Session session)
+        {
+            var obj = new AccessToken
+            {
+                ID = session.ID,
+                Account = session.Account,
+                UserName = session.UserName,
+                Stamp = session.Stamp,
+                Secret = session.Secret
+            };
+            var at = Base64(obj);
+            obj.Secret = session.RefreshKey;
+            var rt = Base64(obj);
+
+            return Serialize(new {AccessToken = at, session.Expired, RefreshToken = rt, session.FailureTime});
         }
 
         /// <summary>
@@ -167,7 +189,7 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string Serialize<T>(T obj)
         {
-            return new JavaScriptSerializer().Serialize(obj);
+            return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>
@@ -178,7 +200,7 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T Deserialize<T>(string json)
         {
-            return new JavaScriptSerializer().Deserialize<T>(json);
+            return string.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
         }
 
         #endregion
