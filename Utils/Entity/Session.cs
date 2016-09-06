@@ -72,14 +72,14 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 设置Secret及过期时间
         /// </summary>
-        /// <param name="expired">超时小时数</param>
-        public void InitSecret(int expired)
+        /// <param name="failure">失效小时数</param>
+        public void InitSecret(int failure)
         {
             var now = DateTime.Now;
             Secret = Util.Hash(Guid.NewGuid() + Signature + now);
-            Expired = now.AddHours(UserType == 0 ? 2 : 24);
             RefreshKey = Util.Hash(Guid.NewGuid() + Secret);
-            FailureTime = now.AddHours(UserType == 0 ? 24 : expired);
+            Expired = now.AddHours(2);
+            FailureTime = now.AddHours(failure);
         }
 
         /// <summary>
@@ -107,6 +107,31 @@ namespace Insight.Utils.Entity
         {
             Secret = Guid.NewGuid().ToString();
             OnlineStatus = false;
+        }
+
+        /// <summary>
+        /// 生成用户签名
+        /// </summary>
+        /// <param name="password">用户密码</param>
+        public void Sign(string password)
+        {
+            Signature = Util.Hash(Account.ToUpper() + password);
+        }
+
+        /// <summary>
+        /// 生成Token
+        /// </summary>
+        /// <returns>string 序列化为Json的Token数据</returns>
+        public object CreatorKey()
+        {
+            var obj = new
+            {
+                AccessToken = Util.Base64(new {ID, Account, UserName, Stamp, Secret}),
+                RefreshToken = Util.Base64(new {ID, Account, UserName, Stamp, Secret = RefreshKey}),
+                Expired,
+                FailureTime
+            };
+            return obj;
         }
     }
 }

@@ -82,28 +82,6 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 生成Token返回数据
-        /// </summary>
-        /// <param name="session">用户Session</param>
-        /// <returns>string 序列化为Json的Token数据</returns>
-        public static object CreatorKey(Session session)
-        {
-            var obj = new AccessToken
-            {
-                ID = session.ID,
-                Account = session.Account,
-                UserName = session.UserName,
-                Stamp = session.Stamp,
-                Secret = session.Secret
-            };
-            var at = Base64(obj);
-            obj.Secret = session.RefreshKey;
-            var rt = Base64(obj);
-
-            return new {AccessToken = at, session.Expired, RefreshToken = rt, session.FailureTime};
-        }
-
-        /// <summary>
         /// 根据传入的时长返回当前调用的剩余限制时间（秒）
         /// </summary>
         /// <param name="seconds">限制访问时长（秒）</param>
@@ -114,26 +92,27 @@ namespace Insight.Utils.Common
 
             var properties = OperationContext.Current.IncomingMessageProperties;
             var endpoint = properties[RemoteEndpointMessageProperty.Name] as RemoteEndpointMessageProperty;
-            if (endpoint == null) return 0;
+            var uri = properties["UriTemplateMatchResults"] as UriTemplateMatch;
+            if (endpoint == null || uri == null) return 0;
 
-            var ip = endpoint.Address;
-            if (!Requests.ContainsKey(ip))
+            var key = Hash(endpoint.Address + uri.Data);
+            if (!Requests.ContainsKey(key))
             {
-                Requests.Add(ip, DateTime.Now);
+                Requests.Add(key, DateTime.Now);
                 return 0;
             }
 
-            var span = Requests[ip].AddSeconds(seconds) - DateTime.Now;
+            var span = Requests[key].AddSeconds(seconds) - DateTime.Now;
             var surplus = (int)Math.Floor(span.TotalSeconds);
             if (seconds - surplus > 0 && seconds - surplus < 3)
             {
-                Requests[ip] = DateTime.Now;
+                Requests[key] = DateTime.Now;
                 return seconds;
             }
 
             if (surplus > 0) return surplus;
 
-            Requests[ip] = DateTime.Now;
+            Requests[key] = DateTime.Now;
             return 0;
         }
 
