@@ -59,6 +59,19 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
+        /// 接口调用成功（200）
+        /// </summary>
+        /// <param name="data">承载的数据</param>
+        public void Success(string data)
+        {
+            Successful = true;
+            Code = "200";
+            Name = "OK";
+            Message = "接口调用成功";
+            Data = data;
+        }
+
+        /// <summary>
         /// 资源创建成功（201）
         /// </summary>
         /// <param name="data">承载的数据（可选）</param>
@@ -69,6 +82,19 @@ namespace Insight.Utils.Entity
             Name = "Created";
             Message = "资源创建成功";
             Data = Util.Serialize(data);
+        }
+
+        /// <summary>
+        /// 资源创建成功（201）
+        /// </summary>
+        /// <param name="data">承载的数据（可选）</param>
+        public void Created(string data)
+        {
+            Successful = true;
+            Code = "201";
+            Name = "Created";
+            Message = "资源创建成功";
+            Data = data;
         }
 
         /// <summary>
@@ -93,6 +119,19 @@ namespace Insight.Utils.Entity
             Name = "BadRequest";
             Message = "请求参数错误";
             Data = Util.Serialize(data);
+        }
+
+        /// <summary>
+        /// 请求参数错误（400）
+        /// </summary>
+        /// <param name="data">错误详细信息（可选）</param>
+        public void BadRequest(string data)
+        {
+            Successful = false;
+            Code = "400";
+            Name = "BadRequest";
+            Message = "请求参数错误";
+            Data = data;
         }
 
         /// <summary>

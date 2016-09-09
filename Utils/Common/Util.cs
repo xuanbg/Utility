@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -32,6 +33,16 @@ namespace Insight.Utils.Common
         public static string GetAppSetting(string key)
         {
             return ConfigurationManager.AppSettings[key];
+        }
+
+        /// <summary>
+        /// 从文件读取图片数据
+        /// </summary>
+        /// <param name="path">图片路径</param>
+        /// <returns>图片对象</returns>
+        public static Image GetImage(string path)
+        {
+            return Image.FromFile(path);
         }
 
         /// <summary>
