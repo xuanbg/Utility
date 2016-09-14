@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -33,16 +34,6 @@ namespace Insight.Utils.Common
         public static string GetAppSetting(string key)
         {
             return ConfigurationManager.AppSettings[key];
-        }
-
-        /// <summary>
-        /// 从文件读取图片数据
-        /// </summary>
-        /// <param name="path">图片路径</param>
-        /// <returns>图片对象</returns>
-        public static Image GetImage(string path)
-        {
-            return Image.FromFile(path);
         }
 
         /// <summary>
@@ -125,6 +116,54 @@ namespace Insight.Utils.Common
 
             Requests[key] = DateTime.Now;
             return 0;
+        }
+
+        #endregion
+
+        #region Image
+
+        /// <summary>
+        /// 从文件读取图片数据
+        /// </summary>
+        /// <param name="path">图片路径</param>
+        /// <returns>图片对象</returns>
+        public static Image GetImage(string path)
+        {
+            return Image.FromFile(path);
+        }
+
+        /// <summary>
+        /// Image 转换为 byte[]数组
+        /// </summary>
+        /// <param name="img">图片</param>
+        /// <returns>byte[] 数组</returns>
+        public static byte[] ImageToByteArray(Image img)
+        {
+            if (img == null) return null;
+
+            using (var ms = new MemoryStream())
+            {
+                img.Save(ms, ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 获取图片缩略图
+        /// </summary>
+        /// <param name="img">原图片</param>
+        /// <returns>Image 缩略图</returns>
+        public static Image GetThumbnail(Image img)
+        {
+            if (img == null) return null;
+
+            var callb = new Image.GetThumbnailImageAbort(Callback);
+            return img.GetThumbnailImage(120, 150, callb, IntPtr.Zero);
+        }
+
+        private static bool Callback()
+        {
+            return false;
         }
 
         #endregion
