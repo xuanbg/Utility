@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -34,6 +35,21 @@ namespace Insight.Utils.Common
         public static string GetAppSetting(string key)
         {
             return ConfigurationManager.AppSettings[key];
+        }
+
+        /// <summary>
+        /// 保存配置项的值
+        /// </summary>
+        /// <param name="key">配置项</param>
+        /// <param name="value">配置项的值</param>
+        public static void SaveAppSetting(string key, string value)
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            config.AppSettings.Settings[key].Value = value;
+
+            config.Save();
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         /// <summary>
@@ -116,6 +132,24 @@ namespace Insight.Utils.Common
 
             Requests[key] = DateTime.Now;
             return 0;
+        }
+
+        /// <summary>
+        /// 保存文件并打开
+        /// </summary>
+        /// <param name="file">文件内容</param>
+        /// <param name="name">文件名</param>
+        public static void SaveFile(byte[] file, string name)
+        {
+            var path = Path.GetTempPath() + name;
+            if (!File.Exists(path))
+            {
+                var bw = new BinaryWriter(File.Create(path));
+                bw.Write(file);
+                bw.Flush();
+                bw.Close();
+            }
+            Process.Start(path);
         }
 
         #endregion
@@ -218,7 +252,7 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string Serialize<T>(T obj)
         {
-            return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
+            return obj == null ? String.Empty : JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>
@@ -229,7 +263,7 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T Deserialize<T>(string json)
         {
-            return string.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
+            return String.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
         }
 
         #endregion
@@ -272,6 +306,5 @@ namespace Insight.Utils.Common
         }
 
         #endregion
-
     }
 }

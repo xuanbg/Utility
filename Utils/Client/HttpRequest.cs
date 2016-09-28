@@ -54,8 +54,9 @@ namespace Insight.Utils.Client
             request.Method = method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
-            request.Headers.Add(HttpRequestHeader.Authorization, author);
+            if (author == null) return request;
 
+            request.Headers.Add(HttpRequestHeader.Authorization, author);
             return request;
         }
 
