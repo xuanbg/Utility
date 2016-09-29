@@ -16,7 +16,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 日志信息
         /// </summary>
-        private readonly LogInfo Info;
+        private readonly LogInfo _info;
 
         /// <summary>
         /// 构造函数
@@ -33,7 +33,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            Info = info;
+            _info = info;
             if (toserver) LogToServer();
 
             if (toevent) LogToEvent();
@@ -46,15 +46,15 @@ namespace Insight.Utils.Client
         {
             var dict = new Dictionary<string, object>
             {
-                {"code", Info.Code},
-                {"message", Info.Message},
-                {"source", Info.Source},
-                {"action", Info.Action},
-                {"key", Info.Key},
-                {"userid", Info.CreatorUserId}
+                {"code", _info.Code},
+                {"message", _info.Message},
+                {"source", _info.Source},
+                {"action", _info.Action},
+                {"key", _info.Key},
+                {"userid", _info.CreatorUserId}
             };
             var data = Util.Serialize(dict);
-            Result = new HttpRequest(Info.Interface, "POST", Info.Token, data).Result;
+            Result = new HttpRequest(_info.Interface, "POST", _info.Token, data).Result;
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace Insight.Utils.Client
         {
             try
             {
-                if (!EventLog.SourceExists(Info.EventSource))
+                if (!EventLog.SourceExists(_info.EventSource))
                 {
-                    EventLog.CreateEventSource(Info.EventSource, "应用程序");
+                    EventLog.CreateEventSource(_info.EventSource, "应用程序");
                 }
 
-                EventLog.WriteEntry(Info.EventSource, Info.Message, Info.EventType);
+                EventLog.WriteEntry(_info.EventSource, _info.Message, _info.EventType);
                 Result.Success();
             }
             catch (ArgumentException ex)
