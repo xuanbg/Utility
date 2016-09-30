@@ -6,12 +6,12 @@ using Insight.Utils.Entity;
 namespace Insight.Utils.Client
 {
 
-    public static class Tokens
+    public class TokenHelper
     {
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public static string AccessToken
+        public string AccessToken
         {
             get
             {
@@ -27,45 +27,38 @@ namespace Insight.Utils.Client
         /// <summary>
         /// AccessToken对象
         /// </summary>
-        public static AccessToken Token { get; private set; }
+        public AccessToken Token { get; private set; }
 
         /// <summary>
         /// 用户签名
         /// </summary>
-        public static string Sign { get; private set; }
+        public string Sign { get; private set; }
 
         /// <summary>
         /// 当前连接基础应用服务器
         /// </summary>
-        public static string BaseServer;
+        public string BaseServer { get; set; }
 
         /// <summary>
         /// 应用ID
         /// </summary>
-        public static string Account;
+        public string Account { get; set; }
 
         /// <summary>
         /// 当前登录部门ID
         /// </summary>
-        public static Guid? DeptId;
+        public Guid? DeptId { get; set; }
 
-        // AccessToken
-        private static string _Token;
-
-        // RefresToken字符串
-        private static string _RefreshToken;
-
-        // Secret过期时间
-        private static DateTime _ExpiryTime;
-
-        // Secret失效时间
-        private static DateTime _FailureTime;
+        private string _Token;
+        private string _RefreshToken;
+        private DateTime _ExpiryTime;
+        private DateTime _FailureTime;
 
         /// <summary>
         /// 生成签名
         /// </summary>
         /// <param name="secret">用户密钥</param>
-        public static void Signature(string secret)
+        public void Signature(string secret)
         {
             Sign = Util.Hash(Account.ToUpper() + Util.Hash(secret));
         }
@@ -73,7 +66,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 获取AccessToken
         /// </summary>
-        public static void GetTokens()
+        public bool GetTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens?account={Account}&signature={Sign}&deptid={DeptId}";
             var result = new HttpRequest(url, "GET", null).Result;
@@ -82,7 +75,7 @@ namespace Insight.Utils.Client
                 const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
                 var msg = result.Code == "400" ? str : result.Message;
                 Messages.ShowError(msg);
-                return;
+                return false;
             }
 
             if (result.Code == "202") Messages.ShowWarning("您已在另一台设备登录！如登录者不是本人，请联系管理员。");
@@ -96,12 +89,13 @@ namespace Insight.Utils.Client
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
             Token = Util.Deserialize<AccessToken>(json);
+            return true;
         }
 
         /// <summary>
         /// 刷新AccessToken过期时间
         /// </summary>
-        public static void RefresTokens()
+        private void RefresTokens()
         {
             if (DateTime.Now > _FailureTime)
             {
