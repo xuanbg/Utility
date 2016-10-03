@@ -13,14 +13,7 @@ namespace Insight.Utils.Client
         /// </summary>
         public string AccessToken
         {
-            get
-            {
-                if (string.IsNullOrEmpty(_Token)) GetTokens();
-
-                if (DateTime.Now > _ExpiryTime) RefresTokens();
-
-                return _Token;
-            }
+            get { return GetToken(); }
             set { _Token = value; }
         }
 
@@ -66,6 +59,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 获取AccessToken
         /// </summary>
+        /// <returns>bool 是否获取成功</returns>
         public bool GetTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens?account={Account}&signature={Sign}&deptid={DeptId}";
@@ -97,11 +91,6 @@ namespace Insight.Utils.Client
         /// </summary>
         private void RefresTokens()
         {
-            if (DateTime.Now > _FailureTime)
-            {
-                GetTokens();
-                return;
-            }
             var url = $"{BaseServer}/security/v1.0/tokens";
             var result = new HttpRequest(url, "PUT", _RefreshToken).Result;
             if (!result.Successful)
@@ -112,6 +101,20 @@ namespace Insight.Utils.Client
 
             var data = Util.Deserialize<TokenResult>(result.Data);
             _ExpiryTime = data.ExpiryTime;
+        }
+
+        /// <summary>
+        /// 检查当前Token并返回
+        /// </summary>
+        /// <returns>string AccessToken</returns>
+        private string GetToken()
+        {
+            var now = DateTime.Now;
+            if (string.IsNullOrEmpty(_Token) || now > _FailureTime) GetTokens();
+
+            if (now > _ExpiryTime) RefresTokens();
+
+            return _Token;
         }
     }
 }
