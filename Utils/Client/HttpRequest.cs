@@ -15,16 +15,50 @@ namespace Insight.Utils.Client
         public Result Result = new Result();
 
         /// <summary>
-        /// HttpRequest方法
+        /// HttpRequest方法，用于客户端请求接口
         /// </summary>
+        /// <param name="token">Token客户端</param>
         /// <param name="url">请求的地址</param>
         /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
-        /// <param name="author">接口认证数据</param>
         /// <param name="data">接口参数</param>
         /// <returns>JsonResult</returns>
-        public HttpRequest(string url, string method, string author, string data = "")
+        public HttpRequest(TokenHelper token, string url, string method, string data = "")
         {
-            var request = GetWebRequest(url, method, author);
+            Start:
+            var request = GetWebRequest(url, method, token?.AccessToken);
+            if (method == "GET")
+            {
+                GetResponse(request);
+                goto End;
+            }
+
+            var buffer = Encoding.UTF8.GetBytes(data);
+            request.ContentLength = buffer.Length;
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(buffer, 0, buffer.Length);
+            }
+
+            GetResponse(request);
+
+            End:
+            if (token == null || Result.Code != "406") return;
+
+            token.GetTokens();
+            goto Start;
+        }
+
+        /// <summary>
+        /// HttpRequest方法，用于服务端请求验证
+        /// </summary>
+        /// <param name="token">客户端提供的AccessToken</param>
+        /// <param name="url">请求的地址</param>
+        /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
+        /// <param name="data">接口参数</param>
+        /// <returns>JsonResult</returns>
+        public HttpRequest(string token, string url, string method, string data = "")
+        {
+            var request = GetWebRequest(url, method, token);
             if (method == "GET")
             {
                 GetResponse(request);
@@ -46,17 +80,17 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">请求的地址</param>
         /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
-        /// <param name="author">接口认证数据</param>
+        /// <param name="token">AccessToken</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string url, string method, string author)
+        private HttpWebRequest GetWebRequest(string url, string method, string token)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
-            if (author == null) return request;
+            if (string.IsNullOrEmpty(token)) return request;
 
-            request.Headers.Add(HttpRequestHeader.Authorization, author);
+            request.Headers.Add(HttpRequestHeader.Authorization, token);
             return request;
         }
 
@@ -69,7 +103,7 @@ namespace Insight.Utils.Client
         {
             try
             {
-                var response = (HttpWebResponse)request.GetResponse();
+                var response = (HttpWebResponse) request.GetResponse();
                 var responseStream = response.GetResponseStream();
                 if (responseStream == null)
                 {

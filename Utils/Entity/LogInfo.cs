@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Insight.Utils.Client;
 
 namespace Insight.Utils.Entity
 {
@@ -13,7 +14,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// AccessToken(Logger)
         /// </summary>
-        public string Token { get; set; }
+        public TokenHelper Token { get; set; }
 
         /// <summary>
         /// 系统日志事件源

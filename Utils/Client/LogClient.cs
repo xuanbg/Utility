@@ -16,7 +16,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 日志信息
         /// </summary>
-        private readonly LogInfo _info;
+        private readonly LogInfo _Info;
 
         /// <summary>
         /// 构造函数
@@ -33,7 +33,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _info = info;
+            _Info = info;
             if (toserver) LogToServer();
 
             if (toevent) LogToEvent();
@@ -46,15 +46,15 @@ namespace Insight.Utils.Client
         {
             var dict = new Dictionary<string, object>
             {
-                {"code", _info.Code},
-                {"message", _info.Message},
-                {"source", _info.Source},
-                {"action", _info.Action},
-                {"key", _info.Key},
-                {"userid", _info.CreatorUserId}
+                {"code", _Info.Code},
+                {"message", _Info.Message},
+                {"source", _Info.Source},
+                {"action", _Info.Action},
+                {"key", _Info.Key},
+                {"userid", _Info.CreatorUserId}
             };
             var data = Util.Serialize(dict);
-            Result = new HttpRequest(_info.Interface, "POST", _info.Token, data).Result;
+            Result = new HttpRequest(_Info.Token, _Info.Interface, "POST", data).Result;
         }
 
         /// <summary>
@@ -64,12 +64,12 @@ namespace Insight.Utils.Client
         {
             try
             {
-                if (!EventLog.SourceExists(_info.EventSource))
+                if (!EventLog.SourceExists(_Info.EventSource))
                 {
-                    EventLog.CreateEventSource(_info.EventSource, "应用程序");
+                    EventLog.CreateEventSource(_Info.EventSource, "应用程序");
                 }
 
-                EventLog.WriteEntry(_info.EventSource, _info.Message, _info.EventType);
+                EventLog.WriteEntry(_Info.EventSource, _Info.Message, _Info.EventType);
                 Result.Success();
             }
             catch (ArgumentException ex)

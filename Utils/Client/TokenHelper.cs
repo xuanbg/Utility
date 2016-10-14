@@ -11,11 +11,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public string AccessToken
-        {
-            get { return GetToken(); }
-            set { _Token = value; }
-        }
+        public string AccessToken => GetToken();
 
         /// <summary>
         /// AccessToken对象
@@ -63,7 +59,7 @@ namespace Insight.Utils.Client
         public bool GetTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens?account={Account}&signature={Sign}&deptid={DeptId}";
-            var result = new HttpRequest(url, "GET", null).Result;
+            var result = new HttpRequest("", url, "GET").Result;
             if (!result.Successful)
             {
                 const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
@@ -92,7 +88,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens";
-            var result = new HttpRequest(url, "PUT", _RefreshToken).Result;
+            var result = new HttpRequest(_RefreshToken, url, "PUT").Result;
             if (!result.Successful)
             {
                 Messages.ShowError(result.Message);

@@ -88,14 +88,14 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 将Result对象复制为其派生类
+        /// 复制对象
         /// </summary>
-        /// <typeparam name="T">Result的派生类型</typeparam>
-        /// <param name="input">输入的Result对象</param>
-        /// <returns>T Result的派生类</returns>
-        public static T Copy<T>(Result input) where T:Result
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="obj">源对象</param>
+        /// <returns>T 复制的对象</returns>
+        public static T Copy<T>(T obj)
         {
-            var str = Serialize(input);
+            var str = Serialize(obj);
             return Deserialize<T>(str);
         }
 
