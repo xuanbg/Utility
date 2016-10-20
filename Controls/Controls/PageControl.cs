@@ -6,20 +6,7 @@ namespace Insight.Utils.Controls
 {
     public partial class PageControl : XtraUserControl
     {
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        public int CurrentPage { get; private set; } = 1;
-
-        /// <summary>
-        /// 当前行
-        /// </summary>
-        public int RowIndex { get; set; } = 0;
-
-        /// <summary>
-        /// 每页行数
-        /// </summary>
-        public int RowCount { get; set; } = 20;
+        private int _Rows;
 
         /// <summary>
         /// 总行数
@@ -30,18 +17,30 @@ namespace Insight.Utils.Controls
             set { SetRows(value); }
         }
         
-        /// <summary>  
-        /// 自定义事件 当前页改变事件  
-        /// </summary>  
-        public event EventHandler CurrentPageChange;
+        /// <summary>
+        /// 每页行数
+        /// </summary>
+        public int RowCount { get; set; } = 20;
 
-        /// <summary>  
-        /// 自定义事件
-        /// </summary>  
-        public event EventHandler PageRowsChange;
+        /// <summary>
+        /// 总页数
+        /// </summary>
+        public int Pages { get; private set; }
 
-        private int _Rows;
-        private int _Pages;
+        /// <summary>
+        /// 当前页
+        /// </summary>
+        public int CurrentPage { get; private set; } = 1;
+
+        /// <summary>
+        /// 当前选中行索引
+        /// </summary>
+        public int RowIndex { get; private set; }
+
+        /// <summary>
+        /// 当前选中行
+        /// </summary>
+        public int FocusedRowHandle => RowIndex - RowCount*(CurrentPage - 1);
 
         /// <summary>
         /// 构造方法
@@ -53,6 +52,70 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
+        /// 设置当前选中行索引
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="index"></param>
+        public void SetRowIndex(IndexType type, int index = 0)
+        {
+            switch (type)
+            {
+                case IndexType.Handle:
+                    RowIndex = (CurrentPage - 1)*RowCount + index;
+                    break;
+
+                case IndexType.Index:
+                    RowIndex = index;
+                    break;
+
+                case IndexType.New:
+                    RowIndex = Rows - 1;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 设置当前页
+        /// </summary>
+        /// <param name="page"></param>
+        public void SetPage(int page)
+        {
+            if (page < 1 || page > Pages) return;
+
+            CurrentPage = page;
+
+            Refresh();
+            PageRowsChange?.Invoke(this, null);
+        }
+
+        /// <summary>
+        /// 刷新控件
+        /// </summary>
+        public override void Refresh()
+        {
+            btnFirst.Enabled = CurrentPage > 1;
+            btnPrev.Enabled = CurrentPage > 1;
+            btnNext.Enabled = CurrentPage < Pages;
+            btnLast.Enabled = CurrentPage < Pages;
+            btnJump.Enabled = Pages > 1;
+
+            var width = (int)Math.Log10(CurrentPage) * 7 + 18;
+            btnJump.Width = width;
+            btnJump.Text = CurrentPage.ToString();
+            labRows.Focus();
+        }
+
+        /// <summary>  
+        /// 自定义事件 当前页改变事件  
+        /// </summary>  
+        public event EventHandler CurrentPageChange;
+
+        /// <summary>  
+        /// 自定义事件
+        /// </summary>  
+        public event EventHandler PageRowsChange;
+
+        /// <summary>
         /// 切换每页行数
         /// </summary>
         /// <param name="sender"></param>
@@ -60,9 +123,7 @@ namespace Insight.Utils.Controls
         private void cbeRows_EditValueChanged(object sender, EventArgs e)
         {
             RowCount = int.Parse(cbeRows.Text);
-
-            float rows = _Rows == 0 ? 1 : _Rows;
-            CurrentPage = (int)Math.Ceiling((RowIndex + 1) / rows);
+            CurrentPage = (int)Math.Ceiling((decimal)(RowIndex + 1) / RowCount);
 
             Refresh();
             PageRowsChange?.Invoke(this, null);
@@ -111,7 +172,7 @@ namespace Insight.Utils.Controls
         /// <param name="e"></param>
         private void btnLast_Click(object sender, EventArgs e)
         {
-            CurrentPage = _Pages;
+            CurrentPage = Pages;
             Refresh();
             CurrentPageChange?.Invoke(this, null);
         }
@@ -155,7 +216,7 @@ namespace Insight.Utils.Controls
             if (e.KeyChar != 13) return;
 
             var page = int.Parse(txtPage.Text);
-            if (page < 1 || page > _Pages || page == CurrentPage)
+            if (page < 1 || page > Pages || page == CurrentPage)
             {
                 txtPage.EditValue = null;
                 return;
@@ -173,28 +234,21 @@ namespace Insight.Utils.Controls
         private void SetRows(int rows)
         {
             _Rows = rows;
-            _Pages = (int) Math.Ceiling((decimal) rows/RowCount);
-            labRows.Text = $" 行/页 | 共 {rows} 行 | 分 {_Pages} 页";
+            Pages = (int) Math.Ceiling((decimal) rows/RowCount);
+            labRows.Text = $" 行/页 | 共 {rows} 行 | 分 {Pages} 页";
             labRows.Refresh();
 
             Refresh();
         }
 
         /// <summary>
-        /// 刷新控件
+        /// 索引类型
         /// </summary>
-        public override void Refresh()
+        public enum IndexType
         {
-            btnFirst.Enabled = CurrentPage > 1;
-            btnPrev.Enabled = CurrentPage > 1;
-            btnNext.Enabled = CurrentPage < _Pages;
-            btnLast.Enabled = CurrentPage < _Pages;
-            btnJump.Enabled = _Pages > 1;
-
-            var width = (int) Math.Log10(CurrentPage)*7 + 18;
-            btnJump.Width = width;
-            btnJump.Text = CurrentPage.ToString();
-            labRows.Focus();
+            Index,
+            Handle,
+            New
         }
     }
 }
