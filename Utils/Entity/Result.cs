@@ -29,6 +29,11 @@ namespace Insight.Utils.Entity
         public string Message { get; set; }
 
         /// <summary>
+        /// 数据集总数
+        /// </summary>
+        public int? Total { get; set; }
+
+        /// <summary>
         /// 数据
         /// </summary>
         public string Data { get; set; }
@@ -49,12 +54,14 @@ namespace Insight.Utils.Entity
         /// 接口调用成功（200）
         /// </summary>
         /// <param name="data">承载的数据</param>
-        public void Success(object data = null)
+        /// <param name="total">数据集总数</param>
+        public void Success(object data = null, int? total = null)
         {
             Successful = true;
             Code = "200";
             Name = "OK";
             Message = "接口调用成功";
+            Total = total;
             Data = Util.Serialize(data);
         }
 
@@ -62,12 +69,14 @@ namespace Insight.Utils.Entity
         /// 接口调用成功（200）
         /// </summary>
         /// <param name="data">承载的数据</param>
-        public void Success(string data)
+        /// <param name="total">数据集总数</param>
+        public void Success(string data, int? total = null)
         {
             Successful = true;
             Code = "200";
             Name = "OK";
             Message = "接口调用成功";
+            Total = total;
             Data = data;
         }
 
