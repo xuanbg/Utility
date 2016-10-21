@@ -7,41 +7,53 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpRequest
+    public class HttpClient
     {
+        private readonly string _Url;
+        private readonly string _Method;
+        private readonly string _Data;
+
         /// <summary>
-        /// 返回结果
+        /// 构造方法
         /// </summary>
-        public Result Result = new Result();
+        /// <param name="url">请求的地址</param>
+        /// <param name="method">请求的方法：GET,PUT,POST,DELETE，默认值为GET</param>
+        /// <param name="data">接口参数，默认值为Null</param>
+        public HttpClient(string url, string method = "GET", string data = "")
+        {
+            _Url = url;
+            _Method = method;
+            _Data = data;
+        }
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
-        /// <param name="token">Token客户端</param>
-        /// <param name="url">请求的地址</param>
-        /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
-        /// <param name="data">接口参数</param>
-        public HttpRequest(TokenHelper token, string url, string method, string data = "")
+        /// <param name="token">TokenHelper</param>
+        /// <returns>Result</returns>
+        public Result Request(TokenHelper token)
         {
+            Result result;
+
             Start:
-            var request = GetWebRequest(url, method, token?.AccessToken);
-            if (method == "GET")
+            var request = GetWebRequest(token?.AccessToken);
+            if (_Method == "GET")
             {
-                GetResponse(request);
+                result = GetResponse(request);
                 goto End;
             }
 
-            var buffer = Encoding.UTF8.GetBytes(data);
+            var buffer = Encoding.UTF8.GetBytes(_Data);
             request.ContentLength = buffer.Length;
             using (var stream = request.GetRequestStream())
             {
                 stream.Write(buffer, 0, buffer.Length);
             }
 
-            GetResponse(request);
+            result = GetResponse(request);
 
             End:
-            if (token == null || Result.Code != "406") return;
+            if (token == null || result.Code != "406") return result;
 
             token.GetTokens();
             goto Start;
@@ -51,39 +63,31 @@ namespace Insight.Utils.Client
         /// HttpRequest方法，用于服务端请求验证
         /// </summary>
         /// <param name="token">客户端提供的AccessToken</param>
-        /// <param name="url">请求的地址</param>
-        /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
-        /// <param name="data">接口参数</param>
-        public HttpRequest(string token, string url, string method, string data = "")
+        /// <returns>Result</returns>
+        public Result Request(string token = null)
         {
-            var request = GetWebRequest(url, method, token);
-            if (method == "GET")
-            {
-                GetResponse(request);
-                return;
-            }
+            var request = GetWebRequest(token);
+            if (_Method == "GET") return GetResponse(request);
 
-            var buffer = Encoding.UTF8.GetBytes(data);
+            var buffer = Encoding.UTF8.GetBytes(_Data);
             request.ContentLength = buffer.Length;
             using (var stream = request.GetRequestStream())
             {
                 stream.Write(buffer, 0, buffer.Length);
             }
 
-            GetResponse(request);
+            return GetResponse(request);
         }
 
         /// <summary>
         /// 获取WebRequest对象
         /// </summary>
-        /// <param name="url">请求的地址</param>
-        /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
         /// <param name="token">AccessToken</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string url, string method, string token)
+        private HttpWebRequest GetWebRequest(string token)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = method;
+            var request = (HttpWebRequest)WebRequest.Create(_Url);
+            request.Method = _Method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
             if (string.IsNullOrEmpty(token)) return request;
@@ -96,28 +100,32 @@ namespace Insight.Utils.Client
         /// 获取Request响应数据
         /// </summary>
         /// <param name="request">WebRequest</param>
-        private void GetResponse(WebRequest request)
+        /// <returns>Result</returns>
+        private Result GetResponse(WebRequest request)
         {
+            var result = new Result();
             try
             {
                 var response = (HttpWebResponse) request.GetResponse();
                 var responseStream = response.GetResponseStream();
                 if (responseStream == null)
                 {
-                    Result.BadRequest("Response was not received data!");
-                    return;
+                    result.BadRequest("Response was not received data!");
+                    return result;
                 }
 
                 using (var reader = new StreamReader(responseStream, Encoding.GetEncoding("utf-8")))
                 {
-                    var result = reader.ReadToEnd();
+                    var stream = reader.ReadToEnd();
                     responseStream.Close();
-                    Result = Util.Deserialize<Result>(result);
+                    result = Util.Deserialize<Result>(stream);
+                    return result;
                 }
             }
             catch (Exception ex)
             {
-                Result.BadRequest(ex);
+                result.BadRequest(ex);
+                return result;
             }
         }
     }

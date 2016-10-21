@@ -59,7 +59,7 @@ namespace Insight.Utils.Client
         public bool GetTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens?account={Account}&signature={Sign}&deptid={DeptId}";
-            var result = new HttpRequest("", url, "GET").Result;
+            var result = new HttpClient(url).Request();
             if (!result.Successful)
             {
                 const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
@@ -88,7 +88,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens";
-            var result = new HttpRequest(_RefreshToken, url, "PUT").Result;
+            var result = new HttpClient(url, "PUT").Request(_RefreshToken);
             if (result.Code == "406")
             {
                 GetTokens();

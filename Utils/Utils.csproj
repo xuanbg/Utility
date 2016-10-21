@@ -57,7 +57,7 @@
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\Result.cs" />
     <Compile Include="Common\GuidParse.cs" />
-    <Compile Include="Client\HttpRequest.cs" />
+    <Compile Include="Client\HttpClient.cs" />
     <Compile Include="Client\LogClient.cs" />
     <Compile Include="Client\TokenHelper.cs" />
     <Compile Include="Entity\TokenResult.cs" />
