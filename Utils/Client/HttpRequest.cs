@@ -21,7 +21,6 @@ namespace Insight.Utils.Client
         /// <param name="url">请求的地址</param>
         /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
         /// <param name="data">接口参数</param>
-        /// <returns>JsonResult</returns>
         public HttpRequest(TokenHelper token, string url, string method, string data = "")
         {
             Start:
@@ -55,7 +54,6 @@ namespace Insight.Utils.Client
         /// <param name="url">请求的地址</param>
         /// <param name="method">请求的方法：GET,PUT,POST,DELETE</param>
         /// <param name="data">接口参数</param>
-        /// <returns>JsonResult</returns>
         public HttpRequest(string token, string url, string method, string data = "")
         {
             var request = GetWebRequest(url, method, token);
@@ -98,7 +96,6 @@ namespace Insight.Utils.Client
         /// 获取Request响应数据
         /// </summary>
         /// <param name="request">WebRequest</param>
-        /// <returns>JsonResult</returns>
         private void GetResponse(WebRequest request)
         {
             try
