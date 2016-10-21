@@ -59,6 +59,7 @@
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
             this.btnFirst.TabIndex = 0;
+            this.btnFirst.ToolTip = "首页";
             this.btnFirst.Click += new System.EventHandler(this.btnFirst_Click);
             // 
             // btnPrev
@@ -71,6 +72,7 @@
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
             this.btnPrev.TabIndex = 0;
+            this.btnPrev.ToolTipTitle = "上一页";
             this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
             // 
             // btnNext
@@ -83,6 +85,7 @@
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(22, 22);
             this.btnNext.TabIndex = 0;
+            this.btnNext.ToolTipTitle = "下一页";
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // btnLast
@@ -95,6 +98,7 @@
             this.btnLast.Name = "btnLast";
             this.btnLast.Size = new System.Drawing.Size(22, 22);
             this.btnLast.TabIndex = 0;
+            this.btnLast.ToolTipTitle = "末页";
             this.btnLast.Click += new System.EventHandler(this.btnLast_Click);
             // 
             // cbeRows
@@ -128,6 +132,7 @@
             this.btnJump.Name = "btnJump";
             this.btnJump.Size = new System.Drawing.Size(18, 22);
             this.btnJump.TabIndex = 0;
+            this.btnJump.ToolTipTitle = "指定页";
             this.btnJump.Click += new System.EventHandler(this.btnJump_Click);
             // 
             // txtPage

@@ -11,21 +11,21 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 总行数
         /// </summary>
-        public int Rows
+        public int TotalRows
         {
             get { return _Rows; }
-            set { SetRows(value); }
+            set { SetTotalRows(value); }
         }
         
         /// <summary>
         /// 每页行数
         /// </summary>
-        public int RowCount { get; set; } = 20;
+        public int RowsPerPage { get; set; } = 20;
 
         /// <summary>
         /// 总页数
         /// </summary>
-        public int Pages { get; private set; }
+        public int TotalPages { get; private set; }
 
         /// <summary>
         /// 当前页
@@ -35,12 +35,12 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 当前选中行索引
         /// </summary>
-        public int RowIndex { get; private set; }
+        public int FocusedRowIndex { get; private set; }
 
         /// <summary>
         /// 当前选中行
         /// </summary>
-        public int FocusedRowHandle => RowIndex - RowCount*(CurrentPage - 1);
+        public int FocusedRowHandle => FocusedRowIndex - RowsPerPage*(CurrentPage - 1);
 
         /// <summary>
         /// 构造方法
@@ -48,28 +48,28 @@ namespace Insight.Utils.Controls
         public PageControl()
         {
             InitializeComponent();
-            cbeRows.EditValue = RowCount;
+            cbeRows.EditValue = RowsPerPage;
         }
 
         /// <summary>
         /// 设置当前选中行索引
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="index"></param>
-        public void SetRowIndex(IndexType type, int index = 0)
+        /// <param name="type">RowIndex类型：1、RowHandle；2、RowIndex；3、TotalRows</param>
+        /// <param name="index">Index值</param>
+        public void SetRowIndex(int type, int index = 0)
         {
             switch (type)
             {
-                case IndexType.Handle:
-                    RowIndex = (CurrentPage - 1)*RowCount + index;
+                case 1:
+                    FocusedRowIndex = (CurrentPage - 1)*RowsPerPage + index;
                     break;
 
-                case IndexType.Index:
-                    RowIndex = index;
+                case 2:
+                    FocusedRowIndex = index;
                     break;
 
-                case IndexType.New:
-                    RowIndex = Rows - 1;
+                case 3:
+                    FocusedRowIndex = TotalRows - 1;
                     break;
             }
         }
@@ -80,12 +80,12 @@ namespace Insight.Utils.Controls
         /// <param name="page"></param>
         public void SetPage(int page)
         {
-            if (page < 1 || page > Pages) return;
+            if (page < 1 || page > TotalPages) return;
 
             CurrentPage = page;
 
             Refresh();
-            PageRowsChange?.Invoke(this, null);
+            RowsPerPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace Insight.Utils.Controls
         {
             btnFirst.Enabled = CurrentPage > 1;
             btnPrev.Enabled = CurrentPage > 1;
-            btnNext.Enabled = CurrentPage < Pages;
-            btnLast.Enabled = CurrentPage < Pages;
-            btnJump.Enabled = Pages > 1;
+            btnNext.Enabled = CurrentPage < TotalPages;
+            btnLast.Enabled = CurrentPage < TotalPages;
+            btnJump.Enabled = TotalPages > 1;
 
             var width = (int)Math.Log10(CurrentPage) * 7 + 18;
             btnJump.Width = width;
@@ -106,14 +106,14 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>  
-        /// 自定义事件 当前页改变事件  
+        /// 当前页发生改变
         /// </summary>  
-        public event EventHandler CurrentPageChange;
+        public event EventHandler CurrentPageChanged;
 
         /// <summary>  
-        /// 自定义事件
+        /// 每页行数发生改变
         /// </summary>  
-        public event EventHandler PageRowsChange;
+        public event EventHandler RowsPerPageChanged;
 
         /// <summary>
         /// 切换每页行数
@@ -122,11 +122,11 @@ namespace Insight.Utils.Controls
         /// <param name="e"></param>
         private void cbeRows_EditValueChanged(object sender, EventArgs e)
         {
-            RowCount = int.Parse(cbeRows.Text);
-            CurrentPage = (int)Math.Ceiling((decimal)(RowIndex + 1) / RowCount);
+            RowsPerPage = int.Parse(cbeRows.Text);
+            CurrentPage = (int)Math.Ceiling((decimal)(FocusedRowIndex + 1) / RowsPerPage);
 
             Refresh();
-            PageRowsChange?.Invoke(this, null);
+            RowsPerPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Insight.Utils.Controls
         {
             CurrentPage = 1;
             Refresh();
-            CurrentPageChange?.Invoke(this, null);
+            CurrentPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace Insight.Utils.Controls
         {
             CurrentPage -= 1;
             Refresh();
-            CurrentPageChange?.Invoke(this, null);
+            CurrentPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Insight.Utils.Controls
         {
             CurrentPage += 1;
             Refresh();
-            CurrentPageChange?.Invoke(this, null);
+            CurrentPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -172,9 +172,9 @@ namespace Insight.Utils.Controls
         /// <param name="e"></param>
         private void btnLast_Click(object sender, EventArgs e)
         {
-            CurrentPage = Pages;
+            CurrentPage = TotalPages;
             Refresh();
-            CurrentPageChange?.Invoke(this, null);
+            CurrentPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Insight.Utils.Controls
             if (e.KeyChar != 13) return;
 
             var page = int.Parse(txtPage.Text);
-            if (page < 1 || page > Pages || page == CurrentPage)
+            if (page < 1 || page > TotalPages || page == CurrentPage)
             {
                 txtPage.EditValue = null;
                 return;
@@ -224,31 +224,21 @@ namespace Insight.Utils.Controls
 
             CurrentPage = page;
             Refresh();
-            CurrentPageChange?.Invoke(this, null);
+            CurrentPageChanged?.Invoke(this, null);
         }
 
         /// <summary>
         /// 输入总行数
         /// </summary>
         /// <param name="rows">总行数</param>
-        private void SetRows(int rows)
+        private void SetTotalRows(int rows)
         {
             _Rows = rows;
-            Pages = (int) Math.Ceiling((decimal) rows/RowCount);
-            labRows.Text = $" 行/页 | 共 {rows} 行 | 分 {Pages} 页";
+            TotalPages = (int) Math.Ceiling((decimal) rows/RowsPerPage);
+            labRows.Text = $" 行/页 | 共 {rows} 行 | 分 {TotalPages} 页";
             labRows.Refresh();
 
             Refresh();
-        }
-
-        /// <summary>
-        /// 索引类型
-        /// </summary>
-        public enum IndexType
-        {
-            Index,
-            Handle,
-            New
         }
     }
 }
