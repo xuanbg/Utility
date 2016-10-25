@@ -14,6 +14,11 @@ namespace Insight.Utils.Client
         private readonly string _Data;
 
         /// <summary>
+        /// 是否记录接口调用日志
+        /// </summary>
+        public bool RequestLog { get; set; } = true;
+
+        /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="url">请求的地址</param>
@@ -33,6 +38,9 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         public Result Request(TokenHelper token)
         {
+#if DEBUG
+            var time = DateTime.Now;
+#endif
             Result result;
 
             Start:
@@ -53,6 +61,24 @@ namespace Insight.Utils.Client
             result = GetResponse(request);
 
             End:
+#if DEBUG
+            if (RequestLog)
+            {
+                var ts = DateTime.Now - time;
+                var server = Util.GetAppSetting("BaseServer");
+                var loginfo = new LogInfo
+                {
+                    Interface = $"{server}/logapi/v1.0/logs",
+                    Token = token,
+                    Code = "700101",
+                    Source = "系统平台",
+                    Action = "接口调用",
+                    Message = $"调用接口：{_Url}；{result.Message}；耗时：{ts.TotalMilliseconds}毫秒。"
+                };
+                var log = new LogClient(loginfo);
+                log.LogToServer();
+            }
+#endif
             if (token == null || result.Code != "406") return result;
 
             token.GetTokens();

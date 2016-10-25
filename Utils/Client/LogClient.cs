@@ -24,19 +24,11 @@ namespace Insight.Utils.Client
         /// <param name="info"></param>
         public LogClient(LogInfo info)
         {
-            var toserver = !string.IsNullOrEmpty(info.Interface);
-            var toevent = !string.IsNullOrEmpty(info.EventSource);
-
-            if (!toevent && !toserver)
+            _Info = info;
+            if (string.IsNullOrEmpty(info.EventSource) && string.IsNullOrEmpty(info.Interface))
             {
                 Result.BadRequest("未知的日志存储目标");
-                return;
             }
-
-            _Info = info;
-            if (toserver) LogToServer();
-
-            if (toevent) LogToEvent();
         }
 
         /// <summary>
@@ -54,7 +46,8 @@ namespace Insight.Utils.Client
                 {"userid", _Info.CreatorUserId}
             };
             var data = Util.Serialize(dict);
-            Result = new HttpClient(_Info.Interface, "POST", data).Request(_Info.Token);
+            var client = new HttpClient(_Info.Interface, "POST", data) {RequestLog = false};
+            Result = client.Request(_Info.Token);
         }
 
         /// <summary>
