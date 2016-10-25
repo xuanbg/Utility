@@ -12,7 +12,6 @@ using System.Security.Cryptography;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
-using Insight.Utils.Entity;
 using Newtonsoft.Json;
 
 namespace Insight.Utils.Common
@@ -93,7 +92,7 @@ namespace Insight.Utils.Common
         /// <typeparam name="T">类型</typeparam>
         /// <param name="obj">源对象</param>
         /// <returns>T 复制的对象</returns>
-        public static T Copy<T>(T obj)
+        public static T Clone<T>(T obj)
         {
             var str = Serialize(obj);
             return Deserialize<T>(str);
