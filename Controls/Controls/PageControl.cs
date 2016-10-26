@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
@@ -6,10 +7,23 @@ namespace Insight.Utils.Controls
 {
     public partial class PageControl : XtraUserControl
     {
+        private bool _IsFirst = true;
         private int _Rows;
         private int _Index;
         private int _Current;
         private bool _PageChanged;
+
+        /// <summary>
+        /// 每页行数下拉列表选项
+        /// </summary>
+        public Collection<string> RowsSelectItems { get; set; } = new Collection<string>
+        {
+            "20",
+            "40",
+            "60",
+            "80",
+            "100"
+        };
 
         /// <summary>
         /// 总行数
@@ -19,11 +33,11 @@ namespace Insight.Utils.Controls
             get { return _Rows; }
             set { SetTotalRows(value); }
         }
-        
+
         /// <summary>
         /// 每页行数
         /// </summary>
-        public int RowsPerPage { get; set; } = 20;
+        public int RowsPerPage { get; private set; } = 20;
 
         /// <summary>
         /// 总页数
@@ -90,7 +104,6 @@ namespace Insight.Utils.Controls
         public PageControl()
         {
             InitializeComponent();
-            cbeRows.EditValue = RowsPerPage;
         }
 
         /// <summary>
@@ -155,6 +168,19 @@ namespace Insight.Utils.Controls
         public event EventHandler RowsPerPageChanged;
 
         /// <summary>
+        /// 控件加载时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PageControl_Load(object sender, EventArgs e)
+        {
+            if (RowsSelectItems == null) return;
+
+            cbeRows.Properties.Items.AddRange(RowsSelectItems);
+            cbeRows.SelectedIndex = 0;
+        }
+
+        /// <summary>
         /// 切换每页行数
         /// </summary>
         /// <param name="sender"></param>
@@ -165,7 +191,9 @@ namespace Insight.Utils.Controls
             _Current = (int)Math.Ceiling((decimal)(FocusedRowIndex + 1) / RowsPerPage) - 1;
 
             Refresh();
-            RowsPerPageChanged?.Invoke(this, null);
+            if (!_IsFirst) RowsPerPageChanged?.Invoke(this, null);
+
+            _IsFirst = false;
         }
 
         /// <summary>

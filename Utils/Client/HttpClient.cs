@@ -73,7 +73,7 @@ namespace Insight.Utils.Client
                     Code = "700101",
                     Source = "系统平台",
                     Action = "接口调用",
-                    Message = $"调用接口：{_Url}；{result.Message}；耗时：{ts.TotalMilliseconds}毫秒。"
+                    Message = $"调用接口:[{_Method}]{_Url};{result.Message};用时:{ts.TotalMilliseconds}毫秒"
                 };
                 var log = new LogClient(loginfo);
                 log.LogToServer();

@@ -112,12 +112,6 @@
             this.cbeRows.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cbeRows.Properties.DropDownRows = 5;
-            this.cbeRows.Properties.Items.AddRange(new object[] {
-            "20",
-            "40",
-            "60",
-            "80",
-            "100"});
             this.cbeRows.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbeRows.Size = new System.Drawing.Size(45, 20);
             this.cbeRows.TabIndex = 0;
@@ -167,6 +161,7 @@
             this.MinimumSize = new System.Drawing.Size(320, 22);
             this.Name = "PageControl";
             this.Size = new System.Drawing.Size(320, 22);
+            this.Load += new System.EventHandler(this.PageControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cbeRows.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPage.Properties)).EndInit();
             this.ResumeLayout(false);
@@ -176,12 +171,12 @@
 
         #endregion
 
+        private DevExpress.XtraEditors.ComboBoxEdit cbeRows;
         private DevExpress.XtraEditors.LabelControl labRows;
         private DevExpress.XtraEditors.SimpleButton btnFirst;
         private DevExpress.XtraEditors.SimpleButton btnPrev;
         private DevExpress.XtraEditors.SimpleButton btnNext;
         private DevExpress.XtraEditors.SimpleButton btnLast;
-        private DevExpress.XtraEditors.ComboBoxEdit cbeRows;
         private DevExpress.XtraEditors.SimpleButton btnJump;
         private DevExpress.XtraEditors.TextEdit txtPage;
     }
