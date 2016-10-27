@@ -14,7 +14,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// AccessToken(Logger)
         /// </summary>
-        public TokenHelper Token { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
         /// 系统日志事件源

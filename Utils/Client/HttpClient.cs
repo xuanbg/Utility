@@ -16,7 +16,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 是否记录接口调用日志
         /// </summary>
-        public bool RequestLog { get; set; } = true;
+        public bool Logging { get; set; } = true;
 
         /// <summary>
         /// 构造方法
@@ -41,10 +41,15 @@ namespace Insight.Utils.Client
 #if DEBUG
             var time = DateTime.Now;
 #endif
-            Result result;
+            var result = new Result();
+            if (token == null)
+            {
+                result.BadRequest("缺少AccessToken！");
+                return result;
+            }
 
             Start:
-            var request = GetWebRequest(token?.AccessToken);
+            var request = GetWebRequest(token.AccessToken);
             if (_Method == "GET")
             {
                 result = GetResponse(request);
@@ -62,24 +67,9 @@ namespace Insight.Utils.Client
 
             End:
 #if DEBUG
-            if (RequestLog)
-            {
-                var ts = DateTime.Now - time;
-                var server = Util.GetAppSetting("BaseServer");
-                var loginfo = new LogInfo
-                {
-                    Interface = $"{server}/logapi/v1.0/logs",
-                    Token = token,
-                    Code = "700101",
-                    Source = "系统平台",
-                    Action = "接口调用",
-                    Message = $"调用接口:[{_Method}]{_Url};{result.Message};用时:{ts.TotalMilliseconds}毫秒"
-                };
-                var log = new LogClient(loginfo);
-                log.LogToServer();
-            }
+            Log(token.AccessToken, time, result.Message);
 #endif
-            if (token == null || result.Code != "406") return result;
+            if (result.Code != "406") return result;
 
             token.GetTokens();
             goto Start;
@@ -92,8 +82,11 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         public Result Request(string token = null)
         {
+#if DEBUG
+            var time = DateTime.Now;
+#endif
             var request = GetWebRequest(token);
-            if (_Method == "GET") return GetResponse(request);
+            if (_Method == "GET") goto End;
 
             var buffer = Encoding.UTF8.GetBytes(_Data);
             request.ContentLength = buffer.Length;
@@ -102,7 +95,12 @@ namespace Insight.Utils.Client
                 stream.Write(buffer, 0, buffer.Length);
             }
 
-            return GetResponse(request);
+            End:
+            var result = GetResponse(request);
+#if DEBUG
+            if (Logging && token != null) Log(token, time, result.Message);
+#endif
+            return result;
         }
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace Insight.Utils.Client
         /// <returns>HttpWebRequest</returns>
         private HttpWebRequest GetWebRequest(string token)
         {
-            var request = (HttpWebRequest)WebRequest.Create(_Url);
+            var request = (HttpWebRequest) WebRequest.Create(_Url);
             request.Method = _Method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
@@ -154,5 +152,30 @@ namespace Insight.Utils.Client
                 return result;
             }
         }
+
+#if DEBUG
+        /// <summary>
+        /// 记录接口调用日志
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="time"></param>
+        /// <param name="message"></param>
+        private void Log(string token, DateTime time, string message)
+        {
+            var ts = DateTime.Now - time;
+            var server = Util.GetAppSetting("BaseServer");
+            var loginfo = new LogInfo
+            {
+                Interface = $"{server}/logapi/v1.0/logs",
+                Token = token,
+                Code = "700101",
+                Source = "系统平台",
+                Action = "接口调用",
+                Message = $"[{_Method}]{_Url};{message};用时{ts.TotalMilliseconds}毫秒"
+            };
+            var log = new LogClient(loginfo);
+            log.LogToServer();
+        }
+#endif
     }
 }
