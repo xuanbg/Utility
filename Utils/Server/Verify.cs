@@ -2,7 +2,6 @@
 using System.Net;
 using System.ServiceModel.Web;
 using Insight.Utils.Client;
-using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Server
@@ -38,7 +37,7 @@ namespace Insight.Utils.Server
                 Result = new HttpClient(verifyurl).Request(Token);
                 if (Result.Successful) return;
 
-                var time = Util.LimitCall(limit <= 0 ? 60 : limit);
+                var time = CallManage.LimitCall(limit <= 0 ? 60 : limit);
                 if (time > 0)
                 {
                     Result.TooFrequent(time);
@@ -49,7 +48,7 @@ namespace Insight.Utils.Server
             }
             else
             {
-                var time = Util.LimitCall(limit);
+                var time = CallManage.LimitCall(limit);
                 if (time > 0)
                 {
                     Result.TooFrequent(time);
@@ -74,7 +73,7 @@ namespace Insight.Utils.Server
         /// <param name="limit">限制调用时间间隔（秒），默认不启用</param>
         public Verify(string verifyurl, Guid aid, int limit = 0)
         {
-            var time = Util.LimitCall(limit);
+            var time = CallManage.LimitCall(limit);
             if (time > 0)
             {
                 Result.TooFrequent(time);

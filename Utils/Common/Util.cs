@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,20 +8,14 @@ using System.IO.Compression;
 using System.Linq;
 using System.Management;
 using System.Security.Cryptography;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.Text;
+using Insight.Utils.Entity;
 using Newtonsoft.Json;
 
 namespace Insight.Utils.Common
 {
     public static class Util
     {
-
-        /// <summary>
-        /// 接口调用时间记录
-        /// </summary>
-        private static readonly Dictionary<string, DateTime> Requests = new Dictionary<string, DateTime>();
 
         #region 常用方法
 
@@ -99,38 +92,15 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 根据传入的时长返回当前调用的剩余限制时间（秒）
+        /// 将Result转换为指定的类型
         /// </summary>
-        /// <param name="seconds">限制访问时长（秒）</param>
-        /// <returns>int 剩余限制时间（秒）</returns>
-        public static int LimitCall(int seconds)
+        /// <typeparam name="T">转换目标类型</typeparam>
+        /// <param name="obj">Result对象</param>
+        /// <returns>T 转换后的类型</returns>
+        public static T ConvertTo<T>(Result obj)
         {
-            if (seconds <= 0) return 0;
-
-            var properties = OperationContext.Current.IncomingMessageProperties;
-            var endpoint = properties[RemoteEndpointMessageProperty.Name] as RemoteEndpointMessageProperty;
-            var uri = properties["UriTemplateMatchResults"] as UriTemplateMatch;
-            if (endpoint == null || uri == null) return 0;
-
-            var key = Hash(endpoint.Address + uri.Data);
-            if (!Requests.ContainsKey(key))
-            {
-                Requests.Add(key, DateTime.Now);
-                return 0;
-            }
-
-            var span = Requests[key].AddSeconds(seconds) - DateTime.Now;
-            var surplus = (int)Math.Floor(span.TotalSeconds);
-            if (seconds - surplus > 0 && seconds - surplus < 3)
-            {
-                Requests[key] = DateTime.Now;
-                return seconds;
-            }
-
-            if (surplus > 0) return surplus;
-
-            Requests[key] = DateTime.Now;
-            return 0;
+            var str = Serialize(obj);
+            return Deserialize<T>(str);
         }
 
         /// <summary>

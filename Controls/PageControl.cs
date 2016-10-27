@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
@@ -16,14 +15,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
-        public Collection<string> RowsSelectItems { get; set; } = new Collection<string>
-        {
-            "20",
-            "40",
-            "60",
-            "80",
-            "100"
-        };
+        public object[] RowsSelectItems { get; set; } = {"20", "40", "60", "80", "100"};
 
         /// <summary>
         /// 总行数
