@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
@@ -6,7 +7,7 @@ namespace Insight.Utils.Controls
 {
     public partial class PageControl : XtraUserControl
     {
-        private bool _IsFirst = true;
+        private bool _IsLoad = true;
         private int _Rows;
         private int _Index;
         private int _Current;
@@ -15,7 +16,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
-        public object[] RowsSelectItems { get; set; } = {"20", "40", "60", "80", "100"};
+        public Collection<string> RowsSelectItems { get; set; } = new Collection<string> {"20", "40", "60", "80", "100"};
 
         /// <summary>
         /// 总行数
@@ -183,9 +184,9 @@ namespace Insight.Utils.Controls
             _Current = (int)Math.Ceiling((decimal)(FocusedRowIndex + 1) / RowsPerPage) - 1;
 
             Refresh();
-            if (!_IsFirst) RowsPerPageChanged?.Invoke(this, null);
+            if (!_IsLoad) RowsPerPageChanged?.Invoke(this, null);
 
-            _IsFirst = false;
+            _IsLoad = false;
         }
 
         /// <summary>
