@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
@@ -8,6 +9,11 @@ namespace Insight.Utils.Client
 
     public class TokenHelper
     {
+        private string _Token;
+        private string _RefreshToken;
+        private DateTime _ExpiryTime;
+        private DateTime _FailureTime;
+
         /// <summary>
         /// AccessToken字符串
         /// </summary>
@@ -38,11 +44,6 @@ namespace Insight.Utils.Client
         /// </summary>
         public Guid? DeptId { get; set; }
 
-        private string _Token;
-        private string _RefreshToken;
-        private DateTime _ExpiryTime;
-        private DateTime _FailureTime;
-
         /// <summary>
         /// 生成签名
         /// </summary>
@@ -58,17 +59,17 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否获取成功</returns>
         public bool GetTokens()
         {
-            var url = $"{BaseServer}/security/v1.0/tokens?account={Account}&signature={Sign}&deptid={DeptId}";
+            var dict = GetCode();
+            if (dict == null) return false;
+
+            var key = Util.Hash(Sign + dict["Stamp"]);
+            var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={DeptId}";
             var result = new HttpClient(url).Request();
             if (!result.Successful)
             {
-                const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
-                var msg = result.Code == "400" ? str : result.Message;
-                Messages.ShowError(msg);
+                Messages.ShowError(result.Message);
                 return false;
             }
-
-            if (result.Code == "202") Messages.ShowWarning("您已在另一台设备登录！如登录者不是本人，请联系管理员。");
 
             var data = Util.Deserialize<TokenResult>(result.Data);
             _Token = data.AccessToken;
@@ -80,6 +81,22 @@ namespace Insight.Utils.Client
             var json = Encoding.UTF8.GetString(buffer);
             Token = Util.Deserialize<AccessToken>(json);
             return true;
+        }
+
+        /// <summary>
+        /// 获取Code
+        /// </summary>
+        /// <returns>Dictionary Code</returns>
+        private Dictionary<string, string> GetCode()
+        {
+            var url = $"{BaseServer}/security/v1.0/codes?account={Account}";
+            var result = new HttpClient(url).Request();
+            if (result.Successful) return Util.Deserialize<Dictionary<string, string>>(result.Data);
+
+            const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
+            var msg = result.Code == "400" ? str : result.Message;
+            Messages.ShowError(msg);
+            return null;
         }
 
         /// <summary>

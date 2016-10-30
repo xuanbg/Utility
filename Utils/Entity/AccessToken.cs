@@ -22,11 +22,6 @@ namespace Insight.Utils.Entity
         public string UserName { get; set; }
 
         /// <summary>
-        /// 用户特征码
-        /// </summary>
-        public string Stamp { get; set; }
-
-        /// <summary>
         /// 随机密码
         /// </summary>
         public string Secret { get; set; }
