@@ -7,11 +7,10 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Windows.Forms;
-using Insight.WCF.Entity;
 
 namespace Insight.WCF
 {
-    public class Services
+    public class Service
     {
         private readonly List<ServiceHost> Hosts = new List<ServiceHost>();
 
@@ -21,13 +20,13 @@ namespace Insight.WCF
         /// 创建WCF服务主机
         /// </summary>
         /// <param name="info">ServiceInfo</param>
-        public void CreateHost(ServiceInfo info)
+        public void CreateHost(Info info)
         {
             var file = $"{Application.StartupPath}\\{info.ServiceFile}";
             if (!File.Exists(file)) return;
 
-            var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
-            var path = string.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
+            var ver = String.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
+            var path = String.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
             var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
             var asm = Assembly.LoadFrom(file);
             var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
@@ -105,6 +104,71 @@ namespace Insight.WCF
 
         #endregion
 
-    }
+        /// <summary>
+        /// 服务信息
+        /// </summary>
+        public class Info
+        {
+            private string _Port;
+            private string _Path;
+            private string _Version;
 
+            /// <summary>
+            /// 服务基地址
+            /// </summary>
+            public string BaseAddress { get; set; }
+
+            /// <summary>
+            /// 服务端口号
+            /// </summary>
+            public string Port
+            {
+                get { return _Port ?? "80"; }
+                set { _Port = value; }
+            }
+
+            /// <summary>
+            /// 访问路径
+            /// </summary>
+            public string Path
+            {
+                get { return _Path ?? ""; }
+                set { _Path = value; }
+            }
+
+            /// <summary>
+            /// 服务版本号
+            /// </summary>
+            public string Version
+            {
+                get { return _Version ?? ""; }
+                set { _Version = value; }
+            }
+
+            /// <summary>
+            /// 服务命名空间
+            /// </summary>
+            public string NameSpace { get; set; }
+
+            /// <summary>
+            /// Endpoint名称
+            /// </summary>
+            public string Interface { get; set; }
+
+            /// <summary>
+            /// 服务实现类型名称
+            /// </summary>
+            public string ComplyType { get; set; }
+
+            /// <summary>
+            /// 库文件路径
+            /// </summary>
+            public string ServiceFile { get; set; }
+
+            /// <summary>
+            /// 是否启用Gzip压缩
+            /// </summary>
+            public bool Compress { get; set; }
+        }
+    }
 }
