@@ -34,6 +34,8 @@ namespace Insight.WCF
             var inter = $"{info.NameSpace}.{info.Interface}";
             var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
             endpoint.Behaviors.Add(new WebHttpBehavior());
+
+            /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647
             foreach (var operation in endpoint.Contract.Operations)
             {
                 var behavior = operation.Behaviors.Find<DataContractSerializerOperationBehavior>();
@@ -41,7 +43,7 @@ namespace Insight.WCF
                 {
                     behavior.MaxItemsInObjectGraph = 2147483647;
                 }
-            }
+            }*/
             Hosts.Add(host);
         }
 
