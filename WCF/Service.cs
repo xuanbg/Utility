@@ -25,8 +25,8 @@ namespace Insight.WCF
             var file = $"{Application.StartupPath}\\{info.ServiceFile}";
             if (!File.Exists(file)) return;
 
-            var ver = String.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
-            var path = String.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
+            var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
+            var path = string.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
             var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
             var asm = Assembly.LoadFrom(file);
             var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
@@ -34,6 +34,14 @@ namespace Insight.WCF
             var inter = $"{info.NameSpace}.{info.Interface}";
             var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
             endpoint.Behaviors.Add(new WebHttpBehavior());
+            foreach (var operation in endpoint.Contract.Operations)
+            {
+                var behavior = operation.Behaviors.Find<DataContractSerializerOperationBehavior>();
+                if (behavior != null)
+                {
+                    behavior.MaxItemsInObjectGraph = 2147483647;
+                }
+            }
             Hosts.Add(host);
         }
 
