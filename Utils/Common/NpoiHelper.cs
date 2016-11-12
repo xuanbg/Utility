@@ -75,7 +75,8 @@ namespace Insight.Utils.Common
                 {
                     try
                     {
-                        dr[i] = GetCellData(row.GetCell(i));
+                        var type = table.Columns[i].DataType;
+                        dr[i] = GetCellData(row.GetCell(i), type);
                     }
                     catch (Exception)
                     {
@@ -127,30 +128,21 @@ namespace Insight.Utils.Common
         /// 读Excel单元格的数据
         /// </summary>
         /// <param name="cell">Excel单元格</param>
+        /// <param name="type">列数据类型</param>
         /// <returns>object 单元格数据</returns>
-        private object GetCellData(ICell cell)
+        private object GetCellData(ICell cell, Type type)
         {
             switch (cell.CellType)
             {
                 case CellType.Numeric:
-                    try
-                    {
-                        return cell.DateCellValue;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        return cell.NumericCellValue;
-                    }
+                    if (type == typeof(DateTime)) return cell.DateCellValue;
+
+                    return cell.NumericCellValue;
 
                 case CellType.String:
-                    try
-                    {
-                        return cell.DateCellValue;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        return cell.StringCellValue;
-                    }
+                    if (type == typeof(DateTime)) return cell.DateCellValue;
+
+                    return cell.StringCellValue;
 
                 case CellType.Boolean:
                     return cell.BooleanCellValue;
