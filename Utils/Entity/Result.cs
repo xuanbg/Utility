@@ -140,6 +140,56 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
+        /// 请求参数错误（400）
+        /// </summary>
+        /// <param name="data">错误详细信息（可选）</param>
+        public void BadRequest(object data = null)
+        {
+            Successful = false;
+            Code = "400";
+            Name = "BadRequest";
+            Message = "请求参数错误";
+            Data = Util.Serialize(data);
+        }
+
+        /// <summary>
+        /// 请求参数错误（400）
+        /// </summary>
+        /// <param name="data">错误详细信息（可选）</param>
+        public void BadRequest(string data)
+        {
+            Successful = false;
+            Code = "400";
+            Name = "BadRequest";
+            Message = "请求参数错误";
+            Data = data;
+        }
+
+        /// <summary>
+        /// 身份验证失败（401）
+        /// </summary>
+        public void InvalidAuth()
+        {
+            Successful = false;
+            Code = "401";
+            Name = "InvalidAuthenticationInfo";
+            Message = "提供的身份验证信息不正确";
+        }
+
+        /// <summary>
+        /// 调用接口过于频繁（402）
+        /// </summary>
+        /// <param name="data"></param>
+        public void TooFrequent(object data)
+        {
+            Successful = false;
+            Code = "402";
+            Name = "CallInterfaceTooFrequent";
+            Message = "调用接口过于频繁";
+            Data = Util.Serialize(data);
+        }
+
+        /// <summary>
         /// 用户未取得授权（403）
         /// </summary>
         public void Forbidden()
@@ -148,6 +198,17 @@ namespace Insight.Utils.Entity
             Code = "403";
             Name = "Forbidden";
             Message = "当前用户未取得授权";
+        }
+
+        /// <summary>
+        /// 指定的资源不存在（404）
+        /// </summary>
+        public void NotFound()
+        {
+            Successful = false;
+            Code = "404";
+            Name = "ResourceNotFound";
+            Message = "指定的资源不存在";
         }
 
         /// <summary>
@@ -217,67 +278,6 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
-        /// 请求参数错误（400）
-        /// </summary>
-        /// <param name="data">错误详细信息（可选）</param>
-        public void BadRequest(object data = null)
-        {
-            Successful = false;
-            Code = "400";
-            Name = "BadRequest";
-            Message = "请求参数错误";
-            Data = Util.Serialize(data);
-        }
-
-        /// <summary>
-        /// 请求参数错误（400）
-        /// </summary>
-        /// <param name="data">错误详细信息（可选）</param>
-        public void BadRequest(string data)
-        {
-            Successful = false;
-            Code = "400";
-            Name = "BadRequest";
-            Message = "请求参数错误";
-            Data = data;
-        }
-
-        /// <summary>
-        /// 身份验证失败（401）
-        /// </summary>
-        public void InvalidAuth()
-        {
-            Successful = false;
-            Code = "401";
-            Name = "InvalidAuthenticationInfo";
-            Message = "提供的身份验证信息不正确";
-        }
-
-        /// <summary>
-        /// 调用接口过于频繁（402）
-        /// </summary>
-        /// <param name="data"></param>
-        public void TooFrequent(object data)
-        {
-            Successful = false;
-            Code = "402";
-            Name = "CallInterfaceTooFrequent";
-            Message = "调用接口过于频繁";
-            Data = Util.Serialize(data);
-        }
-
-        /// <summary>
-        /// 指定的资源不存在（404）
-        /// </summary>
-        public void NotFound()
-        {
-            Successful = false;
-            Code = "404";
-            Name = "ResourceNotFound";
-            Message = "指定的资源不存在";
-        }
-
-        /// <summary>
         /// 转换为Guid失败（420）
         /// </summary>
         public void InvalidGuid()
@@ -297,6 +297,50 @@ namespace Insight.Utils.Entity
             Code = "421";
             Name = "DataNotUpdate";
             Message = "未更新任何数据";
+        }
+
+        /// <summary>
+        /// 未找到指定的文件（430）
+        /// </summary>
+        public void FileNotExists()
+        {
+            Successful = false;
+            Code = "430";
+            Name = "FileNotExists";
+            Message = "未找到指定的文件";
+        }
+
+        /// <summary>
+        /// 未找到指定的Sheet（431）
+        /// </summary>
+        public void SheetNotExists()
+        {
+            Successful = false;
+            Code = "431";
+            Name = "SheetNotExists";
+            Message = "未找到指定的Sheet";
+        }
+
+        /// <summary>
+        /// 未从文件中读取任何数据行（432）
+        /// </summary>
+        public void NoRowsRead()
+        {
+            Successful = false;
+            Code = "432";
+            Name = "NoRowsRead";
+            Message = "未从文件中读取任何数据行";
+        }
+
+        /// <summary>
+        /// Excel格式不正确（433）
+        /// </summary>
+        public void IncorrectExcelFormat()
+        {
+            Successful = false;
+            Code = "433";
+            Name = "IncorrectExcelFormat";
+            Message = "Excel格式不正确";
         }
 
         /// <summary>

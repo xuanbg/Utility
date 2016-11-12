@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -101,6 +103,47 @@ namespace Insight.Utils.Common
         {
             var str = Serialize(obj);
             return Deserialize<T>(str);
+        }
+
+        /// <summary>
+        /// 将DataTable转为List
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns>List</returns>
+        public static List<T> ConvertToList<T>(DataTable table) where T: new()
+        {
+            var obj = new T();
+            var list = new List<T>();
+            var propertys = obj.GetType().GetProperties();
+            foreach (DataRow row in table.Rows)
+            {
+                foreach (var p in propertys)
+                {
+                    string name;
+                    var attributes = p.GetCustomAttributes(typeof(PropertyAlias), false);
+                    if (attributes.Length > 0)
+                    {
+                        var type = (PropertyAlias) attributes[0];
+                        name = type.Alias;
+                    }
+                    else
+                    {
+                        name = p.Name;
+                    }
+
+                    if (table.Columns.Contains(name))
+                    {
+                        if (!p.CanWrite) continue;
+
+                        var value = row[name];
+                        if (value == DBNull.Value) value = null;
+
+                        p.SetValue(obj, value, null);
+                    }
+                }
+                list.Add(obj);
+            }
+            return list;
         }
 
         /// <summary>
@@ -221,7 +264,7 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string Serialize<T>(T obj)
         {
-            return obj == null ? String.Empty : JsonConvert.SerializeObject(obj);
+            return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>
@@ -232,7 +275,7 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T Deserialize<T>(string json)
         {
-            return String.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
+            return string.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
         }
 
         #endregion
