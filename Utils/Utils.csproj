@@ -71,7 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\PropertyAlias.cs" />
+    <Compile Include="Common\AliasAttribute.cs" />
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\NpoiHelper.cs" />
     <Compile Include="Common\SqlHelper.cs" />

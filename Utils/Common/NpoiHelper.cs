@@ -96,8 +96,8 @@ namespace Insight.Utils.Common
         /// <returns>DataTable</returns>
         private DataTable InitTable(ISheet sheet)
         {
-            var hand = sheet.GetRow(0);
-            if (hand == null)
+            var title = sheet.GetRow(0);
+            if (title == null)
             {
                 _Result.NoRowsRead();
                 return null;
@@ -107,7 +107,7 @@ namespace Insight.Utils.Common
             {
                 var dict = GetDictionary();
                 var table = new DataTable();
-                foreach (var cell in hand.Cells)
+                foreach (var cell in title.Cells)
                 {
                     var col_name = cell.StringCellValue;
                     var col_type = dict[col_name];
@@ -121,34 +121,6 @@ namespace Insight.Utils.Common
                 _Result.IncorrectExcelFormat();
                 return null;
             }
-        }
-
-        /// <summary>
-        /// 获取指定类型的属性名称/类型字典
-        /// </summary>
-        /// <returns>Dictionary</returns>
-        private Dictionary<string, Type> GetDictionary()
-        {
-            var dict = new Dictionary<string, Type>();
-            var propertys = typeof(T).GetProperties();
-            foreach (var p in propertys)
-            {
-                string name;
-                var attributes = p.GetCustomAttributes(typeof(PropertyAlias), false);
-                if (attributes.Length > 0)
-                {
-                    var type = (PropertyAlias)attributes[0];
-                    name = type.Alias;
-                }
-                else
-                {
-                    name = p.Name;
-                }
-
-                dict.Add(name, p.PropertyType);
-            }
-
-            return dict;
         }
 
         /// <summary>
@@ -191,6 +163,34 @@ namespace Insight.Utils.Common
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// 获取指定类型的属性名称/类型字典
+        /// </summary>
+        /// <returns>Dictionary</returns>
+        private Dictionary<string, Type> GetDictionary()
+        {
+            var dict = new Dictionary<string, Type>();
+            var propertys = typeof(T).GetProperties();
+            foreach (var p in propertys)
+            {
+                string name;
+                var attributes = p.GetCustomAttributes(typeof(AliasAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    var type = (AliasAttribute)attributes[0];
+                    name = type.Alias;
+                }
+                else
+                {
+                    name = p.Name;
+                }
+
+                dict.Add(name, p.PropertyType);
+            }
+
+            return dict;
         }
     }
 }

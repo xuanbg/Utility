@@ -108,7 +108,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 将DataTable转为List
         /// </summary>
-        /// <param name="table"></param>
+        /// <param name="table">DataTable</param>
         /// <returns>List</returns>
         public static List<T> ConvertToList<T>(DataTable table) where T: new()
         {
@@ -120,10 +120,10 @@ namespace Insight.Utils.Common
                 foreach (var p in propertys)
                 {
                     string name;
-                    var attributes = p.GetCustomAttributes(typeof(PropertyAlias), false);
+                    var attributes = p.GetCustomAttributes(typeof(AliasAttribute), false);
                     if (attributes.Length > 0)
                     {
-                        var type = (PropertyAlias) attributes[0];
+                        var type = (AliasAttribute) attributes[0];
                         name = type.Alias;
                     }
                     else
