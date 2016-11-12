@@ -31,7 +31,7 @@ namespace Insight.Utils.Common
                 book = WorkbookFactory.Create(file);
             }
 
-            if (index > book.NumberOfSheets)
+            if (index >= book.NumberOfSheets)
             {
                 _Result.SheetNotExists();
                 return _Result;
@@ -127,7 +127,7 @@ namespace Insight.Utils.Common
         /// 读Excel单元格的数据
         /// </summary>
         /// <param name="cell">Excel单元格</param>
-        /// <returns>T 单元格数据</returns>
+        /// <returns>object 单元格数据</returns>
         private object GetCellData(ICell cell)
         {
             switch (cell.CellType)
