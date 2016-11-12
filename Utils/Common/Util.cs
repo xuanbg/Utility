@@ -112,11 +112,11 @@ namespace Insight.Utils.Common
         /// <returns>List</returns>
         public static List<T> ConvertToList<T>(DataTable table) where T: new()
         {
-            var obj = new T();
             var list = new List<T>();
-            var propertys = obj.GetType().GetProperties();
+            var propertys = typeof(T).GetProperties();
             foreach (DataRow row in table.Rows)
             {
+                var obj = new T();
                 foreach (var p in propertys)
                 {
                     string name;

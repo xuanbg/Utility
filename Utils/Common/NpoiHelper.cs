@@ -165,7 +165,7 @@ namespace Insight.Utils.Common
                     {
                         return cell.DateCellValue;
                     }
-                    catch (Exception)
+                    catch (InvalidOperationException)
                     {
                         return cell.NumericCellValue;
                     }
@@ -175,7 +175,7 @@ namespace Insight.Utils.Common
                     {
                         return cell.DateCellValue;
                     }
-                    catch (Exception)
+                    catch (InvalidOperationException)
                     {
                         return cell.StringCellValue;
                     }
@@ -183,6 +183,11 @@ namespace Insight.Utils.Common
                 case CellType.Boolean:
                     return cell.BooleanCellValue;
 
+                case CellType.Unknown:
+                case CellType.Formula:
+                case CellType.Blank:
+                case CellType.Error:
+                    return null;
                 default:
                     return null;
             }
