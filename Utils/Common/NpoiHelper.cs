@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using Insight.Utils.Entity;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
 namespace Insight.Utils.Common
@@ -51,6 +53,15 @@ namespace Insight.Utils.Common
         /// <returns>Result</returns>
         public Result Export(List<T> list)
         {
+            if (!list.Any())
+            {
+                _Result.NoContent();
+                return _Result;
+            }
+
+            var book = new HSSFWorkbook();
+            var sheet = book.CreateSheet();
+            SetSheetData(sheet, list);
             return _Result;
         }
 
@@ -91,6 +102,22 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
+        /// 将List数据写入Sheet
+        /// </summary>
+        /// <param name="sheet">当前数据表</param>
+        /// <param name="list">数据集合</param>
+        private void SetSheetData(ISheet sheet, List<T> list)
+        {
+            var table = Util.ConvertToDataTable(list);
+            var row = sheet.CreateRow(0);
+            for (var i = 0; i < dict.Count; i++)
+            {
+                var cell = row.CreateCell(i, CellType.String);
+                cell.SetCellValue(dict["a"].);
+            }
+        }
+
+        /// <summary>
         /// 初始化DataTable
         /// </summary>
         /// <param name="sheet">当前数据表</param>
@@ -104,17 +131,17 @@ namespace Insight.Utils.Common
                 return null;
             }
 
+            // 根据类型属性数据类型建立列数据类型字典
+            var dict = new Dictionary<string, Type>();
+            var propertys = typeof(T).GetProperties().ToList();
+            propertys.ForEach(p => dict.Add(Util.GetPropertyName(p), p.PropertyType));
+
+            // 使用列数据类型字典构建一个和Sheet一致的DataTable
+            // 如Sheet中列与指定类型不匹配，则捕获异常后返回格式不正确的错误
+            var table = new DataTable();
             try
             {
-                var dict = GetDictionary();
-                var table = new DataTable();
-                foreach (var cell in title.Cells)
-                {
-                    var col_name = cell.StringCellValue;
-                    var col_type = dict[col_name];
-                    table.Columns.Add(cell.StringCellValue, col_type);
-                }
-
+                title.Cells.ForEach(c => table.Columns.Add(c.StringCellValue, dict[c.StringCellValue]));
                 return table;
             }
             catch
@@ -152,37 +179,10 @@ namespace Insight.Utils.Common
                 case CellType.Blank:
                 case CellType.Error:
                     return null;
+
                 default:
                     return null;
             }
-        }
-
-        /// <summary>
-        /// 获取指定类型的属性名称/类型字典
-        /// </summary>
-        /// <returns>Dictionary</returns>
-        private Dictionary<string, Type> GetDictionary()
-        {
-            var dict = new Dictionary<string, Type>();
-            var propertys = typeof(T).GetProperties();
-            foreach (var p in propertys)
-            {
-                string name;
-                var attributes = p.GetCustomAttributes(typeof(AliasAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    var type = (AliasAttribute)attributes[0];
-                    name = type.Alias;
-                }
-                else
-                {
-                    name = p.Name;
-                }
-
-                dict.Add(name, p.PropertyType);
-            }
-
-            return dict;
         }
     }
 }
