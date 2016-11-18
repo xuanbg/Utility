@@ -109,12 +109,12 @@ namespace Insight.Utils.Common
         private void SetSheetData(ISheet sheet, List<T> list)
         {
             var table = Util.ConvertToDataTable(list);
-            var row = sheet.CreateRow(0);
-            for (var i = 0; i < dict.Count; i++)
-            {
-                var cell = row.CreateCell(i, CellType.String);
-                cell.SetCellValue(dict["a"].);
-            }
+            //var row = sheet.CreateRow(0);
+            //for (var i = 0; i < dict.Count; i++)
+            //{
+            //    var cell = row.CreateCell(i, CellType.String);
+            //    cell.SetCellValue(dict["a"].);
+            //}
         }
 
         /// <summary>
@@ -162,14 +162,22 @@ namespace Insight.Utils.Common
             switch (cell.CellType)
             {
                 case CellType.Numeric:
-                    if (type == typeof(DateTime)) return cell.DateCellValue;
+                    if (GetType(type) == PropertyType.DateTime) return cell.DateCellValue;
 
                     return cell.NumericCellValue;
 
                 case CellType.String:
-                    if (type == typeof(DateTime)) return cell.DateCellValue;
+                    switch (GetType(type))
+                    {
+                        case PropertyType.DateTime:
+                            return cell.DateCellValue;
 
-                    return cell.StringCellValue;
+                        case PropertyType.Numeric:
+                            return cell.NumericCellValue;
+
+                        default:
+                            return cell.StringCellValue;
+                    }
 
                 case CellType.Boolean:
                     return cell.BooleanCellValue;
@@ -183,6 +191,43 @@ namespace Insight.Utils.Common
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// 获取数据类型
+        /// </summary>
+        /// <param name="type">数据类型</param>
+        /// <returns>PropertyType</returns>
+        private PropertyType GetType(Type type)
+        {
+            switch (type.Name)
+            {
+                case "DateTime":
+                    return PropertyType.DateTime;
+
+                case "bool":
+                    return PropertyType.Boolean;
+
+                case "double":
+                case "float":
+                case "int":
+                case "decimal":
+                    return PropertyType.Numeric;
+
+                default:
+                    return PropertyType.String;
+            }
+        }
+
+        /// <summary>
+        /// 属性类型
+        /// </summary>
+        internal enum PropertyType
+        {
+            Numeric,
+            DateTime,
+            String,
+            Boolean
         }
     }
 }
