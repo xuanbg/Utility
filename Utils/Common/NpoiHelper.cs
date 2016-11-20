@@ -41,6 +41,8 @@ namespace Insight.Utils.Common
 
             var sheet = book.GetSheetAt(index);
             var table = GetSheetData(sheet);
+            if (table == null) return _Result;
+
             var list = Util.ConvertToList<T>(table);
             _Result.Success(list);
             return _Result;
@@ -86,8 +88,26 @@ namespace Insight.Utils.Common
                 {
                     try
                     {
-                        var type = table.Columns[i].DataType;
-                        dr[i] = GetCellData(row.GetCell(i), type);
+                        var cell = row.GetCell(i);
+                        switch (cell.CellType)
+                        {
+                            case CellType.Numeric:
+                                // 如单元格格式为数字，判断列数据类型是否为DateTime
+                                var type = table.Columns[i].DataType.Name;
+                                if (type == "DateTime") dr[i] = cell.DateCellValue;
+                                else dr[i] = cell.NumericCellValue;
+
+                                break;
+                            case CellType.Boolean:
+                                dr[i] = cell.BooleanCellValue;
+                                break;
+                            case CellType.String:
+                                dr[i] = cell.StringCellValue;
+                                break;
+                            default:
+                                dr[i] = DBNull.Value;
+                                break;
+                        }
                     }
                     catch (Exception)
                     {
@@ -109,12 +129,42 @@ namespace Insight.Utils.Common
         private void SetSheetData(ISheet sheet, List<T> list)
         {
             var table = Util.ConvertToDataTable(list);
-            //var row = sheet.CreateRow(0);
-            //for (var i = 0; i < dict.Count; i++)
-            //{
-            //    var cell = row.CreateCell(i, CellType.String);
-            //    cell.SetCellValue(dict["a"].);
-            //}
+
+            // 创建标题行
+            var row = sheet.CreateRow(0);
+            var i = -1;
+            foreach (DataColumn c in table.Columns)
+            {
+                var cell = row.CreateCell(i++, GetCellType(c.DataType));
+                cell.SetCellValue(c.ColumnName);
+            }
+
+            // 创建数据行
+            for (var j = 0; j < table.Rows.Count; j++)
+            {
+                row = sheet.CreateRow(j + 1);
+                var r = -1;
+                foreach (DataColumn c in table.Columns)
+                {
+                    var type = GetCellType(c.DataType);
+                    var cell = row.CreateCell(r++, type);
+                    var data = table.Rows[j].ItemArray[r++];
+                    switch (type)
+                    {
+                        case CellType.Numeric:
+                            cell.SetCellValue(Convert.ToDouble(data));
+                            break;
+
+                        case CellType.Boolean:
+                            cell.SetCellValue(Convert.ToBoolean(data));
+                            break;
+
+                        default:
+                            cell.SetCellValue(data.ToString());
+                            break;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -134,7 +184,12 @@ namespace Insight.Utils.Common
             // 根据类型属性数据类型建立列数据类型字典
             var dict = new Dictionary<string, Type>();
             var propertys = typeof(T).GetProperties().ToList();
-            propertys.ForEach(p => dict.Add(Util.GetPropertyName(p), p.PropertyType));
+            foreach (var p in propertys)
+            {
+                var gta = p.PropertyType.GenericTypeArguments;
+                var type = gta.Length > 0 ? gta[0] : p.PropertyType;
+                dict.Add(Util.GetPropertyName(p), type);
+            }
 
             // 使用列数据类型字典构建一个和Sheet一致的DataTable
             // 如Sheet中列与指定类型不匹配，则捕获异常后返回格式不正确的错误
@@ -152,82 +207,28 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 读Excel单元格的数据
-        /// </summary>
-        /// <param name="cell">Excel单元格</param>
-        /// <param name="type">列数据类型</param>
-        /// <returns>object 单元格数据</returns>
-        private object GetCellData(ICell cell, Type type)
-        {
-            switch (cell.CellType)
-            {
-                case CellType.Numeric:
-                    if (GetType(type) == PropertyType.DateTime) return cell.DateCellValue;
-
-                    return cell.NumericCellValue;
-
-                case CellType.String:
-                    switch (GetType(type))
-                    {
-                        case PropertyType.DateTime:
-                            return cell.DateCellValue;
-
-                        case PropertyType.Numeric:
-                            return cell.NumericCellValue;
-
-                        default:
-                            return cell.StringCellValue;
-                    }
-
-                case CellType.Boolean:
-                    return cell.BooleanCellValue;
-
-                case CellType.Unknown:
-                case CellType.Formula:
-                case CellType.Blank:
-                case CellType.Error:
-                    return null;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// 获取数据类型
+        /// 根据数据类型获取单元格格式
         /// </summary>
         /// <param name="type">数据类型</param>
-        /// <returns>PropertyType</returns>
-        private PropertyType GetType(Type type)
+        /// <returns>CellType</returns>
+        private CellType GetCellType(Type type)
         {
             switch (type.Name)
             {
-                case "DateTime":
-                    return PropertyType.DateTime;
+                case "Boolean":
+                    return CellType.Boolean;
 
-                case "bool":
-                    return PropertyType.Boolean;
-
-                case "double":
-                case "float":
-                case "int":
-                case "decimal":
-                    return PropertyType.Numeric;
+                case "Int16":
+                case "Int32":
+                case "Int64":
+                case "Single":
+                case "Double":
+                case "Decimal":
+                    return CellType.Numeric;
 
                 default:
-                    return PropertyType.String;
+                    return CellType.String;
             }
-        }
-
-        /// <summary>
-        /// 属性类型
-        /// </summary>
-        internal enum PropertyType
-        {
-            Numeric,
-            DateTime,
-            String,
-            Boolean
         }
     }
 }
