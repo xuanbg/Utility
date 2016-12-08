@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
+using FileInfo = Insight.Utils.Entity.FileInfo;
 
 namespace Insight.Utils.Common
 {
@@ -186,6 +187,33 @@ namespace Insight.Utils.Common
                 bw.Close();
             }
             Process.Start(path);
+        }
+
+        /// <summary>
+        /// 获取本地文件列表
+        /// </summary>
+        /// <param name="path">当前目录</param>
+        /// <param name="root">根目录</param>
+        /// <param name="ext">扩展名，默认为Null，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
+        /// <param name="list">FileInfo集合</param>
+        public static void GetLocalFiles(List<FileInfo> list, string root, string ext = null, string path = null)
+        {
+            // 读取目录下文件信息
+            var dirInfo = new DirectoryInfo(path ?? root);
+            var files = ext == null ? dirInfo.GetFiles() : dirInfo.GetFiles().Where(f => ext.Contains(f.Extension));
+            var infos = from file in files
+                        where file.DirectoryName != null
+                        select new FileInfo
+                        {
+                            Name = file.Name,
+                            Path = file.DirectoryName.Replace(root, ""),
+                            FullPath = file.FullName,
+                            Version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion
+                        };
+            list.AddRange(infos);
+
+            // 递归子目录
+            Directory.GetDirectories(path ?? root).ToList().ForEach(p => GetLocalFiles(list, root, ext, p));
         }
 
         #endregion
