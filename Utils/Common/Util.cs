@@ -171,23 +171,9 @@ namespace Insight.Utils.Common
             return type.Alias;
         }
 
-        /// <summary>
-        /// 保存文件并打开
-        /// </summary>
-        /// <param name="file">文件内容</param>
-        /// <param name="name">文件名</param>
-        public static void SaveFile(byte[] file, string name)
-        {
-            var path = Path.GetTempPath() + name;
-            if (!File.Exists(path))
-            {
-                var bw = new BinaryWriter(File.Create(path));
-                bw.Write(file);
-                bw.Flush();
-                bw.Close();
-            }
-            Process.Start(path);
-        }
+        #endregion
+
+        #region 文件操作
 
         /// <summary>
         /// 获取本地文件列表
@@ -212,9 +198,89 @@ namespace Insight.Utils.Common
                             Version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion
                         };
             list.AddRange(infos);
-
-            // 递归子目录
             Directory.GetDirectories(path ?? root).ToList().ForEach(p => GetLocalFiles(list, root, ext, p));
+        }
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        /// <param name="file">文件内容</param>
+        /// <param name="name">文件名</param>
+        /// <param name="open">是否打开文件，默认不打开</param>
+        public static void SaveFile(byte[] file, string name, bool open = false)
+        {
+            var path = Path.GetTempPath() + name;
+            if (!File.Exists(path))
+            {
+                var bw = new BinaryWriter(File.Create(path));
+                bw.Write(file);
+                bw.Flush();
+                bw.Close();
+            }
+
+            if (!open) return;
+
+            Process.Start(path);
+        }
+
+        /// <summary>
+        /// 更新文件
+        /// </summary>
+        /// <param name="file">文件信息</param>
+        /// <param name="root">根目录</param>
+        /// <param name="bytes">文件字节流</param>
+        /// <returns>bool 是否重命名</returns>
+        public static bool UpdateFile(FileInfo file, string root, byte[] bytes)
+        {
+            var rename = false;
+            var path = root + file.Path + "\\";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path += file.Name;
+            try
+            {
+                File.Delete(path);
+            }
+            catch
+            {
+                File.Move(path, path + ".bak");
+                rename = true;
+            }
+
+            var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+            fs.Write(bytes, 0, bytes.Length);
+            return rename;
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="warning">是否显示删除信息</param>
+        /// <returns>bool 是否删除成功</returns>
+        public static bool DeleteFile(string path, bool warning = false)
+        {
+            if (!Directory.Exists(path))
+            {
+                Messages.ShowWarning("未找到指定的文件！");
+                return true;
+            }
+
+            try
+            {
+                File.Delete(path);
+                if (warning) Messages.ShowMessage("指定的文件已删除！");
+
+                return true;
+            }
+            catch
+            {
+                Messages.ShowWarning("未能删除指定的文件！");
+                return false;
+            }
         }
 
         #endregion
