@@ -205,6 +205,7 @@ namespace Insight.Utils.Common
                         where file.DirectoryName != null
                         select new FileInfo
                         {
+                            ID = Hash(file.FullName),
                             Name = file.Name,
                             Path = file.DirectoryName.Replace(root, ""),
                             FullPath = file.FullName,
