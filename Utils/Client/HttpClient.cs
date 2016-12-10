@@ -163,7 +163,7 @@ namespace Insight.Utils.Client
         private void Log(string token, DateTime time, string message)
         {
             var ts = DateTime.Now - time;
-            var server = Util.GetAppSetting("BaseServer");
+            var server = $"http://{Util.GetAppSetting("BaseServer")}:{Util.GetAppSetting("BasePort")}";
             var loginfo = new LogInfo
             {
                 Interface = $"{server}/logapi/v1.0/logs",
