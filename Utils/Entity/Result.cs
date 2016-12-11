@@ -126,6 +126,7 @@ namespace Insight.Utils.Entity
             Code = "204";
             Name = "NoContent";
             Message = "无可用内容";
+            Data = "[]";
         }
 
         /// <summary>
