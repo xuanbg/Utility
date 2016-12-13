@@ -250,8 +250,10 @@ namespace Insight.Utils.Common
                 rename = true;
             }
 
-            var fs = new FileStream(path, FileMode.Create, FileAccess.Write);
-            fs.Write(bytes, 0, bytes.Length);
+            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
             return rename;
         }
 
