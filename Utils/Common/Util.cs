@@ -380,12 +380,11 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 将一个对象序列化为Json字符串
         /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
         /// <param name="obj">对象</param>
         /// <returns>string Json字符串</returns>
-        public static string Serialize<T>(T obj)
+        public static string Serialize(object obj)
         {
-            return obj == null ? string.Empty : JsonConvert.SerializeObject(obj);
+            return JsonConvert.SerializeObject(obj);
         }
 
         /// <summary>

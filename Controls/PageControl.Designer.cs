@@ -47,7 +47,7 @@
             this.labRows.Name = "labRows";
             this.labRows.Size = new System.Drawing.Size(133, 14);
             this.labRows.TabIndex = 0;
-            this.labRows.Text = "行/页 | 共 0 行 | 分 0 页";
+            this.labRows.Text = "行/页 | 共 0 行 | 分 1 页";
             // 
             // btnFirst
             // 
@@ -161,7 +161,6 @@
             this.MinimumSize = new System.Drawing.Size(320, 22);
             this.Name = "PageControl";
             this.Size = new System.Drawing.Size(320, 22);
-            this.Load += new System.EventHandler(this.PageControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cbeRows.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPage.Properties)).EndInit();
             this.ResumeLayout(false);
