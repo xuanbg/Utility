@@ -19,13 +19,19 @@ namespace Insight.Utils.Client
         public bool Logging { get; set; } = true;
 
         /// <summary>
+        /// 构造函数
+        /// </summary>
+        public HttpClient()
+        {
+            Logging = false;
+        }
+
+        /// <summary>
         /// 构造函数，传入AccessToken
         /// </summary>
         /// <param name="token">AccessToken</param>
         public HttpClient(string token)
         {
-            if (string.IsNullOrEmpty(token)) Logging = false;
-
             _AccessToken = token;
         }
 
