@@ -235,14 +235,14 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
-        /// 已在其他设备登录（407）
+        /// 许可证数量不足（407）
         /// </summary>
-        public void SignInOther()
+        public void InsufficientLicenses()
         {
             Successful = false;
             Code = "407";
-            Name = "SignInOtherDevice";
-            Message = "用户已在其他设备登录";
+            Name = "InsufficientNumberOfLicenses";
+            Message = "许可证数量不足";
         }
 
         /// <summary>

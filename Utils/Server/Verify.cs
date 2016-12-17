@@ -34,7 +34,7 @@ namespace Insight.Utils.Server
                     return;
                 }
 
-                Result = new HttpClient(verifyurl).Request(Token);
+                Result = new HttpClient(Token).Request(verifyurl);
                 if (Result.Successful) return;
 
                 var time = CallManage.LimitCall(limit <= 0 ? 60 : limit);
@@ -61,7 +61,7 @@ namespace Insight.Utils.Server
                     return;
                 }
 
-                Result = new HttpClient(verifyurl).Request(Token);
+                Result = new HttpClient(Token).Request(verifyurl);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Insight.Utils.Server
             }
 
             var url =  $"{verifyurl}/auth?action={aid}";
-            Result = new HttpClient(url).Request(Token);
+            Result = new HttpClient(Token).Request(url);
         }
 
         /// <summary>

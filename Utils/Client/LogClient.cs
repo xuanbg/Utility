@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
@@ -45,9 +44,8 @@ namespace Insight.Utils.Client
                 {"key", _Info.Key},
                 {"userid", _Info.CreatorUserId}
             };
-            var data = Util.Serialize(dict);
-            var client = new HttpClient(_Info.Interface, "POST", data) {Logging = false};
-            Result = client.Request(_Info.Token);
+            var client = new HttpClient(_Info.Token) {Logging = false};
+            client.Post<string>(_Info.Interface, dict);
         }
 
         /// <summary>

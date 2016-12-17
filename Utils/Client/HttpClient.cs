@@ -9,9 +9,8 @@ namespace Insight.Utils.Client
 {
     public class HttpClient
     {
-        private readonly string _Url;
-        private readonly string _Method;
-        private readonly string _Data;
+        private readonly string _AccessToken;
+        private readonly TokenHelper _Token;
 
         /// <summary>
         /// 是否记录接口调用日志
@@ -19,99 +18,142 @@ namespace Insight.Utils.Client
         public bool Logging { get; set; } = true;
 
         /// <summary>
-        /// 构造方法
+        /// 构造函数，传入AccessToken
         /// </summary>
-        /// <param name="url">请求的地址</param>
-        /// <param name="method">请求的方法：GET,PUT,POST,DELETE，默认值为GET</param>
-        /// <param name="data">接口参数，默认值为Null</param>
-        public HttpClient(string url, string method = "GET", string data = "")
+        /// <param name="token">AccessToken</param>
+        public HttpClient(string token)
         {
-            _Url = url;
-            _Method = method;
-            _Data = data;
+            if (string.IsNullOrEmpty(token)) Logging = false;
+
+            _AccessToken = token;
+        }
+
+        /// <summary>
+        /// 构造函数，传入TokenHelper
+        /// </summary>
+        /// <param name="token">TokenHelper</param>
+        public HttpClient(TokenHelper token)
+        {
+            _Token = token;
+            _AccessToken = token.AccessToken;
+        }
+
+        /// <summary>
+        /// HttpRequest:GET方法
+        /// </summary>
+        /// <typeparam name="T">返回值数据类型</typeparam>
+        /// <param name="url">接口URL</param>
+        /// <param name="message">错误消息，默认NULL</param>
+        /// <returns>T 指定类型的数据</returns>
+        public T Get<T>(string url, string message = null)
+        {
+            var result = Request(url);
+            if (result.Successful) return Util.Deserialize<T>(result.Data);
+
+            var msg = $"{result.Message}{"\r\n" + message}";
+            Messages.ShowError(msg);
+            return default(T);
+        }
+
+        /// <summary>
+        /// HttpRequest:POST方法
+        /// </summary>
+        /// <typeparam name="T">返回值数据类型</typeparam>
+        /// <param name="url">接口URL</param>
+        /// <param name="data">POST的数据</param>
+        /// <param name="message">错误消息，默认NULL</param>
+        /// <returns>T 指定类型的数据</returns>
+        public T Post<T>(string url, object data, string message = null)
+        {
+            var result = Request(url, "POST", Util.Serialize(data));
+            if (result.Successful) return Util.Deserialize<T>(result.Data);
+
+            var msg = $"{result.Message}{"\r\n" + message}";
+            Messages.ShowError(msg);
+            return default(T);
+        }
+
+        /// <summary>
+        /// HttpRequest:PUT方法
+        /// </summary>
+        /// <typeparam name="T">返回值数据类型</typeparam>
+        /// <param name="url">接口URL</param>
+        /// <param name="data">PUT的数据</param>
+        /// <param name="message">错误消息，默认NULL</param>
+        /// <returns>T 指定类型的数据</returns>
+        public T Put<T>(string url, object data, string message = null)
+        {
+            var result = Request(url, "PUT", Util.Serialize(data));
+            if (result.Successful) return Util.Deserialize<T>(result.Data);
+
+            var msg = $"{result.Message}\r\n{message}";
+            Messages.ShowError(msg);
+            return default(T);
+        }
+
+        /// <summary>
+        /// HttpRequest:DELETE方法
+        /// </summary>
+        /// <typeparam name="T">返回值数据类型</typeparam>
+        /// <param name="url">接口URL</param>
+        /// <param name="data">DELETE的数据，默认NULL</param>
+        /// <param name="message">错误消息，默认NULL</param>
+        /// <returns>T 指定类型的数据</returns>
+        public T Delete<T>(string url, object data = null, string message = null)
+        {
+            var result = Request(url, "DELETE", Util.Serialize(data));
+            if (result.Successful) return Util.Deserialize<T>(result.Data);
+
+            var msg = $"{result.Message}{"\r\n" + message}";
+            Messages.ShowError(msg);
+            return default(T);
         }
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
-        /// <param name="token">TokenHelper</param>
+        /// <param name="url">请求地址</param>
+        /// <param name="method">请求方法，默认GET</param>
+        /// <param name="data">请求数据，默认NULL</param>
         /// <returns>Result</returns>
-        public Result Request(TokenHelper token)
+        public Result Request(string url, string method = "GET", string data = null)
         {
 #if DEBUG
             var time = DateTime.Now;
 #endif
-            var result = new Result();
-            if (token == null)
-            {
-                result.BadRequest("缺少AccessToken！");
-                return result;
-            }
-
             Start:
-            var request = GetWebRequest(token.AccessToken);
-            if (_Method == "GET")
+            var request = GetWebRequest(method, url, _AccessToken);
+            if (!string.IsNullOrEmpty(data))
             {
-                result = GetResponse(request);
-                goto End;
+                var buffer = Encoding.UTF8.GetBytes(data);
+                request.ContentLength = buffer.Length;
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(buffer, 0, buffer.Length);
+                }
             }
 
-            var buffer = Encoding.UTF8.GetBytes(_Data);
-            request.ContentLength = buffer.Length;
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(buffer, 0, buffer.Length);
-            }
-
-            result = GetResponse(request);
-
-            End:
-#if DEBUG
-            Log(token.AccessToken, time, result.Message);
-#endif
-            if (result.Code != "406") return result;
-
-            token.GetTokens();
-            goto Start;
-        }
-
-        /// <summary>
-        /// HttpRequest方法，用于服务端请求验证
-        /// </summary>
-        /// <param name="token">客户端提供的AccessToken</param>
-        /// <returns>Result</returns>
-        public Result Request(string token = null)
-        {
-#if DEBUG
-            var time = DateTime.Now;
-#endif
-            var request = GetWebRequest(token);
-            if (_Method == "GET") goto End;
-
-            var buffer = Encoding.UTF8.GetBytes(_Data);
-            request.ContentLength = buffer.Length;
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(buffer, 0, buffer.Length);
-            }
-
-            End:
             var result = GetResponse(request);
 #if DEBUG
-            if (Logging && token != null) Log(token, time, result.Message);
+            if (Logging) Log(_AccessToken, method, url, time, result.Message);
 #endif
-            return result;
+            if (_Token == null || result.Code != "406") return result;
+
+            _Token.GetTokens();
+            goto Start;
         }
 
         /// <summary>
         /// 获取WebRequest对象
         /// </summary>
+        /// <param name="method">请求方法</param>
+        /// <param name="url">请求地址</param>
         /// <param name="token">AccessToken</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string token)
+        private HttpWebRequest GetWebRequest(string method, string url, string token)
         {
-            var request = (HttpWebRequest) WebRequest.Create(_Url);
-            request.Method = _Method;
+            var request = (HttpWebRequest) WebRequest.Create(url);
+            request.Method = method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
             if (string.IsNullOrEmpty(token)) return request;
@@ -157,10 +199,12 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 记录接口调用日志
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="time"></param>
-        /// <param name="message"></param>
-        private void Log(string token, DateTime time, string message)
+        /// <param name="token">AccessToken</param>
+        /// <param name="method">请求方法</param>
+        /// <param name="url">请求地址</param>
+        /// <param name="time">接口调用开始时间</param>
+        /// <param name="message">接口返回消息</param>
+        private void Log(string token, string method, string url, DateTime time, string message)
         {
             var ts = DateTime.Now - time;
             var server = $"http://{Util.GetAppSetting("BaseServer")}:{Util.GetAppSetting("BasePort")}";
@@ -171,7 +215,7 @@ namespace Insight.Utils.Client
                 Code = "700101",
                 Source = "系统平台",
                 Action = "接口调用",
-                Message = $"[{_Method}]{_Url};{message};用时{ts.TotalMilliseconds}毫秒"
+                Message = $"[{method}]{url};{message};用时{ts.TotalMilliseconds}毫秒"
             };
             var log = new LogClient(loginfo);
             log.LogToServer();

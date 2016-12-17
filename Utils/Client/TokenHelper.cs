@@ -64,18 +64,13 @@ namespace Insight.Utils.Client
 
             var key = Util.Hash(Sign + dict["Stamp"]);
             var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={DeptId}";
-            var result = new HttpClient(url).Request();
-            if (!result.Successful)
-            {
-                Messages.ShowError(result.Message);
-                return false;
-            }
+            var result = new HttpClient("").Get<TokenResult>(url);
+            if (result == null) return false;
 
-            var data = Util.Deserialize<TokenResult>(result.Data);
-            _Token = data.AccessToken;
-            _RefreshToken = data.RefreshToken;
-            _ExpiryTime = data.ExpiryTime;
-            _FailureTime = data.FailureTime;
+            _Token = result.AccessToken;
+            _RefreshToken = result.RefreshToken;
+            _ExpiryTime = result.ExpiryTime;
+            _FailureTime = result.FailureTime;
 
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
@@ -90,13 +85,7 @@ namespace Insight.Utils.Client
         private Dictionary<string, string> GetCode()
         {
             var url = $"{BaseServer}/security/v1.0/codes?account={Account}";
-            var result = new HttpClient(url).Request();
-            if (result.Successful) return Util.Deserialize<Dictionary<string, string>>(result.Data);
-
-            const string str = "配置错误！请检查配置文件中的BaseServer项是否配置正确。";
-            var msg = result.Code == "400" ? str : result.Message;
-            Messages.ShowError(msg);
-            return null;
+            return new HttpClient("").Get<Dictionary<string, string>>(url);
         }
 
         /// <summary>
@@ -105,7 +94,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/security/v1.0/tokens";
-            var result = new HttpClient(url, "PUT").Request(_RefreshToken);
+            var result = new HttpClient(_RefreshToken).Request(url);
             if (result.Code == "406")
             {
                 GetTokens();
