@@ -111,7 +111,7 @@ namespace Insight.Utils.Entity
             Successful = false;
             Code = "400";
             Name = "BadRequest";
-            Message = $"请求参数错误{"：" + data}";
+            Message = $"请求参数错误！{data}";
         }
 
         /// <summary>
