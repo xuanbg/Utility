@@ -109,10 +109,10 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
-        /// <param name="data">DELETE的数据，默认NULL</param>
+        /// <param name="data">DELETE的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Delete<T>(string url, object data = null, string message = null)
+        public T Delete<T>(string url, object data, string message = null)
         {
             var result = Request(url, "DELETE", Util.Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
@@ -131,11 +131,11 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="data">请求数据，默认NULL</param>
         /// <returns>Result</returns>
-        public Result Request(string url, string method = "GET", string data = null)
+        public Result Request(string url, string method = "GET", string data = "")
         {
             var result = new Result();
             var request = GetWebRequest(method, url, _AccessToken);
-            if (!string.IsNullOrEmpty(data))
+            if (method != "GET")
             {
                 var buffer = Encoding.UTF8.GetBytes(data);
                 request.ContentLength = buffer.Length;
