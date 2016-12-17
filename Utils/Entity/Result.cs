@@ -62,59 +62,20 @@ namespace Insight.Utils.Entity
             Name = "OK";
             Message = "接口调用成功";
             Total = total;
-            Data = Util.Serialize(data);
+            Data = Util.Serialize(data ?? true);
         }
 
         /// <summary>
-        /// 接口调用成功（200）
+        /// 资源创建成功（201）
         /// </summary>
         /// <param name="data">承载的数据</param>
-        /// <param name="total">数据集总数</param>
-        public void Success(string data, int? total = null)
-        {
-            Successful = true;
-            Code = "200";
-            Name = "OK";
-            Message = "接口调用成功";
-            Total = total;
-            Data = data;
-        }
-
-        /// <summary>
-        /// 资源创建成功（201）
-        /// </summary>
-        /// <param name="data">承载的数据（可选）</param>
-        public void Created(object data = null)
+        public void Created(object data)
         {
             Successful = true;
             Code = "201";
             Name = "Created";
             Message = "资源创建成功";
             Data = Util.Serialize(data);
-        }
-
-        /// <summary>
-        /// 资源创建成功（201）
-        /// </summary>
-        /// <param name="data">承载的数据（可选）</param>
-        public void Created(string data)
-        {
-            Successful = true;
-            Code = "201";
-            Name = "Created";
-            Message = "资源创建成功";
-            Data = data;
-        }
-
-        /// <summary>
-        /// 用户多地登录（202）
-        /// </summary>
-        public void Multiple()
-        {
-            Successful = true;
-            Code = "202";
-            Name = "MultipleLogin";
-            Message = "用户已在其他设备登录";
         }
 
         /// <summary>
@@ -126,6 +87,7 @@ namespace Insight.Utils.Entity
             Code = "204";
             Name = "NoContent";
             Message = "无可用内容";
+            Total = 0;
             Data = "[]";
         }
 
@@ -149,21 +111,7 @@ namespace Insight.Utils.Entity
             Successful = false;
             Code = "400";
             Name = "BadRequest";
-            Message = "请求参数错误";
-            Data = Util.Serialize(data);
-        }
-
-        /// <summary>
-        /// 请求参数错误（400）
-        /// </summary>
-        /// <param name="data">错误详细信息（可选）</param>
-        public void BadRequest(string data)
-        {
-            Successful = false;
-            Code = "400";
-            Name = "BadRequest";
-            Message = "请求参数错误";
-            Data = data;
+            Message = $"请求参数错误{"：" + data}";
         }
 
         /// <summary>
@@ -187,7 +135,6 @@ namespace Insight.Utils.Entity
             Code = "402";
             Name = "CallInterfaceTooFrequent";
             Message = "调用接口过于频繁";
-            Data = Util.Serialize(data);
         }
 
         /// <summary>

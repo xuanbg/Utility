@@ -11,6 +11,7 @@ namespace Insight.Utils.Client
     {
         private readonly string _AccessToken;
         private readonly TokenHelper _Token;
+        private readonly DateTime _Time = DateTime.Now;
 
         /// <summary>
         /// 是否记录接口调用日志
@@ -118,27 +119,31 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         public Result Request(string url, string method = "GET", string data = null)
         {
-#if DEBUG
-            var time = DateTime.Now;
-#endif
             Start:
+            var result = new Result();
             var request = GetWebRequest(method, url, _AccessToken);
             if (!string.IsNullOrEmpty(data))
             {
                 var buffer = Encoding.UTF8.GetBytes(data);
                 request.ContentLength = buffer.Length;
-                using (var stream = request.GetRequestStream())
+                try
                 {
-                    stream.Write(buffer, 0, buffer.Length);
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    result.BadRequest(ex.Message);
+                    return result;
                 }
             }
 
-            var result = GetResponse(request);
-#if DEBUG
-            if (Logging) Log(_AccessToken, method, url, time, result.Message);
-#endif
+            result = GetResponse(request);
             if (_Token == null || result.Code != "406") return result;
 
+            // AccessToken失效时自动更新AccessToken，并重新调用接口
             _Token.GetTokens();
             goto Start;
         }
@@ -185,28 +190,30 @@ namespace Insight.Utils.Client
                     var stream = reader.ReadToEnd();
                     responseStream.Close();
                     result = Util.Deserialize<Result>(stream);
+#if DEBUG
+                    // 在DEBUG模式下记录接口调用日志
+                    if (Logging) Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
+#endif
                     return result;
                 }
             }
             catch (Exception ex)
             {
-                result.BadRequest(ex);
+                result.BadRequest(ex.Message);
                 return result;
             }
         }
 
-#if DEBUG
         /// <summary>
         /// 记录接口调用日志
         /// </summary>
         /// <param name="token">AccessToken</param>
         /// <param name="method">请求方法</param>
         /// <param name="url">请求地址</param>
-        /// <param name="time">接口调用开始时间</param>
         /// <param name="message">接口返回消息</param>
-        private void Log(string token, string method, string url, DateTime time, string message)
+        private void Log(string token, string method, string url, string message)
         {
-            var ts = DateTime.Now - time;
+            var ts = DateTime.Now - _Time;
             var server = $"http://{Util.GetAppSetting("BaseServer")}:{Util.GetAppSetting("BasePort")}";
             var loginfo = new LogInfo
             {
@@ -220,6 +227,5 @@ namespace Insight.Utils.Client
             var log = new LogClient(loginfo);
             log.LogToServer();
         }
-#endif
     }
 }
