@@ -9,7 +9,7 @@ namespace Insight.Utils.Client
 {
     public class HttpClient
     {
-        private readonly string _AccessToken;
+        private string _AccessToken;
         private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
 
@@ -57,8 +57,10 @@ namespace Insight.Utils.Client
             var result = Request(url);
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
-            var msg = $"{result.Message}{"\r\n" + message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
+            var msg = $"{result.Message}{newline}{message}";
+            if (result.Code != "406") Messages.ShowError(msg);
+
             return default(T);
         }
 
@@ -75,8 +77,10 @@ namespace Insight.Utils.Client
             var result = Request(url, "POST", Util.Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
-            var msg = $"{result.Message}{"\r\n" + message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
+            var msg = $"{result.Message}{newline}{message}";
+            if (result.Code != "406") Messages.ShowError(msg);
+
             return default(T);
         }
 
@@ -93,8 +97,10 @@ namespace Insight.Utils.Client
             var result = Request(url, "PUT", Util.Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
-            var msg = $"{result.Message}\r\n{message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
+            var msg = $"{result.Message}{newline}{message}";
+            if (result.Code != "406") Messages.ShowError(msg);
+
             return default(T);
         }
 
@@ -111,8 +117,10 @@ namespace Insight.Utils.Client
             var result = Request(url, "DELETE", Util.Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
-            var msg = $"{result.Message}{"\r\n" + message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
+            var msg = $"{result.Message}{newline}{message}";
+            if (result.Code != "406") Messages.ShowError(msg);
+
             return default(T);
         }
 
@@ -125,7 +133,6 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         public Result Request(string url, string method = "GET", string data = null)
         {
-            Start:
             var result = new Result();
             var request = GetWebRequest(method, url, _AccessToken);
             if (!string.IsNullOrEmpty(data))
@@ -151,7 +158,8 @@ namespace Insight.Utils.Client
 
             // AccessToken失效时自动更新AccessToken，并重新调用接口
             _Token.GetTokens();
-            goto Start;
+            _AccessToken = _Token.AccessToken;
+            return Request(url, method, data);
         }
 
         /// <summary>
@@ -197,8 +205,8 @@ namespace Insight.Utils.Client
                     responseStream.Close();
                     result = Util.Deserialize<Result>(stream);
 #if DEBUG
-                    // 在DEBUG模式下记录接口调用日志
-                    if (Logging) Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
+                    // 在DEBUG模式下且AccessToken有效时记录接口调用日志
+                    if (Logging && result.Code != "406") Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
 #endif
                     return result;
                 }
