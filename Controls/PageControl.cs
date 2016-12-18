@@ -12,7 +12,7 @@ namespace Insight.Utils.Controls
         private int _Index;
         private int _Handle;
         private int _TotalPages = 1;
-        private static Collection<string> _SelectItems = new Collection<string> { "20", "40", "60", "80", "100" };
+        private Collection<string> _SelectItems = new Collection<string> { "20", "40", "60", "80", "100" };
 
         /// <summary>  
         /// 当前页发生改变
@@ -45,7 +45,6 @@ namespace Insight.Utils.Controls
             set
             {
                 _SelectItems = value;
-                cbeRows.Properties.Items.Clear();
                 cbeRows.Properties.Items.AddRange(value);
                 cbeRows.SelectedIndex = 0;
             }
@@ -78,7 +77,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 每页行数
         /// </summary>
-        public int RowsPerPage { get; private set; } = int.Parse(_SelectItems[0]);
+        public int RowsPerPage { get; private set; }
 
         /// <summary>
         /// 当前页
@@ -96,9 +95,7 @@ namespace Insight.Utils.Controls
         public PageControl()
         {
             InitializeComponent();
-
-            cbeRows.Properties.Items.AddRange(_SelectItems);
-            cbeRows.SelectedIndex = 0;
+            RowsPerPage = int.Parse(_SelectItems[0]);
         }
 
         /// <summary>
