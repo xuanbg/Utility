@@ -45,6 +45,7 @@ namespace Insight.Utils.Controls
             set
             {
                 _SelectItems = value;
+                cbeRows.Properties.Items.Clear();
                 cbeRows.Properties.Items.AddRange(value);
                 cbeRows.SelectedIndex = 0;
             }
