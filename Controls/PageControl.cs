@@ -10,8 +10,31 @@ namespace Insight.Utils.Controls
         private bool _Reload;
         private int _Rows;
         private int _Index;
+        private int _Handle;
         private int _TotalPages = 1;
-        private static Collection<string> _SelectItems = new Collection<string> {"20", "40", "60", "80", "100"};
+        private static Collection<string> _SelectItems = new Collection<string> { "20", "40", "60", "80", "100" };
+
+        /// <summary>  
+        /// 当前页发生改变
+        /// </summary>  
+        public event EventHandler CurrentPageChanged;
+
+        /// <summary>  
+        /// 每页行数发生改变
+        /// </summary>  
+        public event EventHandler RowsPerPageChanged;
+
+        /// <summary>  
+        /// 每页行数发生改变
+        /// </summary>  
+        public event RowsChangedHandle TotalRowsChanged;
+
+        /// <summary>
+        /// 表示将处理总行数变化事件的方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void RowsChangedHandle(object sender, RowsChangedEventArgs e);
 
         /// <summary>
         /// 每页行数下拉列表选项
@@ -32,7 +55,11 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int TotalRows
         {
-            set { SetTotalRows(value); }
+            set
+            {
+                _Rows = value;
+                Refresh();
+            }
         }
 
         /// <summary>
@@ -46,14 +73,16 @@ namespace Insight.Utils.Controls
         public int CurrentPage { get; private set; } = 1;
 
         /// <summary>
-        /// 当前选中行Index(全局)
+        /// 当前选中行Handle(自动)
         /// </summary>
-        public int FocusedRowIndex => _Index;
-
-        /// <summary>
-        /// 当前选中行Handle(当前页)
-        /// </summary>
-        public int FocusedRowHandle => _Index - RowsPerPage*(CurrentPage - 1);
+        public int FocusedRowHandle
+        {
+            set
+            {
+                _Index = RowsPerPage * (CurrentPage - 1) + value;
+                if (_Index > 0) _Handle = _Index;
+            }
+        }
 
         /// <summary>
         /// 当前页删除行后是否需要重新加载列表
@@ -72,34 +101,45 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 设置当前选中行索引
+        /// 增加列表成员
         /// </summary>
-        /// <param name="type">RowIndex类型：1、RowHandle；2、RowIndex；3、TotalRows</param>
-        /// <param name="index">Index值</param>
-        /// <param name="copy">是否在RowHandle属性保存副本，默认值为True</param>
-        public void SetRowIndex(int type, int index = 0, bool copy = true)
+        /// <param name="count">增加数量，默认1个</param>
+        public void AddItems(int count = 1)
         {
-            switch (type)
-            {
-                case 1:
-                    _Index = RowsPerPage * (CurrentPage - 1) + index;
-                    break;
+            _Rows += count;
+            Refresh();
 
-                case 2:
-                    _Index = index;
-                    break;
+            var index = _Rows - RowsPerPage*(CurrentPage - 1) - 1;
+            TotalRowsChanged?.Invoke(this, new RowsChangedEventArgs(index));
+        }
 
-                case 3:
-                    _Index = index > 0 ? index : _Rows - 1;
-                    break;
-            }
+        /// <summary>
+        /// 减少列表成员
+        /// </summary>
+        /// <param name="count">减少数量，默认1个</param>
+        public void RemoveItems(int count = 1)
+        {
+            _Rows -= count;
+            Refresh();
+
+            if (_Handle >= _Rows) _Handle = _Rows - 1;
+
+            var index = _Handle - RowsPerPage*(CurrentPage - 1);
+            TotalRowsChanged?.Invoke(this, new RowsChangedEventArgs(index));
         }
 
         /// <summary>
         /// 刷新控件
         /// </summary>
-        public new void Refresh()
+        private new void Refresh()
         {
+            _TotalPages = (int)Math.Ceiling((decimal)_Rows / RowsPerPage);
+            CurrentPage = (int)Math.Ceiling((decimal)(_Index + 1) / RowsPerPage);
+
+            var total = _TotalPages == 0 ? 1 : _TotalPages;
+            labRows.Text = $" 行/页 | 共 {_Rows} 行 | 分 {total} 页";
+            labRows.Refresh();
+
             btnFirst.Enabled = CurrentPage > 1;
             btnPrev.Enabled = CurrentPage > 1;
             btnNext.Enabled = CurrentPage < _TotalPages;
@@ -112,26 +152,16 @@ namespace Insight.Utils.Controls
             labRows.Focus();
         }
 
-        /// <summary>  
-        /// 当前页发生改变
-        /// </summary>  
-        public event EventHandler CurrentPageChanged;
-
-        /// <summary>  
-        /// 每页行数发生改变
-        /// </summary>  
-        public event EventHandler RowsPerPageChanged;
-
         /// <summary>
         /// 切换每页行数
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cbeRows_EditValueChanged(object sender, EventArgs e)
+        private void PageRowsChanged(object sender, EventArgs e)
         {
             _Reload = _Rows > RowsPerPage;
             RowsPerPage = int.Parse(cbeRows.Text);
-            CurrentPage = (int) Math.Ceiling((decimal) (_Index + 1)/RowsPerPage);
+            CurrentPage = (int)Math.Ceiling((decimal)(_Index + 1) / RowsPerPage);
             _Reload = _Reload || _Rows > RowsPerPage;
             Refresh();
 
@@ -143,7 +173,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnFirst_Click(object sender, EventArgs e)
+        private void First_Click(object sender, EventArgs e)
         {
             _Reload = true;
             CurrentPage = 1;
@@ -155,7 +185,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnPrev_Click(object sender, EventArgs e)
+        private void Prev_Click(object sender, EventArgs e)
         {
             _Reload = true;
             CurrentPage -= 1;
@@ -167,7 +197,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnNext_Click(object sender, EventArgs e)
+        private void Next_Click(object sender, EventArgs e)
         {
             _Reload = true;
             CurrentPage += 1;
@@ -179,7 +209,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnLast_Click(object sender, EventArgs e)
+        private void Last_Click(object sender, EventArgs e)
         {
             _Reload = true;
             CurrentPage = _TotalPages;
@@ -191,7 +221,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnJump_Click(object sender, EventArgs e)
+        private void Jump_Click(object sender, EventArgs e)
         {
             txtPage.Visible = true;
             txtPage.Focus();
@@ -202,7 +232,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void txtPage_Leave(object sender, EventArgs e)
+        private void PageInput_Leave(object sender, EventArgs e)
         {
             txtPage.EditValue = null;
             txtPage.Visible = false;
@@ -213,7 +243,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void txtPage_KeyPress(object sender, KeyPressEventArgs e)
+        private void PageInput_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 27)
             {
@@ -236,22 +266,22 @@ namespace Insight.Utils.Controls
             CurrentPage = page;
             CurrentPageChanged?.Invoke(this, null);
         }
+    }
+
+    public class RowsChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// RowHandle
+        /// </summary>
+        public int RowHandle { get; }
 
         /// <summary>
-        /// 输入总行数
+        /// 构造函数
         /// </summary>
-        /// <param name="rows">总行数</param>
-        private void SetTotalRows(int rows)
+        /// <param name="handel">RowHandle</param>
+        public RowsChangedEventArgs(int handel)
         {
-            _Rows = rows;
-            _TotalPages = (int) Math.Ceiling((decimal) rows/RowsPerPage);
-            CurrentPage = (int) Math.Ceiling((decimal) (_Index + 1)/RowsPerPage);
-
-            var total = _TotalPages == 0 ? 1 : _TotalPages;
-            labRows.Text = $" 行/页 | 共 {rows} 行 | 分 {total} 页";
-            labRows.Refresh();
-
-            Refresh();
+            RowHandle = handel;
         }
     }
 }
