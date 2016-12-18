@@ -63,17 +63,7 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 每页行数
-        /// </summary>
-        public int RowsPerPage { get; private set; } = int.Parse(_SelectItems[0]);
-
-        /// <summary>
-        /// 当前页
-        /// </summary>
-        public int CurrentPage { get; private set; } = 1;
-
-        /// <summary>
-        /// 当前选中行Handle(自动)
+        /// 当前选中行Handle
         /// </summary>
         public int FocusedRowHandle
         {
@@ -85,7 +75,17 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 当前页删除行后是否需要重新加载列表
+        /// 每页行数
+        /// </summary>
+        public int RowsPerPage { get; private set; } = int.Parse(_SelectItems[0]);
+
+        /// <summary>
+        /// 当前页
+        /// </summary>
+        public int CurrentPage { get; private set; } = 1;
+
+        /// <summary>
+        /// 是否需要重新加载列表
         /// </summary>
         public bool NeedReload => _Reload;
 
