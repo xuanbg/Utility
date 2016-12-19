@@ -60,7 +60,6 @@
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
             this.btnFirst.TabIndex = 0;
             this.btnFirst.ToolTip = "首页";
-            this.btnFirst.Click += new System.EventHandler(this.First_Click);
             // 
             // btnPrev
             // 
@@ -73,7 +72,6 @@
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
             this.btnPrev.TabIndex = 0;
             this.btnPrev.ToolTipTitle = "上一页";
-            this.btnPrev.Click += new System.EventHandler(this.Prev_Click);
             // 
             // btnNext
             // 
@@ -86,7 +84,6 @@
             this.btnNext.Size = new System.Drawing.Size(22, 22);
             this.btnNext.TabIndex = 0;
             this.btnNext.ToolTipTitle = "下一页";
-            this.btnNext.Click += new System.EventHandler(this.Next_Click);
             // 
             // btnLast
             // 
@@ -99,7 +96,6 @@
             this.btnLast.Size = new System.Drawing.Size(22, 22);
             this.btnLast.TabIndex = 0;
             this.btnLast.ToolTipTitle = "末页";
-            this.btnLast.Click += new System.EventHandler(this.Last_Click);
             // 
             // cbeRows
             // 
@@ -115,7 +111,6 @@
             this.cbeRows.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbeRows.Size = new System.Drawing.Size(45, 20);
             this.cbeRows.TabIndex = 0;
-            this.cbeRows.EditValueChanged += new System.EventHandler(this.PageRowsChanged);
             // 
             // btnJump
             // 
