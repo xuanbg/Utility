@@ -21,19 +21,19 @@ namespace Insight.Utils.Controls
         /// <summary>  
         /// 当前页发生改变，通知重新加载列表数据
         /// </summary>  
-        public event ReloadHandle CurrentPageChanged;
+        public event PageControlHandle CurrentPageChanged;
 
         /// <summary>  
         /// 总行数发生改变，通知修改FocusedRowHandle
         /// </summary>  
-        public event ReloadHandle TotalRowsChanged;
+        public event PageControlHandle TotalRowsChanged;
 
         /// <summary>
-        /// 表示将处理重新加载数据事件的方法
+        /// 表示将处理分页控件事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void ReloadHandle(object sender, PageControlEventArgs e);
+        public delegate void PageControlHandle(object sender, PageControlEventArgs e);
 
         /// <summary>
         /// 每页行数下拉列表选项
