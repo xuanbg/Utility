@@ -148,6 +148,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         private void PageRowsChanged()
         {
+            var handel = FocusedRowHandle;
             var change = RowsPerPage < _Rows - RowsPerPage*_Current;
             RowsPerPage = int.Parse(cbeRows.Text);
             RowsPerPageChanged?.Invoke(this, null);
@@ -156,7 +157,7 @@ namespace Insight.Utils.Controls
             Refresh();
 
             change = change || RowsPerPage < _Rows - RowsPerPage*_Current;
-            if (_Current == page && !change) return;
+            if (!change && _Current == page && FocusedRowHandle == handel) return;
 
             // 切换了页码或当前页显示行数变化后需要重新加载数据
             CurrentPageChanged?.Invoke(this, new PageControlEventArgs(FocusedRowHandle));
