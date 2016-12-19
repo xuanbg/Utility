@@ -15,7 +15,7 @@ namespace Insight.Utils.Controls
         private Collection<string> _SelectItems = new Collection<string> {"20", "40", "60", "80", "100"};
 
         /// <summary>  
-        /// 每页行数发生改变，通知修改每页行数
+        /// 每页显示行数发生改变，通知修改每页显示行数
         /// </summary>  
         public event RowsPerPageHandle RowsPerPageChanged;
 
@@ -25,26 +25,26 @@ namespace Insight.Utils.Controls
         public event PageReloadHandle CurrentPageChanged;
 
         /// <summary>  
-        /// 总行数发生改变，通知修改FocusedRowHandle
+        /// 列表总行数发生改变，通知修改FocusedRowHandle
         /// </summary>  
         public event TotalRowsHandle TotalRowsChanged;
 
         /// <summary>
-        /// 表示将处理分页控件事件的方法
+        /// 表示将处理每页显示行数改变事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public delegate void RowsPerPageHandle(object sender, RowsPerPageEventArgs e);
 
         /// <summary>
-        /// 表示将处理分页控件事件的方法
+        /// 表示将处理列表数据需重新加载事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public delegate void PageReloadHandle(object sender, PageControlEventArgs e);
 
         /// <summary>
-        /// 表示将处理分页控件事件的方法
+        /// 表示将处理列表总行数改变事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
