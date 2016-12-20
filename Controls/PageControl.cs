@@ -83,7 +83,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int FocusedRowHandle
         {
-            private get { return _Handle - _RowsPerPage*_Current; }
+            get { return _Handle - _RowsPerPage*_Current; }
             set { _Handle = _RowsPerPage*_Current + value; }
         }
 
@@ -245,6 +245,8 @@ namespace Insight.Utils.Controls
             }
 
             if (e.KeyChar != 13) return;
+
+            if (string.IsNullOrEmpty(txtPage.Text)) return;
 
             var page = int.Parse(txtPage.Text);
             if (page < 1 || page > _TotalPages || page == _Current + 1)
