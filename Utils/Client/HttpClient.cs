@@ -50,9 +50,10 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
+        /// <param name="asnew">无结果时是否返回新构造对象</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Get<T>(string url, string message = null)
+        public T Get<T>(string url, bool asnew = true, string message = null) where T : new()
         {
             var result = Request(url);
             if (result.Successful) return Util.Deserialize<T>(result.Data);
@@ -61,7 +62,7 @@ namespace Insight.Utils.Client
             var msg = $"{result.Message}{newline}{message}";
             if (result.Code != "406") Messages.ShowError(msg);
 
-            return default(T);
+            return asnew ? new T() : default(T);
         }
 
         /// <summary>

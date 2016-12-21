@@ -64,7 +64,7 @@ namespace Insight.Utils.Client
 
             var key = Util.Hash(Sign + dict["Stamp"]);
             var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={DeptId}";
-            var result = new HttpClient().Get<TokenResult>(url);
+            var result = new HttpClient().Get<TokenResult>(url, false);
             if (result == null) return false;
 
             _Token = result.AccessToken;
@@ -85,7 +85,7 @@ namespace Insight.Utils.Client
         private Dictionary<string, string> GetCode()
         {
             var url = $"{BaseServer}/security/v1.0/codes?account={Account}";
-            return new HttpClient().Get<Dictionary<string, string>>(url);
+            return new HttpClient().Get<Dictionary<string, string>>(url, false);
         }
 
         /// <summary>
