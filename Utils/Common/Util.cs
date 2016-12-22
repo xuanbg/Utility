@@ -108,6 +108,18 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
+        /// 将任意对象转换为指定的类型，请保证对象能够相互转换为目标类型！
+        /// </summary>
+        /// <typeparam name="T">转换目标类型</typeparam>
+        /// <param name="obj">任意对象</param>
+        /// <returns>T 转换后的类型</returns>
+        public static T ConvertTo<T>(object obj)
+        {
+            var str = Serialize(obj);
+            return Deserialize<T>(str);
+        }
+
+        /// <summary>
         /// 将List转为DataTable
         /// </summary>
         /// <typeparam name="T"></typeparam>
