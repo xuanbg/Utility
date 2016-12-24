@@ -62,13 +62,13 @@ namespace Insight.Utils.Entity
         /// 资源创建成功（201）
         /// </summary>
         /// <param name="data">承载的数据</param>
-        public void Created(object data)
+        public void Created(object data = null)
         {
             Successful = true;
             Code = "201";
             Name = "Created";
             Message = "资源创建成功";
-            Data = Util.Serialize(data);
+            Data = Util.Serialize(data ?? true);
         }
 
         /// <summary>
