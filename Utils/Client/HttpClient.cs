@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web.Script.Serialization;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -75,7 +76,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Post<T>(string url, object data, string message = null)
         {
-            var result = Request(url, "POST", Util.Serialize(data));
+            var result = Request(url, "POST", new JavaScriptSerializer().Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -95,7 +96,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Put<T>(string url, object data, string message = null)
         {
-            var result = Request(url, "PUT", Util.Serialize(data));
+            var result = Request(url, "PUT", new JavaScriptSerializer().Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -115,7 +116,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Delete<T>(string url, object data = null, string message = null)
         {
-            var result = Request(url, "DELETE", Util.Serialize(data));
+            var result = Request(url, "DELETE", new JavaScriptSerializer().Serialize(data));
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";

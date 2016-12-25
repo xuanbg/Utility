@@ -14,7 +14,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
-using FileInfo = Insight.Utils.Entity.FileInfo;
 
 namespace Insight.Utils.Common
 {
@@ -194,14 +193,14 @@ namespace Insight.Utils.Common
         /// <param name="root">根目录</param>
         /// <param name="ext">扩展名，默认为Null，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="list">FileInfo集合</param>
-        public static void GetLocalFiles(List<FileInfo> list, string root, string ext = null, string path = null)
+        public static void GetLocalFiles(List<Entity.FileInfo> list, string root, string ext = null, string path = null)
         {
             // 读取目录下文件信息
             var dirInfo = new DirectoryInfo(path ?? root);
             var files = ext == null ? dirInfo.GetFiles() : dirInfo.GetFiles().Where(f => ext.Contains(f.Extension));
             var infos = from file in files
                         where file.DirectoryName != null
-                        select new FileInfo
+                        select new Entity.FileInfo
                         {
                             ID = Hash(file.FullName),
                             Name = file.Name,
@@ -242,7 +241,7 @@ namespace Insight.Utils.Common
         /// <param name="root">根目录</param>
         /// <param name="bytes">文件字节流</param>
         /// <returns>bool 是否重命名</returns>
-        public static bool UpdateFile(FileInfo file, string root, byte[] bytes)
+        public static bool UpdateFile(Entity.FileInfo file, string root, byte[] bytes)
         {
             var rename = false;
             var path = root + file.Path + "\\";
