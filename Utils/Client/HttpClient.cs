@@ -76,7 +76,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Post<T>(string url, object data, string message = null)
         {
-            var result = Request(url, "POST", new JavaScriptSerializer().Serialize(data));
+            var result = Request(url, "POST", data);
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -96,7 +96,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Put<T>(string url, object data, string message = null)
         {
-            var result = Request(url, "PUT", new JavaScriptSerializer().Serialize(data));
+            var result = Request(url, "PUT", data);
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -116,7 +116,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Delete<T>(string url, object data = null, string message = null)
         {
-            var result = Request(url, "DELETE", new JavaScriptSerializer().Serialize(data));
+            var result = Request(url, "DELETE", data);
             if (result.Successful) return Util.Deserialize<T>(result.Data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -133,13 +133,14 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="data">请求数据，默认NULL</param>
         /// <returns>Result</returns>
-        public Result Request(string url, string method = "GET", string data = "")
+        public Result Request(string url, string method = "GET", object data = null)
         {
             var result = new Result();
             var request = GetWebRequest(method, url, _AccessToken);
             if (method != "GET")
             {
-                var buffer = Encoding.UTF8.GetBytes(data);
+                var body = new JavaScriptSerializer().Serialize(data ?? "");
+                var buffer = Encoding.UTF8.GetBytes(body);
                 request.ContentLength = buffer.Length;
                 try
                 {

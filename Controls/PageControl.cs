@@ -191,6 +191,8 @@ namespace Insight.Utils.Controls
         /// </summary>
         private new void Refresh()
         {
+            if (_Handle > _Rows) _Handle = 0;
+
             var total = _TotalPages == 0 ? 1 : _TotalPages;
             labRows.Text = $" 行/页 | 共 {_Rows} 行 | 分 {total} 页";
             labRows.Refresh();
