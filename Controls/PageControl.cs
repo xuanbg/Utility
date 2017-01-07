@@ -7,9 +7,9 @@ namespace Insight.Utils.Controls
 {
     public partial class PageControl : XtraUserControl
     {
-        private int _Rows;
-        private int _RowsPerPage;
         private int _Handle;
+        private int _RowsPerPage;
+        private int _Rows;
         private int _TotalPages = 1;
         private int _Current;
         private Collection<string> _SelectItems = new Collection<string> {"20", "40", "60", "80", "100"};
@@ -51,6 +51,15 @@ namespace Insight.Utils.Controls
         public delegate void TotalRowsHandle(object sender, PageControlEventArgs e);
 
         /// <summary>
+        /// 当前选中行Handle
+        /// </summary>
+        public int FocusedRowHandle
+        {
+            get { return _Handle - _RowsPerPage*_Current; }
+            set { _Handle = _RowsPerPage*_Current + value; }
+        }
+
+        /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
         public Collection<string> RowsSelectItems
@@ -76,15 +85,6 @@ namespace Insight.Utils.Controls
                 _TotalPages = (int) Math.Ceiling((decimal) _Rows/_RowsPerPage);
                 Refresh();
             }
-        }
-
-        /// <summary>
-        /// 当前选中行Handle
-        /// </summary>
-        public int FocusedRowHandle
-        {
-            get { return _Handle - _RowsPerPage*_Current; }
-            set { _Handle = _RowsPerPage*_Current + value; }
         }
 
         /// <summary>
