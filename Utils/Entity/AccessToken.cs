@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Insight.Utils.Entity
 {
     /// <summary>
@@ -10,6 +11,16 @@ namespace Insight.Utils.Entity
         /// 自增ID
         /// </summary>
         public int ID { get; set; }
+
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public Guid UserId { get; set; }
+
+        /// <summary>
+        /// 当前登录部门ID
+        /// </summary>
+        public Guid? DeptId { get; set; }
 
         /// <summary>
         /// 用户账号

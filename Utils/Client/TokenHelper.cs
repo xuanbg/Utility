@@ -40,11 +40,6 @@ namespace Insight.Utils.Client
         public string Account { get; set; }
 
         /// <summary>
-        /// 当前登录部门ID
-        /// </summary>
-        public Guid? DeptId { get; set; }
-
-        /// <summary>
         /// 生成签名
         /// </summary>
         /// <param name="secret">用户密钥</param>
@@ -63,7 +58,7 @@ namespace Insight.Utils.Client
             if (dict == null) return false;
 
             var key = Util.Hash(Sign + dict["Stamp"]);
-            var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={DeptId}";
+            var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={Token.DeptId}";
             var result = new HttpClient().Get<TokenResult>(url, false);
             if (result == null) return false;
 
