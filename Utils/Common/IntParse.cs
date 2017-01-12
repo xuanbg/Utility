@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Insight.Utils.Entity;
+﻿using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
 {
@@ -15,6 +10,11 @@ namespace Insight.Utils.Common
         public Result Result = new Result();
 
         /// <summary>
+        /// 转换成功后的结果
+        /// </summary>
+        public int? Int;
+
+        /// <summary>
         /// 转换后的整数值
         /// </summary>
         public int Value;
@@ -23,12 +23,19 @@ namespace Insight.Utils.Common
         /// 将一个字符串转换为整数
         /// </summary>
         /// <param name="str">要转换的字符串</param>
-        public IntParse(string str)
+        /// <param name="allowNull">是否允许为空（默认不允许）</param>
+        public IntParse(string str, bool allowNull = false)
         {
-            Result.BadRequest();
-            if (!int.TryParse(str, out Value)) return;
+            if (allowNull) Result.Success();
+            else Result.InvalidGuid();
 
-            Result.Success();
+            if (int.TryParse(str, out Value))
+            {
+                Int = Value;
+                return;
+            }
+
+            Result.InvalidValue();
         }
     }
 }

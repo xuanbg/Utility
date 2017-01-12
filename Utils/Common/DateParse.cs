@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
@@ -28,9 +24,12 @@ namespace Insight.Utils.Common
         /// 将一个字符串转换为DateTime
         /// </summary>
         /// <param name="str">要转换的字符串</param>
-        public DateParse(string str)
+        /// <param name="allowNull">是否允许为空（默认不允许）</param>
+        public DateParse(string str, bool allowNull = false)
         {
-            Result.Success();
+            if (allowNull) Result.Success();
+            else Result.InvalidGuid();
+
             if (string.IsNullOrEmpty(str)) return;
 
             if (System.DateTime.TryParse(str, out Value))

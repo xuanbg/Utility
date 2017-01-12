@@ -240,6 +240,17 @@ namespace Insight.Utils.Entity
         }
 
         /// <summary>
+        /// 数值转换失败（422）
+        /// </summary>
+        public void InvalidValue()
+        {
+            Successful = false;
+            Code = "422";
+            Name = "InvalidValue";
+            Message = "错误的数据";
+        }
+
+        /// <summary>
         /// 未找到指定的文件（430）
         /// </summary>
         public void FileNotExists()

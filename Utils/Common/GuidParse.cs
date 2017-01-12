@@ -24,10 +24,10 @@ namespace Insight.Utils.Common
         /// 将一个字符串转换为GUID
         /// </summary>
         /// <param name="str">要转换的字符串</param>
-        /// <param name="allownull">是否允许为空（默认不允许）</param>
-        public GuidParse(string str, bool allownull = false)
+        /// <param name="allowNull">是否允许为空（默认不允许）</param>
+        public GuidParse(string str, bool allowNull = false)
         {
-            if (allownull) Result.Success();
+            if (allowNull) Result.Success();
             else Result.InvalidGuid();
 
             if (string.IsNullOrEmpty(str)) return;
