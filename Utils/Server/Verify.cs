@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.ServiceModel.Web;
+using System.Text;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
@@ -9,6 +10,8 @@ namespace Insight.Utils.Server
 {
     public class Verify
     {
+        private AccessToken _Token;
+
         /// <summary>
         /// 验证结果
         /// </summary>
@@ -17,7 +20,18 @@ namespace Insight.Utils.Server
         /// <summary>
         /// Access Token对象
         /// </summary>
-        public AccessToken Token => Util.Deserialize<AccessToken>(AccessToken);
+        public AccessToken Token
+        {
+            get
+            {
+                if (_Token != null) return _Token;
+
+                var buffer = Convert.FromBase64String(AccessToken);
+                var json = Encoding.UTF8.GetString(buffer);
+                _Token = Util.Deserialize<AccessToken>(json);
+                return _Token;
+            }
+        }
 
         /// <summary>
         /// Access Token字符串

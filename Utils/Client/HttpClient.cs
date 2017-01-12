@@ -231,10 +231,9 @@ namespace Insight.Utils.Client
         private void Log(string token, string method, string url, string message)
         {
             var ts = DateTime.Now - _Time;
-            var server = $"http://{Util.GetAppSetting("BaseServer")}:{Util.GetAppSetting("BasePort")}";
             var loginfo = new LogInfo
             {
-                Interface = $"{server}/logapi/v1.0/logs",
+                Interface = $"{Util.GetAppSetting("BaseServer")}/logapi/v1.0/logs",
                 Token = token,
                 Code = "700101",
                 Source = "系统平台",

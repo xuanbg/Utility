@@ -31,6 +31,7 @@ namespace Insight.Utils.Common
 
             if (int.TryParse(str, out Value))
             {
+                Result.Success();
                 Int = Value;
                 return;
             }

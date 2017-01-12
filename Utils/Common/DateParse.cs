@@ -34,6 +34,7 @@ namespace Insight.Utils.Common
 
             if (System.DateTime.TryParse(str, out Value))
             {
+                Result.Success();
                 DateTime = Value;
                 return;
             }
