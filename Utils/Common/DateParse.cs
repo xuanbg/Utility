@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
 {
-    public class GuidParse
+    public class DateParse
     {
         /// <summary>
         /// 是否转换成功
@@ -13,32 +17,29 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 转换成功后的结果
         /// </summary>
-        public Guid? Guid;
+        public DateTime? DateTime;
 
         /// <summary>
-        /// 转换后的GUID值
+        /// 转换后的DateTime值
         /// </summary>
-        public Guid Value;
+        public DateTime Value;
 
         /// <summary>
-        /// 将一个字符串转换为GUID
+        /// 将一个字符串转换为DateTime
         /// </summary>
         /// <param name="str">要转换的字符串</param>
-        /// <param name="allownull">是否允许为空（默认不允许）</param>
-        public GuidParse(string str, bool allownull = false)
+        public DateParse(string str)
         {
-            if (allownull) Result.Success();
-            else Result.InvalidGuid();
-
+            Result.Success();
             if (string.IsNullOrEmpty(str)) return;
 
-            if (System.Guid.TryParse(str, out Value))
+            if (System.DateTime.TryParse(str, out Value))
             {
-                Guid = Value;
+                DateTime = Value;
                 return;
             }
 
-            Result.InvalidGuid();
+            Result.InvalidDateTime();
         }
     }
 }

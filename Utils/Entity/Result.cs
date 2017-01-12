@@ -225,18 +225,18 @@ namespace Insight.Utils.Entity
             Successful = false;
             Code = "420";
             Name = "InvalidGUID";
-            Message = "转换为Guid失败";
+            Message = "错误的GUID数据";
         }
 
         /// <summary>
-        /// 未更新任何数据（421）
+        /// 转换为DateTime失败（421）
         /// </summary>
-        public void NotUpdate()
+        public void InvalidDateTime()
         {
             Successful = false;
             Code = "421";
-            Name = "DataNotUpdate";
-            Message = "未更新任何数据";
+            Name = "InvalidDateTime";
+            Message = "错误的DateTime数据";
         }
 
         /// <summary>
@@ -314,6 +314,17 @@ namespace Insight.Utils.Entity
             Code = "503";
             Name = "ServiceUnavailable";
             Message = "当前服务不可用";
+        }
+
+        /// <summary>
+        /// 未更新任何数据（504）
+        /// </summary>
+        public void NotUpdate()
+        {
+            Successful = false;
+            Code = "504";
+            Name = "DataNotUpdate";
+            Message = "未更新任何数据";
         }
 
         #endregion

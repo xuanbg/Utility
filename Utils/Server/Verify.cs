@@ -9,17 +9,20 @@ namespace Insight.Utils.Server
 {
     public class Verify
     {
-        private string _Token;
-
         /// <summary>
         /// 验证结果
         /// </summary>
         public Result Result = new Result();
 
         /// <summary>
-        /// Access Token
+        /// Access Token对象
         /// </summary>
-        public AccessToken Token => Util.Deserialize<AccessToken>(_Token);
+        public AccessToken Token => Util.Deserialize<AccessToken>(AccessToken);
+
+        /// <summary>
+        /// Access Token字符串
+        /// </summary>
+        public string AccessToken { get; private set; }
 
         /// <summary>
         /// 通过Access Token校验是否有权限访问
@@ -37,7 +40,7 @@ namespace Insight.Utils.Server
                     return;
                 }
 
-                Result = new HttpClient(_Token) {Logging = false}.Request(verifyurl);
+                Result = new HttpClient(AccessToken) {Logging = false}.Request(verifyurl);
                 if (Result.Successful) return;
 
                 var time = CallManage.LimitCall(limit <= 0 ? 60 : limit);
@@ -64,7 +67,7 @@ namespace Insight.Utils.Server
                     return;
                 }
 
-                Result = new HttpClient(_Token) {Logging = false}.Request(verifyurl);
+                Result = new HttpClient(AccessToken) {Logging = false}.Request(verifyurl);
             }
         }
 
@@ -90,7 +93,7 @@ namespace Insight.Utils.Server
             }
 
             var url =  $"{verifyurl}/auth?action={aid}";
-            Result = new HttpClient(_Token) {Logging = false}.Request(url);
+            Result = new HttpClient(AccessToken) {Logging = false}.Request(url);
         }
 
         /// <summary>
@@ -104,8 +107,8 @@ namespace Insight.Utils.Server
 
             var headers = context.IncomingRequest.Headers;
             var response = context.OutgoingResponse;
-            _Token = headers[HttpRequestHeader.Authorization];
-            if (!string.IsNullOrEmpty(_Token)) return true;
+            AccessToken = headers[HttpRequestHeader.Authorization];
+            if (!string.IsNullOrEmpty(AccessToken)) return true;
 
             response.StatusCode = HttpStatusCode.Unauthorized;
             return false;
