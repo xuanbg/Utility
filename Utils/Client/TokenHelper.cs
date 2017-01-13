@@ -22,7 +22,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// AccessToken对象
         /// </summary>
-        public AccessToken Token { get; private set; }
+        public AccessToken Token { get; private set; } = new AccessToken();
 
         /// <summary>
         /// 用户签名

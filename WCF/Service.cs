@@ -7,6 +7,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Windows.Forms;
+using Microsoft.Samples.GZipEncoder;
 
 namespace Insight.WCF
 {
@@ -20,7 +21,8 @@ namespace Insight.WCF
         /// 创建WCF服务主机
         /// </summary>
         /// <param name="info">ServiceInfo</param>
-        public void CreateHost(Info info)
+        /// <param name="isCompres"></param>
+        public void CreateHost(Info info, bool isCompres = true)
         {
             var file = $"{Application.StartupPath}\\{info.ServiceFile}";
             if (!File.Exists(file)) return;
@@ -30,7 +32,7 @@ namespace Insight.WCF
             var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
             var asm = Assembly.LoadFrom(file);
             var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
-            var binding = InitBinding();
+            var binding = InitBinding(isCompres);
             var inter = $"{info.NameSpace}.{info.Interface}";
             var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
             endpoint.Behaviors.Add(new WebHttpBehavior());
@@ -103,12 +105,21 @@ namespace Insight.WCF
         /// <summary>
         /// 初始化基本HTTP服务绑定
         /// </summary>
-        private CustomBinding InitBinding()
+        /// <param name="isCompres">是否Gzip压缩</param>
+        private CustomBinding InitBinding(bool isCompres)
         {
             var encoder = new WebMessageEncodingBindingElement { ReaderQuotas = { MaxArrayLength = 67108864, MaxStringContentLength = 67108864 } };
             var transport = new HttpTransportBindingElement { ManualAddressing = true, MaxReceivedMessageSize = 1073741824, TransferMode = TransferMode.Streamed };
             var binding = new CustomBinding { SendTimeout = TimeSpan.FromSeconds(600), ReceiveTimeout = TimeSpan.FromSeconds(600) };
-            binding.Elements.AddRange(encoder, transport);
+            if (isCompres)
+            {
+                var gZipEncode = new GZipBindingElement(encoder);
+                binding.Elements.AddRange(gZipEncode, transport);
+            }
+            else
+            {
+                binding.Elements.AddRange(encoder, transport);
+            }
             return binding;
         }
 

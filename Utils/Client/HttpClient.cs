@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Web.Script.Serialization;
@@ -132,11 +133,12 @@ namespace Insight.Utils.Client
         /// <param name="url">请求地址</param>
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="data">请求数据，默认NULL</param>
+        /// <param name="compress">压缩方式(默认Gzip)</param>
         /// <returns>Result</returns>
-        public Result Request(string url, string method = "GET", object data = null)
+        public Result Request(string url, string method = "GET", object data = null, CompressType compress = CompressType.Gzip)
         {
             var result = new Result();
-            var request = GetWebRequest(method, url, _AccessToken);
+            var request = GetWebRequest(method, url, _AccessToken, compress);
             if (method != "GET")
             {
                 var body = new JavaScriptSerializer().Serialize(data ?? "");
@@ -144,9 +146,26 @@ namespace Insight.Utils.Client
                 request.ContentLength = buffer.Length;
                 try
                 {
-                    using (var stream = request.GetRequestStream())
+                    switch (compress)
                     {
-                        stream.Write(buffer, 0, buffer.Length);
+                        case CompressType.Gzip:
+                            using (var stream = new GZipStream(request.GetRequestStream(), CompressionLevel.Optimal))
+                            {
+                                stream.Write(buffer, 0, buffer.Length);
+                            }
+                            break;
+                        case CompressType.Deflate:
+                            using (var stream = new DeflateStream(request.GetRequestStream(), CompressionLevel.Optimal))
+                            {
+                                stream.Write(buffer, 0, buffer.Length);
+                            }
+                            break;
+                        case CompressType.None:
+                            using (var stream = request.GetRequestStream())
+                            {
+                                stream.Write(buffer, 0, buffer.Length);
+                            }
+                            break;
                     }
                 }
                 catch (Exception ex)
@@ -171,13 +190,24 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="url">请求地址</param>
         /// <param name="token">AccessToken</param>
+        /// <param name="compress">压缩方式</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string method, string url, string token)
+        private HttpWebRequest GetWebRequest(string method, string url, string token, CompressType compress)
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.Method = method;
             request.Accept = "application/json";
             request.ContentType = "application/json";
+            switch (compress)
+            {
+                case CompressType.Gzip:
+                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
+                    break;
+                case CompressType.Deflate:
+                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "deflate");
+                    break;
+            }
+
             if (string.IsNullOrEmpty(token)) return request;
 
             request.Headers.Add(HttpRequestHeader.Authorization, token);
@@ -195,29 +225,80 @@ namespace Insight.Utils.Client
             try
             {
                 var response = (HttpWebResponse) request.GetResponse();
-                var responseStream = response.GetResponseStream();
-                if (responseStream == null)
+                var stream = response.GetResponseStream();
+                if (stream == null)
                 {
                     result.BadRequest("Response was not received data!");
                     return result;
                 }
 
-                using (var reader = new StreamReader(responseStream, Encoding.GetEncoding("utf-8")))
+                string data;
+                var encoding = response.ContentEncoding.ToLower();
+                switch (encoding)
                 {
-                    var stream = reader.ReadToEnd();
-                    responseStream.Close();
-                    result = Util.Deserialize<Result>(stream);
-#if DEBUG
-                    // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-                    if (Logging && result.Code != "406") Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
-#endif
-                    return result;
+                    case "gzip":
+                        data = FromGZipStream(stream);
+                        break;
+                    case "deflate":
+                        data = FromDeflateStream(stream);
+                        break;
+                    default:
+                        data = FromStream(stream);
+                        break;
                 }
+
+                result = Util.Deserialize<Result>(data);
+                stream.Flush();
+                stream.Close();
             }
             catch (Exception ex)
             {
                 result.BadRequest(ex.Message);
                 return result;
+            }
+#if DEBUG
+            // 在DEBUG模式下且AccessToken有效时记录接口调用日志
+            if (Logging && result.Code != "406") Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
+#endif
+            return result;
+        }
+
+        /// <summary>
+        /// 从DGZip压缩的流中获取数据
+        /// </summary>
+        /// <param name="response">GZip压缩的流</param>
+        /// <returns>string 流中的数据</returns>
+        private string FromGZipStream(Stream response)
+        {
+            using (var stream = new GZipStream(response, CompressionMode.Decompress))
+            {
+                return FromStream(stream);
+            }
+        }
+
+        /// <summary>
+        /// 从Deflate压缩的流中获取数据
+        /// </summary>
+        /// <param name="response">Deflate压缩的流</param>
+        /// <returns>string 流中的数据</returns>
+        private string FromDeflateStream(Stream response)
+        {
+            using (var stream = new DeflateStream(response, CompressionMode.Decompress))
+            {
+                return FromStream(stream);
+            }
+        }
+
+        /// <summary>
+        /// 从流中获取数据
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>string 流中的数据</returns>
+        private string FromStream(Stream stream)
+        {
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
             }
         }
 

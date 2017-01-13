@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("WCF 服务模块")]
-[assembly: AssemblyDescription("Insight Utils WCF 服务模块")]
+[assembly: AssemblyTitle("WCF 压缩公共库")]
+[assembly: AssemblyDescription("Insight Utils WCF 压缩公共库")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Insight Software Ltd.")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Insight Utils")]
-[assembly: AssemblyCopyright("Copyright © 2016 Insight Software Ltd.")]
+[assembly: AssemblyCopyright("Copyright © 蒋金楠")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("4bb72af9-eadb-418a-9764-18dc29be749d")]
+[assembly: Guid("47f12ce7-867d-4847-8b74-d405b75c33df")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

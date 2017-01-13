@@ -63,7 +63,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -78,6 +77,7 @@
     <Compile Include="Common\NpoiHelper.cs" />
     <Compile Include="Common\SqlHelper.cs" />
     <Compile Include="Entity\AccessToken.cs" />
+    <Compile Include="Entity\CompressType.cs" />
     <Compile Include="Entity\FileInfo.cs" />
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\Result.cs" />
@@ -94,6 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WCF\WCF.csproj">
+      <Project>{4BB72AF9-EADB-418A-9764-18DC29BE749D}</Project>
+      <Name>WCF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
