@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Microsoft.Samples.GZipEncoder
 {
-    public class GZipPolicyImporter : IPolicyImportExtension
+    public class GZipMessageEncodingBindingElementImporter : IPolicyImportExtension
     {
         void IPolicyImportExtension.ImportPolicy(MetadataImporter importer, PolicyConversionContext context)
         {
@@ -22,10 +22,10 @@ namespace Microsoft.Samples.GZipEncoder
             ICollection<XmlElement> assertions = context.GetBindingAssertions();
             foreach (XmlElement assertion in assertions)
             {
-                if (assertion.NamespaceURI != GZipEncodingPolicy.GZipEncodingNamespace || assertion.LocalName != GZipEncodingPolicy.GZipEncodingName) continue;
+                if (assertion.NamespaceURI != GZipMessageEncodingPolicyConstants.GZipEncodingNamespace || assertion.LocalName != GZipMessageEncodingPolicyConstants.GZipEncodingName) continue;
 
                 assertions.Remove(assertion);
-                context.BindingElements.Add(new GZipBindingElement());
+                context.BindingElements.Add(new GZipMessageEncodingBindingElement());
                 break;
             }
         }

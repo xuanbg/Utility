@@ -143,29 +143,31 @@ namespace Insight.Utils.Client
             {
                 var body = new JavaScriptSerializer().Serialize(data ?? "");
                 var buffer = Encoding.UTF8.GetBytes(body);
-                request.ContentLength = buffer.Length;
                 try
                 {
+                    var ms = new MemoryStream();
                     switch (compress)
                     {
                         case CompressType.Gzip:
-                            using (var stream = new GZipStream(request.GetRequestStream(), CompressionLevel.Optimal))
+                            using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
                             {
                                 stream.Write(buffer, 0, buffer.Length);
                             }
+                            buffer = ms.GetBuffer();
                             break;
                         case CompressType.Deflate:
-                            using (var stream = new DeflateStream(request.GetRequestStream(), CompressionLevel.Optimal))
+                            using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
                             {
                                 stream.Write(buffer, 0, buffer.Length);
                             }
+                            buffer = ms.GetBuffer();
                             break;
-                        case CompressType.None:
-                            using (var stream = request.GetRequestStream())
-                            {
-                                stream.Write(buffer, 0, buffer.Length);
-                            }
-                            break;
+                    }
+
+                    request.ContentLength = buffer.Length;
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
                     }
                 }
                 catch (Exception ex)
@@ -196,7 +198,6 @@ namespace Insight.Utils.Client
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.Method = method;
-            request.Accept = "application/json";
             request.ContentType = "application/json";
             switch (compress)
             {
@@ -233,7 +234,7 @@ namespace Insight.Utils.Client
                 }
 
                 string data;
-                var encoding = response.ContentEncoding.ToLower();
+                var encoding = "gzip";//response.ContentEncoding.ToLower();
                 switch (encoding)
                 {
                     case "gzip":

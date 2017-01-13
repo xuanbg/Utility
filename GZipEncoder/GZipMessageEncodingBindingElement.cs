@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Microsoft.Samples.GZipEncoder
 {
-    public sealed class GZipBindingElement : MessageEncodingBindingElement, IPolicyExportExtension
+    public sealed class GZipMessageEncodingBindingElement : MessageEncodingBindingElement, IPolicyExportExtension
     {
         // 使用内部绑定元素来存储内部编码器所需的信息
         private MessageEncodingBindingElement _InnerBindingElement;
@@ -31,7 +31,7 @@ namespace Microsoft.Samples.GZipEncoder
         /// <summary>
         /// 构造函数，使用默认文本编码器作为内部编码器
         /// </summary>
-        public GZipBindingElement()
+        public GZipMessageEncodingBindingElement()
         {
             _InnerBindingElement = new TextMessageEncodingBindingElement();
         }
@@ -40,7 +40,7 @@ namespace Microsoft.Samples.GZipEncoder
         /// 构造函数，使用指定的消息编码器
         /// </summary>
         /// <param name="messageEncoderBindingElement">指定的消息编码器</param>
-        public GZipBindingElement(MessageEncodingBindingElement messageEncoderBindingElement)
+        public GZipMessageEncodingBindingElement(MessageEncodingBindingElement messageEncoderBindingElement)
         {
             _InnerBindingElement = messageEncoderBindingElement;
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Samples.GZipEncoder
         /// <returns></returns>
         public override MessageEncoderFactory CreateMessageEncoderFactory()
         {
-            return new GZipEncoderFactory(_InnerBindingElement.CreateMessageEncoderFactory());
+            return new GZipMessageEncoderFactory(_InnerBindingElement.CreateMessageEncoderFactory());
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Microsoft.Samples.GZipEncoder
         /// <returns></returns>
         public override BindingElement Clone()
         {
-            return new GZipBindingElement(_InnerBindingElement);
+            return new GZipMessageEncodingBindingElement(_InnerBindingElement);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace Microsoft.Samples.GZipEncoder
             }
 
             var document = new XmlDocument();
-            policyContext.GetBindingAssertions().Add(document.CreateElement(GZipEncodingPolicy.GZipEncodingPrefix, GZipEncodingPolicy.GZipEncodingName, GZipEncodingPolicy.GZipEncodingNamespace));
+            policyContext.GetBindingAssertions().Add(document.CreateElement(GZipMessageEncodingPolicyConstants.GZipEncodingPrefix, GZipMessageEncodingPolicyConstants.GZipEncodingName, GZipMessageEncodingPolicyConstants.GZipEncodingNamespace));
         }
     }
 }

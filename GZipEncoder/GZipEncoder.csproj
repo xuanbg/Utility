@@ -50,18 +50,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GZipEncoderFactory.cs" />
-    <Compile Include="GZipBindingElement.cs" />
-    <Compile Include="GZipEncodingElement.cs" />
-    <Compile Include="GZipEncodingPolicy.cs" />
+    <Compile Include="GZipMessageEncoderFactory.cs" />
+    <Compile Include="GZipMessageEncodingBindingElement.cs" />
+    <Compile Include="GZipMessageEncodingElement.cs" />
+    <Compile Include="GZipMessageEncodingPolicyConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GZipPolicyImporter.cs" />
+    <Compile Include="GZipMessageEncodingBindingElementImporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

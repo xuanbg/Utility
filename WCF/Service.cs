@@ -35,7 +35,8 @@ namespace Insight.WCF
             var binding = InitBinding(isCompres);
             var inter = $"{info.NameSpace}.{info.Interface}";
             var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
-            endpoint.Behaviors.Add(new WebHttpBehavior());
+            var behavior = new WebHttpBehavior {AutomaticFormatSelectionEnabled = true};
+            endpoint.Behaviors.Add(behavior);
 
             /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647
             foreach (var operation in endpoint.Contract.Operations)
@@ -113,7 +114,7 @@ namespace Insight.WCF
             var binding = new CustomBinding { SendTimeout = TimeSpan.FromSeconds(600), ReceiveTimeout = TimeSpan.FromSeconds(600) };
             if (isCompres)
             {
-                var gZipEncode = new GZipBindingElement(encoder);
+                var gZipEncode = new GZipMessageEncodingBindingElement(encoder);
                 binding.Elements.AddRange(gZipEncode, transport);
             }
             else

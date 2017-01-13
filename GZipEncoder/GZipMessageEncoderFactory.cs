@@ -5,7 +5,7 @@ using System.ServiceModel.Channels;
 
 namespace Microsoft.Samples.GZipEncoder
 {
-    internal class GZipEncoderFactory : MessageEncoderFactory
+    internal class GZipMessageEncoderFactory : MessageEncoderFactory
     {
         private readonly MessageEncoder _Encoder;
 
@@ -23,7 +23,7 @@ namespace Microsoft.Samples.GZipEncoder
         /// 构造函数，根据传入的消息编码器类型创建一个Gzip消息编码器
         /// </summary>
         /// <param name="messageEncoderFactory"></param>
-        public GZipEncoderFactory(MessageEncoderFactory messageEncoderFactory)
+        public GZipMessageEncoderFactory(MessageEncoderFactory messageEncoderFactory)
         {
             if (messageEncoderFactory == null) throw new ArgumentNullException(nameof(messageEncoderFactory), "A valid message encoder factory must be passed to the GZipEncoder");
 
@@ -74,9 +74,7 @@ namespace Microsoft.Samples.GZipEncoder
             /// <returns>Message 解码后的消息</returns>
             public override Message ReadMessage(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
             {
-                //Decompress the buffer
                 var decompressedBuffer = DecompressBuffer(buffer, bufferManager);
-                //Use the inner encoder to decode the decompressed buffer
                 var returnMessage = _InnerEncoder.ReadMessage(decompressedBuffer, bufferManager);
                 returnMessage.Properties.Encoder = this;
                 return returnMessage;
