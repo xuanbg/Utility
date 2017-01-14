@@ -45,9 +45,9 @@
     <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GZipEncoder\GZipEncoder.csproj">
-      <Project>{3eb736c4-62ea-4887-b040-948b13ef29b9}</Project>
-      <Name>GZipEncoder</Name>
+    <ProjectReference Include="..\CustomEncoder\CustomEncoder.csproj">
+      <Project>{f2937362-e927-44e3-9e53-8576eba39b23}</Project>
+      <Name>CustomEncoder</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

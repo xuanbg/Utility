@@ -1,4 +1,4 @@
-﻿namespace Insight.WCF.CompressEncoder
+﻿namespace Insight.WCF.CustomEncoder
 {
     public enum CompressAlgorithm
     {

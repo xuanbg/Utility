@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compression", "Compression\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GZipEncoder", "GZipEncoder\GZipEncoder.csproj", "{3EB736C4-62EA-4887-B040-948B13EF29B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompressEncoder", "CompressEncoder\CompressEncoder.csproj", "{F2937362-E927-44E3-9E53-8576EBA39B23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomEncoder", "CustomEncoder\CustomEncoder.csproj", "{F2937362-E927-44E3-9E53-8576EBA39B23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

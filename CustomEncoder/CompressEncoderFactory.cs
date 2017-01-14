@@ -1,6 +1,6 @@
 ﻿using System.ServiceModel.Channels;
 
-namespace Insight.WCF.CompressEncoder
+namespace Insight.WCF.CustomEncoder
 {
     public class CompressEncoderFactory : MessageEncoderFactory
     {

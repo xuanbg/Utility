@@ -1,7 +1,7 @@
 ﻿using System.ServiceModel.Channels;
 using System.Xml;
 
-namespace Insight.WCF.CompressEncoder
+namespace Insight.WCF.CustomEncoder
 {
     public sealed class CompressEncodingBindingElement : MessageEncodingBindingElement
     {
