@@ -35,13 +35,14 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressBehavior.cs" />
-    <Compile Include="CompressEncoder.cs" />
     <Compile Include="CompressEncoderFactory.cs" />
     <Compile Include="CompressEncodingBindingElement.cs" />
     <Compile Include="CompressInspector.cs" />
+    <Compile Include="MessageCompress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
