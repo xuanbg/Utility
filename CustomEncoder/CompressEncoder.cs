@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.ServiceModel.Channels;
 
 namespace Insight.WCF.CustomEncoder
@@ -56,8 +57,9 @@ namespace Insight.WCF.CustomEncoder
 
         public override ArraySegment<byte> WriteMessage(Message message, int maxMessageSize, BufferManager bufferManager, int messageOffset)
         {
+            var property = message.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
             var buffer = _InnerEncoder.WriteMessage(message, maxMessageSize, bufferManager, 0);
-            return CompressBuffer(buffer, bufferManager, messageOffset);
+            return CompressBuffer(buffer, bufferManager, messageOffset, property.Headers[HttpResponseHeader.ContentEncoding]);
         }
 
         public override Message ReadMessage(Stream stream, int maxSizeOfHeaders, string contentType)
@@ -77,22 +79,24 @@ namespace Insight.WCF.CustomEncoder
 
         public override void WriteMessage(Message message, Stream stream)
         {
-            switch (_Algorithm)
+            var property = message.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
+            switch (property.Headers[HttpResponseHeader.ContentEncoding])
             {
-                case CompressAlgorithm.GZip:
+                case "gzip":
                     using (var ms = new GZipStream(stream, CompressionLevel.Optimal, true))
                     {
                         _InnerEncoder.WriteMessage(message, ms);
                     }
                     break;
-                case CompressAlgorithm.Deflate:
+                case "deflate":
                     using (var ms = new DeflateStream(stream, CompressionLevel.Optimal, true))
                     {
                         _InnerEncoder.WriteMessage(message, ms);
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    _InnerEncoder.WriteMessage(message, stream);
+                    break;
             }
             stream.Flush();
         }
@@ -103,26 +107,28 @@ namespace Insight.WCF.CustomEncoder
         /// <param name="buffer"></param>
         /// <param name="bufferManager"></param>
         /// <param name="messageOffset"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        private ArraySegment<byte> CompressBuffer(ArraySegment<byte> buffer, BufferManager bufferManager, int messageOffset)
+        private ArraySegment<byte> CompressBuffer(ArraySegment<byte> buffer, BufferManager bufferManager, int messageOffset, string encoding)
         {
             var ms = new MemoryStream();
-            switch (_Algorithm)
+            switch (encoding)
             {
-                case CompressAlgorithm.GZip:
+                case "gzip":
                     using (var stream = new GZipStream(ms, CompressionMode.Compress, true))
                     {
                         stream.Write(buffer.Array, buffer.Offset, buffer.Count);
                     }
                     break;
-                case CompressAlgorithm.Deflate:
+                case "deflate":
                     using (var stream = new DeflateStream(ms, CompressionLevel.Optimal, true))
                     {
                         stream.Write(buffer.Array, buffer.Offset, buffer.Count);
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    ms = new MemoryStream(buffer.Array);
+                    break;
             }
 
             var bytes = ms.ToArray();
