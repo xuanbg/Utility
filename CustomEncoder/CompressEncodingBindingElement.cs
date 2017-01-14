@@ -6,7 +6,6 @@ namespace Insight.WCF.CustomEncoder
     public sealed class CompressEncodingBindingElement : MessageEncodingBindingElement
     {
         private readonly XmlDictionaryReaderQuotas _ReaderQuotas;
-        private readonly CompressAlgorithm _Algorithm;
 
         /// <summary>
         /// 消息编码器绑定元素
@@ -14,19 +13,12 @@ namespace Insight.WCF.CustomEncoder
         public MessageEncodingBindingElement InnerMessageEncodingBindingElement { get; }
 
         /// <summary>
-        /// 压缩方式
-        /// </summary>
-        public CompressAlgorithm CompressAlgorithm => _Algorithm;
-
-        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="innerElement">消息编码器绑定元素</param>
-        /// <param name="algorithm">压缩方式</param>
-        public CompressEncodingBindingElement(MessageEncodingBindingElement innerElement, CompressAlgorithm algorithm)
+        public CompressEncodingBindingElement(MessageEncodingBindingElement innerElement)
         {
             _ReaderQuotas = new XmlDictionaryReaderQuotas();
-            _Algorithm = algorithm;
             InnerMessageEncodingBindingElement = innerElement;
         }
 
@@ -56,7 +48,7 @@ namespace Insight.WCF.CustomEncoder
 
         public override MessageEncoderFactory CreateMessageEncoderFactory()
         {
-            return new CompressEncoderFactory(InnerMessageEncodingBindingElement, _Algorithm);
+            return new CompressEncoderFactory(InnerMessageEncodingBindingElement);
         }
 
         public override T GetProperty<T>(BindingContext context)
@@ -74,7 +66,7 @@ namespace Insight.WCF.CustomEncoder
 
         public override BindingElement Clone()
         {
-            return new CompressEncodingBindingElement(InnerMessageEncodingBindingElement, _Algorithm);
+            return new CompressEncodingBindingElement(InnerMessageEncodingBindingElement);
         }
     }
 }

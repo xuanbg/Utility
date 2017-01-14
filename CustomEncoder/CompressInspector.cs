@@ -11,7 +11,7 @@ namespace Insight.WCF.CustomEncoder
         public object AfterReceiveRequest(ref Message request, IClientChannel channel, InstanceContext instanceContext)
         {
             var property = request.Properties[HttpRequestMessageProperty.Name] as HttpRequestMessageProperty;
-            var accept = property.Headers[HttpRequestHeader.AcceptEncoding];
+            var accept = property?.Headers[HttpRequestHeader.AcceptEncoding];
             switch (accept)
             {
                 case "gzip":
@@ -30,11 +30,11 @@ namespace Insight.WCF.CustomEncoder
             var exts = OperationContext.Current.Extensions;
             if (exts.OfType<GzipExtension>().Any())
             {
-                property.Headers.Add(HttpResponseHeader.ContentEncoding, "gzip");
+                property?.Headers.Add(HttpResponseHeader.ContentEncoding, "gzip");
             }
             else if (exts.OfType<DeflateExtension>().Any())
             {
-                property.Headers.Add(HttpResponseHeader.ContentEncoding, "deflate");
+                property?.Headers.Add(HttpResponseHeader.ContentEncoding, "deflate");
             }
         }
     }

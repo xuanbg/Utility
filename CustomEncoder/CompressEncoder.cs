@@ -9,7 +9,6 @@ namespace Insight.WCF.CustomEncoder
     public class CompressEncoder : MessageEncoder
     {
         private readonly MessageEncoder _InnerEncoder;
-        private readonly CompressAlgorithm _Algorithm;
 
         /// <summary>
         /// 内容类型
@@ -30,10 +29,8 @@ namespace Insight.WCF.CustomEncoder
         /// 构造函数
         /// </summary>
         /// <param name="encoderFactory">编码器工厂</param>
-        /// <param name="algorithm">压缩方式</param>
-        public CompressEncoder(CompressEncoderFactory encoderFactory, CompressAlgorithm algorithm)
+        public CompressEncoder(CompressEncoderFactory encoderFactory)
         {
-            _Algorithm = algorithm;
             _InnerEncoder = encoderFactory.InnerMessageEncodingBindingElement.CreateMessageEncoderFactory().Encoder;
         }
 
@@ -49,7 +46,7 @@ namespace Insight.WCF.CustomEncoder
 
         public override Message ReadMessage(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
         {
-            var decompressedBuffer = DecompressBuffer(buffer, bufferManager);
+            var decompressedBuffer = DecompressBuffer(buffer, bufferManager, contentType);
             var message = _InnerEncoder.ReadMessage(decompressedBuffer, bufferManager, contentType);
             message.Properties.Encoder = this;
             return message;
@@ -59,28 +56,28 @@ namespace Insight.WCF.CustomEncoder
         {
             var property = message.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
             var buffer = _InnerEncoder.WriteMessage(message, maxMessageSize, bufferManager, 0);
-            return CompressBuffer(buffer, bufferManager, messageOffset, property.Headers[HttpResponseHeader.ContentEncoding]);
+            return CompressBuffer(buffer, bufferManager, messageOffset, property?.Headers[HttpResponseHeader.ContentEncoding]);
         }
 
         public override Message ReadMessage(Stream stream, int maxSizeOfHeaders, string contentType)
         {
-            switch (_Algorithm)
+            switch (contentType)
             {
-                case CompressAlgorithm.GZip:
+                case "application/json; x-gzip":
                     var gs = new GZipStream(stream, CompressionMode.Decompress, false);
-                    return _InnerEncoder.ReadMessage(gs, maxSizeOfHeaders, contentType);
-                case CompressAlgorithm.Deflate:
+                    return _InnerEncoder.ReadMessage(gs, maxSizeOfHeaders, "application/json");
+                case "application/json; x-deflate":
                     var ds = new DeflateStream(stream, CompressionMode.Decompress, false);
-                    return _InnerEncoder.ReadMessage(ds, maxSizeOfHeaders, contentType);
+                    return _InnerEncoder.ReadMessage(ds, maxSizeOfHeaders, "application/json");
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return _InnerEncoder.ReadMessage(stream, maxSizeOfHeaders, contentType);
             }
         }
 
         public override void WriteMessage(Message message, Stream stream)
         {
             var property = message.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
-            switch (property.Headers[HttpResponseHeader.ContentEncoding])
+            switch (property?.Headers[HttpResponseHeader.ContentEncoding])
             {
                 case "gzip":
                     using (var ms = new GZipStream(stream, CompressionLevel.Optimal, true))
@@ -146,16 +143,17 @@ namespace Insight.WCF.CustomEncoder
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="bufferManager"></param>
+        /// <param name="contentType"></param>
         /// <returns></returns>
-        private ArraySegment<byte> DecompressBuffer(ArraySegment<byte> buffer, BufferManager bufferManager)
+        private ArraySegment<byte> DecompressBuffer(ArraySegment<byte> buffer, BufferManager bufferManager, string contentType)
         {
             var ms = new MemoryStream(buffer.Array, buffer.Offset, buffer.Count);
             var decompressedStream = new MemoryStream();
             const int blockSize = 1024;
             var tempBuffer = bufferManager.TakeBuffer(blockSize);
-            switch (_Algorithm)
+            switch (contentType)
             {
-                case CompressAlgorithm.GZip:
+                case "application/json; x-gzip":
                     using (var stream = new GZipStream(ms, CompressionMode.Decompress))
                     {
                         while (true)
@@ -167,7 +165,7 @@ namespace Insight.WCF.CustomEncoder
                         }
                     }
                     break;
-                case CompressAlgorithm.Deflate:
+                case "application/json; x-deflate":
                     using (var stream = new DeflateStream(ms, CompressionMode.Decompress))
                     {
                         while (true)
@@ -180,7 +178,8 @@ namespace Insight.WCF.CustomEncoder
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    decompressedStream.Write(buffer.Array, 0, blockSize);
+                    break;
             }
             bufferManager.ReturnBuffer(tempBuffer);
 

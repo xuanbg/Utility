@@ -34,16 +34,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressBehavior.cs" />
-    <Compile Include="CompressAlgorithm.cs" />
     <Compile Include="CompressEncoder.cs" />
     <Compile Include="CompressEncoderFactory.cs" />
     <Compile Include="CompressEncodingBindingElement.cs" />

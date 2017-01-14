@@ -198,14 +198,18 @@ namespace Insight.Utils.Client
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.Method = method;
-            request.ContentType = "application/json";
+            request.Accept = "application/json";
+            request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip");
             switch (compress)
             {
                 case CompressType.Gzip:
-                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
+                    request.ContentType = "application/json; x-gzip";
                     break;
                 case CompressType.Deflate:
-                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "deflate");
+                    request.ContentType = "application/json; x-deflate";
+                    break;
+                default:
+                    request.ContentType = "application/json";
                     break;
             }
 
@@ -234,7 +238,7 @@ namespace Insight.Utils.Client
                 }
 
                 string data;
-                var encoding = "gzip";//response.ContentEncoding.ToLower();
+                var encoding = response.ContentEncoding.ToLower();
                 switch (encoding)
                 {
                     case "gzip":

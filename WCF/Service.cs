@@ -115,7 +115,7 @@ namespace Insight.WCF
             var binding = new CustomBinding { SendTimeout = TimeSpan.FromSeconds(600), ReceiveTimeout = TimeSpan.FromSeconds(600) };
             if (isCompres)
             {
-                var gZipEncode = new CompressEncodingBindingElement(encoder, CompressAlgorithm.GZip);
+                var gZipEncode = new CompressEncodingBindingElement(encoder);
                 binding.Elements.AddRange(gZipEncode, transport);
             }
             else

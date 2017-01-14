@@ -25,11 +25,10 @@ namespace Insight.WCF.CustomEncoder
         /// 构造函数
         /// </summary>
         /// <param name="innerElement">消息编码器绑定元素</param>
-        /// <param name="algorithm">压缩方式</param>
-        public CompressEncoderFactory(MessageEncodingBindingElement innerElement, CompressAlgorithm algorithm)
+        public CompressEncoderFactory(MessageEncodingBindingElement innerElement)
         {
             InnerMessageEncodingBindingElement = innerElement;
-            _MessageEncoder = new CompressEncoder(this, algorithm);
+            _MessageEncoder = new CompressEncoder(this);
         }
     }
 }
