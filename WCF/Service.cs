@@ -12,7 +12,7 @@ namespace Insight.WCF
 {
     public class Service
     {
-        private readonly List<ServiceHost> Hosts = new List<ServiceHost>();
+        private readonly List<ServiceHost> _Hosts = new List<ServiceHost>();
 
         #region 公共方法
 
@@ -20,10 +20,9 @@ namespace Insight.WCF
         /// 创建WCF服务主机
         /// </summary>
         /// <param name="info">ServiceInfo</param>
-        /// <param name="isCompres"></param>
-        public void CreateHost(Info info, bool isCompres = true)
+        public void CreateHost(Info info)
         {
-            var file = $"{Environment.CurrentDirectory}\\{info.ServiceFile}";
+            var file = AppDomain.CurrentDomain.BaseDirectory + info.ServiceFile;
             if (!File.Exists(file)) return;
 
             var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
@@ -31,7 +30,7 @@ namespace Insight.WCF
             var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
             var asm = Assembly.LoadFrom(file);
             var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
-            var binding = InitBinding(isCompres);
+            var binding = InitBinding();
             var inter = $"{info.NameSpace}.{info.Interface}";
             var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
             var behavior = new WebHttpBehavior {AutomaticFormatSelectionEnabled = true};
@@ -47,7 +46,7 @@ namespace Insight.WCF
                     behavior.MaxItemsInObjectGraph = 2147483647;
                 }
             }*/
-            Hosts.Add(host);
+            _Hosts.Add(host);
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace Insight.WCF
         /// </summary>
         public void StartService()
         {
-            var hosts = Hosts.Where(h => h.State == CommunicationState.Created || h.State == CommunicationState.Closed);
+            var hosts = _Hosts.Where(h => h.State == CommunicationState.Created || h.State == CommunicationState.Closed);
             foreach (var host in hosts)
             {
                 host.Open();
@@ -68,7 +67,7 @@ namespace Insight.WCF
         /// <param name="service">服务名称</param>
         public void StartService(string service)
         {
-            var host = Hosts.SingleOrDefault(h => h.Description.Name == service);
+            var host = _Hosts.SingleOrDefault(h => h.Description.Name == service);
             if (host == null || (host.State != CommunicationState.Created && host.State != CommunicationState.Closed)) return;
 
             host.Open();
@@ -79,7 +78,7 @@ namespace Insight.WCF
         /// </summary>
         public void StopService()
         {
-            foreach (var host in Hosts.Where(host => host.State == CommunicationState.Opened))
+            foreach (var host in _Hosts.Where(host => host.State == CommunicationState.Opened))
             {
                 host.Abort();
                 host.Close();
@@ -92,7 +91,7 @@ namespace Insight.WCF
         /// <param name="service">服务名称</param>
         public void StopService(string service)
         {
-            var host = Hosts.SingleOrDefault(h => h.Description.Name == service);
+            var host = _Hosts.SingleOrDefault(h => h.Description.Name == service);
             if (host == null || host.State != CommunicationState.Opened) return;
 
             host.Abort();
@@ -106,21 +105,26 @@ namespace Insight.WCF
         /// <summary>
         /// 初始化基本HTTP服务绑定
         /// </summary>
-        /// <param name="isCompres">是否Gzip压缩</param>
-        private CustomBinding InitBinding(bool isCompres)
+        private CustomBinding InitBinding()
         {
-            var encoder = new WebMessageEncodingBindingElement { ReaderQuotas = { MaxArrayLength = 67108864, MaxStringContentLength = 67108864 } };
-            var transport = new HttpTransportBindingElement { ManualAddressing = true, MaxReceivedMessageSize = 1073741824, TransferMode = TransferMode.Streamed };
-            var binding = new CustomBinding { SendTimeout = TimeSpan.FromSeconds(600), ReceiveTimeout = TimeSpan.FromSeconds(600) };
-            if (isCompres)
+            var encoder = new WebMessageEncodingBindingElement
             {
-                var gZipEncode = new CompressEncodingBindingElement(encoder);
-                binding.Elements.AddRange(gZipEncode, transport);
-            }
-            else
+                ReaderQuotas = {MaxArrayLength = 67108864, MaxStringContentLength = 67108864}
+            };
+            var transport = new HttpTransportBindingElement
             {
-                binding.Elements.AddRange(encoder, transport);
-            }
+                ManualAddressing = true,
+                MaxReceivedMessageSize = 1073741824,
+                TransferMode = TransferMode.Streamed
+            };
+            var binding = new CustomBinding
+            {
+                SendTimeout = TimeSpan.FromSeconds(600),
+                ReceiveTimeout = TimeSpan.FromSeconds(600)
+            };
+
+            var gZipEncode = new CompressEncodingBindingElement(encoder);
+            binding.Elements.AddRange(gZipEncode, transport);
             return binding;
         }
 
