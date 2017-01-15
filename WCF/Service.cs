@@ -6,7 +6,6 @@ using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
-using System.Windows.Forms;
 using Insight.WCF.CustomEncoder;
 
 namespace Insight.WCF
@@ -24,7 +23,7 @@ namespace Insight.WCF
         /// <param name="isCompres"></param>
         public void CreateHost(Info info, bool isCompres = true)
         {
-            var file = $"{Application.StartupPath}\\{info.ServiceFile}";
+            var file = $"{Environment.CurrentDirectory}\\{info.ServiceFile}";
             if (!File.Exists(file)) return;
 
             var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
