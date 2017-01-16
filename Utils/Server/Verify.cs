@@ -39,59 +39,33 @@ namespace Insight.Utils.Server
         public string AccessToken { get; private set; }
 
         /// <summary>
-        /// 通过Access Token校验是否有权限访问
+        /// 允许非授权访问，限制访问间隔60秒以上；如通过授权则不限制间隔时间
         /// </summary>
         /// <param name="verifyurl">验证服务URL</param>
-        /// <param name="limit">限制调用时间间隔（秒），默认不启用</param>
-        /// <param name="anonymous">是否允许匿名访问（默认不允许）</param>
-        public Verify(string verifyurl, int limit = 0, bool anonymous = false)
+        /// <param name="limit">限制访问时间间隔（秒）</param>
+        public Verify(string verifyurl, int limit)
         {
-            if (anonymous)
+            GetToken();
+            Result = new HttpClient(AccessToken) {Logging = false}.Request(verifyurl);
+            if (Result.Successful) return;
+
+            var time = CallManage.LimitCall(limit <= 60 ? 60 : limit);
+            if (time > 0)
             {
-                if (!GetToken())
-                {
-                    Result.InvalidAuth();
-                    return;
-                }
-
-                Result = new HttpClient(AccessToken) {Logging = false}.Request(verifyurl);
-                if (Result.Successful) return;
-
-                var time = CallManage.LimitCall(limit <= 0 ? 60 : limit);
-                if (time > 0)
-                {
-                    Result.TooFrequent(time);
-                    return;
-                }
-
-                Result.Success();
+                Result.TooFrequent(time);
+                return;
             }
-            else
-            {
-                var time = CallManage.LimitCall(limit);
-                if (time > 0)
-                {
-                    Result.TooFrequent(time);
-                    return;
-                }
 
-                if (!GetToken())
-                {
-                    Result.InvalidAuth();
-                    return;
-                }
-
-                Result = new HttpClient(AccessToken) {Logging = false}.Request(verifyurl);
-            }
+            Result.Success();
         }
 
         /// <summary>
-        /// 带鉴权的会话合法性验证
+        /// 会话合法性验证
         /// </summary>
         /// <param name="verifyurl">验证服务URL</param>
-        /// <param name="aid">操作ID</param>
-        /// <param name="limit">限制调用时间间隔（秒），默认不启用</param>
-        public Verify(string verifyurl, Guid aid, int limit = 0)
+        /// <param name="aid">操作权限代码，默认为空(不进行鉴权)</param>
+        /// <param name="limit">限制访问时间间隔（秒），默认不启用</param>
+        public Verify(string verifyurl, string aid = null, int limit = 0)
         {
             var time = CallManage.LimitCall(limit);
             if (time > 0)
@@ -106,7 +80,7 @@ namespace Insight.Utils.Server
                 return;
             }
 
-            var url =  $"{verifyurl}/auth?action={aid}";
+            var url =  $"{verifyurl}?action={aid}";
             Result = new HttpClient(AccessToken) {Logging = false}.Request(url);
         }
 

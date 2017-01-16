@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AliasAttribute.cs" />
+    <Compile Include="Common\BoolParse.cs" />
     <Compile Include="Common\DateParse.cs" />
     <Compile Include="Common\IntParse.cs" />
     <Compile Include="Common\Messages.cs" />
