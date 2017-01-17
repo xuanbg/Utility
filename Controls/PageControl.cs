@@ -79,6 +79,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int TotalRows
         {
+            get { return _Rows; }
             set
             {
                 _Rows = value;
@@ -142,7 +143,7 @@ namespace Insight.Utils.Controls
             var page = _Current;
             Refresh();
 
-            if (_TotalPages == 1 || _Handle < _RowsPerPage*(_TotalPages - 1) || _Current < page)
+            if ((_Rows > 0 && _Handle < _RowsPerPage*(_TotalPages - 1)) || _Current < page)
             {
                 // 不是末页或切换了页码需要重新加载数据
                 CurrentPageChanged?.Invoke(this, new PageControlEventArgs(FocusedRowHandle));
@@ -197,7 +198,8 @@ namespace Insight.Utils.Controls
             labRows.Text = $" 行/页 | 共 {_Rows} 行 | 分 {total} 页";
             labRows.Refresh();
 
-            _Current = (int) Math.Floor((decimal) _Handle/_RowsPerPage);
+            var val = (int) Math.Floor((decimal) _Handle/_RowsPerPage);
+            _Current = val < 0 ? 0 : val;
             btnFirst.Enabled = _Current > 0;
             btnPrev.Enabled = _Current > 0;
             btnNext.Enabled = _Current < _TotalPages - 1;
