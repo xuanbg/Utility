@@ -292,7 +292,7 @@ namespace Insight.Utils.Common
         {
             result.Successful = false;
             result.Code = "501";
-            result.Name = "result.DataBaseError";
+            result.Name = "DataBaseError";
             result.Message = "写数据库失败";
             return result;
         }
@@ -304,7 +304,7 @@ namespace Insight.Utils.Common
         {
             result.Successful = false;
             result.Code = "502";
-            result.Name = "result.DataAlreadyExists";
+            result.Name = "DataAlreadyExists";
             result.Message = "数据已存在";
             return result;
         }
@@ -328,8 +328,32 @@ namespace Insight.Utils.Common
         {
             result.Successful = false;
             result.Code = "504";
-            result.Name = "result.DataNotUpdate";
+            result.Name = "DataNotUpdate";
             result.Message = "未更新任何数据";
+            return result;
+        }
+
+        /// <summary>
+        /// 不允许修改和删除的数据（505）
+        /// </summary>
+        public static Result NotBeModified(this Result result)
+        {
+            result.Successful = false;
+            result.Code = "505";
+            result.Name = "NotBeModified";
+            result.Message = "不允许修改和删除的数据";
+            return result;
+        }
+
+        /// <summary>
+        /// 不允许删除的数据（506）
+        /// </summary>
+        public static Result NotBeDeleted(this Result result)
+        {
+            result.Successful = false;
+            result.Code = "506";
+            result.Name = "NotBeDeleted";
+            result.Message = "不允许删除的数据";
             return result;
         }
     }
