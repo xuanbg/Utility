@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client

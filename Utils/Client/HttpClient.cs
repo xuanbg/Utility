@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
@@ -263,7 +264,7 @@ namespace Insight.Utils.Client
             }
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            if (Logging && result.Code != "406") Log(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
+            if (Logging && result.Code != "406") LogAsync(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
 #endif
             return result;
         }
@@ -316,6 +317,8 @@ namespace Insight.Utils.Client
         /// <param name="message">接口返回消息</param>
         private void Log(string token, string method, string url, string message)
         {
+            if (string.IsNullOrEmpty(token)) return;
+
             var ts = DateTime.Now - _Time;
             var loginfo = new LogInfo
             {
@@ -328,6 +331,18 @@ namespace Insight.Utils.Client
             };
             var log = new LogClient(loginfo);
             log.LogToServer();
+        }
+
+        /// <summary>
+        /// 异步记录接口调用日志
+        /// </summary>
+        /// <param name="token">AccessToken</param>
+        /// <param name="method">请求方法</param>
+        /// <param name="url">请求地址</param>
+        /// <param name="message">接口返回消息</param>
+        private void LogAsync(string token, string method, string url, string message)
+        {
+            Task.Run(() => Log(token, method, url, message));
         }
     }
 }

@@ -68,6 +68,7 @@
     <Compile Include="Common\IntParse.cs" />
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\NpoiHelper.cs" />
+    <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
     <Compile Include="Entity\AccessToken.cs" />
     <Compile Include="Entity\CompressType.cs" />
