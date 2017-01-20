@@ -8,16 +8,16 @@ namespace Insight.Utils.Controls
     public partial class PageControl : XtraUserControl
     {
         private int _Handle;
-        private int _RowsPerPage;
+        private int _PageSize;
         private int _Rows;
         private int _TotalPages = 1;
         private int _Current;
-        private Collection<string> _SelectItems = new Collection<string> {"20", "40", "60", "80", "100"};
+        private Collection<string> _PageSizes = new Collection<string> {"20", "40", "60", "80", "100"};
 
         /// <summary>  
         /// 每页显示行数发生改变，通知修改每页显示行数
         /// </summary>  
-        public event RowsPerPageHandle RowsPerPageChanged;
+        public event PageSizeHandle PageSizeChanged;
 
         /// <summary>  
         /// 当前页发生改变，通知重新加载列表数据
@@ -34,7 +34,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void RowsPerPageHandle(object sender, RowsPerPageEventArgs e);
+        public delegate void PageSizeHandle(object sender, PageSizeEventArgs e);
 
         /// <summary>
         /// 表示将处理列表数据需重新加载事件的方法
@@ -55,22 +55,22 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int FocusedRowHandle
         {
-            get { return _Handle - _RowsPerPage*_Current; }
-            set { _Handle = _RowsPerPage*_Current + value; }
+            get { return _Handle - _PageSize*_Current; }
+            set { _Handle = _PageSize*_Current + value; }
         }
 
         /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
-        public Collection<string> RowsSelectItems
+        public Collection<string> PageSizeItems
         {
-            get { return _SelectItems; }
+            get { return _PageSizes; }
             set
             {
-                _SelectItems = value;
+                _PageSizes = value;
                 cbeRows.Properties.Items.AddRange(value);
                 cbeRows.SelectedIndex = 0;
-                _RowsPerPage = int.Parse(_SelectItems[0]);
+                _PageSize = int.Parse(_PageSizes[0]);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Insight.Utils.Controls
             set
             {
                 _Rows = value;
-                _TotalPages = (int) Math.Ceiling((decimal) _Rows/_RowsPerPage);
+                _TotalPages = (int) Math.Ceiling((decimal) _Rows/_PageSize);
                 Refresh();
             }
         }
@@ -143,7 +143,7 @@ namespace Insight.Utils.Controls
             var page = _Current;
             Refresh();
 
-            if ((_Rows > 0 && _Handle < _RowsPerPage*(_TotalPages - 1)) || _Current < page)
+            if ((_Rows > 0 && _Handle < _PageSize*(_TotalPages - 1)) || _Current < page)
             {
                 // 不是末页或切换了页码需要重新加载数据
                 CurrentPageChanged?.Invoke(this, new PageControlEventArgs(FocusedRowHandle));
@@ -160,14 +160,14 @@ namespace Insight.Utils.Controls
         private void PageRowsChanged()
         {
             var handel = FocusedRowHandle;
-            var change = _RowsPerPage < _Rows - _RowsPerPage*_Current;
-            _RowsPerPage = int.Parse(cbeRows.Text);
-            RowsPerPageChanged?.Invoke(this, new RowsPerPageEventArgs(_RowsPerPage));
+            var change = _PageSize < _Rows - _PageSize*_Current;
+            _PageSize = int.Parse(cbeRows.Text);
+            PageSizeChanged?.Invoke(this, new PageSizeEventArgs(_PageSize));
 
             var page = _Current;
             Refresh();
 
-            change = change || _RowsPerPage < _Rows - _RowsPerPage*_Current;
+            change = change || _PageSize < _Rows - _PageSize*_Current;
             if (!change && _Current == page && FocusedRowHandle == handel) return;
 
             // 切换了页码或当前页显示行数变化后需要重新加载数据
@@ -180,7 +180,7 @@ namespace Insight.Utils.Controls
         /// <param name="page">页码</param>
         private void ChangePage(int page)
         {
-            _Handle = _RowsPerPage*page;
+            _Handle = _PageSize*page;
 
             Refresh();
 
@@ -198,7 +198,7 @@ namespace Insight.Utils.Controls
             labRows.Text = $" 行/页 | 共 {_Rows} 行 | 分 {total} 页";
             labRows.Refresh();
 
-            var val = (int) Math.Floor((decimal) _Handle/_RowsPerPage);
+            var val = (int) Math.Floor((decimal) _Handle/_PageSize);
             _Current = val < 0 ? 0 : val;
             btnFirst.Enabled = _Current > 0;
             btnPrev.Enabled = _Current > 0;
@@ -264,20 +264,20 @@ namespace Insight.Utils.Controls
         }
     }
 
-    public class RowsPerPageEventArgs : EventArgs
+    public class PageSizeEventArgs : EventArgs
     {
         /// <summary>
-        /// RowsPerPage
+        /// PageSize
         /// </summary>
-        public int RowsPerPage { get; }
+        public int PageSize { get; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="rows">RowsPerPage</param>
-        public RowsPerPageEventArgs(int rows)
+        public PageSizeEventArgs(int rows)
         {
-            RowsPerPage = rows;
+            PageSize = rows;
         }
     }
 
