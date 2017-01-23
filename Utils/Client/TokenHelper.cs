@@ -58,7 +58,7 @@ namespace Insight.Utils.Client
             if (dict == null) return false;
 
             var key = Util.Hash(Sign + dict["Stamp"]);
-            var url = $"{BaseServer}/security/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={Token.DeptId}";
+            var url = $"{BaseServer}/securityapi/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={Token.DeptId}";
             var result = new HttpClient().Get<TokenResult>(url, false);
             if (result == null) return false;
 
@@ -79,7 +79,7 @@ namespace Insight.Utils.Client
         /// <returns>Dictionary Code</returns>
         private Dictionary<string, string> GetCode()
         {
-            var url = $"{BaseServer}/security/v1.0/codes?account={Account}";
+            var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
             return new HttpClient().Get<Dictionary<string, string>>(url, false);
         }
 
@@ -88,7 +88,7 @@ namespace Insight.Utils.Client
         /// </summary>
         private void RefresTokens()
         {
-            var url = $"{BaseServer}/security/v1.0/tokens";
+            var url = $"{BaseServer}/securityapi/v1.0/tokens";
             var result = new HttpClient(_RefreshToken).Request(url, "PUT");
             if (result.Code == "406")
             {
