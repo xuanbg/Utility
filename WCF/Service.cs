@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,39 +15,27 @@ namespace Insight.WCF
     {
         private readonly List<ServiceHost> _Hosts = new List<ServiceHost>();
 
-        #region 公共方法
-
         /// <summary>
-        /// 创建WCF服务主机
+        /// 读取服务目录下的WCF服务库创建WCF服务主机
         /// </summary>
-        /// <param name="info">ServiceInfo</param>
-        public void CreateHost(Info info)
+        /// <param name="address">服务基地址</param>
+        public void CreateHosts(string address)
         {
-            var file = AppDomain.CurrentDomain.BaseDirectory + info.ServiceFile;
-            if (!File.Exists(file)) return;
-
-            var ver = string.IsNullOrEmpty(info.Version) ? "" : "/" + info.Version;
-            var path = string.IsNullOrEmpty(info.Path) ? "" : "/" + info.Path;
-            var address = new Uri($"{info.BaseAddress}:{info.Port}{path}{ver}");
-            var asm = Assembly.LoadFrom(file);
-            var host = new ServiceHost(asm.GetType($"{info.NameSpace}.{info.ComplyType}"), address);
-            var binding = InitBinding();
-            var inter = $"{info.NameSpace}.{info.Interface}";
-            var endpoint = host.AddServiceEndpoint(asm.GetType(inter), binding, "");
-            var behavior = new WebHttpBehavior {AutomaticFormatSelectionEnabled = true};
-            endpoint.Behaviors.Add(behavior);
-            endpoint.Behaviors.Add(new CompressBehavior());
-
-            /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647
-            foreach (var operation in endpoint.Contract.Operations)
+            var dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            var files = dirInfo.GetFiles("*.dll", SearchOption.AllDirectories);
+            foreach (var file in files)
             {
-                var behavior = operation.Behaviors.Find<DataContractSerializerOperationBehavior>();
-                if (behavior != null)
-                {
-                    behavior.MaxItemsInObjectGraph = 2147483647;
-                }
-            }*/
-            _Hosts.Add(host);
+                var assembly = Assembly.LoadFrom(file.FullName);
+                var product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+                if (product != "WCF Service") continue;
+
+                var name = assembly.GetName();
+                var type = assembly.DefinedTypes.Single(i => i.Name == name.Name);
+                var ln = name.Name.ToLower();
+                var api = ln.EndsWith("s") ? ln.Substring(0, ln.Length - 1) : ln;
+                var uri = new Uri($"{address}/{api}api/v{name.Version.Major}.{name.Version.Minor}");
+                CreateHost(type, uri);
+            }
         }
 
         /// <summary>
@@ -98,9 +87,32 @@ namespace Insight.WCF
             host.Close();
         }
 
-        #endregion
+        /// <summary>
+        /// 创建WCF服务主机
+        /// </summary>
+        /// <param name="type">TypeInfo</param>
+        /// <param name="uri">Uri</param>
+        private void CreateHost(TypeInfo type, Uri uri)
+        {
+            var host = new ServiceHost(type, uri);
+            var binding = InitBinding();
+            var endpoint = host.AddServiceEndpoint(type.ImplementedInterfaces.First(), binding, "");
+            var behavior = new WebHttpBehavior {AutomaticFormatSelectionEnabled = true};
+            endpoint.Behaviors.Add(behavior);
+            endpoint.Behaviors.Add(new CompressBehavior());
 
-        #region 私有方法
+            /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647
+            foreach (var operation in endpoint.Contract.Operations)
+            {
+                var behavior = operation.Behaviors.Find<DataContractSerializerOperationBehavior>();
+                if (behavior != null)
+                {
+                    behavior.MaxItemsInObjectGraph = 2147483647;
+                }
+            }*/
+            _Hosts.Add(host);
+            LogToEvent($"WCF 服务{type.Name}已绑定于：{uri}");
+        }
 
         /// <summary>
         /// 初始化基本HTTP服务绑定
@@ -128,73 +140,18 @@ namespace Insight.WCF
             return binding;
         }
 
-        #endregion
-
         /// <summary>
-        /// 服务信息
+        /// 将事件消息写入系统日志
         /// </summary>
-        public class Info
+        /// <param name="message"></param>
+        public void LogToEvent(string message)
         {
-            private string _Port;
-            private string _Path;
-            private string _Version;
-
-            /// <summary>
-            /// 服务基地址
-            /// </summary>
-            public string BaseAddress { get; set; }
-
-            /// <summary>
-            /// 服务端口号
-            /// </summary>
-            public string Port
+            if (!EventLog.SourceExists("WCF Service"))
             {
-                get { return _Port ?? "80"; }
-                set { _Port = value; }
+                EventLog.CreateEventSource("WCF Service", "应用程序");
             }
 
-            /// <summary>
-            /// 访问路径
-            /// </summary>
-            public string Path
-            {
-                get { return _Path ?? ""; }
-                set { _Path = value; }
-            }
-
-            /// <summary>
-            /// 服务版本号
-            /// </summary>
-            public string Version
-            {
-                get { return _Version ?? ""; }
-                set { _Version = value; }
-            }
-
-            /// <summary>
-            /// 服务命名空间
-            /// </summary>
-            public string NameSpace { get; set; }
-
-            /// <summary>
-            /// Endpoint名称
-            /// </summary>
-            public string Interface { get; set; }
-
-            /// <summary>
-            /// 服务实现类型名称
-            /// </summary>
-            public string ComplyType { get; set; }
-
-            /// <summary>
-            /// 库文件路径
-            /// </summary>
-            public string ServiceFile { get; set; }
-
-            /// <summary>
-            /// 是否启用Gzip压缩
-            /// </summary>
-            public bool Compress { get; set; }
+            EventLog.WriteEntry("WCF Service", message, EventLogEntryType.Information);
         }
     }
 }
