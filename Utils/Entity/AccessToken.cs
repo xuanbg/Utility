@@ -8,11 +8,6 @@ namespace Insight.Utils.Entity
     public class AccessToken
     {
         /// <summary>
-        /// 自增ID
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
         /// 用户ID
         /// </summary>
         public Guid UserId { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
@@ -54,12 +53,12 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否获取成功</returns>
         public bool GetTokens()
         {
-            var dict = GetCode();
-            if (dict == null) return false;
+            var code = GetCode();
+            if (code == null) return false;
 
-            var key = Util.Hash(Sign + dict["Stamp"]);
-            var url = $"{BaseServer}/securityapi/v1.0/tokens?id={dict["ID"]}&account={Account}&signature={key}&deptid={Token.DeptId}";
-            var result = new HttpClient().Get<TokenResult>(url, false);
+            var key = Util.Hash(Sign + code);
+            var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.DeptId}";
+            var result = new HttpClient().Get<TokenResult>(url);
             if (result == null) return false;
 
             _Token = result.AccessToken;
@@ -77,10 +76,10 @@ namespace Insight.Utils.Client
         /// 获取Code
         /// </summary>
         /// <returns>Dictionary Code</returns>
-        private Dictionary<string, string> GetCode()
+        private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
-            return new HttpClient().Get<Dictionary<string, string>>(url, false);
+            return new HttpClient().Get<string>(url);
         }
 
         /// <summary>
