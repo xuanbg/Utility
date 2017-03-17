@@ -58,11 +58,11 @@ namespace Insight.Utils.Client
         public T Get<T>(string url, string message = null)
         {
             var result = Request(url);
-            if (result.Successful) return Util.Deserialize<T>(result.Data);
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.Message}{newline}{message}";
-            if (result.Code != "406") Messages.ShowError(msg);
+            var msg = $"{result.message}{newline}{message}";
+            if (result.code != "406") Messages.ShowError(msg);
 
             return default(T);
         }
@@ -78,11 +78,11 @@ namespace Insight.Utils.Client
         public T Post<T>(string url, object data, string message = null)
         {
             var result = Request(url, "POST", data);
-            if (result.Successful) return Util.Deserialize<T>(result.Data);
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.Message}{newline}{message}";
-            if (result.Code != "406") Messages.ShowError(msg);
+            var msg = $"{result.message}{newline}{message}";
+            if (result.code != "406") Messages.ShowError(msg);
 
             return default(T);
         }
@@ -98,11 +98,11 @@ namespace Insight.Utils.Client
         public T Put<T>(string url, object data, string message = null)
         {
             var result = Request(url, "PUT", data);
-            if (result.Successful) return Util.Deserialize<T>(result.Data);
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.Message}{newline}{message}";
-            if (result.Code != "406") Messages.ShowError(msg);
+            var msg = $"{result.message}{newline}{message}";
+            if (result.code != "406") Messages.ShowError(msg);
 
             return default(T);
         }
@@ -118,11 +118,11 @@ namespace Insight.Utils.Client
         public T Delete<T>(string url, object data = null, string message = null)
         {
             var result = Request(url, "DELETE", data);
-            if (result.Successful) return Util.Deserialize<T>(result.Data);
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.Message}{newline}{message}";
-            if (result.Code != "406") Messages.ShowError(msg);
+            var msg = $"{result.message}{newline}{message}";
+            if (result.code != "406") Messages.ShowError(msg);
 
             return default(T);
         }
@@ -178,7 +178,7 @@ namespace Insight.Utils.Client
             }
 
             result = GetResponse(request);
-            if (_Token == null || result.Code != "406") return result;
+            if (_Token == null || result.code != "406") return result;
 
             // AccessToken失效时自动更新AccessToken，并重新调用接口
             _Token.GetTokens();
@@ -263,7 +263,7 @@ namespace Insight.Utils.Client
             }
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            if (Logging && result.Code != "406") LogAsync(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.Message);
+            if (Logging && result.code != "406") LogAsync(_AccessToken, request.Method, request.RequestUri.AbsolutePath, result.message);
 #endif
             return result;
         }

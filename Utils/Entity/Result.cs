@@ -8,36 +8,36 @@
         /// <summary>
         /// 结果
         /// </summary>
-        public bool Successful { get; set; }
+        public bool successful { get; set; }
 
         /// <summary>
         /// 错误代码
         /// </summary>
-        public string Code { get; set; }
+        public string code { get; set; }
 
         /// <summary>
         /// 错误名
         /// </summary>
-        public string Name { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         /// 错误消息
         /// </summary>
-        public string Message { get; set; }
+        public string message { get; set; }
 
         /// <summary>
         /// 数据
         /// </summary>
-        public string Data { get; set; }
+        public string data { get; set; }
 
         /// <summary>
         /// 初始化为未知错误（500）
         /// </summary>
         public Result()
         {
-            Code = "500";
-            Name = "UnknownError";
-            Message = "未知错误";
+            code = "500";
+            name = "UnknownError";
+            message = "未知错误";
         }
     }
 }

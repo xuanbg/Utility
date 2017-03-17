@@ -8,21 +8,21 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public string AccessToken { get; set; }
+        public string accessToken { get; set; }
 
         /// <summary>
         /// RefresToken字符串
         /// </summary>
-        public string RefreshToken { get; set; }
+        public string refreshToken { get; set; }
 
         /// <summary>
         /// Secret过期时间
         /// </summary>
-        public DateTime ExpiryTime { get; set; }
+        public DateTime expiryTime { get; set; }
 
         /// <summary>
         /// Secret失效时间
         /// </summary>
-        public DateTime FailureTime { get; set; }
+        public DateTime failureTime { get; set; }
     }
 }

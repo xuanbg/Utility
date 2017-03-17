@@ -11,11 +11,26 @@ namespace Insight.Utils.Common
         /// <param name="data">承载的数据</param>
         public static Result Success(this Result result, object data = null)
         {
-            result.Successful = true;
-            result.Code = "200";
-            result.Name = "OK";
-            result.Message = "接口调用成功";
-            result.Data = Util.Serialize(data ?? true);
+            result.successful = true;
+            result.code = "200";
+            result.name = "OK";
+            result.message = "接口调用成功";
+            result.data = Util.Serialize(data ?? true);
+            return result;
+        }
+
+        /// <summary>
+        /// 接口调用成功（200）
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="data">承载的数据</param>
+        public static Result Success(this Result result, string data)
+        {
+            result.successful = true;
+            result.code = "200";
+            result.name = "OK";
+            result.message = "接口调用成功";
+            result.data = data;
             return result;
         }
 
@@ -26,11 +41,11 @@ namespace Insight.Utils.Common
         /// <param name="data">承载的数据</param>
         public static Result Created(this Result result, object data = null)
         {
-            result.Successful = true;
-            result.Code = "201";
-            result.Name = "Created";
-            result.Message = "资源创建成功";
-            result.Data = Util.Serialize(data ?? true);
+            result.successful = true;
+            result.code = "201";
+            result.name = "Created";
+            result.message = "资源创建成功";
+            result.data = Util.Serialize(data ?? true);
             return result;
         }
 
@@ -40,11 +55,11 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result NoContent(this Result result)
         {
-            result.Successful = true;
-            result.Code = "204";
-            result.Name = "NoContent";
-            result.Message = "无可用内容";
-            result.Data = "[]";
+            result.successful = true;
+            result.code = "204";
+            result.name = "NoContent";
+            result.message = "无可用内容";
+            result.data = "[]";
             return result;
         }
 
@@ -54,10 +69,10 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result WithoutRefresh(this Result result)
         {
-            result.Successful = true;
-            result.Code = "205";
-            result.Name = "WithoutRefresh";
-            result.Message = "尚未过期，无需刷新";
+            result.successful = true;
+            result.code = "205";
+            result.name = "WithoutRefresh";
+            result.message = "尚未过期，无需刷新";
             return result;
         }
 
@@ -68,10 +83,10 @@ namespace Insight.Utils.Common
         /// <param name="data">错误详细信息（可选）</param>
         public static Result BadRequest(this Result result, object data = null)
         {
-            result.Successful = false;
-            result.Code = "400";
-            result.Name = "BadRequest";
-            result.Message = $"请求参数错误！{data}";
+            result.successful = false;
+            result.code = "400";
+            result.name = "BadRequest";
+            result.message = $"请求参数错误！{data}";
             return result;
         }
 
@@ -81,10 +96,10 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result InvalidAuth(this Result result)
         {
-            result.Successful = false;
-            result.Code = "401";
-            result.Name = "InvalidAuthenticationInfo";
-            result.Message = "提供的身份验证信息不正确";
+            result.successful = false;
+            result.code = "401";
+            result.name = "InvalidAuthenticationInfo";
+            result.message = "提供的身份验证信息不正确";
             return result;
         }
 
@@ -95,10 +110,10 @@ namespace Insight.Utils.Common
         /// <param name="data"></param>
         public static Result TooFrequent(this Result result, object data)
         {
-            result.Successful = false;
-            result.Code = "402";
-            result.Name = "CallInterfaceTooFrequent";
-            result.Message = "调用接口过于频繁";
+            result.successful = false;
+            result.code = "402";
+            result.name = "CallInterfaceTooFrequent";
+            result.message = "调用接口过于频繁";
             return result;
         }
 
@@ -108,10 +123,10 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result Forbidden(this Result result)
         {
-            result.Successful = false;
-            result.Code = "403";
-            result.Name = "Forbidden";
-            result.Message = "当前用户未取得授权";
+            result.successful = false;
+            result.code = "403";
+            result.name = "Forbidden";
+            result.message = "当前用户未取得授权";
             return result;
         }
 
@@ -121,10 +136,10 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result NotFound(this Result result)
         {
-            result.Successful = false;
-            result.Code = "404";
-            result.Name = "ResourceNotFound";
-            result.Message = "指定的资源不存在";
+            result.successful = false;
+            result.code = "404";
+            result.name = "ResourceNotFound";
+            result.message = "指定的资源不存在";
             return result;
         }
 
@@ -134,10 +149,10 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         public static Result Expired(this Result result)
         {
-            result.Successful = false;
-            result.Code = "405";
-            result.Name = "AccessTokenExpired";
-            result.Message = "AccessToken已过期";
+            result.successful = false;
+            result.code = "405";
+            result.name = "AccessTokenExpired";
+            result.message = "AccessToken已过期";
             return result;
         }
 
@@ -146,10 +161,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result Failured(this Result result)
         {
-            result.Successful = false;
-            result.Code = "406";
-            result.Name = "AccessTokenFailured";
-            result.Message = "AccessToken已失效";
+            result.successful = false;
+            result.code = "406";
+            result.name = "AccessTokenFailured";
+            result.message = "AccessToken已失效";
             return result;
         }
 
@@ -158,10 +173,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result InsufficientLicenses(this Result result)
         {
-            result.Successful = false;
-            result.Code = "407";
-            result.Name = "InsufficientNumberOfLicenses";
-            result.Message = "许可证数量不足";
+            result.successful = false;
+            result.code = "407";
+            result.name = "InsufficientNumberOfLicenses";
+            result.message = "许可证数量不足";
             return result;
         }
 
@@ -170,10 +185,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result AccountIsBlocked(this Result result)
         {
-            result.Successful = false;
-            result.Code = "408";
-            result.Name = "AccountIsBlocked";
-            result.Message = "账号已锁定";
+            result.successful = false;
+            result.code = "408";
+            result.name = "AccountIsBlocked";
+            result.message = "账号已锁定";
             return result;
         }
 
@@ -182,10 +197,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result AccountExists(this Result result)
         {
-            result.Successful = false;
-            result.Code = "409";
-            result.Name = "AccountAlreadyExists";
-            result.Message = "用户已存在";
+            result.successful = false;
+            result.code = "409";
+            result.name = "AccountAlreadyExists";
+            result.message = "用户已存在";
             return result;
         }
 
@@ -194,10 +209,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result Disabled(this Result result)
         {
-            result.Successful = false;
-            result.Code = "410";
-            result.Name = "AccountIsDisabled";
-            result.Message = "当前用户被禁止登录";
+            result.successful = false;
+            result.code = "410";
+            result.name = "AccountIsDisabled";
+            result.message = "当前用户被禁止登录";
             return result;
         }
 
@@ -206,10 +221,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result InvalidGuid(this Result result)
         {
-            result.Successful = false;
-            result.Code = "420";
-            result.Name = "InvalidGUID";
-            result.Message = "错误的GUID数据";
+            result.successful = false;
+            result.code = "420";
+            result.name = "InvalidGUID";
+            result.message = "错误的GUID数据";
             return result;
         }
 
@@ -218,10 +233,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result InvalidDateTime(this Result result)
         {
-            result.Successful = false;
-            result.Code = "421";
-            result.Name = "InvalidDateTime";
-            result.Message = "错误的DateTime数据";
+            result.successful = false;
+            result.code = "421";
+            result.name = "InvalidDateTime";
+            result.message = "错误的DateTime数据";
             return result;
         }
 
@@ -230,10 +245,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result InvalidValue(this Result result)
         {
-            result.Successful = false;
-            result.Code = "422";
-            result.Name = "InvalidValue";
-            result.Message = "错误的数据";
+            result.successful = false;
+            result.code = "422";
+            result.name = "InvalidValue";
+            result.message = "错误的数据";
             return result;
         }
 
@@ -242,10 +257,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result FileNotExists(this Result result)
         {
-            result.Successful = false;
-            result.Code = "430";
-            result.Name = "FileNotExists";
-            result.Message = "未找到指定的文件";
+            result.successful = false;
+            result.code = "430";
+            result.name = "FileNotExists";
+            result.message = "未找到指定的文件";
             return result;
         }
 
@@ -254,10 +269,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result SheetNotExists(this Result result)
         {
-            result.Successful = false;
-            result.Code = "431";
-            result.Name = "SheetNotExists";
-            result.Message = "未找到指定的Sheet";
+            result.successful = false;
+            result.code = "431";
+            result.name = "SheetNotExists";
+            result.message = "未找到指定的Sheet";
             return result;
         }
 
@@ -266,10 +281,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result NoRowsRead(this Result result)
         {
-            result.Successful = false;
-            result.Code = "432";
-            result.Name = "NoRowsRead";
-            result.Message = "未从文件中读取任何数据行";
+            result.successful = false;
+            result.code = "432";
+            result.name = "NoRowsRead";
+            result.message = "未从文件中读取任何数据行";
             return result;
         }
 
@@ -278,10 +293,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result IncorrectExcelFormat(this Result result)
         {
-            result.Successful = false;
-            result.Code = "433";
-            result.Name = "IncorrectExcelFormat";
-            result.Message = "Excel格式不正确";
+            result.successful = false;
+            result.code = "433";
+            result.name = "IncorrectExcelFormat";
+            result.message = "Excel格式不正确";
             return result;
         }
 
@@ -290,10 +305,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result DataBaseError(this Result result)
         {
-            result.Successful = false;
-            result.Code = "501";
-            result.Name = "DataBaseError";
-            result.Message = "写数据库失败";
+            result.successful = false;
+            result.code = "501";
+            result.name = "DataBaseError";
+            result.message = "写数据库失败";
             return result;
         }
 
@@ -302,10 +317,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result DataAlreadyExists(this Result result)
         {
-            result.Successful = false;
-            result.Code = "502";
-            result.Name = "DataAlreadyExists";
-            result.Message = "数据已存在";
+            result.successful = false;
+            result.code = "502";
+            result.name = "DataAlreadyExists";
+            result.message = "数据已存在";
             return result;
         }
 
@@ -314,10 +329,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result ServiceUnavailable(this Result result)
         {
-            result.Successful = false;
-            result.Code = "503";
-            result.Name = "ServiceUnavailable";
-            result.Message = "当前服务不可用";
+            result.successful = false;
+            result.code = "503";
+            result.name = "ServiceUnavailable";
+            result.message = "当前服务不可用";
             return result;
         }
 
@@ -326,10 +341,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result NotUpdate(this Result result)
         {
-            result.Successful = false;
-            result.Code = "504";
-            result.Name = "DataNotUpdate";
-            result.Message = "未更新任何数据";
+            result.successful = false;
+            result.code = "504";
+            result.name = "DataNotUpdate";
+            result.message = "未更新任何数据";
             return result;
         }
 
@@ -338,10 +353,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result NotBeModified(this Result result)
         {
-            result.Successful = false;
-            result.Code = "505";
-            result.Name = "NotBeModified";
-            result.Message = "不允许修改和删除的数据";
+            result.successful = false;
+            result.code = "505";
+            result.name = "NotBeModified";
+            result.message = "不允许修改和删除的数据";
             return result;
         }
 
@@ -350,10 +365,10 @@ namespace Insight.Utils.Common
         /// </summary>
         public static Result NotBeDeleted(this Result result)
         {
-            result.Successful = false;
-            result.Code = "506";
-            result.Name = "NotBeDeleted";
-            result.Message = "不允许删除的数据";
+            result.successful = false;
+            result.code = "506";
+            result.name = "NotBeDeleted";
+            result.message = "不允许删除的数据";
             return result;
         }
     }

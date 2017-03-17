@@ -57,14 +57,14 @@ namespace Insight.Utils.Client
             if (code == null) return false;
 
             var key = Util.Hash(Sign + code);
-            var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.DeptId}";
+            var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
             var result = new HttpClient().Get<TokenResult>(url);
             if (result == null) return false;
 
-            _Token = result.AccessToken;
-            _RefreshToken = result.RefreshToken;
-            _ExpiryTime = result.ExpiryTime;
-            _FailureTime = result.FailureTime;
+            _Token = result.accessToken;
+            _RefreshToken = result.refreshToken;
+            _ExpiryTime = result.expiryTime;
+            _FailureTime = result.failureTime;
 
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
@@ -79,7 +79,7 @@ namespace Insight.Utils.Client
         private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
-            return new HttpClient().Get<string>(url);
+            return new HttpClient().Request(url).data;
         }
 
         /// <summary>
@@ -89,20 +89,20 @@ namespace Insight.Utils.Client
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
             var result = new HttpClient(_RefreshToken).Request(url, "PUT");
-            if (result.Code == "406")
+            if (result.code == "406")
             {
                 GetTokens();
                 return;
             }
 
-            if (!result.Successful)
+            if (!result.successful)
             {
-                Messages.ShowError(result.Message);
+                Messages.ShowError(result.message);
                 return;
             }
 
-            var data = Util.Deserialize<TokenResult>(result.Data);
-            _ExpiryTime = data.ExpiryTime;
+            var data = Util.Deserialize<TokenResult>(result.data);
+            _ExpiryTime = data.expiryTime;
         }
 
         /// <summary>

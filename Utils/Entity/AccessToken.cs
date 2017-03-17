@@ -8,28 +8,33 @@ namespace Insight.Utils.Entity
     public class AccessToken
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public Guid id { get; set; }
+
+        /// <summary>
         /// 用户ID
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid userId { get; set; }
 
         /// <summary>
         /// 当前登录部门ID
         /// </summary>
-        public Guid? DeptId { get; set; }
+        public Guid? deptId { get; set; }
 
         /// <summary>
         /// 用户账号
         /// </summary>
-        public string Account { get; set; }
+        public string account { get; set; }
 
         /// <summary>
         /// 登录用户姓名
         /// </summary>
-        public string UserName { get; set; }
+        public string userName { get; set; }
 
         /// <summary>
         /// 随机密码
         /// </summary>
-        public string Secret { get; set; }
+        public string secret { get; set; }
     }
 }

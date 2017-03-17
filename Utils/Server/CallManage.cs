@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using Insight.Utils.Common;
 
 namespace Insight.Utils.Server
 {
@@ -16,16 +13,10 @@ namespace Insight.Utils.Server
         /// </summary>
         /// <param name="seconds">限制访问时长（秒）</param>
         /// <returns>int 剩余限制时间（秒）</returns>
-        public static int LimitCall(int seconds)
+        public static int LimitCall(string key, int seconds)
         {
             if (seconds <= 0) return 0;
 
-            var properties = OperationContext.Current.IncomingMessageProperties;
-            var endpoint = properties[RemoteEndpointMessageProperty.Name] as RemoteEndpointMessageProperty;
-            var uri = properties["UriTemplateMatchResults"] as UriTemplateMatch;
-            if (endpoint == null || uri == null) return 0;
-
-            var key = Util.Hash(endpoint.Address + uri.Data);
             if (!_Requests.ContainsKey(key))
             {
                 _Requests.Add(key, DateTime.Now);

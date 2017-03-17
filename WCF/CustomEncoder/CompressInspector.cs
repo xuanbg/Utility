@@ -28,13 +28,17 @@ namespace Insight.WCF.CustomEncoder
         {
             var property = reply.Properties[HttpResponseMessageProperty.Name] as HttpResponseMessageProperty;
             var exts = OperationContext.Current.Extensions;
+            property.Headers.Add("Access-Control-Allow-Credentials", "true");
+            property.Headers.Add("Access-Control-Allow-Headers", "Accept, Accept-Encoding, Content-Type, Authorization");
+            property.Headers.Add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            property.Headers.Add("Access-Control-Allow-Origin", "*");
             if (exts.OfType<GzipExtension>().Any())
             {
-                property?.Headers.Add(HttpResponseHeader.ContentEncoding, "gzip");
+                property.Headers.Add(HttpResponseHeader.ContentEncoding, "gzip");
             }
             else if (exts.OfType<DeflateExtension>().Any())
             {
-                property?.Headers.Add(HttpResponseHeader.ContentEncoding, "deflate");
+                property.Headers.Add(HttpResponseHeader.ContentEncoding, "deflate");
             }
         }
     }
