@@ -7,11 +7,11 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 列表总数
         /// </summary>
-        public int Total { get; set; }
+        public int total { get; set; }
 
         /// <summary>
         /// 列表对象集合
         /// </summary>
-        public List<T> Items { get; set; }
+        public List<T> items { get; set; }
     }
 }

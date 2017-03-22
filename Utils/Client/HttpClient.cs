@@ -135,7 +135,7 @@ namespace Insight.Utils.Client
         /// <param name="data">请求数据，默认NULL</param>
         /// <param name="compress">压缩方式(默认Gzip)</param>
         /// <returns>Result</returns>
-        public Result Request(string url, string method = "GET", object data = null, CompressType compress = CompressType.Gzip)
+        public Result Request(string url, string method = "GET", object data = null, CompressType compress = CompressType.None)
         {
             var result = new Result();
             var request = GetWebRequest(method, url, _AccessToken, compress);
@@ -161,6 +161,8 @@ namespace Insight.Utils.Client
                                 stream.Write(buffer, 0, buffer.Length);
                             }
                             buffer = ms.GetBuffer();
+                            break;
+                        case CompressType.None:
                             break;
                     }
 
