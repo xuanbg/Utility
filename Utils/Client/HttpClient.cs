@@ -64,6 +64,8 @@ namespace Insight.Utils.Client
             var msg = $"{result.message}{newline}{message}";
             if (result.code != "406") Messages.ShowError(msg);
 
+            if (result.code == "204") Messages.ShowMessage(result.message);
+
             return default(T);
         }
 
@@ -83,6 +85,8 @@ namespace Insight.Utils.Client
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
             if (result.code != "406") Messages.ShowError(msg);
+
+            if (result.code == "204") Messages.ShowMessage(result.message);
 
             return default(T);
         }
@@ -104,6 +108,8 @@ namespace Insight.Utils.Client
             var msg = $"{result.message}{newline}{message}";
             if (result.code != "406") Messages.ShowError(msg);
 
+            if (result.code == "204") Messages.ShowMessage(result.message);
+
             return default(T);
         }
 
@@ -123,6 +129,8 @@ namespace Insight.Utils.Client
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
             if (result.code != "406") Messages.ShowError(msg);
+
+            if (result.code == "204") Messages.ShowMessage(result.message);
 
             return default(T);
         }

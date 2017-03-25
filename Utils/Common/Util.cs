@@ -406,7 +406,7 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T Deserialize<T>(string json)
         {
-            return string.IsNullOrEmpty(json) ? default(T) : JsonConvert.DeserializeObject<T>(json);
+            return JsonConvert.DeserializeObject<T>(json ?? "");
         }
 
         #endregion
