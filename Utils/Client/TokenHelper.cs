@@ -101,8 +101,8 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            var data = Util.Deserialize<TokenResult>(result.data);
-            _ExpiryTime = data.expiryTime;
+            var data = Util.Deserialize<DateTime>(result.data);
+            _ExpiryTime = data;
         }
 
         /// <summary>
