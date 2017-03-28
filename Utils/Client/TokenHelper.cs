@@ -88,7 +88,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var result = new HttpClient(_RefreshToken).Request(url, "PUT");
+            var result = new HttpClient(_RefreshToken) {Logging = false}.Request(url, "PUT");
             if (result.code == "406")
             {
                 GetTokens();
