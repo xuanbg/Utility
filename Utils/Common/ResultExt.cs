@@ -15,7 +15,7 @@ namespace Insight.Utils.Common
             result.code = "200";
             result.name = "OK";
             result.message = "接口调用成功";
-            result.data = Util.Serialize(data);
+            result.data = data == null ? "NoContent" : Util.Serialize(data);
             return result;
         }
 
@@ -45,7 +45,7 @@ namespace Insight.Utils.Common
             result.code = "201";
             result.name = "Created";
             result.message = "资源创建成功";
-            result.data = Util.Serialize(data);
+            result.data = data == null ? "NoContent" : Util.Serialize(data);
             return result;
         }
 
