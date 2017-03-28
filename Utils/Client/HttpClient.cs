@@ -12,8 +12,7 @@ namespace Insight.Utils.Client
 {
     public class HttpClient
     {
-        private string _AccessToken;
-        private readonly TokenHelper _Token;
+        private readonly string _AccessToken;
         private readonly DateTime _Time = DateTime.Now;
 
         /// <summary>
@@ -39,16 +38,6 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
-        /// 构造函数，传入TokenHelper
-        /// </summary>
-        /// <param name="token">TokenHelper</param>
-        public HttpClient(TokenHelper token)
-        {
-            _Token = token;
-            _AccessToken = token.AccessToken;
-        }
-
-        /// <summary>
         /// HttpRequest:GET方法
         /// </summary>
         /// <typeparam name="T">返回值数据类型</typeparam>
@@ -58,7 +47,7 @@ namespace Insight.Utils.Client
         public T Get<T>(string url, string message = null)
         {
             var result = Request(url);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -80,7 +69,7 @@ namespace Insight.Utils.Client
         public T Post<T>(string url, object data, string message = null)
         {
             var result = Request(url, "POST", data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -102,7 +91,7 @@ namespace Insight.Utils.Client
         public T Put<T>(string url, object data, string message = null)
         {
             var result = Request(url, "PUT", data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -124,7 +113,7 @@ namespace Insight.Utils.Client
         public T Delete<T>(string url, object data = null, string message = null)
         {
             var result = Request(url, "DELETE", data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -146,7 +135,7 @@ namespace Insight.Utils.Client
         public Result Request(string url, string method = "GET", object data = null, CompressType compress = CompressType.None)
         {
             var result = new Result();
-            var request = GetWebRequest(method, url, _AccessToken, compress);
+            var request = GetWebRequest(method, url, compress);
             if (method != "GET")
             {
                 var body = new JavaScriptSerializer().Serialize(data ?? "");
@@ -188,12 +177,7 @@ namespace Insight.Utils.Client
             }
 
             result = GetResponse(request);
-            if (_Token == null || result.code != "406") return result;
-
-            // AccessToken失效时自动更新AccessToken，并重新调用接口
-            _Token.GetTokens();
-            _AccessToken = _Token.AccessToken;
-            return Request(url, method, data);
+            return result;
         }
 
         /// <summary>
@@ -201,10 +185,9 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="method">请求方法</param>
         /// <param name="url">请求地址</param>
-        /// <param name="token">AccessToken</param>
         /// <param name="compress">压缩方式</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string method, string url, string token, CompressType compress)
+        private HttpWebRequest GetWebRequest(string method, string url, CompressType compress)
         {
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.Method = method;
@@ -223,9 +206,9 @@ namespace Insight.Utils.Client
                     break;
             }
 
-            if (string.IsNullOrEmpty(token)) return request;
+            if (string.IsNullOrEmpty(_AccessToken)) return request;
 
-            request.Headers.Add(HttpRequestHeader.Authorization, token);
+            request.Headers.Add(HttpRequestHeader.Authorization, _AccessToken);
             return request;
         }
 
