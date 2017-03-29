@@ -12,7 +12,8 @@ namespace Insight.Utils.Client
 {
     public class HttpClient
     {
-        private readonly string _AccessToken;
+        private string _AccessToken;
+        private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
 
         /// <summary>
@@ -38,24 +39,32 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
+        /// 构造函数，传入TokenHelper
+        /// </summary>
+        /// <param name="token">TokenHelper</param>
+        public HttpClient(TokenHelper token)
+        {
+            _Token = token;
+            _AccessToken = token.AccessToken;
+        }
+
+        /// <summary>
         /// HttpRequest:GET方法
         /// </summary>
         /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Get<T>(string url, string message = null)
+        public T Get<T>(string url, string message = null) where T : new()
         {
             var result = Request(url);
-            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
-            if (result.code != "406") Messages.ShowError(msg);
+            Messages.ShowError(msg);
 
-            if (result.code == "204") Messages.ShowMessage(result.message);
-
-            return default(T);
+            return new T();
         }
 
         /// <summary>
@@ -66,18 +75,16 @@ namespace Insight.Utils.Client
         /// <param name="data">POST的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Post<T>(string url, object data, string message = null)
+        public T Post<T>(string url, object data, string message = null) where T : new()
         {
             var result = Request(url, "POST", data);
-            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
-            if (result.code != "406") Messages.ShowError(msg);
+            Messages.ShowError(msg);
 
-            if (result.code == "204") Messages.ShowMessage(result.message);
-
-            return default(T);
+            return new T();
         }
 
         /// <summary>
@@ -88,18 +95,16 @@ namespace Insight.Utils.Client
         /// <param name="data">PUT的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Put<T>(string url, object data, string message = null)
+        public T Put<T>(string url, object data, string message = null) where T : new()
         {
             var result = Request(url, "PUT", data);
-            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
-            if (result.code != "406") Messages.ShowError(msg);
+            Messages.ShowError(msg);
 
-            if (result.code == "204") Messages.ShowMessage(result.message);
-
-            return default(T);
+            return new T();
         }
 
         /// <summary>
@@ -110,18 +115,16 @@ namespace Insight.Utils.Client
         /// <param name="data">DELETE的数据，默认NULL</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Delete<T>(string url, object data = null, string message = null)
+        public T Delete<T>(string url, object data = null, string message = null) where T : new()
         {
             var result = Request(url, "DELETE", data);
-            if (result.successful) return Util.Deserialize<T>(result.data ?? "null");
+            if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
-            if (result.code != "406") Messages.ShowError(msg);
+            Messages.ShowError(msg);
 
-            if (result.code == "204") Messages.ShowMessage(result.message);
-
-            return default(T);
+            return new T();
         }
 
         /// <summary>
@@ -177,7 +180,12 @@ namespace Insight.Utils.Client
             }
 
             result = GetResponse(request);
-            return result;
+            if (_Token == null || result.code != "406") return result;
+
+            // AccessToken失效时自动更新AccessToken，并重新调用接口
+            _Token.GetTokens();
+            _AccessToken = _Token.AccessToken;
+            return Request(url, method, data);
         }
 
         /// <summary>

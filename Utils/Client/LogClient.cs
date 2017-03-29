@@ -46,7 +46,7 @@ namespace Insight.Utils.Client
                 {"userid", _Info.CreatorUserId}
             };
             var client = new HttpClient(_Info.Token) {Logging = false};
-            client.Post<string>(_Info.Interface, dict);
+            client.Request(_Info.Interface, "POST", dict);
         }
 
         /// <summary>
