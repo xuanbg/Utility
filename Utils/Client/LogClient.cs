@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Web.Script.Serialization;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -45,8 +46,8 @@ namespace Insight.Utils.Client
                 {"key", _Info.Key},
                 {"userid", _Info.CreatorUserId}
             };
-            var client = new HttpClient(_Info.Token) {Logging = false};
-            client.Request(_Info.Interface, "POST", dict);
+            var body = new JavaScriptSerializer().Serialize(dict);
+            new HttpRequest(_Info.Token, _Info.Interface, "POST", body);
         }
 
         /// <summary>

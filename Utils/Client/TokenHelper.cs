@@ -58,13 +58,14 @@ namespace Insight.Utils.Client
 
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
-            var result = new HttpClient().Get<TokenResult>(url);
-            if (result == null) return false;
+            var result = new HttpRequest(null, url).Result;
+            if (!result.successful) return false;
 
-            _Token = result.accessToken;
-            _RefreshToken = result.refreshToken;
-            _ExpiryTime = result.expiryTime;
-            _FailureTime = result.failureTime;
+            var token = Util.Deserialize<TokenResult>(result.data);
+            _Token = token.accessToken;
+            _RefreshToken = token.refreshToken;
+            _ExpiryTime = token.expiryTime;
+            _FailureTime = token.failureTime;
 
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
@@ -79,7 +80,7 @@ namespace Insight.Utils.Client
         private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
-            return new HttpClient().Request(url).data;
+            return new HttpRequest(null, url).Result.data;
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var result = new HttpClient(_RefreshToken) {Logging = false}.Request(url, "PUT");
+            var result = new HttpRequest(_RefreshToken, url).Result;
             if (result.code == "406")
             {
                 GetTokens();

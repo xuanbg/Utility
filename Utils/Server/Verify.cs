@@ -2,7 +2,6 @@
 using System.Net;
 using System.ServiceModel.Web;
 using System.Text;
-using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -62,7 +61,7 @@ namespace Insight.Utils.Server
             }
 
             var url = $"{verifyurl}?action={aid}";
-            Result = new HttpClient(AccessToken) { Logging = false }.Request(url);
+            Result = new HttpRequest(AccessToken, url).Result;
         }
 
         /// <summary>
