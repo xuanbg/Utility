@@ -15,7 +15,7 @@ namespace Insight.Utils.Client
         /// 构造函数，传入TokenHelper
         /// </summary>
         /// <param name="token">TokenHelper</param>
-        public HttpClient(TokenHelper token = null)
+        public HttpClient(TokenHelper token)
         {
             _Token = token;
         }
@@ -109,8 +109,7 @@ namespace Insight.Utils.Client
         public Result Request(string url, string method = "GET", object data = null)
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            var result = new HttpRequest(_Token?.AccessToken, url, method, body).Result;
-            if (_Token == null) return result;
+            var result = new HttpRequest(_Token.AccessToken, url, method, body).Result;
 
             if (result.code != "406")
             {

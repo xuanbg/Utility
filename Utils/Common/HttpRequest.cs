@@ -77,23 +77,23 @@ namespace Insight.Utils.Common
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.Accept = "application/json";
+            request.ContentType = "application/json; charset=utf-8";
             request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip");
+            request.Headers.Add(HttpRequestHeader.Authorization, token);
+            if (method == "GET") return request;
+
             switch (compress)
             {
                 case CompressType.Gzip:
                     request.ContentType = "application/json; x-gzip";
+                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
                     break;
                 case CompressType.Deflate:
                     request.ContentType = "application/json; x-deflate";
-                    break;
-                default:
-                    request.ContentType = "application/json";
+                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "deflate");
                     break;
             }
 
-            if (string.IsNullOrEmpty(token)) return request;
-
-            request.Headers.Add(HttpRequestHeader.Authorization, token);
             return request;
         }
 

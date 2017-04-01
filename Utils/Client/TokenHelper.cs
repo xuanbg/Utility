@@ -16,7 +16,23 @@ namespace Insight.Utils.Client
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public string AccessToken => GetToken();
+        public string AccessToken
+        {
+            get
+            {
+                var now = DateTime.Now;
+                if (string.IsNullOrEmpty(_Token) || now > _FailureTime)
+                {
+                    var result = GetTokens();
+                    if (!result) return null;
+                }
+
+                if (now > _ExpiryTime) RefresTokens();
+
+                return _Token;
+
+            }
+        }
 
         /// <summary>
         /// AccessToken对象
@@ -111,20 +127,6 @@ namespace Insight.Utils.Client
 
             var data = Util.Deserialize<DateTime>(result.data);
             _ExpiryTime = data;
-        }
-
-        /// <summary>
-        /// 检查当前Token并返回
-        /// </summary>
-        /// <returns>string AccessToken</returns>
-        private string GetToken()
-        {
-            var now = DateTime.Now;
-            if (string.IsNullOrEmpty(_Token) || now > _FailureTime) GetTokens();
-
-            if (now > _ExpiryTime) RefresTokens();
-
-            return _Token;
         }
     }
 }
