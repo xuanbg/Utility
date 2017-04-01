@@ -59,7 +59,11 @@ namespace Insight.Utils.Client
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
             var result = new HttpRequest(null, url).Result;
-            if (!result.successful) return false;
+            if (!result.successful)
+            {
+                Messages.ShowError(result.message);
+                return false;
+            }
 
             var token = Util.Deserialize<TokenResult>(result.data);
             _Token = token.accessToken;
@@ -80,7 +84,10 @@ namespace Insight.Utils.Client
         private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
-            return new HttpRequest(null, url).Result.data;
+            var result = new HttpRequest(null, url).Result;
+            if (!result.successful) Messages.ShowError(result.message);
+
+            return result.data;
         }
 
         /// <summary>
