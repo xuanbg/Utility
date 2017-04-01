@@ -191,15 +191,14 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="path">当前目录</param>
         /// <param name="root">根目录</param>
-        /// <param name="ext">扩展名，默认为Null，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
+        /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="list">FileInfo集合</param>
-        public static void GetLocalFiles(List<Entity.FileInfo> list, string root, string ext = null, string path = null)
+        public static void GetLocalFiles(List<Entity.FileInfo> list, string root, string ext = "*.*", string path = null)
         {
             // 读取目录下文件信息
             var dirInfo = new DirectoryInfo(path ?? root);
-            var files = ext == null ? dirInfo.GetFiles() : dirInfo.GetFiles().Where(f => ext.Contains(f.Extension));
-            var infos = from file in files
-                        where file.DirectoryName != null
+            var infos = from file in dirInfo.GetFiles()
+                        where file.DirectoryName != null && (ext == "*.*" || ext.Contains(file.Extension))
                         select new Entity.FileInfo
                         {
                             ID = Hash(file.FullName),
