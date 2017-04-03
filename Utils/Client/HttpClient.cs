@@ -110,18 +110,17 @@ namespace Insight.Utils.Client
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             var result = new HttpRequest(_Token.AccessToken, url, method, body).Result;
-
-            if (result.code != "406")
+            if (result.code == "406")
             {
-#if DEBUG
-                // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-                LogAsync(method, url, result.message);
-#endif
-                return result;
+                _Token.GetTokens();
+                return Request(url, method, data);
             }
 
-            _Token.GetTokens();
-            return Request(url, method, data);
+#if DEBUG
+            // 在DEBUG模式下且AccessToken有效时记录接口调用日志
+            LogAsync(method, url, result.message);
+#endif
+            return result;
         }
 
         /// <summary>
