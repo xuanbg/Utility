@@ -47,7 +47,8 @@ namespace Insight.Utils.Client
                 {"userid", _Info.CreatorUserId}
             };
             var body = new JavaScriptSerializer().Serialize(dict);
-            new HttpRequest(_Info.Token, _Info.Interface, "POST", body);
+            // ReSharper disable once UnusedVariable
+            var request = new HttpRequest(_Info.Token, _Info.Interface, RequestMethod.POST, body);
         }
 
         /// <summary>

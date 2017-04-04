@@ -9,8 +9,8 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
-
-        public Result Result;
+        public Result Result = new Result();
+        public string Data;
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
@@ -20,10 +20,10 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">Body数据，默认NULL</param>
         /// <param name="compress">压缩方式(默认Gzip)</param>
-        public HttpRequest(string token, string url, string method = "GET", string body = null, CompressType compress = CompressType.None)
+        public HttpRequest(string token, string url, RequestMethod method = RequestMethod.GET, string body = null, CompressType compress = CompressType.None)
         {
-            var request = GetWebRequest(token, method, url, compress);
-            if (method != "GET")
+            var request = GetWebRequest(url, method, token, compress);
+            if (method != RequestMethod.GET)
             {
                 var buffer = Encoding.UTF8.GetBytes(body ?? "");
                 try
@@ -61,26 +61,67 @@ namespace Insight.Utils.Common
                 }
             }
 
-            Result = GetResponse(request);
+            if (!GetResponse(request))
+            {
+                Result.BadRequest(Data ?? "Response was not received data!");
+                return;
+            }
+
+            Result = Util.Deserialize<Result>(Data);
+        }
+
+        /// <summary>
+        /// HttpRequest方法，用于客户端请求外部接口
+        /// </summary>
+        /// <param name="method">请求方法，默认GET</param>
+        /// <param name="url">请求地址</param>
+        /// <param name="body">Body数据</param>
+        public HttpRequest(RequestMethod method, string url, string body)
+        {
+            var request = GetWebRequest(url, method);
+            if (method != RequestMethod.GET)
+            {
+                var buffer = Encoding.UTF8.GetBytes(body ?? "");
+                try
+                {
+                    request.ContentLength = buffer.Length;
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Result.BadRequest(ex.Message);
+                }
+            }
+
+            if (GetResponse(request))
+            {
+                Result.Success(Data);
+                return;
+            }
+
+            Result.BadRequest(Data ?? "Response was not received data!");
         }
 
         /// <summary>
         /// 获取WebRequest对象
         /// </summary>
-        /// <param name="token">AccessToken</param>
-        /// <param name="method">请求方法</param>
         /// <param name="url">请求地址</param>
+        /// <param name="method">请求方法</param>
+        /// <param name="token">AccessToken</param>
         /// <param name="compress">压缩方式</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string token, string method, string url, CompressType compress)
+        private HttpWebRequest GetWebRequest(string url, RequestMethod method, string token = null, CompressType compress = CompressType.None)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = method;
+            request.Method = method.ToString();
             request.Accept = "application/json";
             request.ContentType = "application/json; charset=utf-8";
             request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip");
             request.Headers.Add(HttpRequestHeader.Authorization, token);
-            if (method == "GET") return request;
+            if (method == RequestMethod.GET) return request;
 
             switch (compress)
             {
@@ -102,44 +143,37 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="request">WebRequest</param>
         /// <returns>Result</returns>
-        private Result GetResponse(WebRequest request)
+        private bool GetResponse(WebRequest request)
         {
-            var result = new Result();
             try
             {
                 var response = (HttpWebResponse)request.GetResponse();
                 var stream = response.GetResponseStream();
-                if (stream == null)
-                {
-                    result.BadRequest("Response was not received data!");
-                    return result;
-                }
+                if (stream == null) return false;
 
-                string data;
                 var encoding = response.ContentEncoding.ToLower();
                 switch (encoding)
                 {
                     case "gzip":
-                        data = FromGZipStream(stream);
+                        Data = FromGZipStream(stream);
                         break;
                     case "deflate":
-                        data = FromDeflateStream(stream);
+                        Data = FromDeflateStream(stream);
                         break;
                     default:
-                        data = FromStream(stream);
+                        Data = FromStream(stream);
                         break;
                 }
 
-                result = Util.Deserialize<Result>(data);
                 stream.Flush();
                 stream.Close();
+                return true;
             }
             catch (Exception ex)
             {
-                result.BadRequest(ex.Message);
-                return result;
+                Data = ex.Message;
+                return false;
             }
-            return result;
         }
 
         /// <summary>
@@ -180,5 +214,18 @@ namespace Insight.Utils.Common
                 return reader.ReadToEnd();
             }
         }
+    }
+
+    /// <summary>
+    /// Http请求方法
+    /// </summary>
+    public enum RequestMethod
+    {
+        GET,
+        POST,
+        PUT,
+        PATCH,
+        DELETE,
+        OPTIONS
     }
 }

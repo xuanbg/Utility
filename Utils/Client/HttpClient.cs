@@ -49,7 +49,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Post<T>(string url, object data, string message = null) where T : new()
         {
-            var result = Request(url, "POST", data);
+            var result = Request(url, RequestMethod.POST, data);
             if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -69,7 +69,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Put<T>(string url, object data, string message = null) where T : new()
         {
-            var result = Request(url, "PUT", data);
+            var result = Request(url, RequestMethod.PUT, data);
             if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -89,7 +89,7 @@ namespace Insight.Utils.Client
         /// <returns>T 指定类型的数据</returns>
         public T Delete<T>(string url, object data = null, string message = null) where T : new()
         {
-            var result = Request(url, "DELETE", data);
+            var result = Request(url, RequestMethod.DELETE, data);
             if (result.successful) return Util.Deserialize<T>(result.data);
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
@@ -106,7 +106,7 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
         /// <returns>Result</returns>
-        public Result Request(string url, string method = "GET", object data = null)
+        public Result Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             var result = new HttpRequest(_Token.AccessToken, url, method, body).Result;
@@ -118,7 +118,7 @@ namespace Insight.Utils.Client
 
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            LogAsync(method, url, result.message);
+            LogAsync(method.ToString(), url, result.message);
 #endif
             return result;
         }
