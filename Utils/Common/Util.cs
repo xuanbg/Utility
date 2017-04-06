@@ -66,9 +66,29 @@ namespace Insight.Utils.Common
         /// <returns>string Base64编码的字符串</returns>
         public static string Base64(object obj)
         {
-            var json = Serialize(obj);
-            var buff = Encoding.UTF8.GetBytes(json);
+            return Base64Encode(Serialize(obj));
+        }
+
+        /// <summary>
+        /// 将字符串进行Base64编码
+        /// </summary>
+        /// <param name="str">输入字符串</param>
+        /// <returns>string Base64编码的字符串</returns>
+        public static string Base64Encode(string str)
+        {
+            var buff = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(buff);
+        }
+
+        /// <summary>
+        /// 将字符串进行Base64解码
+        /// </summary>
+        /// <param name="str">输入字符串</param>
+        /// <returns>string Base64编码的字符串</returns>
+        public static string Base64Decode(string str)
+        {
+            var buff = Convert.FromBase64String(str);
+            return Encoding.UTF8.GetString(buff);
         }
 
         /// <summary>
@@ -201,7 +221,7 @@ namespace Insight.Utils.Common
                         where file.DirectoryName != null && (ext == "*.*" || ext.Contains(file.Extension))
                         select new Entity.FileInfo
                         {
-                            ID = Hash(file.FullName),
+                            ID = Hash(file.Name),
                             Name = file.Name,
                             Path = file.DirectoryName.Replace(root, ""),
                             FullPath = file.FullName,
@@ -394,7 +414,14 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string Serialize(object obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            try
+            {
+                return JsonConvert.SerializeObject(obj);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -405,7 +432,14 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T Deserialize<T>(string json)
         {
-            return JsonConvert.DeserializeObject<T>(json ?? "");
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(json ?? "");
+            }
+            catch (Exception)
+            {
+                return default(T);
+            }
         }
 
         #endregion

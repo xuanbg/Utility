@@ -65,6 +65,7 @@
     <Compile Include="Common\BoolParse.cs" />
     <Compile Include="Common\DateParse.cs" />
     <Compile Include="Common\HttpRequest.cs" />
+    <Compile Include="Common\InputCheck.cs" />
     <Compile Include="Common\IntParse.cs" />
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\NpoiHelper.cs" />

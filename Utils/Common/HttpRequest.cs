@@ -10,7 +10,7 @@ namespace Insight.Utils.Common
     public class HttpRequest
     {
         public Result Result = new Result();
-        public string Data;
+        private string _Data;
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
@@ -63,11 +63,14 @@ namespace Insight.Utils.Common
 
             if (!GetResponse(request))
             {
-                Result.BadRequest(Data ?? "Response was not received data!");
+                Result.BadRequest(_Data ?? "Response was not received data!");
                 return;
             }
 
-            Result = Util.Deserialize<Result>(Data);
+            Result = Util.Deserialize<Result>(_Data);
+            if (Result != null) return;
+
+            Result = new Result().BadRequest(_Data);
         }
 
         /// <summary>
@@ -98,11 +101,11 @@ namespace Insight.Utils.Common
 
             if (GetResponse(request))
             {
-                Result.Success(Data);
+                Result.Success(_Data);
                 return;
             }
 
-            Result.BadRequest(Data ?? "Response was not received data!");
+            Result.BadRequest(_Data ?? "Response was not received data!");
         }
 
         /// <summary>
@@ -155,13 +158,13 @@ namespace Insight.Utils.Common
                 switch (encoding)
                 {
                     case "gzip":
-                        Data = FromGZipStream(stream);
+                        _Data = FromGZipStream(stream);
                         break;
                     case "deflate":
-                        Data = FromDeflateStream(stream);
+                        _Data = FromDeflateStream(stream);
                         break;
                     default:
-                        Data = FromStream(stream);
+                        _Data = FromStream(stream);
                         break;
                 }
 
@@ -171,7 +174,7 @@ namespace Insight.Utils.Common
             }
             catch (Exception ex)
             {
-                Data = ex.Message;
+                _Data = ex.Message;
                 return false;
             }
         }

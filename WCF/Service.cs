@@ -21,7 +21,7 @@ namespace Insight.WCF
         /// <param name="address">服务基地址</param>
         public void CreateHosts(string address)
         {
-            var dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            var dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Services");
             var files = dirInfo.GetFiles("*.dll", SearchOption.AllDirectories);
             foreach (var file in files)
             {
