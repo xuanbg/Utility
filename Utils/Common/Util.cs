@@ -295,7 +295,7 @@ namespace Insight.Utils.Common
         /// <returns>bool 是否删除成功</returns>
         public static bool DeleteFile(string path, bool warning = false)
         {
-            if (!Directory.Exists(path))
+            if (!File.Exists(path))
             {
                 Messages.ShowWarning("未找到指定的文件！");
                 return true;

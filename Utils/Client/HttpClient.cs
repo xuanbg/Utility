@@ -110,7 +110,7 @@ namespace Insight.Utils.Client
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             var result = new HttpRequest(_Token.AccessToken, url, method, body).Result;
-            if (result.code == "406")
+            if (result.code == "406" || result.code == "401")
             {
                 _Token.GetTokens();
                 return Request(url, method, data);

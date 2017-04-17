@@ -149,12 +149,13 @@ namespace Insight.Utils.Common
         /// 指定的资源不存在（404）
         /// </summary>
         /// <param name="result"></param>
-        public static Result NotFound(this Result result)
+        /// <param name="msg"></param>
+        public static Result NotFound(this Result result, string msg = null)
         {
             result.successful = false;
             result.code = "404";
             result.name = "ResourceNotFound";
-            result.message = "指定的资源不存在";
+            result.message = msg ?? "指定的资源不存在";
             return result;
         }
 
@@ -184,14 +185,14 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 许可证数量不足（407）
+        /// 获取AccessToken失败（407）
         /// </summary>
-        public static Result InsufficientLicenses(this Result result)
+        public static Result GetTokenFailured(this Result result)
         {
             result.successful = false;
             result.code = "407";
-            result.name = "InsufficientNumberOfLicenses";
-            result.message = "许可证数量不足";
+            result.name = "GetTokenFailured";
+            result.message = "用户名或密码错误";
             return result;
         }
 

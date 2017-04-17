@@ -11,6 +11,7 @@ namespace Insight.Utils.Server
         /// <summary>
         /// 根据传入的时长返回当前调用的剩余限制时间（秒）
         /// </summary>
+        /// <param name="key"></param>
         /// <param name="seconds">限制访问时长（秒）</param>
         /// <returns>int 剩余限制时间（秒）</returns>
         public static int LimitCall(string key, int seconds)
