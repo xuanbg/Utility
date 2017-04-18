@@ -79,9 +79,10 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="url">请求地址</param>
         /// <param name="body">Body数据</param>
-        public HttpRequest(RequestMethod method, string url, string body)
+        /// <param name="token">AccessToken</param>
+        public HttpRequest(RequestMethod method, string url, string body = null, string token = null)
         {
-            var request = GetWebRequest(url, method);
+            var request = GetWebRequest(url, method, token);
             if (method != RequestMethod.GET)
             {
                 var buffer = Encoding.UTF8.GetBytes(body ?? "");
