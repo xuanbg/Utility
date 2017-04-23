@@ -36,10 +36,10 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="button"></param>
-        /// <returns></returns>
-        public static DialogResult ShowConfirm(string msg, MessageBoxDefaultButton button = MessageBoxDefaultButton.Button2)
+        /// <returns>bool 是否确认</returns>
+        public static bool ShowConfirm(string msg, MessageBoxDefaultButton button = MessageBoxDefaultButton.Button2)
         {
-            return MessageBox.Show(msg, "请确认", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, button);
+            return MessageBox.Show(msg, "请确认", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, button) == DialogResult.OK;
         }
 
         /// <summary>

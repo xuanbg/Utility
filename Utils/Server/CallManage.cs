@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Insight.Utils.Server
 {
     public class CallManage
     {
+        // 进程同步基元
+        private static readonly Mutex _Mutex = new Mutex();
+
         // 接口调用时间记录
         private static readonly Dictionary<string, DateTime> _Requests = new Dictionary<string, DateTime>();
 
@@ -18,23 +22,40 @@ namespace Insight.Utils.Server
         {
             if (seconds <= 0) return 0;
 
-            if (!_Requests.ContainsKey(key))
+            // 非首次访问
+            if (_Requests.ContainsKey(key))
             {
-                _Requests.Add(key, DateTime.Now);
+                // 如离上次访问时间不到1秒，则更新访问时间，返回等待时间为设定时间
+                var span = (DateTime.Now - _Requests[key]).TotalSeconds;
+                if (span < 1)
+                {
+                    _Requests[key] = DateTime.Now;
+                    return seconds;
+                }
+
+                // 计算剩余时间，如剩余时间大于0，返回等待时间为剩余时间
+                var surplus = seconds - (int) Math.Floor(span);
+                if (surplus > 0) return surplus;
+
+                // 更新访问时间，返回等待时间为0
+                _Requests[key] = DateTime.Now;
                 return 0;
             }
 
-            var span = _Requests[key].AddSeconds(seconds) - DateTime.Now;
-            var surplus = (int)Math.Floor(span.TotalSeconds);
-            if (seconds - surplus > 0 && seconds - surplus < 3)
+
+            // 开启线程锁
+            _Mutex.WaitOne();
+
+            // 发生并发访问，返回等待时间为设定时间
+            if (_Requests.ContainsKey(key))
             {
-                _Requests[key] = DateTime.Now;
+                _Mutex.ReleaseMutex();
                 return seconds;
             }
 
-            if (surplus > 0) return surplus;
-
-            _Requests[key] = DateTime.Now;
+            // 首次访问，登记访问时间，返回等待时间为0
+            _Requests.Add(key, DateTime.Now);
+            _Mutex.ReleaseMutex();
             return 0;
         }
     }

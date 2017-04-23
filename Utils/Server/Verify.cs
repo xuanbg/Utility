@@ -56,7 +56,7 @@ namespace Insight.Utils.Server
             var time = CallManage.LimitCall(key, limit);
             if (time > 0)
             {
-                Result.TooFrequent(time);
+                Result.TooFrequent(time.ToString());
                 return;
             }
 

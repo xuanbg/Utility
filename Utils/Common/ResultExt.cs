@@ -123,12 +123,13 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="data"></param>
-        public static Result TooFrequent(this Result result, object data)
+        public static Result TooFrequent(this Result result, string data)
         {
             result.successful = false;
             result.code = "402";
             result.name = "CallInterfaceTooFrequent";
             result.message = "调用接口过于频繁";
+            result.data = data;
             return result;
         }
 
@@ -197,14 +198,14 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 账号已锁定（408）
+        /// 获取Code失败（408）
         /// </summary>
-        public static Result AccountIsBlocked(this Result result)
+        public static Result GetCodeFailured(this Result result)
         {
             result.successful = false;
             result.code = "408";
-            result.name = "AccountIsBlocked";
-            result.message = "账号已锁定";
+            result.name = "GetCodeFailured";
+            result.message = "获取Code失败";
             return result;
         }
 
@@ -229,6 +230,18 @@ namespace Insight.Utils.Common
             result.code = "410";
             result.name = "AccountIsDisabled";
             result.message = "当前用户被禁止登录";
+            return result;
+        }
+
+        /// <summary>
+        /// 账号已锁定（411）
+        /// </summary>
+        public static Result AccountIsBlocked(this Result result)
+        {
+            result.successful = false;
+            result.code = "411";
+            result.name = "AccountIsBlocked";
+            result.message = "账号已锁定";
             return result;
         }
 
