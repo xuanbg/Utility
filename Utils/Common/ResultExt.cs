@@ -280,55 +280,7 @@ namespace Insight.Utils.Common
             result.message = "错误的数据";
             return result;
         }
-
-        /// <summary>
-        /// 未找到指定的文件（430）
-        /// </summary>
-        public static Result FileNotExists(this Result result)
-        {
-            result.successful = false;
-            result.code = "430";
-            result.name = "FileNotExists";
-            result.message = "未找到指定的文件";
-            return result;
-        }
-
-        /// <summary>
-        /// 未找到指定的Sheet（431）
-        /// </summary>
-        public static Result SheetNotExists(this Result result)
-        {
-            result.successful = false;
-            result.code = "431";
-            result.name = "SheetNotExists";
-            result.message = "未找到指定的Sheet";
-            return result;
-        }
-
-        /// <summary>
-        /// 未从文件中读取任何数据行（432）
-        /// </summary>
-        public static Result NoRowsRead(this Result result)
-        {
-            result.successful = false;
-            result.code = "432";
-            result.name = "NoRowsRead";
-            result.message = "未从文件中读取任何数据行";
-            return result;
-        }
-
-        /// <summary>
-        /// Excel格式不正确（433）
-        /// </summary>
-        public static Result IncorrectExcelFormat(this Result result)
-        {
-            result.successful = false;
-            result.code = "433";
-            result.name = "IncorrectExcelFormat";
-            result.message = "Excel格式不正确";
-            return result;
-        }
-
+        
         /// <summary>
         /// 写数据库失败（501）
         /// </summary>

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using Insight.Utils.Entity;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 
-namespace Insight.Utils.Common
+namespace Insight.Utils.Npoi
 {
     public class NpoiHelper<T> where T : new()
     {

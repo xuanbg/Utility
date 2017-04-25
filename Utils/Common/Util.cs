@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -9,7 +8,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Insight.Utils.Entity;
@@ -136,70 +134,6 @@ namespace Insight.Utils.Common
         {
             var str = Serialize(obj);
             return Deserialize<T>(str);
-        }
-
-        /// <summary>
-        /// 将List转为DataTable
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static DataTable ConvertToDataTable<T>(List<T> list)
-        {
-            var table = new DataTable();
-            var propertys = typeof(T).GetProperties().ToList();
-            propertys.ForEach(p => table.Columns.Add(GetPropertyName(p), p.PropertyType));
-
-            foreach (var item in list)
-            {
-                var row = table.NewRow();
-                propertys.ForEach(p => row[GetPropertyName(p)] = p.GetValue(item, null));
-                table.Rows.Add(row);
-            }
-            return table;
-        }
-
-        /// <summary>
-        /// 将DataTable转为List
-        /// </summary>
-        /// <param name="table">DataTable</param>
-        /// <returns>List</returns>
-        public static List<T> ConvertToList<T>(DataTable table) where T: new()
-        {
-            var list = new List<T>();
-            var propertys = typeof(T).GetProperties();
-            foreach (DataRow row in table.Rows)
-            {
-                var obj = new T();
-                foreach (var p in propertys)
-                {
-                    var name = GetPropertyName(p);
-                    if (!p.CanWrite || !table.Columns.Contains(name)) continue;
-
-                    var value = row[name];
-                    if (value == DBNull.Value) continue;
-
-                    p.SetValue(obj, value, null);
-                }
-                list.Add(obj);
-            }
-            return list;
-        }
-
-        /// <summary>
-        /// 获取属性别名或名称
-        /// </summary>
-        /// <param name="info">PropertyInfo</param>
-        /// <returns>string 属性别名或名称</returns>
-        public static string GetPropertyName(PropertyInfo info)
-        {
-            if (info == null) return null;
-
-            var attributes = info.GetCustomAttributes(typeof(AliasAttribute), false);
-            if (attributes.Length <= 0) return info.Name;
-
-            var type = (AliasAttribute)attributes[0];
-            return type.Alias;
         }
 
         #endregion

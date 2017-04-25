@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Insight.Utils.Common
+namespace Insight.Utils.Npoi
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class AliasAttribute : Attribute
