@@ -5,7 +5,7 @@ namespace Insight.Utils.Server
 {
     public class CallManage
     {
-        private readonly IDatabase _Database;
+        private readonly ConnectionMultiplexer _Redis;
 
         /// <summary>
         /// 设置Redis链接参数
@@ -13,7 +13,7 @@ namespace Insight.Utils.Server
         /// <param name="conn">Redis链接参数</param>
         public CallManage(string conn = "localhost:6379")
         {
-            _Database = ConnectionMultiplexer.Connect(conn).GetDatabase();
+            _Redis = ConnectionMultiplexer.Connect(conn);
         }
 
         /// <summary>
@@ -27,10 +27,13 @@ namespace Insight.Utils.Server
             var now = DateTime.Now;
             var val = now.ToString("O");
             var ts = new TimeSpan(0, 0, seconds);
-            var value = _Database.StringGet(key);
-            if (!value.HasValue)
+            var db = _Redis.GetDatabase();
+            var value = db.StringGet(key);
+
+            // 初次访问或正常频次访问
+            if (value.IsNullOrEmpty)
             {
-                _Database.StringSet(key, val, ts);
+                db.StringSet(key, val, ts);
                 return 0;
             }
 
@@ -38,7 +41,7 @@ namespace Insight.Utils.Server
             var span = (now - DateTime.Parse(value)).TotalSeconds;
             if (span < 1)
             {
-                _Database.StringSet(key, val, ts);
+                db.StringSet(key, val, ts);
                 return seconds;
             }
 
@@ -46,8 +49,8 @@ namespace Insight.Utils.Server
             var surplus = seconds - (int) span;
             if (surplus > 0) return surplus;
 
-            // 更新访问时间，返回等待时间为0
-            _Database.StringSet(key, val, ts);
+            // Redis记录访问记录，返回等待时间为0
+            db.StringSet(key, val, ts);
             return 0;
         }
     }
