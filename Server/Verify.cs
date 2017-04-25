@@ -41,10 +41,11 @@ namespace Insight.Utils.Server
         /// <summary>
         /// 会话合法性验证
         /// </summary>
+        /// <param name="call">CallManage</param>
         /// <param name="verifyurl">验证服务URL</param>
         /// <param name="aid">操作权限代码，默认为空(不进行鉴权)</param>
         /// <param name="limit">限制访问时间间隔（秒），默认不启用</param>
-        public Verify(string verifyurl, string aid = null, int limit = 0)
+        public Verify(CallManage call, string verifyurl, string aid = null, int limit = 0)
         {
             if (!GetToken())
             {
@@ -52,12 +53,15 @@ namespace Insight.Utils.Server
                 return;
             }
 
-            var key = Util.Hash(Token.id.ToString() + _Uri.Data);
-            var time = CallManage.LimitCall(key, limit);
-            if (time > 0)
+            if (call != null && limit > 0)
             {
-                Result.TooFrequent(time.ToString());
-                return;
+                var key = Util.Hash(Token.id.ToString() + _Uri.Data);
+                var time = call.LimitCall(key, limit);
+                if (time > 0)
+                {
+                    Result.TooFrequent(time.ToString());
+                    return;
+                }
             }
 
             var url = $"{verifyurl}?action={aid}";
