@@ -70,8 +70,6 @@
     <Compile Include="Entity\TokenResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Util.cs" />
-    <Compile Include="Server\CallManage.cs" />
-    <Compile Include="Server\Verify.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
