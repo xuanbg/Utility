@@ -503,13 +503,13 @@ namespace Insight.Utils.Common
         /// <summary>
         /// RSA加密
         /// </summary>
-        /// <param name="key">RSA公钥(Base64)</param>
+        /// <param name="key">RSA公钥(xml)</param>
         /// <param name="source">输入明文</param>
         /// <returns>string RSA密文</returns>
         public static string Encrypt(string key, string source)
         {
             var provider = new RSACryptoServiceProvider();
-            provider.FromXmlString(Base64Decode(key));
+            provider.FromXmlString(key);
 
             var buffer = provider.Encrypt(Encoding.UTF8.GetBytes(source), false);
             return Convert.ToBase64String(buffer);
@@ -518,7 +518,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// RSA解密
         /// </summary>
-        /// <param name="key">RSA私钥(Base64)</param>
+        /// <param name="key">RSA私钥(xml)</param>
         /// <param name="source">RSA密文</param>
         /// <returns>string 输出明文</returns>
         public static string Decrypt(string key, string source)
@@ -526,7 +526,7 @@ namespace Insight.Utils.Common
             try
             {
                 var provider = new RSACryptoServiceProvider();
-                provider.FromXmlString(Base64Decode(key));
+                provider.FromXmlString(key);
 
                 var buffer = provider.Decrypt(Convert.FromBase64String(source), false);
                 return Encoding.UTF8.GetString(buffer);
