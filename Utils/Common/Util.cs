@@ -482,5 +482,61 @@ namespace Insight.Utils.Common
         }
 
         #endregion
+
+        #region Encrypt/Decrypt
+
+        /// <summary>
+        /// 生成RSA密钥
+        /// </summary>
+        /// <returns>string 包含RSA公私钥对的JSON字符串</returns>
+        public static string CreateKey()
+        {
+            var provider = new RSACryptoServiceProvider();
+            var key = new
+            {
+                PublicKey = provider.ToXmlString(false),
+                PrivateKey = provider.ToXmlString(true)
+            };
+            return Serialize(key);
+        }
+
+        /// <summary>
+        /// RSA加密
+        /// </summary>
+        /// <param name="key">RSA公钥</param>
+        /// <param name="source">输入明文</param>
+        /// <returns>string RSA密文</returns>
+        public static string Encrypt(string key, string source)
+        {
+            var provider = new RSACryptoServiceProvider();
+            provider.FromXmlString(key);
+
+            var buffer = provider.Encrypt(Encoding.UTF8.GetBytes(source), false);
+            return Convert.ToBase64String(buffer);
+        }
+
+        /// <summary>
+        /// RSA解密
+        /// </summary>
+        /// <param name="key">RSA私钥</param>
+        /// <param name="source">RSA密文</param>
+        /// <returns>string 输出明文</returns>
+        public static string Decrypt(string key, string source)
+        {
+            try
+            {
+                var provider = new RSACryptoServiceProvider();
+                provider.FromXmlString(key);
+
+                var buffer = provider.Decrypt(Convert.FromBase64String(source), false);
+                return Encoding.UTF8.GetString(buffer);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        #endregion
     }
 }

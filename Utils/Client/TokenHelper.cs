@@ -99,7 +99,7 @@ namespace Insight.Utils.Client
         /// <returns>Dictionary Code</returns>
         private string GetCode()
         {
-            var url = $"{BaseServer}/securityapi/v1.0/codes?account={Account}";
+            var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
             var result = new HttpRequest(null, url).Result;
             if (!result.successful) Messages.ShowError(result.message);
 
