@@ -531,9 +531,9 @@ namespace Insight.Utils.Common
                 var buffer = provider.Decrypt(Convert.FromBase64String(source), false);
                 return Encoding.UTF8.GetString(buffer);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ex.Message;
+                return null;
             }
         }
 
