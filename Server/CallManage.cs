@@ -10,10 +10,10 @@ namespace Insight.Utils.Server
         /// <summary>
         /// 设置Redis链接参数
         /// </summary>
-        /// <param name="conn">Redis链接参数</param>
-        public CallManage(string conn = "localhost:6379")
+        /// <param name="redis">Redis链接对象</param>
+        public CallManage(ConnectionMultiplexer redis)
         {
-            _Redis = ConnectionMultiplexer.Connect(conn);
+            _Redis = redis;
         }
 
         /// <summary>
