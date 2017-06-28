@@ -9,12 +9,14 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="data">承载的数据</param>
-        public static Result Success(this Result result, object data = null)
+        /// <param name="option"></param>
+        public static Result Success(this Result result, object data = null, object option = null)
         {
             result.successful = true;
             result.code = "200";
             result.name = "OK";
             result.message = "接口调用成功";
+            result.option = option;
             result.data = Util.Serialize(data ?? "NoContent");
             return result;
         }
@@ -234,14 +236,14 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 账号已锁定（411）
+        /// 账号在线数量过多（411）
         /// </summary>
-        public static Result AccountIsBlocked(this Result result)
+        public static Result TooManyOnline(this Result result)
         {
             result.successful = false;
             result.code = "411";
-            result.name = "AccountIsBlocked";
-            result.message = "账号已锁定";
+            result.name = "TooManyOnline";
+            result.message = "该账号在线数量过多";
             return result;
         }
 

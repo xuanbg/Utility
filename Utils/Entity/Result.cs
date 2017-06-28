@@ -26,6 +26,11 @@
         public string message { get; set; }
 
         /// <summary>
+        /// 可选参数
+        /// </summary>
+        public object option { get; set; }
+
+        /// <summary>
         /// 数据
         /// </summary>
         public string data { get; set; }
