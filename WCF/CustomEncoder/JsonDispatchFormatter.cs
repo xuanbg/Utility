@@ -1,7 +1,5 @@
 ﻿using System.IO;
-using System.Linq;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using System.ServiceModel.Web;
 using System.Text;
@@ -12,17 +10,14 @@ namespace Insight.WCF.CustomEncoder
     public class JsonDispatchFormatter : IDispatchMessageFormatter
     {
         private readonly IDispatchMessageFormatter _InnerFormatter;
-        private readonly OperationDescription _Operation;
 
         /// <summary>
         /// 构造方法，传入内置消息格式化器
         /// </summary>
         /// <param name="formatter">内置消息格式化器</param>
-        /// <param name="operation">传入的操作</param>
-        public JsonDispatchFormatter(IDispatchMessageFormatter formatter, OperationDescription operation)
+        public JsonDispatchFormatter(IDispatchMessageFormatter formatter)
         {
             _InnerFormatter = formatter;
-            _Operation = operation;
         }
 
         /// <summary>
@@ -32,9 +27,6 @@ namespace Insight.WCF.CustomEncoder
         /// <param name="parameters">请求参数集合</param>
         public void DeserializeRequest(Message message, object[] parameters)
         {
-            var parts = _Operation.Messages[0].Body.Parts;
-            var partNames = parts.ToDictionary(part => part.Name, part => part.Index);
-
             _InnerFormatter.DeserializeRequest(message, parameters);
         }
 

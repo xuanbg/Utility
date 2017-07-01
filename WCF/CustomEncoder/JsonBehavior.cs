@@ -14,7 +14,7 @@ namespace Insight.WCF.CustomEncoder
         protected override IDispatchMessageFormatter GetRequestDispatchFormatter(OperationDescription operationDescription, ServiceEndpoint endpoint)
         {
             var innerFormatter = base.GetRequestDispatchFormatter(operationDescription, endpoint);
-            return new JsonDispatchFormatter(innerFormatter, operationDescription);
+            return new JsonDispatchFormatter(innerFormatter);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Insight.WCF.CustomEncoder
         protected override IDispatchMessageFormatter GetReplyDispatchFormatter(OperationDescription operationDescription, ServiceEndpoint endpoint)
         {
             var innerFormatter = base.GetRequestDispatchFormatter(operationDescription, endpoint);
-            return new JsonDispatchFormatter(innerFormatter, operationDescription);
+            return new JsonDispatchFormatter(innerFormatter);
         }
 
         /// <summary>
