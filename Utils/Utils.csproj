@@ -69,7 +69,6 @@
     <Compile Include="Client\HttpClient.cs" />
     <Compile Include="Client\LogClient.cs" />
     <Compile Include="Client\TokenHelper.cs" />
-    <Compile Include="Entity\TabList.cs" />
     <Compile Include="Entity\TokenResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Util.cs" />

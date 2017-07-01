@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using Insight.WCF.CustomEncoder;
 
 namespace Insight.WCF
@@ -97,7 +96,7 @@ namespace Insight.WCF
             var host = new ServiceHost(type, uri);
             var binding = InitBinding();
             var endpoint = host.AddServiceEndpoint(type.ImplementedInterfaces.First(), binding, "");
-            var behavior = new WebHttpBehavior {AutomaticFormatSelectionEnabled = true};
+            var behavior = new JsonBehavior {AutomaticFormatSelectionEnabled = true};
             endpoint.Behaviors.Add(behavior);
             endpoint.Behaviors.Add(new CompressBehavior());
 

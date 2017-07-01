@@ -30,7 +30,7 @@ namespace Insight.Utils.Client
         public T Get<T>(string url, string message = null) where T : new()
         {
             var result = Request(url);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return (T)result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -50,7 +50,7 @@ namespace Insight.Utils.Client
         public T Post<T>(string url, object data, string message = null) where T : new()
         {
             var result = Request(url, RequestMethod.POST, data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return (T)result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -70,7 +70,7 @@ namespace Insight.Utils.Client
         public T Put<T>(string url, object data, string message = null) where T : new()
         {
             var result = Request(url, RequestMethod.PUT, data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return (T)result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -90,7 +90,7 @@ namespace Insight.Utils.Client
         public T Delete<T>(string url, object data = null, string message = null) where T : new()
         {
             var result = Request(url, RequestMethod.DELETE, data);
-            if (result.successful) return Util.Deserialize<T>(result.data);
+            if (result.successful) return (T)result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";

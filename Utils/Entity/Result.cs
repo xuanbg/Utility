@@ -33,7 +33,7 @@
         /// <summary>
         /// 数据
         /// </summary>
-        public string data { get; set; }
+        public object data { get; set; }
 
         /// <summary>
         /// 初始化为未知错误（500）

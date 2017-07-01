@@ -81,7 +81,7 @@ namespace Insight.Utils.Client
                 return false;
             }
 
-            var token = Util.Deserialize<TokenResult>(result.data);
+            var token = (TokenResult)result.data;
             _Token = token.accessToken;
             _RefreshToken = token.refreshToken;
             _ExpiryTime = token.expiryTime;
@@ -97,7 +97,7 @@ namespace Insight.Utils.Client
         /// 获取Code
         /// </summary>
         /// <returns>Dictionary Code</returns>
-        private string GetCode()
+        private object GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
             var result = new HttpRequest(null, url).Result;
@@ -125,8 +125,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            var data = Util.Deserialize<DateTime>(result.data);
-            _ExpiryTime = data;
+            _ExpiryTime = (DateTime)result.data;
         }
     }
 }

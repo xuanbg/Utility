@@ -17,21 +17,6 @@ namespace Insight.Utils.Common
             result.name = "OK";
             result.message = "接口调用成功";
             result.option = option;
-            result.data = Util.Serialize(data ?? "NoContent");
-            return result;
-        }
-
-        /// <summary>
-        /// 接口调用成功（200）
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="data">承载的数据</param>
-        public static Result Success(this Result result, string data)
-        {
-            result.successful = true;
-            result.code = "200";
-            result.name = "OK";
-            result.message = "接口调用成功";
             result.data = data;
             return result;
         }
@@ -42,21 +27,6 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         /// <param name="data">承载的数据</param>
         public static Result Created(this Result result, object data = null)
-        {
-            result.successful = true;
-            result.code = "201";
-            result.name = "Created";
-            result.message = "资源创建成功";
-            result.data = Util.Serialize(data ?? "NoContent");
-            return result;
-        }
-
-        /// <summary>
-        /// 资源创建成功（201）
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="data">承载的数据</param>
-        public static Result Created(this Result result, string data)
         {
             result.successful = true;
             result.code = "201";
@@ -76,7 +46,7 @@ namespace Insight.Utils.Common
             result.code = "204";
             result.name = "NoContent";
             result.message = "无可用内容";
-            result.data = "[]";
+            result.data = new object[]{};
             return result;
         }
 
@@ -97,13 +67,13 @@ namespace Insight.Utils.Common
         /// 请求参数错误（400）
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="data">错误详细信息（可选）</param>
-        public static Result BadRequest(this Result result, object data = null)
+        /// <param name="message">错误详细信息（可选）</param>
+        public static Result BadRequest(this Result result, string message = null)
         {
             result.successful = false;
             result.code = "400";
             result.name = "BadRequest";
-            result.message = $"请求参数错误！{data}";
+            result.message = $"请求参数错误！{message}";
             return result;
         }
 
@@ -124,14 +94,14 @@ namespace Insight.Utils.Common
         /// 调用接口过于频繁（402）
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="data"></param>
-        public static Result TooFrequent(this Result result, string data)
+        /// <param name="option">剩余秒数</param>
+        public static Result TooFrequent(this Result result, object option)
         {
             result.successful = false;
             result.code = "402";
             result.name = "CallInterfaceTooFrequent";
             result.message = "调用接口过于频繁";
-            result.data = data;
+            result.option = option;
             return result;
         }
 
