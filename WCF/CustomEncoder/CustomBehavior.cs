@@ -1,5 +1,4 @@
-﻿using System;
-using System.ServiceModel.Description;
+﻿using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
 namespace Insight.WCF.CustomEncoder

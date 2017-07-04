@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
@@ -12,8 +7,6 @@ using System.ServiceModel.Web;
 using System.Text;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using Insight.Utils.Common;
 
 namespace Insight.WCF.CustomEncoder
@@ -45,41 +38,6 @@ namespace Insight.WCF.CustomEncoder
         public void DeserializeRequest(Message message, object[] parameters)
         {
             _InnerFormatter.DeserializeRequest(message, parameters);
-
-            /*if (message.IsEmpty)
-            {
-                return;
-            }
-
-            // 使用Json.NET反序列化BODY数据，不能反序列化URL参数和包含转义符字符串
-            string body;
-            using (var ms = new MemoryStream())
-            {
-                using (var writer = JsonReaderWriterFactory.CreateJsonWriter(ms))
-                {
-                    message.WriteMessage(writer);
-                    writer.Flush();
-                    writer.Close();
-                    body = Encoding.UTF8.GetString(ms.ToArray());
-                }
-            }
-
-            var jObject = JObject.Parse(body);
-            var settings = new JsonSerializerSettings
-            {
-                TraceWriter = new DiagnosticsTraceWriter { LevelFilter = TraceLevel.Verbose },
-                DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
-            };
-            foreach (var part in _Operation.Messages[0].Body.Parts)
-            {
-                if (jObject.Properties().All(t => t.Name != part.Name)) continue;
-
-                var value = jObject[part.Name].ToString();
-                parameters[part.Index] = part.Type.Name == "String" ? value : JsonConvert.DeserializeObject(value, part.Type, settings);
-            }
-            //*/
         }
 
         /// <summary>
@@ -91,10 +49,18 @@ namespace Insight.WCF.CustomEncoder
         /// <returns>Message</returns>
         public Message SerializeReply(MessageVersion messageVersion, object[] parameters, object result)
         {
-            byte[] bytes;
+            var bytes = new byte[0];
             var context = WebOperationContext.Current;
             var encoding = context.IncomingRequest.Headers[HttpRequestHeader.AcceptEncoding];
-            if (!Enum.TryParse(encoding, out CompressType model)) model = CompressType.none;
+            var model = CompressType.None;
+            if (encoding.Contains("gzip"))
+            {
+                model = CompressType.Gzip;
+            }
+            else if (encoding.Contains("deflate"))
+            {
+                model = CompressType.Deflate;
+            }
 
             // 将result数据使用Json.NET序列化，并按AcceptEncoding指定的压缩模式压缩为一个字节数组
             using (var stream = new MemoryStream())
@@ -104,8 +70,7 @@ namespace Insight.WCF.CustomEncoder
                     var writer = new JsonTextWriter(streamWriter) {Formatting = Formatting.Indented};
                     new JsonSerializer().Serialize(writer, result);
                     streamWriter.Flush();
-                    stream.Seek(0, SeekOrigin.Begin);
-                    bytes = Util.Compress(stream.ToArray(), model);
+                    bytes = result is null ? bytes : Util.Compress(stream.ToArray(), model);
                 }
             }
 

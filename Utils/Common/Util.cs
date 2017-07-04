@@ -447,30 +447,30 @@ namespace Insight.Utils.Common
         #region Compress/Decompress
 
         /// <summary>
-        /// GZip压缩
+        /// GZip/Deflate压缩
         /// </summary>
         /// <param name="data">输入字节数组</param>
-        /// <param name="model">压缩模式，默认gzip</param>
+        /// <param name="model">压缩模式，默认Gzip</param>
         /// <returns>byte[] 压缩后的字节数组</returns>
-        public static byte[] Compress(byte[] data, CompressType model = CompressType.gzip)
+        public static byte[] Compress(byte[] data, CompressType model = CompressType.Gzip)
         {
             using (var ms = new MemoryStream())
             {
                 switch (model)
                 {
-                    case CompressType.gzip:
+                    case CompressType.Gzip:
                         using (var stream = new GZipStream(ms, CompressionMode.Compress, true))
                         {
                             stream.Write(data, 0, data.Length);
                         }
                         break;
-                    case CompressType.deflate:
+                    case CompressType.Deflate:
                         using (var stream = new DeflateStream(ms, CompressionMode.Compress, true))
                         {
                             stream.Write(data, 0, data.Length);
                         }
                         break;
-                    case CompressType.none:
+                    case CompressType.None:
                         return data;
                     default:
                         return data;
@@ -480,12 +480,12 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// ZIP解压
+        /// Gzip/Deflate解压缩
         /// </summary>
         /// <param name="data">输入字节数组</param>
-        /// <param name="model">压缩模式，默认gzip</param>
+        /// <param name="model">压缩模式，默认Gzip</param>
         /// <returns>byte[] 解压缩后的字节数组</returns>
-        public static byte[] Decompress(byte[] data, CompressType model = CompressType.gzip)
+        public static byte[] Decompress(byte[] data, CompressType model = CompressType.Gzip)
         {
             using (var ms = new MemoryStream(data))
             {
@@ -493,7 +493,7 @@ namespace Insight.Utils.Common
                 var block = new byte[1024];
                 switch (model)
                 {
-                    case CompressType.gzip:
+                    case CompressType.Gzip:
                         using (var stream = new GZipStream(ms, CompressionMode.Decompress))
                         {
                             while (true)
@@ -504,7 +504,7 @@ namespace Insight.Utils.Common
                             }
                         }
                         break;
-                    case CompressType.deflate:
+                    case CompressType.Deflate:
                         using (var stream = new DeflateStream(ms, CompressionMode.Decompress))
                         {
                             while (true)
@@ -515,7 +515,7 @@ namespace Insight.Utils.Common
                             }
                         }
                         break;
-                    case CompressType.none:
+                    case CompressType.None:
                         return data;
                     default:
                         return data;
