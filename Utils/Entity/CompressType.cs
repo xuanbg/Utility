@@ -2,8 +2,8 @@
 {
     public enum CompressType
     {
-        Gzip,
-        Deflate,
-        None
+        gzip,
+        deflate,
+        none
     }
 }

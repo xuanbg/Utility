@@ -20,7 +20,7 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">Body数据，默认NULL</param>
         /// <param name="compress">压缩方式(默认Gzip)</param>
-        public HttpRequest(string token, string url, RequestMethod method = RequestMethod.GET, string body = null, CompressType compress = CompressType.None)
+        public HttpRequest(string token, string url, RequestMethod method = RequestMethod.GET, string body = null, CompressType compress = CompressType.none)
         {
             var request = GetWebRequest(url, method, token, compress);
             if (method != RequestMethod.GET)
@@ -31,21 +31,21 @@ namespace Insight.Utils.Common
                     var ms = new MemoryStream();
                     switch (compress)
                     {
-                        case CompressType.Gzip:
+                        case CompressType.gzip:
                             using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
                             {
                                 stream.Write(buffer, 0, buffer.Length);
                             }
                             buffer = ms.GetBuffer();
                             break;
-                        case CompressType.Deflate:
+                        case CompressType.deflate:
                             using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
                             {
                                 stream.Write(buffer, 0, buffer.Length);
                             }
                             buffer = ms.GetBuffer();
                             break;
-                        case CompressType.None:
+                        case CompressType.none:
                             break;
                     }
 
@@ -117,7 +117,7 @@ namespace Insight.Utils.Common
         /// <param name="token">AccessToken</param>
         /// <param name="compress">压缩方式</param>
         /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string url, RequestMethod method, string token = null, CompressType compress = CompressType.None)
+        private HttpWebRequest GetWebRequest(string url, RequestMethod method, string token = null, CompressType compress = CompressType.none)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();
@@ -129,11 +129,11 @@ namespace Insight.Utils.Common
 
             switch (compress)
             {
-                case CompressType.Gzip:
+                case CompressType.gzip:
                     request.ContentType = "application/json; x-gzip";
                     request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
                     break;
-                case CompressType.Deflate:
+                case CompressType.deflate:
                     request.ContentType = "application/json; x-deflate";
                     request.Headers.Add(HttpRequestHeader.ContentEncoding, "deflate");
                     break;

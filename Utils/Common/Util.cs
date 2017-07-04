@@ -449,36 +449,79 @@ namespace Insight.Utils.Common
         /// <summary>
         /// GZip压缩
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static byte[] Compress(byte[] data)
+        /// <param name="data">输入字节数组</param>
+        /// <param name="model">压缩模式，默认gzip</param>
+        /// <returns>byte[] 压缩后的字节数组</returns>
+        public static byte[] Compress(byte[] data, CompressType model = CompressType.gzip)
         {
-            var ms = new MemoryStream();
-            var stream = new GZipStream(ms, CompressionMode.Compress, true);
-            stream.Write(data, 0, data.Length);
-            stream.Close();
-            return ms.ToArray();
+            using (var ms = new MemoryStream())
+            {
+                switch (model)
+                {
+                    case CompressType.gzip:
+                        using (var stream = new GZipStream(ms, CompressionMode.Compress, true))
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+                        break;
+                    case CompressType.deflate:
+                        using (var stream = new DeflateStream(ms, CompressionMode.Compress, true))
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+                        break;
+                    case CompressType.none:
+                        return data;
+                    default:
+                        return data;
+                }
+                return ms.ToArray();
+            }
         }
 
         /// <summary>
         /// ZIP解压
         /// </summary>
-        /// <param name="dada"></param>
-        /// <returns></returns>
-        public static byte[] Decompress(byte[] dada)
+        /// <param name="data">输入字节数组</param>
+        /// <param name="model">压缩模式，默认gzip</param>
+        /// <returns>byte[] 解压缩后的字节数组</returns>
+        public static byte[] Decompress(byte[] data, CompressType model = CompressType.gzip)
         {
-            var ms = new MemoryStream(dada);
-            var stream = new GZipStream(ms, CompressionMode.Decompress);
-            var buffer = new MemoryStream();
-            var block = new byte[1024];
-            while (true)
+            using (var ms = new MemoryStream(data))
             {
-                var read = stream.Read(block, 0, block.Length);
-                if (read <= 0) break;
-                buffer.Write(block, 0, read);
+                var buffer = new MemoryStream();
+                var block = new byte[1024];
+                switch (model)
+                {
+                    case CompressType.gzip:
+                        using (var stream = new GZipStream(ms, CompressionMode.Decompress))
+                        {
+                            while (true)
+                            {
+                                var read = stream.Read(block, 0, block.Length);
+                                if (read <= 0) break;
+                                buffer.Write(block, 0, read);
+                            }
+                        }
+                        break;
+                    case CompressType.deflate:
+                        using (var stream = new DeflateStream(ms, CompressionMode.Decompress))
+                        {
+                            while (true)
+                            {
+                                var read = stream.Read(block, 0, block.Length);
+                                if (read <= 0) break;
+                                buffer.Write(block, 0, read);
+                            }
+                        }
+                        break;
+                    case CompressType.none:
+                        return data;
+                    default:
+                        return data;
+                }
+                return buffer.ToArray();
             }
-            stream.Close();
-            return buffer.ToArray();
         }
 
         #endregion

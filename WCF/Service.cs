@@ -18,7 +18,8 @@ namespace Insight.WCF
         /// 读取服务目录下的WCF服务库创建WCF服务主机
         /// </summary>
         /// <param name="address">服务基地址</param>
-        public void CreateHosts(string address)
+        /// <param name="allowOrigin">允许跨域访问的域，多个域名使用逗号分隔</param>
+        public void CreateHosts(string address, string allowOrigin)
         {
             var dirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Services");
             var files = dirInfo.GetFiles("*.dll", SearchOption.AllDirectories);
@@ -33,7 +34,7 @@ namespace Insight.WCF
                 var ln = name.Name.ToLower();
                 var api = ln.EndsWith("s") ? ln.Substring(0, ln.Length - 1) : ln;
                 var uri = new Uri($"{address}/{api}api/v{name.Version.Major}.{name.Version.Minor}");
-                CreateHost(type, uri);
+                CreateHost(type, uri, allowOrigin);
             }
         }
 
@@ -91,14 +92,14 @@ namespace Insight.WCF
         /// </summary>
         /// <param name="type">TypeInfo</param>
         /// <param name="uri">Uri</param>
-        private void CreateHost(TypeInfo type, Uri uri)
+        /// <param name="allowOrigin">允许跨域访问的域</param>
+        private void CreateHost(TypeInfo type, Uri uri, string allowOrigin)
         {
             var host = new ServiceHost(type, uri);
             var binding = InitBinding();
             var endpoint = host.AddServiceEndpoint(type.ImplementedInterfaces.First(), binding, "");
-            var behavior = new JsonBehavior {AutomaticFormatSelectionEnabled = true};
+            var behavior = new CustomBehavior {AutomaticFormatSelectionEnabled = true, AllowOrigin = allowOrigin};
             endpoint.Behaviors.Add(behavior);
-            endpoint.Behaviors.Add(new CompressBehavior());
 
             /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647
             foreach (var operation in endpoint.Contract.Operations)
@@ -134,8 +135,8 @@ namespace Insight.WCF
                 ReceiveTimeout = TimeSpan.FromSeconds(600)
             };
 
-            var gZipEncode = new CompressEncodingBindingElement(encoder);
-            binding.Elements.AddRange(gZipEncode, transport);
+            //var gZipEncode = new CompressEncodingBindingElement(encoder);
+            binding.Elements.AddRange(encoder, transport);
             return binding;
         }
 
