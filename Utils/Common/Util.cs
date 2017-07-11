@@ -19,7 +19,6 @@ namespace Insight.Utils.Common
 {
     public static class Util
     {
-
         #region 常用方法
 
         /// <summary>

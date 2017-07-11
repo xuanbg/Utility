@@ -48,7 +48,7 @@ namespace Insight.Utils.Client
             };
             var body = new JavaScriptSerializer().Serialize(dict);
             // ReSharper disable once UnusedVariable
-            var request = new HttpRequest(_Info.Token, _Info.Interface, RequestMethod.POST, body);
+            var request = new HttpRequest(_Info.Token, _Info.Interface, body, RequestMethod.POST);
         }
 
         /// <summary>

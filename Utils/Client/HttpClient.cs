@@ -109,7 +109,7 @@ namespace Insight.Utils.Client
         public Result Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            var result = new HttpRequest(_Token.AccessToken, url, method, body).Result;
+            var result = new HttpRequest(_Token.AccessToken, url, body, method).Result;
             if (result.code == "406" || result.code == "401")
             {
                 _Token.GetTokens();

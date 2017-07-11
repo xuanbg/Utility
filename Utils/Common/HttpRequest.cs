@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -17,10 +18,10 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="token">AccessToken</param>
         /// <param name="url">请求地址</param>
-        /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">Body数据，默认NULL</param>
+        /// <param name="method">请求方法，默认GET</param>
         /// <param name="compress">压缩方式(默认Gzip)</param>
-        public HttpRequest(string token, string url, RequestMethod method = RequestMethod.GET, string body = null, CompressType compress = CompressType.None)
+        public HttpRequest(string token, string url, string body = null, RequestMethod method = RequestMethod.GET, CompressType compress = CompressType.None)
         {
             var request = GetWebRequest(url, method, token, compress);
             if (method != RequestMethod.GET)
@@ -79,10 +80,21 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="url">请求地址</param>
         /// <param name="body">Body数据</param>
-        /// <param name="token">AccessToken</param>
-        public HttpRequest(RequestMethod method, string url, string body = null, string token = null)
+        /// <param name="accept"></param>
+        /// <param name="contentType"></param>
+        /// <param name="headers">请求头</param>
+        public HttpRequest(RequestMethod method, string url, string body = null, string accept = "application/json", string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
         {
-            var request = GetWebRequest(url, method, token);
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            request.ContentType = contentType;
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
+            }
+
             if (method != RequestMethod.GET)
             {
                 var buffer = Encoding.UTF8.GetBytes(body ?? "");
