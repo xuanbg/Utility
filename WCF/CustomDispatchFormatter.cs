@@ -50,7 +50,7 @@ namespace Insight.WCF
             var context = WebOperationContext.Current;
             if (context == null) throw new Exception("Unknown exception");
 
-            var encoding = context.IncomingRequest.Headers[HttpRequestHeader.AcceptEncoding];
+            var encoding = context.IncomingRequest.Headers[HttpRequestHeader.AcceptEncoding] ?? "";
             var model = encoding.Contains("gzip") ? CompressType.Gzip : encoding.Contains("deflate") ? CompressType.Deflate : CompressType.None;
 
             // 将result数据使用Json.NET序列化，并按AcceptEncoding指定的压缩模式压缩为一个字节数组
