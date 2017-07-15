@@ -52,8 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomEncoder\JsonDispatchFormatter.cs" />
-    <Compile Include="CustomEncoder\CustomBehavior.cs" />
+    <Compile Include="CustomDispatchFormatter.cs" />
+    <Compile Include="CustomWebHttpBehavior.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service.cs" />
   </ItemGroup>

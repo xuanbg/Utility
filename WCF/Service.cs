@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using Insight.WCF.CustomEncoder;
 
 namespace Insight.WCF
 {
@@ -98,7 +97,7 @@ namespace Insight.WCF
             var host = new ServiceHost(type, uri);
             var binding = InitBinding();
             var endpoint = host.AddServiceEndpoint(type.ImplementedInterfaces.First(), binding, "");
-            var behavior = new CustomBehavior {AutomaticFormatSelectionEnabled = true, AllowOrigin = allowOrigin};
+            var behavior = new CustomWebHttpBehavior {AutomaticFormatSelectionEnabled = true, AllowOrigin = allowOrigin};
             endpoint.Behaviors.Add(behavior);
 
             /* Windows Server 2008 需要设置MaxItemsInObjectGraph值为2147483647

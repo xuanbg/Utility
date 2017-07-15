@@ -1,32 +1,29 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.ServiceModel.Channels;
-using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using System.ServiceModel.Web;
 using System.Text;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
-using Insight.Utils.Common;
 
-namespace Insight.WCF.CustomEncoder
+namespace Insight.WCF
 {
-    public class JsonDispatchFormatter : IDispatchMessageFormatter
+    public class CustomDispatchFormatter : IDispatchMessageFormatter
     {
         private readonly IDispatchMessageFormatter _InnerFormatter;
-        private readonly OperationDescription _Operation;
         private readonly string _AllowOrigin;
 
         /// <summary>
         /// 构造方法，传入内置消息格式化器
         /// </summary>
         /// <param name="formatter">内置消息格式化器</param>
-        /// <param name="operation">传入的操作</param>
         /// <param name="allowOrigin">允许跨域的源</param>
-        public JsonDispatchFormatter(IDispatchMessageFormatter formatter, OperationDescription operation, string allowOrigin)
+        public CustomDispatchFormatter(IDispatchMessageFormatter formatter, string allowOrigin)
         {
             _InnerFormatter = formatter;
-            _Operation = operation;
             _AllowOrigin = allowOrigin ?? "";
         }
 
@@ -49,18 +46,12 @@ namespace Insight.WCF.CustomEncoder
         /// <returns>Message</returns>
         public Message SerializeReply(MessageVersion messageVersion, object[] parameters, object result)
         {
-            var bytes = new byte[0];
+            byte[] bytes;
             var context = WebOperationContext.Current;
+            if (context == null) throw new Exception("Unknown exception");
+
             var encoding = context.IncomingRequest.Headers[HttpRequestHeader.AcceptEncoding];
-            var model = CompressType.None;
-            if (encoding.Contains("gzip"))
-            {
-                model = CompressType.Gzip;
-            }
-            else if (encoding.Contains("deflate"))
-            {
-                model = CompressType.Deflate;
-            }
+            var model = encoding.Contains("gzip") ? CompressType.Gzip : encoding.Contains("deflate") ? CompressType.Deflate : CompressType.None;
 
             // 将result数据使用Json.NET序列化，并按AcceptEncoding指定的压缩模式压缩为一个字节数组
             using (var stream = new MemoryStream())
@@ -70,7 +61,7 @@ namespace Insight.WCF.CustomEncoder
                     var writer = new JsonTextWriter(streamWriter) {Formatting = Formatting.Indented};
                     new JsonSerializer().Serialize(writer, result);
                     streamWriter.Flush();
-                    bytes = result is null ? bytes : Util.Compress(stream.ToArray(), model);
+                    bytes = Util.Compress(stream.ToArray(), model);
                 }
             }
 
