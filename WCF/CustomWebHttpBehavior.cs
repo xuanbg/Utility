@@ -1,9 +1,9 @@
 ﻿using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
-namespace Insight.WCF.CustomEncoder
+namespace Insight.WCF
 {
-    public class CustomBehavior : WebHttpBehavior
+    public class CustomWebHttpBehavior : WebHttpBehavior
     {
         public string AllowOrigin { get; set; }
 
@@ -16,7 +16,7 @@ namespace Insight.WCF.CustomEncoder
         protected override IDispatchMessageFormatter GetRequestDispatchFormatter(OperationDescription operationDescription, ServiceEndpoint endpoint)
         {
             var innerFormatter = base.GetRequestDispatchFormatter(operationDescription, endpoint);
-            return new JsonDispatchFormatter(innerFormatter, operationDescription, AllowOrigin);
+            return new CustomDispatchFormatter(innerFormatter, AllowOrigin);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Insight.WCF.CustomEncoder
         protected override IDispatchMessageFormatter GetReplyDispatchFormatter(OperationDescription operationDescription, ServiceEndpoint endpoint)
         {
             var innerFormatter = base.GetRequestDispatchFormatter(operationDescription, endpoint);
-            return new JsonDispatchFormatter(innerFormatter, operationDescription, AllowOrigin);
+            return new CustomDispatchFormatter(innerFormatter, AllowOrigin);
         }
 
         /// <summary>
