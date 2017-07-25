@@ -27,7 +27,7 @@ namespace Insight.WCF
         /// <returns></returns>
         protected override IDispatchMessageFormatter GetReplyDispatchFormatter(OperationDescription operationDescription, ServiceEndpoint endpoint)
         {
-            var innerFormatter = base.GetRequestDispatchFormatter(operationDescription, endpoint);
+            var innerFormatter = base.GetReplyDispatchFormatter(operationDescription, endpoint);
             return new CustomDispatchFormatter(innerFormatter, AllowOrigin);
         }
 
