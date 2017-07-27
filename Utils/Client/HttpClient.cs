@@ -6,7 +6,7 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpClient
+    public class HttpClient<T> where T : new()
     {
         private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
@@ -23,14 +23,13 @@ namespace Insight.Utils.Client
         /// <summary>
         /// HttpRequest:GET方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Get<T>(string url, string message = null) where T : new()
+        public T Get(string url, string message = null)
         {
             var result = Request(url);
-            if (result.successful) return (T)result.data;
+            if (result.successful) return result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -42,15 +41,14 @@ namespace Insight.Utils.Client
         /// <summary>
         /// HttpRequest:POST方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">POST的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Post<T>(string url, object data, string message = null) where T : new()
+        public T Post(string url, object data, string message = null)
         {
             var result = Request(url, RequestMethod.POST, data);
-            if (result.successful) return (T)result.data;
+            if (result.successful) return result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -62,15 +60,14 @@ namespace Insight.Utils.Client
         /// <summary>
         /// HttpRequest:PUT方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">PUT的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Put<T>(string url, object data, string message = null) where T : new()
+        public T Put(string url, object data, string message = null)
         {
             var result = Request(url, RequestMethod.PUT, data);
-            if (result.successful) return (T)result.data;
+            if (result.successful) return result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -82,15 +79,14 @@ namespace Insight.Utils.Client
         /// <summary>
         /// HttpRequest:DELETE方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">DELETE的数据，默认NULL</param>
         /// <param name="message">错误消息，默认NULL</param>
         /// <returns>T 指定类型的数据</returns>
-        public T Delete<T>(string url, object data = null, string message = null) where T : new()
+        public T Delete(string url, object data = null, string message = null)
         {
             var result = Request(url, RequestMethod.DELETE, data);
-            if (result.successful) return (T)result.data;
+            if (result.successful) return result.data;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{result.message}{newline}{message}";
@@ -106,10 +102,10 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
         /// <returns>Result</returns>
-        public Result Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
+        public Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            var result = new HttpRequest(_Token.AccessToken, url, body, method).Result;
+            var result = new HttpRequest<T>(_Token.AccessToken, url, body, method).Result;
             if (result.code == "406" || result.code == "401")
             {
                 _Token.GetTokens();

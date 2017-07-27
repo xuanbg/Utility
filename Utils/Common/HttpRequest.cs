@@ -8,9 +8,9 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
 {
-    public class HttpRequest
+    public class HttpRequest<T>
     {
-        public Result Result = new Result();
+        public Result<T> Result = new Result<T>();
         private string _Data;
 
         /// <summary>
@@ -68,10 +68,10 @@ namespace Insight.Utils.Common
                 return;
             }
 
-            Result = Util.Deserialize<Result>(_Data);
+            Result = Util.Deserialize<Result<T>>(_Data);
             if (Result != null) return;
 
-            Result = new Result().BadRequest(_Data);
+            Result = new Result<T>().BadRequest(_Data);
         }
 
         /// <summary>
@@ -80,10 +80,9 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="url">请求地址</param>
         /// <param name="body">Body数据</param>
-        /// <param name="accept"></param>
         /// <param name="contentType"></param>
         /// <param name="headers">请求头</param>
-        public HttpRequest(RequestMethod method, string url, string body = null, string accept = "application/json", string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
+        public HttpRequest(RequestMethod method, string url, string body = null, string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.ContentType = contentType;
@@ -114,7 +113,7 @@ namespace Insight.Utils.Common
 
             if (GetResponse(request))
             {
-                Result.Success(_Data);
+                Result.Success(Util.Deserialize<T>(_Data));
                 return;
             }
 

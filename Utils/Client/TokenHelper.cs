@@ -74,14 +74,14 @@ namespace Insight.Utils.Client
 
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
-            var result = new HttpRequest(null, url).Result;
+            var result = new HttpRequest<TokenResult>(null, url).Result;
             if (!result.successful)
             {
                 Messages.ShowError(result.message);
                 return false;
             }
 
-            var token = (TokenResult)result.data;
+            var token = result.data;
             _Token = token.accessToken;
             _RefreshToken = token.refreshToken;
             _ExpiryTime = token.expiryTime;
@@ -100,7 +100,7 @@ namespace Insight.Utils.Client
         private object GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
-            var result = new HttpRequest(null, url).Result;
+            var result = new HttpRequest<string>(null, url).Result;
             if (!result.successful) Messages.ShowError(result.message);
 
             return result.data;
@@ -112,7 +112,7 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var result = new HttpRequest(_RefreshToken, url, null, RequestMethod.PUT).Result;
+            var result = new HttpRequest<DateTime>(_RefreshToken, url, null, RequestMethod.PUT).Result;
             if (result.code == "406")
             {
                 GetTokens();
@@ -125,7 +125,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _ExpiryTime = (DateTime)result.data;
+            _ExpiryTime = result.data;
         }
     }
 }

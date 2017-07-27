@@ -8,7 +8,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 转换返回结果
         /// </summary>
-        public Result Result = new Result();
+        public Result<object> Result = new Result<object>();
 
         /// <summary>
         /// 转换后的值

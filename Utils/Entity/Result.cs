@@ -3,7 +3,7 @@
     /// <summary>
     /// Json接口返回值
     /// </summary>
-    public class Result
+    public class Result<T>
     {
         /// <summary>
         /// 结果
@@ -28,12 +28,12 @@
         /// <summary>
         /// 可选参数
         /// </summary>
-        public object option { get; set; }
+        public string option { get; set; }
 
         /// <summary>
         /// 数据
         /// </summary>
-        public object data { get; set; }
+        public T data { get; set; }
 
         /// <summary>
         /// 初始化为未知错误（500）
