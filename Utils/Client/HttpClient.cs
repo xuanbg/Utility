@@ -11,6 +11,9 @@ namespace Insight.Utils.Client
         private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
 
+        // 返回结果
+        public Result<T> Result = new Result<T>();
+
         /// <summary>
         /// 构造函数，传入TokenHelper
         /// </summary>
@@ -25,17 +28,16 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Get(string url, string message = null)
+        /// <returns>bool 是否成功</returns>
+        public bool Get(string url, string message = null)
         {
-            var result = Request(url);
-            if (result.successful) return result.data;
+            Result = Request(url);
+            if (Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
@@ -44,17 +46,16 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="data">POST的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Post(string url, object data, string message = null)
+        /// <returns>bool 是否成功</returns>
+        public bool Post(string url, object data, string message = null)
         {
-            var result = Request(url, RequestMethod.POST, data);
-            if (result.successful) return result.data;
+            Result = Request(url, RequestMethod.POST, data);
+            if (Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
@@ -63,17 +64,16 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="data">PUT的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Put(string url, object data, string message = null)
+        /// <returns>bool 是否成功</returns>
+        public bool Put(string url, object data, string message = null)
         {
-            var result = Request(url, RequestMethod.PUT, data);
-            if (result.successful) return result.data;
+            Result = Request(url, RequestMethod.PUT, data);
+            if (Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
@@ -82,17 +82,16 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="data">DELETE的数据，默认NULL</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Delete(string url, object data = null, string message = null)
+        /// <returns>bool 是否成功</returns>
+        public bool Delete(string url, object data = null, string message = null)
         {
-            var result = Request(url, RequestMethod.DELETE, data);
-            if (result.successful) return result.data;
+            Result = Request(url, RequestMethod.DELETE, data);
+            if (Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
         /// <returns>Result</returns>
-        public Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
+        private Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             var result = new HttpRequest<T>(_Token.AccessToken, url, body, method).Result;
