@@ -10,160 +10,134 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
-        public Result Result = new Result();
-        private string _Data;
+        private readonly HttpWebRequest _Request;
+
+        /// <summary>
+        /// 错误消息
+        /// </summary>
+        public string Message { get; private set; }
+
+        /// <summary>
+        /// 返回数据
+        /// </summary>
+        public string Data { get; private set; }
+
+        /// <summary>
+        /// 请求方法，默认GET
+        /// </summary>
+        public RequestMethod Method { private get; set; } = RequestMethod.GET;
+
+        /// <summary>
+        /// 下行数据压缩方式(默认Gzip)
+        /// </summary>
+        public CompressType AcceptEncoding { private get; set; } = CompressType.Gzip;
+
+        /// <summary>
+        /// 上行数据压缩方式(默认无压缩)
+        /// </summary>
+        public CompressType ContentEncoding { private get; set; } = CompressType.None;
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
-        /// <param name="token">AccessToken</param>
         /// <param name="url">请求地址</param>
-        /// <param name="body">Body数据，默认NULL</param>
-        /// <param name="method">请求方法，默认GET</param>
-        /// <param name="compress">压缩方式(默认Gzip)</param>
-        public HttpRequest(string token, string url, string body = null, RequestMethod method = RequestMethod.GET, CompressType compress = CompressType.None)
+        /// <param name="token">AccessToken</param>
+        public HttpRequest(string url, string token)
         {
-            var request = GetWebRequest(url, method, token, compress);
-            if (method != RequestMethod.GET)
+            _Request = (HttpWebRequest)WebRequest.Create(url);
+            _Request.Method = Method.ToString();
+            _Request.Accept = "application/json";
+            _Request.ContentType = "application/json; charset=utf-8";
+            if (token != null)
             {
-                var buffer = Encoding.UTF8.GetBytes(body ?? "");
-                try
-                {
-                    var ms = new MemoryStream();
-                    switch (compress)
-                    {
-                        case CompressType.Gzip:
-                            using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
-                            {
-                                stream.Write(buffer, 0, buffer.Length);
-                            }
-                            buffer = ms.GetBuffer();
-                            break;
-                        case CompressType.Deflate:
-                            using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
-                            {
-                                stream.Write(buffer, 0, buffer.Length);
-                            }
-                            buffer = ms.GetBuffer();
-                            break;
-                        case CompressType.None:
-                            break;
-                    }
-
-                    request.ContentLength = buffer.Length;
-                    using (var stream = request.GetRequestStream())
-                    {
-                        stream.Write(buffer, 0, buffer.Length);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Result.BadRequest(ex.Message);
-                }
+                _Request.Headers.Add(HttpRequestHeader.Authorization, token);
             }
 
-            if (!GetResponse(request))
+            if (AcceptEncoding != CompressType.None)
             {
-                Result.BadRequest(_Data ?? "Response was not received data!");
-                return;
+                _Request.Headers.Add(HttpRequestHeader.AcceptEncoding, AcceptEncoding.ToString().ToLower());
             }
 
-            Result = Util.Deserialize<Result>(_Data);
-            if (Result != null) return;
-
-            Result = new Result().BadRequest(_Data);
+            if (ContentEncoding != CompressType.None)
+            {
+                _Request.Headers.Add(HttpRequestHeader.ContentEncoding, ContentEncoding.ToString().ToLower());
+            }
         }
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求外部接口
         /// </summary>
-        /// <param name="method">请求方法，默认GET</param>
         /// <param name="url">请求地址</param>
-        /// <param name="body">Body数据</param>
-        /// <param name="accept"></param>
         /// <param name="contentType"></param>
         /// <param name="headers">请求头</param>
-        public HttpRequest(RequestMethod method, string url, string body = null, string accept = "application/json", string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
+        public HttpRequest(string url, string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.ContentType = contentType;
-            if (headers != null)
-            {
-                foreach (var header in headers)
-                {
-                    request.Headers[header.Key] = header.Value;
-                }
-            }
+            _Request = (HttpWebRequest)WebRequest.Create(url);
+            _Request.ContentType = contentType;
+            if (headers == null) return;
 
-            if (method != RequestMethod.GET)
+            foreach (var header in headers)
             {
-                var buffer = Encoding.UTF8.GetBytes(body ?? "");
-                try
-                {
-                    request.ContentLength = buffer.Length;
-                    using (var stream = request.GetRequestStream())
-                    {
-                        stream.Write(buffer, 0, buffer.Length);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Result.BadRequest(ex.Message);
-                }
+                _Request.Headers[header.Key] = header.Value;
             }
-
-            if (GetResponse(request))
-            {
-                Result.Success(_Data);
-                return;
-            }
-
-            Result.BadRequest(_Data ?? "Response was not received data!");
         }
 
         /// <summary>
-        /// 获取WebRequest对象
+        /// 请求数据
         /// </summary>
-        /// <param name="url">请求地址</param>
-        /// <param name="method">请求方法</param>
-        /// <param name="token">AccessToken</param>
-        /// <param name="compress">压缩方式</param>
-        /// <returns>HttpWebRequest</returns>
-        private HttpWebRequest GetWebRequest(string url, RequestMethod method, string token = null, CompressType compress = CompressType.None)
+        /// <param name="body">BODY数据</param>
+        /// <returns>bool 是否成功</returns>
+        public bool Request(string body = null)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = method.ToString();
-            request.Accept = "application/json";
-            request.ContentType = "application/json; charset=utf-8";
-            request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip");
-            request.Headers.Add(HttpRequestHeader.Authorization, token);
-            if (method == RequestMethod.GET) return request;
+            if (Method == RequestMethod.GET) return GetResponse();
 
-            switch (compress)
+            var buffer = Encoding.UTF8.GetBytes(body ?? "");
+            try
             {
-                case CompressType.Gzip:
-                    request.ContentType = "application/json; x-gzip";
-                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "gzip");
-                    break;
-                case CompressType.Deflate:
-                    request.ContentType = "application/json; x-deflate";
-                    request.Headers.Add(HttpRequestHeader.ContentEncoding, "deflate");
-                    break;
+                var ms = new MemoryStream();
+                switch (ContentEncoding)
+                {
+                    case CompressType.Gzip:
+                        using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
+                        {
+                            stream.Write(buffer, 0, buffer.Length);
+                        }
+                        buffer = ms.GetBuffer();
+                        break;
+                    case CompressType.Deflate:
+                        using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
+                        {
+                            stream.Write(buffer, 0, buffer.Length);
+                        }
+                        buffer = ms.GetBuffer();
+                        break;
+                    case CompressType.None:
+                        break;
+                }
+
+                _Request.ContentLength = buffer.Length;
+                using (var stream = _Request.GetRequestStream())
+                {
+                    stream.Write(buffer, 0, buffer.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+                return false;
             }
 
-            return request;
+            return GetResponse();
         }
 
         /// <summary>
         /// 获取Request响应数据
         /// </summary>
-        /// <param name="request">WebRequest</param>
-        /// <returns>Result</returns>
-        private bool GetResponse(WebRequest request)
+        private bool GetResponse()
         {
             try
             {
-                var response = (HttpWebResponse)request.GetResponse();
+                var response = (HttpWebResponse) _Request.GetResponse();
                 var stream = response.GetResponseStream();
                 if (stream == null) return false;
 
@@ -171,13 +145,13 @@ namespace Insight.Utils.Common
                 switch (encoding)
                 {
                     case "gzip":
-                        _Data = FromGZipStream(stream);
+                        Data = FromGZipStream(stream);
                         break;
                     case "deflate":
-                        _Data = FromDeflateStream(stream);
+                        Data = FromDeflateStream(stream);
                         break;
                     default:
-                        _Data = FromStream(stream);
+                        Data = FromStream(stream);
                         break;
                 }
 
@@ -187,7 +161,7 @@ namespace Insight.Utils.Common
             }
             catch (Exception ex)
             {
-                _Data = ex.Message;
+                Message = ex.Message;
                 return false;
             }
         }

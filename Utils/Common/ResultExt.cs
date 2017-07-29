@@ -10,7 +10,7 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         /// <param name="data">承载的数据</param>
         /// <param name="option"></param>
-        public static Result Success(this Result result, object data = null, object option = null)
+        public static Result<T> Success<T>(this Result<T> result, T data = default(T), string option = null)
         {
             result.successful = true;
             result.code = "200";
@@ -26,7 +26,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="data">承载的数据</param>
-        public static Result Created(this Result result, object data = null)
+        public static Result<T> Created<T>(this Result<T> result, T data = default(T))
         {
             result.successful = true;
             result.code = "201";
@@ -40,13 +40,14 @@ namespace Insight.Utils.Common
         /// 无可用内容（204）
         /// </summary>
         /// <param name="result"></param>
-        public static Result NoContent(this Result result)
+        /// <param name="data">承载的数据</param>
+        public static Result<T> NoContent<T>(this Result<T> result, T data)
         {
             result.successful = true;
             result.code = "204";
             result.name = "NoContent";
             result.message = "无可用内容";
-            result.data = new object[]{};
+            result.data = data;
             return result;
         }
 
@@ -54,7 +55,7 @@ namespace Insight.Utils.Common
         /// 无需刷新（205）
         /// </summary>
         /// <param name="result"></param>
-        public static Result WithoutRefresh(this Result result)
+        public static Result<T> WithoutRefresh<T>(this Result<T> result)
         {
             result.successful = true;
             result.code = "205";
@@ -68,7 +69,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="message">错误详细信息（可选）</param>
-        public static Result BadRequest(this Result result, string message = null)
+        public static Result<T> BadRequest<T>(this Result<T> result, string message = null)
         {
             result.successful = false;
             result.code = "400";
@@ -81,7 +82,7 @@ namespace Insight.Utils.Common
         /// 身份验证失败（401）
         /// </summary>
         /// <param name="result"></param>
-        public static Result InvalidAuth(this Result result)
+        public static Result<T> InvalidAuth<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "401";
@@ -95,7 +96,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="option">剩余秒数</param>
-        public static Result TooFrequent(this Result result, object option)
+        public static Result<T> TooFrequent<T>(this Result<T> result, string option)
         {
             result.successful = false;
             result.code = "402";
@@ -109,7 +110,7 @@ namespace Insight.Utils.Common
         /// 用户未取得授权（403）
         /// </summary>
         /// <param name="result"></param>
-        public static Result Forbidden(this Result result)
+        public static Result<T> Forbidden<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "403";
@@ -123,7 +124,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="msg"></param>
-        public static Result NotFound(this Result result, string msg = null)
+        public static Result<T> NotFound<T>(this Result<T> result, string msg = null)
         {
             result.successful = false;
             result.code = "404";
@@ -136,7 +137,7 @@ namespace Insight.Utils.Common
         /// AccessToken已过期（405）
         /// </summary>
         /// <param name="result"></param>
-        public static Result Expired(this Result result)
+        public static Result<T> Expired<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "405";
@@ -148,7 +149,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// AccessToken已失效（406）
         /// </summary>
-        public static Result Failured(this Result result)
+        public static Result<T> Failured<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "406";
@@ -160,7 +161,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 获取AccessToken失败（407）
         /// </summary>
-        public static Result GetTokenFailured(this Result result)
+        public static Result<T> GetTokenFailured<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "407";
@@ -172,7 +173,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 获取Code失败（408）
         /// </summary>
-        public static Result GetCodeFailured(this Result result)
+        public static Result<T> GetCodeFailured<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "408";
@@ -184,7 +185,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 用户已存在（409）
         /// </summary>
-        public static Result AccountExists(this Result result)
+        public static Result<T> AccountExists<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "409";
@@ -196,7 +197,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 用户被禁止登录（410）
         /// </summary>
-        public static Result Disabled(this Result result)
+        public static Result<T> Disabled<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "410";
@@ -208,7 +209,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 账号在线数量过多（411）
         /// </summary>
-        public static Result TooManyOnline(this Result result)
+        public static Result<T> TooManyOnline<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "411";
@@ -220,7 +221,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 转换为Guid失败（420）
         /// </summary>
-        public static Result InvalidGuid(this Result result)
+        public static Result<T> InvalidGuid<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "420";
@@ -232,7 +233,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 转换为DateTime失败（421）
         /// </summary>
-        public static Result InvalidDateTime(this Result result)
+        public static Result<T> InvalidDateTime<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "421";
@@ -244,7 +245,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 数值转换失败（422）
         /// </summary>
-        public static Result InvalidValue(this Result result)
+        public static Result<T> InvalidValue<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "422";
@@ -256,7 +257,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 未找到指定的文件（430）
         /// </summary>
-        public static Result FileNotExists(this Result result)
+        public static Result<T> FileNotExists<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "430";
@@ -268,7 +269,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 未找到指定的Sheet（431）
         /// </summary>
-        public static Result SheetNotExists(this Result result)
+        public static Result<T> SheetNotExists<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "431";
@@ -280,7 +281,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 未从文件中读取任何数据行（432）
         /// </summary>
-        public static Result NoRowsRead(this Result result)
+        public static Result<T> NoRowsRead<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "432";
@@ -292,7 +293,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// Excel格式不正确（433）
         /// </summary>
-        public static Result IncorrectExcelFormat(this Result result)
+        public static Result<T> IncorrectExcelFormat<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "433";
@@ -304,7 +305,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 写数据库失败（501）
         /// </summary>
-        public static Result DataBaseError(this Result result)
+        public static Result<T> DataBaseError<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "501";
@@ -316,7 +317,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 数据已存在（502）
         /// </summary>
-        public static Result DataAlreadyExists(this Result result)
+        public static Result<T> DataAlreadyExists<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "502";
@@ -328,7 +329,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 当前服务不可用（503）
         /// </summary>
-        public static Result ServiceUnavailable(this Result result)
+        public static Result<T> ServiceUnavailable<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "503";
@@ -340,7 +341,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 未更新任何数据（504）
         /// </summary>
-        public static Result NotUpdate(this Result result)
+        public static Result<T> NotUpdate<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "504";
@@ -352,7 +353,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 不允许修改和删除的数据（505）
         /// </summary>
-        public static Result NotBeModified(this Result result)
+        public static Result<T> NotBeModified<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "505";
@@ -364,7 +365,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 不允许删除的数据（506）
         /// </summary>
-        public static Result NotBeDeleted(this Result result)
+        public static Result<T> NotBeDeleted<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "506";

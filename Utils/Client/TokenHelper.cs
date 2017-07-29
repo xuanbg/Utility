@@ -74,18 +74,13 @@ namespace Insight.Utils.Client
 
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
-            var result = new HttpRequest(null, url).Result;
-            if (!result.successful)
-            {
-                Messages.ShowError(result.message);
-                return false;
-            }
+            var client = new HttpClient<TokenResult>(null);
+            if (!client.Get(url)) return false;
 
-            var token = (TokenResult)result.data;
-            _Token = token.accessToken;
-            _RefreshToken = token.refreshToken;
-            _ExpiryTime = token.expiryTime;
-            _FailureTime = token.failureTime;
+            _Token = client.Data.accessToken;
+            _RefreshToken = client.Data.refreshToken;
+            _ExpiryTime = client.Data.expiryTime;
+            _FailureTime = client.Data.failureTime;
 
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
@@ -97,13 +92,11 @@ namespace Insight.Utils.Client
         /// 获取Code
         /// </summary>
         /// <returns>Dictionary Code</returns>
-        private object GetCode()
+        private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
-            var result = new HttpRequest(null, url).Result;
-            if (!result.successful) Messages.ShowError(result.message);
-
-            return result.data;
+            var client = new HttpClient<string>(null);
+            return client.Get(url) ? client.Data : null;
         }
 
         /// <summary>
@@ -112,7 +105,14 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var result = new HttpRequest(_RefreshToken, url, null, RequestMethod.PUT).Result;
+            var request = new HttpRequest(url, _RefreshToken);
+            if (!request.Request())
+            {
+                Messages.ShowError(request.Message);
+                return;
+            }
+
+            var result = Util.Deserialize<Result<DateTime>>(request.Data);
             if (result.code == "406")
             {
                 GetTokens();
@@ -125,7 +125,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _ExpiryTime = (DateTime)result.data;
+            _ExpiryTime = result.data;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Insight.Utils.Npoi
 {
     public class NpoiHelper<T> where T : new()
     {
-        private readonly Result _Result = new Result();
+        private readonly Result<object> _Result = new Result<object>();
 
         /// <summary>
         /// 导入Excel文件
@@ -20,7 +20,7 @@ namespace Insight.Utils.Npoi
         /// <param name="path">文件路径</param>
         /// <param name="index">Sheet索引</param>
         /// <returns>Result</returns>
-        public Result Import(string path, int index = 0)
+        public Result<object> Import(string path, int index = 0)
         {
             if (!File.Exists(path))
             {
@@ -54,11 +54,11 @@ namespace Insight.Utils.Npoi
         /// </summary>
         /// <param name="list">数据集合</param>
         /// <returns>Result</returns>
-        public Result Export(List<T> list)
+        public Result<object> Export(List<T> list)
         {
             if (!list.Any())
             {
-                _Result.NoContent();
+                _Result.NoContent(new List<object>());
                 return _Result;
             }
 

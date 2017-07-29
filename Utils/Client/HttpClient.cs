@@ -6,10 +6,31 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpClient
+    public class HttpClient<T>
     {
         private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
+        private Result<T> _Result = new Result<T>();
+
+        /// <summary>
+        /// 返回的错误代码
+        /// </summary>
+        public string Code => _Result.code;
+
+        /// <summary>
+        /// 返回的错误消息
+        /// </summary>
+        public string Message => _Result.message;
+
+        /// <summary>
+        /// 返回的数据
+        /// </summary>
+        public T Data => _Result.data;
+
+        /// <summary>
+        /// 返回的可选项
+        /// </summary>
+        public string Option => _Result.option;
 
         /// <summary>
         /// 构造函数，传入TokenHelper
@@ -23,80 +44,72 @@ namespace Insight.Utils.Client
         /// <summary>
         /// HttpRequest:GET方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Get<T>(string url, string message = null) where T : new()
+        /// <returns>bool 是否成功</returns>
+        public bool Get(string url, string message = null)
         {
-            var result = Request(url);
-            if (result.successful) return (T)result.data;
+            _Result = Request(url);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
         /// HttpRequest:POST方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">POST的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Post<T>(string url, object data, string message = null) where T : new()
+        /// <returns>bool 是否成功</returns>
+        public bool Post(string url, object data, string message = null)
         {
-            var result = Request(url, RequestMethod.POST, data);
-            if (result.successful) return (T)result.data;
+            _Result = Request(url, RequestMethod.POST, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
         /// HttpRequest:PUT方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">PUT的数据</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Put<T>(string url, object data, string message = null) where T : new()
+        /// <returns>bool 是否成功</returns>
+        public bool Put(string url, object data, string message = null)
         {
-            var result = Request(url, RequestMethod.PUT, data);
-            if (result.successful) return (T)result.data;
+            _Result = Request(url, RequestMethod.PUT, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
         /// HttpRequest:DELETE方法
         /// </summary>
-        /// <typeparam name="T">返回值数据类型</typeparam>
         /// <param name="url">接口URL</param>
         /// <param name="data">DELETE的数据，默认NULL</param>
         /// <param name="message">错误消息，默认NULL</param>
-        /// <returns>T 指定类型的数据</returns>
-        public T Delete<T>(string url, object data = null, string message = null) where T : new()
+        /// <returns>bool 是否成功</returns>
+        public bool Delete(string url, object data = null, string message = null)
         {
-            var result = Request(url, RequestMethod.DELETE, data);
-            if (result.successful) return (T)result.data;
+            _Result = Request(url, RequestMethod.DELETE, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
-
-            return new T();
+            return false;
         }
 
         /// <summary>
@@ -106,11 +119,16 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
         /// <returns>Result</returns>
-        public Result Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
+        private Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
+            var request = new HttpRequest(url, _Token?.AccessToken){Method = method};
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            var result = new HttpRequest(_Token.AccessToken, url, body, method).Result;
-            if (result.code == "406" || result.code == "401")
+            if (!request.Request(body)) return new Result<T>().BadRequest(request.Message);
+
+            var result = Util.Deserialize<Result<T>>(request.Data);
+            if (result == null) return new Result<T>().BadRequest(request.Message);
+
+            if (_Token != null && (result.code == "406" || result.code == "401"))
             {
                 _Token.GetTokens();
                 return Request(url, method, data);
@@ -156,6 +174,8 @@ namespace Insight.Utils.Client
         /// <param name="message">接口返回消息</param>
         private void LogAsync(string method, string url, string message)
         {
+            if (_Token == null) return;
+
             Task.Run(() => Log(_Token.AccessToken, method, url, message));
         }
     }

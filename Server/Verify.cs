@@ -15,7 +15,7 @@ namespace Insight.Utils.Server
         /// <summary>
         /// 验证结果
         /// </summary>
-        public Result Result = new Result();
+        public Result<object> Result = new Result<object>();
 
         /// <summary>
         /// Access Token字符串
@@ -65,7 +65,7 @@ namespace Insight.Utils.Server
             }
 
             var url = $"{verifyurl}?action={aid}";
-            Result = new HttpRequest(AccessToken, url).Result;
+            Result = new HttpRequest<object>(AccessToken, url).Result;
         }
 
         /// <summary>

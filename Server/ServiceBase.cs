@@ -8,7 +8,7 @@ namespace Insight.Utils.Server
         protected CallManage CallManage;
         protected string VerifyUrl;
 
-        public Result Result = new Result();
+        public Result<object> Result = new Result<object>();
         public string UserName;
         public Guid UserId;
         public Guid? DeptId;

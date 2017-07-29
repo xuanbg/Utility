@@ -12,7 +12,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回结果
         /// </summary>
-        public Result Result = new Result();
+        public Result<string> Result = new Result<string>();
 
         /// <summary>
         /// 日志信息
@@ -47,8 +47,8 @@ namespace Insight.Utils.Client
                 {"userid", _Info.CreatorUserId}
             };
             var body = new JavaScriptSerializer().Serialize(dict);
-            // ReSharper disable once UnusedVariable
-            var request = new HttpRequest(_Info.Token, _Info.Interface, body, RequestMethod.POST);
+            var request = new HttpRequest( _Info.Interface, _Info.Token){Method = RequestMethod.POST};
+            request.Request(body);
         }
 
         /// <summary>
