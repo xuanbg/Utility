@@ -6,13 +6,31 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpClient<T> where T : new()
+    public class HttpClient<T>
     {
         private readonly TokenHelper _Token;
         private readonly DateTime _Time = DateTime.Now;
+        private Result<T> _Result = new Result<T>();
 
-        // 返回结果
-        public Result<T> Result = new Result<T>();
+        /// <summary>
+        /// 返回的错误代码
+        /// </summary>
+        public string Code => _Result.code;
+
+        /// <summary>
+        /// 返回的错误消息
+        /// </summary>
+        public string Message => _Result.message;
+
+        /// <summary>
+        /// 返回的数据
+        /// </summary>
+        public T Data => _Result.data;
+
+        /// <summary>
+        /// 返回的可选项
+        /// </summary>
+        public string Option => _Result.option;
 
         /// <summary>
         /// 构造函数，传入TokenHelper
@@ -31,11 +49,11 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Get(string url, string message = null)
         {
-            Result = Request(url);
-            if (Result.successful) return true;
+            _Result = Request(url);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{Result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -49,11 +67,11 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Post(string url, object data, string message = null)
         {
-            Result = Request(url, RequestMethod.POST, data);
-            if (Result.successful) return true;
+            _Result = Request(url, RequestMethod.POST, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{Result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -67,11 +85,11 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Put(string url, object data, string message = null)
         {
-            Result = Request(url, RequestMethod.PUT, data);
-            if (Result.successful) return true;
+            _Result = Request(url, RequestMethod.PUT, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{Result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -85,11 +103,11 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Delete(string url, object data = null, string message = null)
         {
-            Result = Request(url, RequestMethod.DELETE, data);
-            if (Result.successful) return true;
+            _Result = Request(url, RequestMethod.DELETE, data);
+            if (_Result.successful) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{Result.message}{newline}{message}";
+            var msg = $"{_Result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -103,9 +121,14 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         private Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
+            var request = new HttpRequest(url, _Token?.AccessToken){Method = method};
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            var result = new HttpRequest<T>(_Token.AccessToken, url, body, method).Result;
-            if (result.code == "406" || result.code == "401")
+            if (!request.Request(body)) return new Result<T>().BadRequest(request.Message);
+
+            var result = Util.Deserialize<Result<T>>(request.Data);
+            if (result == null) return new Result<T>().BadRequest(request.Message);
+
+            if (_Token != null && (result.code == "406" || result.code == "401"))
             {
                 _Token.GetTokens();
                 return Request(url, method, data);
@@ -151,6 +174,8 @@ namespace Insight.Utils.Client
         /// <param name="message">接口返回消息</param>
         private void LogAsync(string method, string url, string message)
         {
+            if (_Token == null) return;
+
             Task.Run(() => Log(_Token.AccessToken, method, url, message));
         }
     }
