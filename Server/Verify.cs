@@ -65,8 +65,8 @@ namespace Insight.Utils.Server
             }
 
             var url = $"{verifyurl}?action={aid}";
-            var request = new HttpRequest(url, AccessToken);
-            if (!request.Request())
+            var request = new HttpRequest(AccessToken);
+            if (!request.Send(url))
             {
                 Result.BadRequest(request.Message);
                 return;

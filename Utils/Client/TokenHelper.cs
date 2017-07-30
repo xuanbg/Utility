@@ -105,8 +105,8 @@ namespace Insight.Utils.Client
         private void RefresTokens()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var request = new HttpRequest(url, _RefreshToken);
-            if (!request.Request())
+            var request = new HttpRequest(_RefreshToken);
+            if (!request.Send(url))
             {
                 Messages.ShowError(request.Message);
                 return;
