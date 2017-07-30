@@ -10,7 +10,8 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
-        private readonly HttpWebRequest _Request;
+        private HttpWebRequest _Request;
+        private readonly string _Token;
 
         /// <summary>
         /// 错误消息
@@ -23,9 +24,9 @@ namespace Insight.Utils.Common
         public string Data { get; private set; }
 
         /// <summary>
-        /// 请求方法，默认GET
+        /// ContentType
         /// </summary>
-        public RequestMethod Method { private get; set; } = RequestMethod.GET;
+        public string ContentType { private get; set; } = "application/json; charset=utf-8";
 
         /// <summary>
         /// 下行数据压缩方式(默认Gzip)
@@ -38,58 +39,30 @@ namespace Insight.Utils.Common
         public CompressType ContentEncoding { private get; set; } = CompressType.None;
 
         /// <summary>
+        /// 自定义请求头内容
+        /// </summary>
+        public Dictionary<HttpRequestHeader, string> Headers { private get; set; }
+
+        /// <summary>
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
-        /// <param name="url">请求地址</param>
         /// <param name="token">AccessToken</param>
-        public HttpRequest(string url, string token)
+        public HttpRequest(string token)
         {
-            _Request = (HttpWebRequest)WebRequest.Create(url);
-            _Request.Method = Method.ToString();
-            _Request.Accept = "application/json";
-            _Request.ContentType = "application/json; charset=utf-8";
-            if (token != null)
-            {
-                _Request.Headers.Add(HttpRequestHeader.Authorization, token);
-            }
-
-            if (AcceptEncoding != CompressType.None)
-            {
-                _Request.Headers.Add(HttpRequestHeader.AcceptEncoding, AcceptEncoding.ToString().ToLower());
-            }
-
-            if (ContentEncoding != CompressType.None)
-            {
-                _Request.Headers.Add(HttpRequestHeader.ContentEncoding, ContentEncoding.ToString().ToLower());
-            }
+            _Token = token;
         }
 
         /// <summary>
-        /// HttpRequest方法，用于客户端请求外部接口
+        /// 发送Http请求
         /// </summary>
         /// <param name="url">请求地址</param>
-        /// <param name="contentType"></param>
-        /// <param name="headers">请求头</param>
-        public HttpRequest(string url, string contentType = "application/json; charset=utf-8", Dictionary<HttpRequestHeader, string> headers = null)
-        {
-            _Request = (HttpWebRequest)WebRequest.Create(url);
-            _Request.ContentType = contentType;
-            if (headers == null) return;
-
-            foreach (var header in headers)
-            {
-                _Request.Headers[header.Key] = header.Value;
-            }
-        }
-
-        /// <summary>
-        /// 请求数据
-        /// </summary>
         /// <param name="body">BODY数据</param>
+        /// <param name="method">请求方法，默认GET</param>
         /// <returns>bool 是否成功</returns>
-        public bool Request(string body = null)
+        public bool Send(string url, string body = null, RequestMethod method = RequestMethod.GET)
         {
-            if (Method == RequestMethod.GET) return GetResponse();
+            Create(url, method);
+            if (method == RequestMethod.GET) return GetResponse();
 
             var buffer = Encoding.UTF8.GetBytes(body ?? "");
             try
@@ -128,6 +101,40 @@ namespace Insight.Utils.Common
             }
 
             return GetResponse();
+        }
+
+        /// <summary>
+        /// 新建并初始化一个Http请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="method">请求方法</param>
+        private void Create(string url, RequestMethod method)
+        {
+            _Request = (HttpWebRequest)WebRequest.Create(url);
+            _Request.Method = method.ToString();
+            _Request.Accept = "application/json";
+            _Request.ContentType = ContentType;
+            if (_Token != null)
+            {
+                _Request.Headers.Add(HttpRequestHeader.Authorization, _Token);
+            }
+
+            if (AcceptEncoding != CompressType.None)
+            {
+                _Request.Headers.Add(HttpRequestHeader.AcceptEncoding, AcceptEncoding.ToString().ToLower());
+            }
+
+            if (ContentEncoding != CompressType.None)
+            {
+                _Request.Headers.Add(HttpRequestHeader.ContentEncoding, ContentEncoding.ToString().ToLower());
+            }
+
+            if (Headers == null) return;
+
+            foreach (var header in Headers)
+            {
+                _Request.Headers[header.Key] = header.Value;
+            }
         }
 
         /// <summary>
