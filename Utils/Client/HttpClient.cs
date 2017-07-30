@@ -121,9 +121,9 @@ namespace Insight.Utils.Client
         /// <returns>Result</returns>
         private Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
-            var request = new HttpRequest(url, _Token?.AccessToken){Method = method};
+            var request = new HttpRequest(_Token?.AccessToken);
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            if (!request.Request(body)) return new Result<T>().BadRequest(request.Message);
+            if (!request.Send(url, body, method)) return new Result<T>().BadRequest(request.Message);
 
             var result = Util.Deserialize<Result<T>>(request.Data);
             if (result == null) return new Result<T>().BadRequest(request.Message);

@@ -47,8 +47,8 @@ namespace Insight.Utils.Client
                 {"userid", _Info.CreatorUserId}
             };
             var body = new JavaScriptSerializer().Serialize(dict);
-            var request = new HttpRequest( _Info.Interface, _Info.Token){Method = RequestMethod.POST};
-            request.Request(body);
+            var request = new HttpRequest(_Info.Token);
+            request.Send(_Info.Interface, body, RequestMethod.POST);
         }
 
         /// <summary>
