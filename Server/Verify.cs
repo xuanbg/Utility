@@ -65,7 +65,14 @@ namespace Insight.Utils.Server
             }
 
             var url = $"{verifyurl}?action={aid}";
-            Result = new HttpRequest<object>(AccessToken, url).Result;
+            var request = new HttpRequest(url, AccessToken);
+            if (!request.Request())
+            {
+                Result.BadRequest(request.Message);
+                return;
+            }
+
+            Result = Util.Deserialize<Result<object>>(request.Data);
         }
 
         /// <summary>
