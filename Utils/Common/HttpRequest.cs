@@ -47,7 +47,7 @@ namespace Insight.Utils.Common
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
         /// <param name="token">AccessToken</param>
-        public HttpRequest(string token)
+        public HttpRequest(string token = null)
         {
             _Token = token;
         }
@@ -145,25 +145,24 @@ namespace Insight.Utils.Common
             try
             {
                 var response = (HttpWebResponse) _Request.GetResponse();
-                var stream = response.GetResponseStream();
-                if (stream == null) return false;
-
-                var encoding = response.ContentEncoding.ToLower();
-                switch (encoding)
+                using (var stream = response.GetResponseStream())
                 {
-                    case "gzip":
-                        Data = FromGZipStream(stream);
-                        break;
-                    case "deflate":
-                        Data = FromDeflateStream(stream);
-                        break;
-                    default:
-                        Data = FromStream(stream);
-                        break;
+                    switch (response.ContentEncoding.ToLower())
+                    {
+                        case "gzip":
+                            Data = FromGZipStream(stream);
+                            break;
+                        case "deflate":
+                            Data = FromDeflateStream(stream);
+                            break;
+                        default:
+                            Data = FromStream(stream);
+                            break;
+                    }
+                    // ReSharper disable once PossibleNullReferenceException
+                    stream.Flush();
                 }
 
-                stream.Flush();
-                stream.Close();
                 return true;
             }
             catch (Exception ex)
