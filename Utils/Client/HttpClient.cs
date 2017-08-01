@@ -135,7 +135,7 @@ namespace Insight.Utils.Client
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
             LogAsync(method.ToString(), url, Message);
 #endif
-            return true;
+            return _Result.successful;
         }
 
         /// <summary>
