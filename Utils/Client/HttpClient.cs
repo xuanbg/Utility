@@ -125,7 +125,7 @@ namespace Insight.Utils.Client
             } 
 
             _Result = Util.Deserialize<Result<T>>(request.Data);
-            if (_Token != null && (Code == "406" || Code == "401"))
+            if (_Token != null && "401,406".Contains(Code))
             {
                 _Token.GetTokens();
                 return Request(url, method, data);
