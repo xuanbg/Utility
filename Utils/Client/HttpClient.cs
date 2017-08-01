@@ -114,7 +114,7 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
-        /// <returns>Result</returns>
+        /// <returns>bool 是否成功</returns>
         private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var request = new HttpRequest(_Token?.AccessToken);
