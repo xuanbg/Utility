@@ -91,7 +91,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 获取Code
         /// </summary>
-        /// <returns>Dictionary Code</returns>
+        /// <returns>string Code</returns>
         private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";

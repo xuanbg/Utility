@@ -7,7 +7,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 显示提示对话框
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="msg">消息内容</param>
         public static void ShowMessage(string msg)
         {
             MessageBox.Show(msg, "信息", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -16,7 +16,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 显示警告对话框
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="msg">消息内容</param>
         public static void ShowWarning(string msg)
         {
             MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -25,7 +25,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 显示错误对话框
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="msg">消息内容</param>
         public static void ShowError(string msg)
         {
             MessageBox.Show(msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -34,8 +34,8 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 显示确认对话框
         /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="button"></param>
+        /// <param name="msg">消息内容</param>
+        /// <param name="button">默认按钮</param>
         /// <returns>bool 是否确认</returns>
         public static bool ShowConfirm(string msg, MessageBoxDefaultButton button = MessageBoxDefaultButton.Button2)
         {
@@ -45,8 +45,8 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 显示提问对话框
         /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
+        /// <param name="msg">消息内容</param>
+        /// <returns>DialogResult</returns>
         public static DialogResult ShowQuestion(string msg)
         {
             return MessageBox.Show(msg, "请选择", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3);

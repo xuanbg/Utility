@@ -49,8 +49,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Get(string url, string message = null)
         {
-            _Result = Request(url);
-            if (_Result.successful) return true;
+            if (Request(url)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{_Result.message}{newline}{message}";
@@ -67,8 +66,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Post(string url, object data, string message = null)
         {
-            _Result = Request(url, RequestMethod.POST, data);
-            if (_Result.successful) return true;
+            if (Request(url, RequestMethod.POST, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{_Result.message}{newline}{message}";
@@ -85,8 +83,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Put(string url, object data, string message = null)
         {
-            _Result = Request(url, RequestMethod.PUT, data);
-            if (_Result.successful) return true;
+            if (Request(url, RequestMethod.PUT, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{_Result.message}{newline}{message}";
@@ -103,8 +100,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Delete(string url, object data = null, string message = null)
         {
-            _Result = Request(url, RequestMethod.DELETE, data);
-            if (_Result.successful) return true;
+            if (Request(url, RequestMethod.DELETE, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
             var msg = $"{_Result.message}{newline}{message}";
@@ -118,17 +114,18 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
         /// <param name="data">Body中的数据</param>
-        /// <returns>Result</returns>
-        private Result<T> Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
+        /// <returns>bool 是否成功</returns>
+        private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var request = new HttpRequest(_Token?.AccessToken);
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            if (!request.Send(url, body, method)) return new Result<T>().BadRequest(request.Message);
+            if (!request.Send(url, body, method)){
+                _Result.BadRequest(request.Message);
+                return false;
+            } 
 
-            var result = Util.Deserialize<Result<T>>(request.Data);
-            if (result == null) return new Result<T>().BadRequest(request.Message);
-
-            if (_Token != null && (result.code == "406" || result.code == "401"))
+            _Result = Util.Deserialize<Result<T>>(request.Data);
+            if (_Token != null && "401,406".Contains(Code))
             {
                 _Token.GetTokens();
                 return Request(url, method, data);
@@ -136,9 +133,9 @@ namespace Insight.Utils.Client
 
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            LogAsync(method.ToString(), url, result.message);
+            LogAsync(method.ToString(), url, Message);
 #endif
-            return result;
+            return true;
         }
 
         /// <summary>
