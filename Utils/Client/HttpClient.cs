@@ -141,19 +141,16 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 记录接口调用日志
         /// </summary>
-        /// <param name="token">AccessToken</param>
         /// <param name="method">请求方法</param>
         /// <param name="url">请求地址</param>
         /// <param name="message">接口返回消息</param>
-        private void Log(string token, string method, string url, string message)
+        private void Log(string method, string url, string message)
         {
-            if (string.IsNullOrEmpty(token)) return;
-
             var ts = DateTime.Now - _Time;
             var loginfo = new LogInfo
             {
                 Interface = $"{Util.GetAppSetting("BaseServer")}/logapi/v1.0/logs",
-                Token = token,
+                Token = _Token.AccessToken,
                 Code = "700101",
                 Source = "系统平台",
                 Action = "接口调用",
@@ -173,7 +170,7 @@ namespace Insight.Utils.Client
         {
             if (_Token == null) return;
 
-            Task.Run(() => Log(_Token.AccessToken, method, url, message));
+            Task.Run(() => Log(method, url, message));
         }
     }
 }
