@@ -14,6 +14,11 @@ namespace Insight.Utils.Client
         private DateTime _FailureTime;
 
         /// <summary>
+        /// 请求状态
+        /// </summary>
+        public bool RequestStatus { get; private set; }
+
+        /// <summary>
         /// AccessToken字符串
         /// </summary>
         public string AccessToken
@@ -23,8 +28,8 @@ namespace Insight.Utils.Client
                 var now = DateTime.Now;
                 if (string.IsNullOrEmpty(_Token) || now > _FailureTime)
                 {
-                    var result = GetTokens();
-                    if (!result) return null;
+                    GetTokens();
+                    if (!RequestStatus) return null;
                 }
 
                 if (now > _ExpiryTime) RefresTokens();
@@ -67,25 +72,36 @@ namespace Insight.Utils.Client
         /// 获取AccessToken
         /// </summary>
         /// <returns>bool 是否获取成功</returns>
-        public bool GetTokens()
+        public void GetTokens()
         {
             var code = GetCode();
-            if (code == null) return false;
+            if (code == null) return;
 
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
-            var client = new HttpClient<TokenResult>(null);
-            if (!client.Get(url)) return false;
+            var request = new HttpRequest(_RefreshToken);
+            RequestStatus = request.Send(url);
+            if (!RequestStatus)
+            {
+                Messages.ShowError(request.Message);
+                return;
+            }
 
-            _Token = client.Data.accessToken;
-            _RefreshToken = client.Data.refreshToken;
-            _ExpiryTime = client.Data.expiryTime;
-            _FailureTime = client.Data.failureTime;
+            var result = Util.Deserialize<Result<TokenResult>>(request.Data);
+            if (!result.successful)
+            {
+                Messages.ShowError(result.message);
+                return;
+            }
+
+            _Token = result.data.accessToken;
+            _RefreshToken = result.data.refreshToken;
+            _ExpiryTime = result.data.expiryTime;
+            _FailureTime = result.data.failureTime;
 
             var buffer = Convert.FromBase64String(_Token);
             var json = Encoding.UTF8.GetString(buffer);
             Token = Util.Deserialize<AccessToken>(json);
-            return true;
         }
 
         /// <summary>
@@ -95,8 +111,19 @@ namespace Insight.Utils.Client
         private string GetCode()
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
-            var client = new HttpClient<string>(null);
-            return client.Get(url) ? client.Data : null;
+            var request = new HttpRequest(_RefreshToken);
+            RequestStatus = request.Send(url);
+            if (!RequestStatus)
+            {
+                Messages.ShowError(request.Message);
+                return null;
+            }
+
+            var result = Util.Deserialize<Result<string>>(request.Data);
+            if (result.successful) {return result.data;}
+
+            Messages.ShowError(result.message);
+            return null;
         }
 
         /// <summary>

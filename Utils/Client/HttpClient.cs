@@ -118,8 +118,15 @@ namespace Insight.Utils.Client
         private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var request = new HttpRequest(_Token?.AccessToken);
+            if (!_Token?.RequestStatus ?? false)
+            {
+                _Result.BadRequest("Auth服务异常，未能获取Token！");
+                return false;
+            }
+
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            if (!request.Send(url, body, method)){
+            if (!request.Send(url, body, method))
+            {
                 _Result.BadRequest(request.Message);
                 return false;
             } 
