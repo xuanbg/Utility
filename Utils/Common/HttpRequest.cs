@@ -14,6 +14,11 @@ namespace Insight.Utils.Common
         private readonly string _Token;
 
         /// <summary>
+        /// 请求是否成功返回结果
+        /// </summary>
+        public bool Success { get; private set; }
+
+        /// <summary>
         /// 错误消息
         /// </summary>
         public string Message { get; private set; }
@@ -163,6 +168,7 @@ namespace Insight.Utils.Common
                     stream.Flush();
                 }
 
+                Success = true;
                 return true;
             }
             catch (Exception ex)
