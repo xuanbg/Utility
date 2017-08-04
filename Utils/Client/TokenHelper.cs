@@ -80,8 +80,8 @@ namespace Insight.Utils.Client
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
             var request = new HttpRequest(_RefreshToken);
-            RequestStatus = request.Send(url);
-            if (!RequestStatus)
+            RequestSuccess = request.Send(url);
+            if (!RequestSuccess)
             {
                 Messages.ShowError(request.Message);
                 return;
