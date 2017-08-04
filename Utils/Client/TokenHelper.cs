@@ -16,7 +16,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 请求状态
         /// </summary>
-        public bool RequestSuccess { get; private set; }
+        public bool Success { get; private set; }
 
         /// <summary>
         /// AccessToken字符串
@@ -29,7 +29,7 @@ namespace Insight.Utils.Client
                 if (string.IsNullOrEmpty(_Token) || now > _FailureTime)
                 {
                     GetTokens();
-                    if (!RequestSuccess) return null;
+                    if (!Success) return null;
                 }
 
                 if (now > _ExpiryTime) RefresTokens();
@@ -80,8 +80,8 @@ namespace Insight.Utils.Client
             var key = Util.Hash(Sign + code);
             var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
             var request = new HttpRequest(_RefreshToken);
-            RequestSuccess = request.Send(url);
-            if (!RequestSuccess)
+            Success = request.Send(url);
+            if (!Success)
             {
                 Messages.ShowError(request.Message);
                 return;
@@ -112,8 +112,8 @@ namespace Insight.Utils.Client
         {
             var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
             var request = new HttpRequest(_RefreshToken);
-            RequestSuccess = request.Send(url);
-            if (!RequestSuccess)
+            Success = request.Send(url);
+            if (!Success)
             {
                 Messages.ShowError(request.Message);
                 return null;
