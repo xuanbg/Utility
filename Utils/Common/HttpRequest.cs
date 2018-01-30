@@ -76,14 +76,14 @@ namespace Insight.Utils.Common
                 switch (ContentEncoding)
                 {
                     case CompressType.Gzip:
-                        using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
+                        using (var stream = new GZipStream(ms, CompressionMode.Compress))
                         {
                             stream.Write(buffer, 0, buffer.Length);
                         }
                         buffer = ms.GetBuffer();
                         break;
                     case CompressType.Deflate:
-                        using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
+                        using (var stream = new DeflateStream(ms, CompressionMode.Compress))
                         {
                             stream.Write(buffer, 0, buffer.Length);
                         }

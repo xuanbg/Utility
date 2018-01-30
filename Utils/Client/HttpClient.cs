@@ -177,7 +177,7 @@ namespace Insight.Utils.Client
         {
             if (_Token == null) return;
 
-            Task.Run(() => Log(method, url, message));
+            new Task(() => Log(method, url, message)).Start();
         }
     }
 }

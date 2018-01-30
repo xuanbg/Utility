@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Insight.Utils.Client;
 
 namespace Insight.Utils.Entity
 {
