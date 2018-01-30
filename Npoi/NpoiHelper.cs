@@ -218,7 +218,7 @@ namespace Insight.Utils.ExcelHelper
             var infos = initFieldsInfo();
             var sheet = _workbook.CreateSheet(sheetName);
             var row = sheet.CreateRow(0);
-            var i = -1;
+            var i = 0;
             foreach (var info in infos)
             {
                 var cell = row.CreateCell(i++, CellType.String);
@@ -227,7 +227,7 @@ namespace Insight.Utils.ExcelHelper
             }
 
             // 根据字段类型设置单元格格式并生成数据
-            i = 0;
+            i = 1;
             foreach (var item in list)
             {
                 if (item == null) continue;
@@ -455,7 +455,7 @@ namespace Insight.Utils.ExcelHelper
                 };
 
                 // 如读取到列名自定义特性
-                var attributes = typeof(T).GetCustomAttributes(typeof(ColumnName), false);
+                var attributes = property.GetCustomAttributes(typeof(ColumnName), false);
                 if (attributes.Length > 0 && attributes[0] is ColumnName att)
                 {
                     info.columnName = att.name;
