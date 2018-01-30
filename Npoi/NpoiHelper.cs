@@ -303,7 +303,7 @@ namespace Insight.Utils.Npoi
                 }
 
                 // 给字段赋值
-                property.SetValue(item, value);
+                property.SetValue(item, value, null);
             }
 
             return nullCount < _title.Count ? item : default(T);
@@ -378,7 +378,7 @@ namespace Insight.Utils.Npoi
                 var property = _propertys.First(p => p.Name == info.fieldName);
                 if (!property.CanRead) continue;
 
-                var value = property.GetValue(item)?.ToString();
+                var value = property.GetValue(item, null)?.ToString();
                 if (string.IsNullOrEmpty(value))
                 {
                     continue;
