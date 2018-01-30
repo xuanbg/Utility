@@ -1,6 +1,6 @@
-﻿using Insight.Utils.Npoi.Enum;
+﻿using Insight.Utils.ExcelHelper.Enum;
 
-namespace Insight.Utils.Npoi
+namespace Insight.Utils.ExcelHelper
 {
     public class FieldInfo
     {

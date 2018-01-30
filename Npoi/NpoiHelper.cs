@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Insight.Utils.Npoi.Attribute;
-using Insight.Utils.Npoi.Enum;
+using Insight.Utils.ExcelHelper.Attribute;
+using Insight.Utils.ExcelHelper.Enum;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
-namespace Insight.Utils.Npoi
+namespace Insight.Utils.ExcelHelper
 {
     public class NpoiHelper<T> where T : new()
     {

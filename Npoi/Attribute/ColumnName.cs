@@ -1,7 +1,7 @@
 ﻿using System;
-using Insight.Utils.Npoi.Enum;
+using Insight.Utils.ExcelHelper.Enum;
 
-namespace Insight.Utils.Npoi.Attribute
+namespace Insight.Utils.ExcelHelper.Attribute
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ColumnName : System.Attribute

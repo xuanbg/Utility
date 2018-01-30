@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Npoi.Enum
+﻿namespace Insight.Utils.ExcelHelper.Enum
 {
     public enum ExcelVer
     {
