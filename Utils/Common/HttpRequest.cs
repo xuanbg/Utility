@@ -14,6 +14,11 @@ namespace Insight.Utils.Common
         private readonly string _Token;
 
         /// <summary>
+        /// 请求是否成功返回结果
+        /// </summary>
+        public bool Success { get; private set; }
+
+        /// <summary>
         /// 错误消息
         /// </summary>
         public string Message { get; private set; }
@@ -71,14 +76,14 @@ namespace Insight.Utils.Common
                 switch (ContentEncoding)
                 {
                     case CompressType.Gzip:
-                        using (var stream = new GZipStream(ms, CompressionLevel.Optimal))
+                        using (var stream = new GZipStream(ms, CompressionMode.Compress))
                         {
                             stream.Write(buffer, 0, buffer.Length);
                         }
                         buffer = ms.GetBuffer();
                         break;
                     case CompressType.Deflate:
-                        using (var stream = new DeflateStream(ms, CompressionLevel.Optimal))
+                        using (var stream = new DeflateStream(ms, CompressionMode.Compress))
                         {
                             stream.Write(buffer, 0, buffer.Length);
                         }
@@ -163,6 +168,7 @@ namespace Insight.Utils.Common
                     stream.Flush();
                 }
 
+                Success = true;
                 return true;
             }
             catch (Exception ex)

@@ -55,8 +55,8 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int FocusedRowHandle
         {
-            get { return _Handle - _PageSize*_Current; }
-            set { _Handle = _PageSize*_Current + value; }
+            get => _Handle - _PageSize*_Current;
+            set => _Handle = _PageSize*_Current + value;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public Collection<string> PageSizeItems
         {
-            get { return _PageSizes; }
+            get => _PageSizes;
             set
             {
                 _PageSizes = value;
@@ -79,7 +79,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int TotalRows
         {
-            get { return _Rows; }
+            get => _Rows;
             set
             {
                 _Rows = value;

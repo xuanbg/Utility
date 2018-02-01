@@ -91,6 +91,23 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
+        /// 16进制字符串转字节数组
+        /// </summary>
+        /// <param name="str">输入字符串</param>
+        /// <returns>byte[]</returns>
+        public static byte[] HexToByteArray(string str)
+        {
+            var hex = str.Replace("0x", "");
+            var bytes = new byte[hex.Length / 2];
+            for (var x = 0; x < bytes.Length; x++)
+            {
+                bytes[x] = Convert.ToByte(hex.Substring(x * 2, 2), 16);
+            }
+
+            return bytes;
+        }
+
+        /// <summary>
         /// 忽略大小写情况下比较两个字符串
         /// </summary>
         /// <param name="s1">字符串1</param>

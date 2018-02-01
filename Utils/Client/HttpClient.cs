@@ -118,8 +118,15 @@ namespace Insight.Utils.Client
         private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
             var request = new HttpRequest(_Token?.AccessToken);
+            if (!_Token?.Success ?? false)
+            {
+                _Result.BadRequest("Auth服务异常，未能获取Token！");
+                return false;
+            }
+
             var body = new JavaScriptSerializer().Serialize(data ?? "");
-            if (!request.Send(url, body, method)){
+            if (!request.Send(url, body, method))
+            {
                 _Result.BadRequest(request.Message);
                 return false;
             } 
@@ -135,7 +142,7 @@ namespace Insight.Utils.Client
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
             LogAsync(method.ToString(), url, Message);
 #endif
-            return true;
+            return _Result.successful;
         }
 
         /// <summary>
@@ -170,7 +177,7 @@ namespace Insight.Utils.Client
         {
             if (_Token == null) return;
 
-            Task.Run(() => Log(method, url, message));
+            new Task(() => Log(method, url, message)).Start();
         }
     }
 }
