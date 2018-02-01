@@ -47,6 +47,8 @@ NpoiHelper(Stream stream)
 |name(默认特性)|Excel中的对应的列名|
 |dateFormat|列的时间/日期格式,默认为:yyyy-MM-dd|
 |policy|Ignorable:导出时忽略(不会导出),Required:导入时文件必须包含此列,否则无法通过关键列校验|
+
+
 示例如下：
 ```
 public class Test
