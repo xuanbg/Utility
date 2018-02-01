@@ -132,7 +132,6 @@ namespace Insight.Utils.ExcelHelper
             var sheet = _workbook.GetSheet(sheetName);
             if (sheet == null) return false;
 
-            // 读取标题
             initTitel(sheet);
             if (_title == null || _title.Count == 0) return false;
 
@@ -199,7 +198,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 从集合导出数据到Excel文件
+        /// 使用指定的数据集生成Sheet并导出工作簿到Excel文件
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file"></param>
@@ -210,7 +209,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据到指定名称的Sheet并导出工作簿到Excel文件
+        /// 使用指定的数据集生成指定名称的Sheet并导出工作簿到Excel文件
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file">输出Excel文件(.xls|.xlsx)的路径及文件名</param>
@@ -223,7 +222,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导出工作簿到文件流
+        /// 导出工作簿到数据流
         /// </summary>
         /// <returns>Stream 文件流</returns>
         public MemoryStream exportStream()
@@ -237,7 +236,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据并导出工作簿到文件流
+        /// 使用指定的数据集生成Sheet并导出工作簿到数据流
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
@@ -248,7 +247,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据到指定名称的Sheet并导出工作簿到文件流
+        /// 使用指定的数据集生成指定名称的Sheet并导出工作簿到数据流
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
@@ -262,7 +261,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导出工作簿到字节流
+        /// 导出工作簿到字节数组
         /// </summary>
         /// <returns>字节流</returns>
         public byte[] exportByteArray()
@@ -271,7 +270,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据并导出工作簿到字节流
+        /// 使用指定的数据集生成Sheet并导出工作簿到字节数组
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
@@ -282,7 +281,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据到指定名称的Sheet并导出工作簿到字节流
+        /// 使用指定的数据集生成指定名称的Sheet并导出工作簿到字节数组
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
@@ -544,22 +543,18 @@ namespace Insight.Utils.ExcelHelper
             for (var i = 0; i < _exportfields.Count; i++)
             {
                 var field = _exportfields[i];
-                var cellType = getCellType(field.typeName);
-                var cell = row.CreateCell(i, cellType);
-
+                var cell = row.CreateCell(i, getCellType(field.typeName));
                 var property = propertys.First(p => p.Name == field.fieldName);
                 if (!property.CanRead) continue;
 
                 var value = property.GetValue(item, null)?.ToString();
-                if (string.IsNullOrEmpty(value))
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(value)) continue;
 
                 switch (field.typeName)
                 {
                     case "DateTime":
-                        cell.SetCellValue(DateTime.Parse(value));
+                        var isFormat = !string.IsNullOrEmpty(field.dateFormat);
+                        cell.SetCellValue(isFormat ? string.Format(field.dateFormat, DateTime.Parse(value)) : value);
                         break;
                     default:
                         cell.SetCellValue(value);
