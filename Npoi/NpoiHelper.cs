@@ -35,7 +35,7 @@ namespace Insight.Utils.ExcelHelper
         private readonly IWorkbook _workbook;
 
         /// <summary>
-        /// 构造方法,用于导出
+        /// 构造方法,用于导出Excel文件
         /// </summary>
         /// <param name="ver">导出的Excel文件版本，默认为2007版本</param>
         public NpoiHelper(ExcelVer ver = XLS)
@@ -63,7 +63,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 构造方法,用于从文件导入数据
+        /// 构造方法,用于从字节数组导入数据
         /// </summary>
         /// <param name="data">输入字节流</param>
         public NpoiHelper(byte[] data) : this(new MemoryStream(data))
@@ -71,7 +71,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 构造方法,用于从文件流导入数据
+        /// 构造方法,用于从数据流导入数据
         /// </summary>
         /// <param name="stream">文件流</param>
         public NpoiHelper(Stream stream)
@@ -329,7 +329,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 创建一个用于导入数据的模板
+        /// 创建一个用于导入数据的模板Sheet
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         public void createTemplate<T>()
@@ -338,7 +338,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 创建一个用于导入数据且指定Sheet名称的模板
+        /// 创建一个用于导入数据且指定名称的模板Sheet
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
@@ -350,7 +350,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 使用输入的数据集在工作簿中创建一个Sheet
+        /// 使用指定的数据集在工作簿中创建一个Sheet
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
@@ -360,7 +360,7 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 使用输入的数据集在工作簿中创建一个指定名称的Sheet
+        /// 使用指定的数据集在工作簿中创建一个指定名称的Sheet
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
