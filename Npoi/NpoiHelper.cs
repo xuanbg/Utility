@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Insight.Utils.ExcelHelper.Attribute;
 using Insight.Utils.ExcelHelper.Enum;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using static Insight.Utils.ExcelHelper.Enum.ExcelVer;
+using static Insight.Utils.ExcelHelper.Enum.Policy;
 
 namespace Insight.Utils.ExcelHelper
 {
-    public class NpoiHelper<T> where T : new()
+    public class NpoiHelper
     {
         /// <summary>
         /// 当前Sheet列标题
@@ -24,9 +25,9 @@ namespace Insight.Utils.ExcelHelper
         private List<FieldInfo> _fieldInfos;
 
         /// <summary>
-        /// 指定类型的属性集合
+        /// 类型成员字段信息集合
         /// </summary>
-        private readonly PropertyInfo[] _propertys = typeof(T).GetProperties();
+        private List<FieldInfo> _exportfields;
 
         /// <summary>
         /// 工作簿
@@ -37,14 +38,14 @@ namespace Insight.Utils.ExcelHelper
         /// 构造方法,用于导出
         /// </summary>
         /// <param name="ver">导出的Excel文件版本，默认为2007版本</param>
-        public NpoiHelper(ExcelVer ver = ExcelVer.XLS)
+        public NpoiHelper(ExcelVer ver = XLS)
         {
             switch (ver)
             {
-                case ExcelVer.XLS:
+                case XLS:
                     _workbook = new HSSFWorkbook();
                     break;
-                case ExcelVer.XLSX:
+                case XLSX:
                     _workbook = new XSSFWorkbook();
                     break;
                 default:
@@ -86,36 +87,98 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入Excel文件中第一个Sheet的数据到指定类型的集合
-        /// </summary>
-        /// <returns>指定类型的集合</returns>
-        public List<T> importExcel()
-        {
-            return importSheet(0);
-        }
-
-        /// <summary>
-        /// 导入指定位置的Sheet的数据到指定类型的集合
+        /// 指定位置的Sheet是否存在
         /// </summary>
         /// <param name="sheetIndex">Sheet位置</param>
-        /// <returns>指定类型的集合</returns>
-        public List<T> importSheet(int sheetIndex)
+        /// <returns>Sheet是否存在</returns>
+        public bool sheetIsExist(int sheetIndex)
         {
-            var sheet = _workbook.GetSheetAt(sheetIndex);
-
-            return toList(sheet);
+            return _workbook.GetSheetAt(sheetIndex) != null;
         }
 
         /// <summary>
-        /// 导入指定名称的Sheet的数据到指定类型的集合
+        /// 指定名称的Sheet是否存在
         /// </summary>
         /// <param name="sheetName">Sheet名称</param>
-        /// <returns>指定类型的集合</returns>
-        public List<T> importSheet(string sheetName)
+        /// <returns>Sheet是否存在</returns>
+        public bool sheetIsExist(string sheetName)
+        {
+            return _workbook.GetSheet(sheetName) != null;
+        }
+
+        /// <summary>
+        /// 校验指定位置的Sheet是否包含关键列
+        /// </summary>
+        /// <param name="sheetIndex">Sheet位置</param>
+        /// <param name="keys">关键列名称(英文逗号分隔)</param>
+        /// <returns>是否通过校验</returns>
+        public bool verifyColumns(int sheetIndex, string keys)
+        {
+            var sheetName = _workbook.GetSheetName(sheetIndex);
+
+            return verifyColumns(sheetName, keys);
+        }
+
+        /// <summary>
+        /// 校验指定名称的Sheet是否包含关键列
+        /// </summary>
+        /// <param name="sheetName">Sheet名称</param>
+        /// <param name="keys">关键列名称(英文逗号分隔)</param>
+        /// <returns>是否通过校验</returns>
+        public bool verifyColumns(string sheetName, string keys)
+        {
+            if (string.IsNullOrEmpty(keys)) return false;
+
+            var sheet = _workbook.GetSheet(sheetName);
+            if (sheet == null) return false;
+
+            // 读取标题
+            initTitel(sheet);
+            if (_title == null || _title.Count == 0) return false;
+
+            return !keys.Split(',').Except(_title).Any();
+        }
+
+        /// <summary>
+        /// 校验指定位置的Sheet是否包含关键列
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetIndex">Sheet位置</param>
+        /// <returns>是否通过校验</returns>
+        public bool verifyColumns<T>(int sheetIndex)
+        {
+            var sheetName = _workbook.GetSheetName(sheetIndex);
+
+            return verifyColumns<T>(sheetName);
+        }
+
+        /// <summary>
+        /// 校验指定名称的Sheet是否包含关键列
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetName">Sheet名称</param>
+        /// <returns>是否通过校验</returns>
+        public bool verifyColumns<T>(string sheetName)
         {
             var sheet = _workbook.GetSheet(sheetName);
+            if (sheet == null) return false;
 
-            return toList(sheet);
+            // 读取标题
+            initTitel(sheet);
+            if (_title == null || _title.Count == 0) return false;
+
+            // 读取关键列到集合并取标题集合的差集
+            var list = new List<string>();
+            foreach (var property in typeof(T).GetProperties())
+            {
+                var attributes = property.GetCustomAttributes(typeof(ColumnName), false);
+                if (attributes.FirstOrDefault() is ColumnName att && att.policy == Required)
+                {
+                    list.Add(att.name);
+                }
+            }
+
+            return !list.Except(_title).Any();
         }
 
         /// <summary>
@@ -136,11 +199,12 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 导入集合数据并导出工作簿到Excel文件
+        /// 从集合导出数据到Excel文件
         /// </summary>
-        /// <param name="list"></param>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file"></param>
-        public void exportFile(List<T> list, string file)
+        /// <param name="list"></param>
+        public void exportFile<T>(string file, List<T> list)
         {
             exportFile(file, list, null);
         }
@@ -148,10 +212,11 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 导入集合数据到指定名称的Sheet并导出工作簿到Excel文件
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file">输出Excel文件(.xls|.xlsx)的路径及文件名</param>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void exportFile(string file, List<T> list, string sheetName)
+        public void exportFile<T>(string file, List<T> list, string sheetName)
         {
             createSheet(list, sheetName);
             exportFile(file);
@@ -174,9 +239,10 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 导入集合数据并导出工作簿到文件流
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream exportStream(List<T> list)
+        public MemoryStream exportStream<T>(List<T> list)
         {
             return exportStream(list, null);
         }
@@ -184,10 +250,11 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 导入集合数据到指定名称的Sheet并导出工作簿到文件流
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream exportStream(List<T> list, string sheetName)
+        public MemoryStream exportStream<T>(List<T> list, string sheetName)
         {
             createSheet(list, sheetName);
 
@@ -195,73 +262,151 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 工作簿中创建一个Sheet并从集合导入数据
+        /// 导出工作簿到字节流
         /// </summary>
+        /// <returns>字节流</returns>
+        public byte[] exportByteArray()
+        {
+            return exportStream().ToArray();
+        }
+
+        /// <summary>
+        /// 导入集合数据并导出工作簿到字节流
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
-        public void createSheet(List<T> list)
+        /// <returns>字节流</returns>
+        public byte[] exportByteArray<T>(List<T> list)
+        {
+            return exportStream(list).ToArray();
+        }
+
+        /// <summary>
+        /// 导入集合数据到指定名称的Sheet并导出工作簿到字节流
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="list">输入数据集合</param>
+        /// <param name="sheetName">Sheet名称</param>
+        /// <returns>字节流</returns>
+        public byte[] exportByteArray<T>(List<T> list, string sheetName)
+        {
+            return exportStream(list, sheetName).ToArray();
+        }
+
+        /// <summary>
+        /// 导入Excel文件中第一个Sheet的数据到指定类型的集合
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <returns>指定类型的集合</returns>
+        public List<T> importSheet<T>() where T : new()
+        {
+            return importSheet<T>(0);
+        }
+
+        /// <summary>
+        /// 导入指定位置的Sheet的数据到指定类型的集合
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetIndex">Sheet位置</param>
+        /// <returns>指定类型的集合</returns>
+        public List<T> importSheet<T>(int sheetIndex) where T : new()
+        {
+            var sheetName = _workbook.GetSheetName(sheetIndex);
+
+            return importSheet<T>(sheetName);
+        }
+
+        /// <summary>
+        /// 导入指定名称的Sheet的数据到指定类型的集合
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetName">Sheet名称</param>
+        /// <returns>指定类型的集合</returns>
+        public List<T> importSheet<T>(string sheetName) where T : new()
+        {
+            var sheet = _workbook.GetSheet(sheetName);
+
+            return toList<T>(sheet);
+        }
+
+        /// <summary>
+        /// 创建一个用于导入数据的模板
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        public void createTemplate<T>()
+        {
+            createTemplate<T>(null);
+        }
+
+        /// <summary>
+        /// 创建一个用于导入数据且指定Sheet名称的模板
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetName">Sheet名称</param>
+        public void createTemplate<T>(string sheetName)
+        {
+            if (_workbook == null) return;
+
+            createTitel<T>(sheetName);
+        }
+
+        /// <summary>
+        /// 使用输入的数据集在工作簿中创建一个Sheet
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="list">输入数据集合</param>
+        public void createSheet<T>(List<T> list)
         {
             createSheet(list, null);
         }
 
         /// <summary>
-        /// 工作簿中创建一个指定名称的Sheet并从集合导入数据
+        /// 使用输入的数据集在工作簿中创建一个指定名称的Sheet
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void createSheet(List<T> list, string sheetName)
+        public void createSheet<T>(List<T> list, string sheetName)
         {
-            if (_workbook == null || list == null) return;
-
-            if (string.IsNullOrEmpty(sheetName)) sheetName = $"Sheet{_workbook.NumberOfSheets + 1}";
+            if (_workbook == null || list == null || list.Count == 0) return;
 
             // 创建Sheet并生成标题行
-            var infos = initFieldsInfo();
-            var sheet = _workbook.CreateSheet(sheetName);
-            var row = sheet.CreateRow(0);
-            var i = 0;
-            foreach (var info in infos)
-            {
-                var cell = row.CreateCell(i++, CellType.String);
-                var columnName = info.columnName;
-                cell.SetCellValue(columnName ?? info.fieldName);
-            }
+            var sheet = createTitel<T>(sheetName);
 
             // 根据字段类型设置单元格格式并生成数据
-            i = 1;
+            var i = 1;
             foreach (var item in list)
             {
                 if (item == null) continue;
 
-                row = sheet.CreateRow(i++);
-                writeRow(infos, row, item);
+                var row = sheet.CreateRow(i++);
+                writeRow(row, item);
             }
         }
 
         /// <summary>
         /// 从Sheet导入数据到集合
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheet">Sheet</param>
         /// <returns>指定类型的集合</returns>
-        private List<T> toList(ISheet sheet)
+        private List<T> toList<T>(ISheet sheet) where T : new()
         {
             if (sheet == null) return null;
 
             // 初始化字段信息字典和标题字典
-            initFieldsInfo();
+            initFieldsInfo<T>();
             initTitel(sheet);
 
             // 如标题为空,则返回一个空集合
             var table = new List<T>();
-            if (_title == null || _title.Count == 0)
-            {
-                return table;
-            }
+            if (_title == null || _title.Count == 0) return table;
 
             // 从第二行开始读取正文内容(第一行为标题行)
             for (var i = 1; i <= sheet.LastRowNum; i++)
             {
                 var row = sheet.GetRow(i);
-                var item = readRow(row);
+                var item = readRow<T>(row);
                 table.Add(item);
             }
 
@@ -271,15 +416,17 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 读取输入Row的数据到指定类型的对象实体
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="row">输入的行数据</param>
         /// <returns>T 指定类型的数据对象</returns>
-        private T readRow(IRow row)
+        private T readRow<T>(IRow row) where T : new()
         {
             if (row == null) return default(T);
 
             // 顺序读取行内的每个单元格的数据并赋值给对应的字段
             var nullCount = 0;
             var item = new T();
+            var propertys = typeof(T).GetProperties();
             for (var i = 0; i < _title.Count; i++)
             {
                 var colName = _title[i];
@@ -295,7 +442,7 @@ namespace Insight.Utils.ExcelHelper
                 // 读取单元格数据,如该属性/字段不允许写入或单元格值为空,则跳过该单元格
                 var cell = row.GetCell(i);
                 var value = readCell(cell, info.typeName);
-                var property = _propertys.First(p => p.Name == info.fieldName);
+                var property = propertys.First(p => p.Name == info.fieldName);
                 if (!property.CanWrite || value == null)
                 {
                     nullCount++;
@@ -315,7 +462,7 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="cell"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private object readCell(ICell cell, string type)
+        private static object readCell(ICell cell, string type)
         {
             if (cell == null) return null;
 
@@ -362,20 +509,45 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
+        /// 创建指定名称的Sheet并生成标题行
+        /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
+        /// <param name="sheetName">Sheet名称</param>
+        /// <returns>Sheet</returns>
+        private ISheet createTitel<T>(string sheetName)
+        {
+            initFieldsInfo<T>();
+            if (string.IsNullOrEmpty(sheetName)) sheetName = $"Sheet{_workbook.NumberOfSheets + 1}";
+
+            var sheet = _workbook.CreateSheet(sheetName);
+            var row = sheet.CreateRow(0);
+            var i = 0;
+            foreach (var field in _exportfields)
+            {
+                var cell = row.CreateCell(i++, CellType.String);
+                var columnName = field.columnName;
+                cell.SetCellValue(columnName ?? field.fieldName);
+            }
+
+            return sheet;
+        }
+
+        /// <summary>
         /// 写入数据对象字段值到行数据
         /// </summary>
-        /// <param name="infos">字段信息字典</param>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <param name="row">行数据</param>
         /// <param name="item">指定类型的数据对象</param>
-        private void writeRow(List<FieldInfo> infos, IRow row, T item)
+        private void writeRow<T>(IRow row, T item)
         {
-            for (var i = 0; i < infos.Count; i++)
+            var propertys = typeof(T).GetProperties();
+            for (var i = 0; i < _exportfields.Count; i++)
             {
-                var info = infos[i];
-                var cellType = getCellType(info.typeName);
+                var field = _exportfields[i];
+                var cellType = getCellType(field.typeName);
                 var cell = row.CreateCell(i, cellType);
 
-                var property = _propertys.First(p => p.Name == info.fieldName);
+                var property = propertys.First(p => p.Name == field.fieldName);
                 if (!property.CanRead) continue;
 
                 var value = property.GetValue(item, null)?.ToString();
@@ -384,7 +556,7 @@ namespace Insight.Utils.ExcelHelper
                     continue;
                 }
 
-                switch (info.typeName)
+                switch (field.typeName)
                 {
                     case "DateTime":
                         cell.SetCellValue(DateTime.Parse(value));
@@ -401,7 +573,7 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <param name="type">属性/字段类型</param>
         /// <returns>单元格格式</returns>
-        private CellType getCellType(string type)
+        private static CellType getCellType(string type)
         {
             switch (type)
             {
@@ -442,11 +614,13 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 生成指定类型对应的字段信息集合
         /// </summary>
+        /// <typeparam name="T">类型参数</typeparam>
         /// <returns>指定类型对应的需要导出的字段信息集合</returns>
-        private List<FieldInfo> initFieldsInfo()
+        private void initFieldsInfo<T>()
         {
             _fieldInfos = new List<FieldInfo>();
-            foreach (var property in _propertys)
+            var propertys = typeof(T).GetProperties();
+            foreach (var property in propertys)
             {
                 var info = new FieldInfo
                 {
@@ -456,7 +630,7 @@ namespace Insight.Utils.ExcelHelper
 
                 // 如读取到列名自定义特性
                 var attributes = property.GetCustomAttributes(typeof(ColumnName), false);
-                if (attributes.Length > 0 && attributes[0] is ColumnName att)
+                if (attributes.FirstOrDefault() is ColumnName att)
                 {
                     info.columnName = att.name;
                     info.dateFormat = att.dateFormat;
@@ -466,7 +640,7 @@ namespace Insight.Utils.ExcelHelper
                 _fieldInfos.Add(info);
             }
 
-            return _fieldInfos.Where(i => i.columnPolicy != Policy.Ignorable).ToList();
+            _exportfields = _fieldInfos.Where(i => i.columnPolicy != Ignorable).ToList();
         }
     }
 }
