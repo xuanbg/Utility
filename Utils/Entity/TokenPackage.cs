@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Insight.Utils.Entity
+﻿namespace Insight.Utils.Entity
 {
 
-    public class TokenResult
+    public class TokenPackage
     {
         /// <summary>
         /// AccessToken字符串
@@ -18,11 +16,11 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// Secret过期时间
         /// </summary>
-        public DateTime expiryTime { get; set; }
+        public int expiryTime { get; set; }
 
         /// <summary>
         /// Secret失效时间
         /// </summary>
-        public DateTime failureTime { get; set; }
+        public int failureTime { get; set; }
     }
 }

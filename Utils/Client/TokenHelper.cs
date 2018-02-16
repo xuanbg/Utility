@@ -8,10 +8,11 @@ namespace Insight.Utils.Client
 
     public class TokenHelper
     {
+        private DateTime _Time;
         private string _Token;
         private string _RefreshToken;
-        private DateTime _ExpiryTime;
-        private DateTime _FailureTime;
+        private int _ExpiryTime;
+        private int _FailureTime;
 
         /// <summary>
         /// 请求状态
@@ -26,13 +27,13 @@ namespace Insight.Utils.Client
             get
             {
                 var now = DateTime.Now;
-                if (string.IsNullOrEmpty(_Token) || now > _FailureTime)
+                if (string.IsNullOrEmpty(_Token) || now > _Time.AddSeconds(_FailureTime))
                 {
                     GetTokens();
                     if (!Success) return null;
                 }
 
-                if (now > _ExpiryTime) RefresTokens();
+                if (now > _Time.AddSeconds(_ExpiryTime)) RefresTokens();
 
                 return _Token;
 
@@ -87,13 +88,14 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            var result = Util.Deserialize<Result<TokenResult>>(request.Data);
+            var result = Util.Deserialize<Result<TokenPackage>>(request.Data);
             if (!result.successful)
             {
                 Messages.ShowError(result.message);
                 return;
             }
 
+            _Time = DateTime.Now;
             _Token = result.data.accessToken;
             _RefreshToken = result.data.refreshToken;
             _ExpiryTime = result.data.expiryTime;
@@ -139,7 +141,7 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            var result = Util.Deserialize<Result<DateTime>>(request.Data);
+            var result = Util.Deserialize<Result<TokenPackage>>(request.Data);
             if (result.code == "406")
             {
                 GetTokens();
@@ -152,7 +154,15 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _ExpiryTime = result.data;
+            _Time = DateTime.Now;
+            _Token = result.data.accessToken;
+            _RefreshToken = result.data.refreshToken;
+            _ExpiryTime = result.data.expiryTime;
+            _FailureTime = result.data.failureTime;
+
+            var buffer = Convert.FromBase64String(_Token);
+            var json = Encoding.UTF8.GetString(buffer);
+            Token = Util.Deserialize<AccessToken>(json);
         }
     }
 }

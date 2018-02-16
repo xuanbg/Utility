@@ -22,6 +22,16 @@ namespace Insight.Utils.Common
         #region 常用方法
 
         /// <summary>
+        /// 生成ID
+        /// </summary>
+        /// <param name="format">输出格式(N:无分隔符;默认D:有分隔符)</param>
+        /// <returns>ID</returns>
+        public static string NewId(string format = "D")
+        {
+            return Guid.NewGuid().ToString(format);
+        }
+
+        /// <summary>
         /// 读取配置项的值
         /// </summary>
         /// <param name="key">配置项</param>

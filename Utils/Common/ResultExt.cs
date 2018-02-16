@@ -10,7 +10,7 @@ namespace Insight.Utils.Common
         /// <param name="result"></param>
         /// <param name="data">承载的数据</param>
         /// <param name="option"></param>
-        public static Result<T> Success<T>(this Result<T> result, T data = default(T), string option = null)
+        public static Result<T> Success<T>(this Result<T> result, T data = default(T), object option = null)
         {
             result.successful = true;
             result.code = "200";
@@ -96,7 +96,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="option">剩余秒数</param>
-        public static Result<T> TooFrequent<T>(this Result<T> result, string option)
+        public static Result<T> TooFrequent<T>(this Result<T> result, object option)
         {
             result.successful = false;
             result.code = "402";

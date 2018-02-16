@@ -30,7 +30,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回的可选项
         /// </summary>
-        public string Option => _Result.option;
+        public object Option => _Result.option;
 
         /// <summary>
         /// 构造函数，传入TokenHelper

@@ -28,7 +28,7 @@
         /// <summary>
         /// 可选参数
         /// </summary>
-        public string option { get; set; }
+        public object option { get; set; }
 
         /// <summary>
         /// 数据
