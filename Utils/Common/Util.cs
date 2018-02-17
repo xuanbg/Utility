@@ -65,7 +65,7 @@ namespace Insight.Utils.Common
         {
             var md5 = MD5.Create();
             var s = md5.ComputeHash(Encoding.UTF8.GetBytes(str.Trim()));
-            return s.Aggregate("", (current, c) => current + c.ToString("X2"));
+            return s.Aggregate("", (current, c) => current + c.ToString("x2"));
         }
 
         /// <summary>
