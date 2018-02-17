@@ -79,10 +79,10 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 身份验证失败（401）
+        /// 获取AccessToken失败（401）
         /// </summary>
         /// <param name="result"></param>
-        public static Result<T> InvalidAuth<T>(this Result<T> result)
+        public static Result<T> InvalidToken<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "401";
@@ -159,13 +159,14 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 获取AccessToken失败（407）
+        /// 身份验证失败（407）
         /// </summary>
-        public static Result<T> GetTokenFailured<T>(this Result<T> result)
+        /// <param name="result"></param>
+        public static Result<T> InvalidAuth<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "407";
-            result.name = "GetTokenFailured";
+            result.name = "InvalidAuthenticationInfo";
             result.message = "用户名或密码错误";
             return result;
         }
@@ -209,12 +210,12 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 账号在线数量过多（411）
         /// </summary>
-        public static Result<T> TooManyOnline<T>(this Result<T> result)
+        public static Result<T> NotExists<T>(this Result<T> result)
         {
             result.successful = false;
             result.code = "411";
-            result.name = "TooManyOnline";
-            result.message = "该账号在线数量过多";
+            result.name = "UserNotExists";
+            result.message = "不存在指定的用户";
             return result;
         }
 
@@ -301,7 +302,19 @@ namespace Insight.Utils.Common
             result.message = "Excel格式不正确";
             return result;
         }
-        
+
+        /// <summary>
+        /// 服务器错误（500）
+        /// </summary>
+        public static Result<T> ServerError<T>(this Result<T> result, string message)
+        {
+            result.successful = false;
+            result.code = "500";
+            result.name = "ServerError";
+            result.message = message;
+            return result;
+        }
+
         /// <summary>
         /// 写数据库失败（501）
         /// </summary>

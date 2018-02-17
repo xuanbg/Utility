@@ -42,6 +42,11 @@
         public string id { get; set; }
 
         /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string userId { get; set; }
+
+        /// <summary>
         /// 随机密码
         /// </summary>
         public string secret { get; set; }

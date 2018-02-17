@@ -90,14 +90,40 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
+        /// 解码Base64字符串为AccessToken
+        /// </summary>
+        /// <param name="str">输入字符串</param>
+        /// <returns>AccessToken</returns>
+        public static AccessToken Base64ToAccessToken(string str)
+        {
+            try
+            {
+                var buffer = Convert.FromBase64String(str);
+                var json = Encoding.UTF8.GetString(buffer);
+                return Deserialize<AccessToken>(json);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 将字符串进行Base64解码
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>string Base64编码的字符串</returns>
         public static string Base64Decode(string str)
         {
-            var buff = Convert.FromBase64String(str);
-            return Encoding.UTF8.GetString(buff);
+            try
+            {
+                var buff = Convert.FromBase64String(str);
+                return Encoding.UTF8.GetString(buff);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
