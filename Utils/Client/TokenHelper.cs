@@ -4,7 +4,6 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-
     public class TokenHelper
     {
         private DateTime time;
@@ -12,11 +11,6 @@ namespace Insight.Utils.Client
         private string refreshToken;
         private int expiryTime;
         private int failureTime;
-
-        /// <summary>
-        /// 请求状态
-        /// </summary>
-        public bool success { get; private set; }
 
         /// <summary>
         /// AccessToken字符串
@@ -35,9 +29,13 @@ namespace Insight.Utils.Client
                 if (expiryTime >= 3600 && now > time.AddSeconds(expiryTime)) RefresTokens();
 
                 return accessToken;
-
             }
         }
+
+        /// <summary>
+        /// 请求状态
+        /// </summary>
+        public bool success { get; private set; }
 
         /// <summary>
         /// 用户签名
@@ -47,7 +45,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 当前连接基础应用服务器
         /// </summary>
-        public string baseServer { get; set; }
+        public string baseServer { get; set; } = Util.GetAppSetting("BaseServer");
 
         /// <summary>
         /// 租户ID
@@ -79,25 +77,24 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
-        /// 获取AccessToken
+        /// 获取令牌
         /// </summary>
-        /// <returns>bool 是否获取成功</returns>
         public void GetTokens()
         {
             var code = GetCode();
             if (code == null) return;
 
             var key = Util.Hash(sign + code);
-            var url = $"{baseServer}/authapi/v1.0/tokens?tenantid={tenantId}&appid={appId}&account={account}&signature={key}&deptid={deptId}";
-            var request = new HttpRequest(refreshToken);
+            var url = $"{baseServer}/authapi/v1.0/{account}/tokens?signature={key}&tenantid={tenantId}&appid={appId}&deptid={deptId}";
+            var request = new HttpRequest();
             success = request.Send(url);
             if (!success)
             {
-                Messages.ShowError(request.Message);
+                Messages.ShowError(request.message);
                 return;
             }
 
-            var result = Util.Deserialize<Result<TokenPackage>>(request.Data);
+            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
             if (!result.successful)
             {
                 Messages.ShowError(result.message);
@@ -112,21 +109,34 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
+        /// 注销令牌
+        /// </summary>
+        public void DeleteToken()
+        {
+            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var request = new HttpRequest();
+            success = request.Send(url);
+            if (success) return;
+
+            Messages.ShowError(request.message);
+        }
+
+        /// <summary>
         /// 获取Code
         /// </summary>
         /// <returns>string Code</returns>
         private string GetCode()
         {
-            var url = $"{baseServer}/authapi/v1.0/tokens/codes?account={account}";
-            var request = new HttpRequest(refreshToken);
+            var url = $"{baseServer}/authapi/v1.0/{account}/codes";
+            var request = new HttpRequest();
             success = request.Send(url);
             if (!success)
             {
-                Messages.ShowError(request.Message);
+                Messages.ShowError(request.message);
                 return null;
             }
 
-            var result = Util.Deserialize<Result<string>>(request.Data);
+            var result = Util.Deserialize<Result<string>>(request.data);
             if (result.successful) return result.data;
 
             Messages.ShowError(result.message);
@@ -142,11 +152,11 @@ namespace Insight.Utils.Client
             var request = new HttpRequest(refreshToken);
             if (!request.Send(url))
             {
-                Messages.ShowError(request.Message);
+                Messages.ShowError(request.message);
                 return;
             }
 
-            var result = Util.Deserialize<Result<TokenPackage>>(request.Data);
+            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
             if (result.code == "406")
             {
                 GetTokens();

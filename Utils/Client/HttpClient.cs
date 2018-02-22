@@ -15,22 +15,22 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回的错误代码
         /// </summary>
-        public string Code => result.code;
+        public string code => result.code;
 
         /// <summary>
         /// 返回的错误消息
         /// </summary>
-        public string Message => result.message;
+        public string message => result.message;
 
         /// <summary>
         /// 返回的数据
         /// </summary>
-        public T Data => result.data;
+        public T data => result.data;
 
         /// <summary>
         /// 返回的可选项
         /// </summary>
-        public object Option => result.option;
+        public object option => result.option;
 
         /// <summary>
         /// 构造函数，传入TokenHelper
@@ -127,12 +127,12 @@ namespace Insight.Utils.Client
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             if (!request.Send(url, body, method))
             {
-                result.BadRequest(request.Message);
+                result.BadRequest(request.message);
                 return false;
             } 
 
-            result = Util.Deserialize<Result<T>>(request.Data);
-            if (token != null && "401,406".Contains(Code))
+            result = Util.Deserialize<Result<T>>(request.data);
+            if (token != null && "401,406".Contains(code))
             {
                 token.GetTokens();
                 return Request(url, method, data);
@@ -140,7 +140,7 @@ namespace Insight.Utils.Client
 
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            LogAsync(method.ToString(), url, Message);
+            LogAsync(method.ToString(), url, message);
 #endif
             return result.successful;
         }

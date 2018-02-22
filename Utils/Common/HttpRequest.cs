@@ -10,43 +10,43 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
-        private HttpWebRequest _Request;
-        private readonly string _Token;
+        private HttpWebRequest request;
+        private readonly string token;
 
         /// <summary>
         /// 请求是否成功返回结果
         /// </summary>
-        public bool Success { get; private set; }
+        public bool success { get; private set; }
 
         /// <summary>
         /// 错误消息
         /// </summary>
-        public string Message { get; private set; }
+        public string message { get; private set; }
 
         /// <summary>
         /// 返回数据
         /// </summary>
-        public string Data { get; private set; }
+        public string data { get; private set; }
 
         /// <summary>
         /// ContentType
         /// </summary>
-        public string ContentType { private get; set; } = "application/json; charset=utf-8";
+        public string contentType { private get; set; } = "application/json; charset=utf-8";
 
         /// <summary>
         /// 下行数据压缩方式(默认Gzip)
         /// </summary>
-        public CompressType AcceptEncoding { private get; set; } = CompressType.Gzip;
+        public CompressType acceptEncoding { private get; set; } = CompressType.Gzip;
 
         /// <summary>
         /// 上行数据压缩方式(默认无压缩)
         /// </summary>
-        public CompressType ContentEncoding { private get; set; } = CompressType.None;
+        public CompressType contentEncoding { private get; set; } = CompressType.None;
 
         /// <summary>
         /// 自定义请求头内容
         /// </summary>
-        public Dictionary<HttpRequestHeader, string> Headers { private get; set; }
+        public Dictionary<HttpRequestHeader, string> headers { private get; set; }
 
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
@@ -54,7 +54,7 @@ namespace Insight.Utils.Common
         /// <param name="token">AccessToken</param>
         public HttpRequest(string token = null)
         {
-            _Token = token;
+            this.token = token;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Insight.Utils.Common
             try
             {
                 var ms = new MemoryStream();
-                switch (ContentEncoding)
+                switch (contentEncoding)
                 {
                     case CompressType.Gzip:
                         using (var stream = new GZipStream(ms, CompressionMode.Compress))
@@ -93,15 +93,15 @@ namespace Insight.Utils.Common
                         break;
                 }
 
-                _Request.ContentLength = buffer.Length;
-                using (var stream = _Request.GetRequestStream())
+                request.ContentLength = buffer.Length;
+                using (var stream = request.GetRequestStream())
                 {
                     stream.Write(buffer, 0, buffer.Length);
                 }
             }
             catch (Exception ex)
             {
-                Message = ex.Message;
+                message = ex.Message;
                 return false;
             }
 
@@ -115,30 +115,30 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法</param>
         private void Create(string url, RequestMethod method)
         {
-            _Request = (HttpWebRequest)WebRequest.Create(url);
-            _Request.Method = method.ToString();
-            _Request.Accept = "application/json";
-            _Request.ContentType = ContentType;
-            if (_Token != null)
+            request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = method.ToString();
+            request.Accept = "application/json";
+            request.ContentType = contentType;
+            if (token != null)
             {
-                _Request.Headers.Add(HttpRequestHeader.Authorization, _Token);
+                request.Headers.Add(HttpRequestHeader.Authorization, token);
             }
 
-            if (AcceptEncoding != CompressType.None)
+            if (acceptEncoding != CompressType.None)
             {
-                _Request.Headers.Add(HttpRequestHeader.AcceptEncoding, AcceptEncoding.ToString().ToLower());
+                request.Headers.Add(HttpRequestHeader.AcceptEncoding, acceptEncoding.ToString().ToLower());
             }
 
-            if (ContentEncoding != CompressType.None)
+            if (contentEncoding != CompressType.None)
             {
-                _Request.Headers.Add(HttpRequestHeader.ContentEncoding, ContentEncoding.ToString().ToLower());
+                request.Headers.Add(HttpRequestHeader.ContentEncoding, contentEncoding.ToString().ToLower());
             }
 
-            if (Headers == null) return;
+            if (headers == null) return;
 
-            foreach (var header in Headers)
+            foreach (var header in headers)
             {
-                _Request.Headers[header.Key] = header.Value;
+                request.Headers[header.Key] = header.Value;
             }
         }
 
@@ -149,31 +149,31 @@ namespace Insight.Utils.Common
         {
             try
             {
-                var response = (HttpWebResponse) _Request.GetResponse();
+                var response = (HttpWebResponse) request.GetResponse();
                 using (var stream = response.GetResponseStream())
                 {
                     switch (response.ContentEncoding.ToLower())
                     {
                         case "gzip":
-                            Data = FromGZipStream(stream);
+                            data = FromGZipStream(stream);
                             break;
                         case "deflate":
-                            Data = FromDeflateStream(stream);
+                            data = FromDeflateStream(stream);
                             break;
                         default:
-                            Data = FromStream(stream);
+                            data = FromStream(stream);
                             break;
                     }
                     // ReSharper disable once PossibleNullReferenceException
                     stream.Flush();
                 }
 
-                Success = true;
+                success = true;
                 return true;
             }
             catch (Exception ex)
             {
-                Message = ex.Message;
+                message = ex.Message;
                 return false;
             }
         }
