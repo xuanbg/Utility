@@ -114,8 +114,8 @@ namespace Insight.Utils.Client
         public void DeleteToken()
         {
             var url = $"{baseServer}/authapi/v1.0/tokens";
-            var request = new HttpRequest();
-            success = request.Send(url);
+            var request = new HttpRequest(token);
+            success = request.Send(url, null, RequestMethod.DELETE);
             if (success) return;
 
             Messages.ShowError(request.message);
