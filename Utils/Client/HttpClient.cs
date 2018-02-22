@@ -8,29 +8,29 @@ namespace Insight.Utils.Client
 {
     public class HttpClient<T>
     {
-        private readonly TokenHelper _Token;
-        private readonly DateTime _Time = DateTime.Now;
-        private Result<T> _Result = new Result<T>();
+        private readonly TokenHelper token;
+        private readonly DateTime time = DateTime.Now;
+        private Result<T> result = new Result<T>();
 
         /// <summary>
         /// 返回的错误代码
         /// </summary>
-        public string Code => _Result.code;
+        public string Code => result.code;
 
         /// <summary>
         /// 返回的错误消息
         /// </summary>
-        public string Message => _Result.message;
+        public string Message => result.message;
 
         /// <summary>
         /// 返回的数据
         /// </summary>
-        public T Data => _Result.data;
+        public T Data => result.data;
 
         /// <summary>
         /// 返回的可选项
         /// </summary>
-        public object Option => _Result.option;
+        public object Option => result.option;
 
         /// <summary>
         /// 构造函数，传入TokenHelper
@@ -38,7 +38,7 @@ namespace Insight.Utils.Client
         /// <param name="token">TokenHelper</param>
         public HttpClient(TokenHelper token)
         {
-            _Token = token;
+            this.token = token;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Insight.Utils.Client
             if (Request(url)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{_Result.message}{newline}{message}";
+            var msg = $"{result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -69,7 +69,7 @@ namespace Insight.Utils.Client
             if (Request(url, RequestMethod.POST, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{_Result.message}{newline}{message}";
+            var msg = $"{result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -86,7 +86,7 @@ namespace Insight.Utils.Client
             if (Request(url, RequestMethod.PUT, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{_Result.message}{newline}{message}";
+            var msg = $"{result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -103,7 +103,7 @@ namespace Insight.Utils.Client
             if (Request(url, RequestMethod.DELETE, data)) return true;
 
             var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{_Result.message}{newline}{message}";
+            var msg = $"{result.message}{newline}{message}";
             Messages.ShowError(msg);
             return false;
         }
@@ -117,24 +117,24 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
         {
-            var request = new HttpRequest(_Token?.AccessToken);
-            if (!_Token?.Success ?? false)
+            var request = new HttpRequest(token?.token);
+            if (!token?.success ?? false)
             {
-                _Result.BadRequest("Auth服务异常，未能获取Token！");
+                result.BadRequest("Auth服务异常，未能获取Token！");
                 return false;
             }
 
             var body = new JavaScriptSerializer().Serialize(data ?? "");
             if (!request.Send(url, body, method))
             {
-                _Result.BadRequest(request.Message);
+                result.BadRequest(request.Message);
                 return false;
             } 
 
-            _Result = Util.Deserialize<Result<T>>(request.Data);
-            if (_Token != null && "401,406".Contains(Code))
+            result = Util.Deserialize<Result<T>>(request.Data);
+            if (token != null && "401,406".Contains(Code))
             {
-                _Token.GetTokens();
+                token.GetTokens();
                 return Request(url, method, data);
             }
 
@@ -142,7 +142,7 @@ namespace Insight.Utils.Client
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
             LogAsync(method.ToString(), url, Message);
 #endif
-            return _Result.successful;
+            return result.successful;
         }
 
         /// <summary>
@@ -153,15 +153,15 @@ namespace Insight.Utils.Client
         /// <param name="message">接口返回消息</param>
         private void Log(string method, string url, string message)
         {
-            var ts = DateTime.Now - _Time;
+            var ts = DateTime.Now - time;
             var loginfo = new LogInfo
             {
-                Interface = $"{Util.GetAppSetting("BaseServer")}/logapi/v1.0/logs",
-                Token = _Token.AccessToken,
-                Code = "700101",
-                Source = "系统平台",
-                Action = "接口调用",
-                Message = $"[{method}]{url};{message};用时{ts.TotalMilliseconds}毫秒"
+                logUrl = $"{Util.GetAppSetting("BaseServer")}/logapi/v1.0/logs",
+                token = token.token,
+                code = "700101",
+                source = "系统平台",
+                action = "接口调用",
+                message = $"[{method}]{url};{message};用时{ts.TotalMilliseconds}毫秒"
             };
             var log = new LogClient(loginfo);
             log.LogToServer();
@@ -175,7 +175,7 @@ namespace Insight.Utils.Client
         /// <param name="message">接口返回消息</param>
         private void LogAsync(string method, string url, string message)
         {
-            if (_Token == null) return;
+            if (token == null) return;
 
             new Task(() => Log(method, url, message)).Start();
         }

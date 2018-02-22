@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -8,57 +7,67 @@ namespace Insight.Utils.Client
 
     public class TokenHelper
     {
-        private DateTime _Time;
-        private string _Token;
-        private string _RefreshToken;
-        private int _ExpiryTime;
-        private int _FailureTime;
+        private DateTime time;
+        private string accessToken;
+        private string refreshToken;
+        private int expiryTime;
+        private int failureTime;
 
         /// <summary>
         /// 请求状态
         /// </summary>
-        public bool Success { get; private set; }
+        public bool success { get; private set; }
 
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public string AccessToken
+        public string token
         {
             get
             {
                 var now = DateTime.Now;
-                if (string.IsNullOrEmpty(_Token) || now > _Time.AddSeconds(_FailureTime))
+                if (string.IsNullOrEmpty(accessToken) || now > time.AddSeconds(failureTime))
                 {
                     GetTokens();
-                    if (!Success) return null;
+                    if (!success) return null;
                 }
 
-                if (now > _Time.AddSeconds(_ExpiryTime)) RefresTokens();
+                if (expiryTime >= 3600 && now > time.AddSeconds(expiryTime)) RefresTokens();
 
-                return _Token;
+                return accessToken;
 
             }
         }
 
         /// <summary>
-        /// AccessToken对象
-        /// </summary>
-        public AccessToken Token { get; private set; } = new AccessToken();
-
-        /// <summary>
         /// 用户签名
         /// </summary>
-        public string Sign { get; private set; }
+        public string sign { get; private set; }
 
         /// <summary>
         /// 当前连接基础应用服务器
         /// </summary>
-        public string BaseServer { get; set; }
+        public string baseServer { get; set; }
+
+        /// <summary>
+        /// 租户ID
+        /// </summary>
+        public string tenantId { get; set; }
 
         /// <summary>
         /// 应用ID
         /// </summary>
-        public string Account { get; set; }
+        public string appId { get; set; }
+
+        /// <summary>
+        /// 登录账号
+        /// </summary>
+        public string account { get; set; }
+
+        /// <summary>
+        /// 登录部门ID
+        /// </summary>
+        public string deptId { get; set; }
 
         /// <summary>
         /// 生成签名
@@ -66,7 +75,7 @@ namespace Insight.Utils.Client
         /// <param name="secret">用户密钥</param>
         public void Signature(string secret)
         {
-            Sign = Util.Hash(Account.ToUpper() + Util.Hash(secret));
+            sign = Util.Hash(account + Util.Hash(secret));
         }
 
         /// <summary>
@@ -78,11 +87,11 @@ namespace Insight.Utils.Client
             var code = GetCode();
             if (code == null) return;
 
-            var key = Util.Hash(Sign + code);
-            var url = $"{BaseServer}/securityapi/v1.0/tokens?account={Account}&signature={key}&deptid={Token.deptId}";
-            var request = new HttpRequest(_RefreshToken);
-            Success = request.Send(url);
-            if (!Success)
+            var key = Util.Hash(sign + code);
+            var url = $"{baseServer}/authapi/v1.0/tokens?tenantid={tenantId}&appid={appId}&account={account}&signature={key}&deptid={deptId}";
+            var request = new HttpRequest(refreshToken);
+            success = request.Send(url);
+            if (!success)
             {
                 Messages.ShowError(request.Message);
                 return;
@@ -95,15 +104,11 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _Time = DateTime.Now;
-            _Token = result.data.accessToken;
-            _RefreshToken = result.data.refreshToken;
-            _ExpiryTime = result.data.expiryTime;
-            _FailureTime = result.data.failureTime;
-
-            var buffer = Convert.FromBase64String(_Token);
-            var json = Encoding.UTF8.GetString(buffer);
-            Token = Util.Deserialize<AccessToken>(json);
+            time = DateTime.Now;
+            accessToken = result.data.accessToken;
+            refreshToken = result.data.refreshToken;
+            expiryTime = result.data.expiryTime;
+            failureTime = result.data.failureTime;
         }
 
         /// <summary>
@@ -112,17 +117,17 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string GetCode()
         {
-            var url = $"{BaseServer}/securityapi/v1.0/tokens/codes?account={Account}";
-            var request = new HttpRequest(_RefreshToken);
-            Success = request.Send(url);
-            if (!Success)
+            var url = $"{baseServer}/authapi/v1.0/tokens/codes?account={account}";
+            var request = new HttpRequest(refreshToken);
+            success = request.Send(url);
+            if (!success)
             {
                 Messages.ShowError(request.Message);
                 return null;
             }
 
             var result = Util.Deserialize<Result<string>>(request.Data);
-            if (result.successful) {return result.data;}
+            if (result.successful) return result.data;
 
             Messages.ShowError(result.message);
             return null;
@@ -133,8 +138,8 @@ namespace Insight.Utils.Client
         /// </summary>
         private void RefresTokens()
         {
-            var url = $"{BaseServer}/securityapi/v1.0/tokens";
-            var request = new HttpRequest(_RefreshToken);
+            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var request = new HttpRequest(refreshToken);
             if (!request.Send(url))
             {
                 Messages.ShowError(request.Message);
@@ -154,15 +159,11 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            _Time = DateTime.Now;
-            _Token = result.data.accessToken;
-            _RefreshToken = result.data.refreshToken;
-            _ExpiryTime = result.data.expiryTime;
-            _FailureTime = result.data.failureTime;
-
-            var buffer = Convert.FromBase64String(_Token);
-            var json = Encoding.UTF8.GetString(buffer);
-            Token = Util.Deserialize<AccessToken>(json);
+            time = DateTime.Now;
+            accessToken = result.data.accessToken;
+            refreshToken = result.data.refreshToken;
+            expiryTime = result.data.expiryTime;
+            failureTime = result.data.failureTime;
         }
     }
 }

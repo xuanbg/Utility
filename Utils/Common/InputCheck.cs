@@ -7,7 +7,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 检查结果
         /// </summary>
-        public bool Result = true;
+        public bool result = true;
 
         /// <summary>
         /// 构造函数
@@ -17,10 +17,10 @@ namespace Insight.Utils.Common
         {
             foreach (var item in items)
             {
-                if (!string.IsNullOrEmpty(item.Key)) continue;
+                if (!string.IsNullOrEmpty(item.key)) continue;
 
-                Messages.ShowWarning(item.Message);
-                Result = false;
+                Messages.ShowWarning(item.message);
+                result = false;
                 return;
             }
         }
@@ -34,11 +34,11 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 检查内容
         /// </summary>
-        public string Key { get; set; }
+        public string key { get; set; }
 
         /// <summary>
         /// 错误消息
         /// </summary>
-        public string Message { get; set; }
+        public string message { get; set; }
     }
 }

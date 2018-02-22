@@ -12,12 +12,12 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回结果
         /// </summary>
-        public Result<string> Result = new Result<string>();
+        public Result<string> result = new Result<string>();
 
         /// <summary>
         /// 日志信息
         /// </summary>
-        private readonly LogInfo _Info;
+        private readonly LogInfo info;
 
         /// <summary>
         /// 构造函数
@@ -25,10 +25,10 @@ namespace Insight.Utils.Client
         /// <param name="info"></param>
         public LogClient(LogInfo info)
         {
-            _Info = info;
-            if (string.IsNullOrEmpty(info.EventSource) && string.IsNullOrEmpty(info.Interface))
+            this.info = info;
+            if (string.IsNullOrEmpty(info.eventSource) && string.IsNullOrEmpty(info.logUrl))
             {
-                Result.BadRequest("未知的日志存储目标");
+                result.BadRequest("未知的日志存储目标");
             }
         }
 
@@ -39,16 +39,16 @@ namespace Insight.Utils.Client
         {
             var dict = new Dictionary<string, object>
             {
-                {"code", _Info.Code},
-                {"message", _Info.Message},
-                {"source", _Info.Source},
-                {"action", _Info.Action},
-                {"key", _Info.Key},
-                {"userid", _Info.CreatorUserId}
+                {"code", info.code},
+                {"message", info.message},
+                {"source", info.source},
+                {"action", info.action},
+                {"key", info.key},
+                {"userid", info.userId}
             };
             var body = new JavaScriptSerializer().Serialize(dict);
-            var request = new HttpRequest(_Info.Token);
-            request.Send(_Info.Interface, body, RequestMethod.POST);
+            var request = new HttpRequest(info.token);
+            request.Send(info.logUrl, body, RequestMethod.POST);
         }
 
         /// <summary>
@@ -58,17 +58,17 @@ namespace Insight.Utils.Client
         {
             try
             {
-                if (!EventLog.SourceExists(_Info.EventSource))
+                if (!EventLog.SourceExists(info.eventSource))
                 {
-                    EventLog.CreateEventSource(_Info.EventSource, "应用程序");
+                    EventLog.CreateEventSource(info.eventSource, "应用程序");
                 }
 
-                EventLog.WriteEntry(_Info.EventSource, _Info.Message, _Info.EventType);
-                Result.Success();
+                EventLog.WriteEntry(info.eventSource, info.message, info.eventType);
+                result.Success();
             }
             catch (ArgumentException ex)
             {
-                Result.BadRequest(ex.Message);
+                result.BadRequest(ex.Message);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Insight.Utils.Common
     {
 
         // 数据库连接字符串
-        private readonly string _ConStr;
+        private readonly string conStr;
 
         /// <summary>
         /// 构造函数
@@ -17,7 +17,7 @@ namespace Insight.Utils.Common
         /// <param name="con">数据库连接字符串</param>
         public SqlHelper(string con)
         {
-            _ConStr = con;
+            conStr = con;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Insight.Utils.Common
         /// <returns>DataTable 查询结果集</returns>
         public DataTable SqlQuery(SqlCommand cmd)
         {
-            using (var conn = new SqlConnection(_ConStr))
+            using (var conn = new SqlConnection(conStr))
             {
                 conn.Open();
                 cmd.Connection = conn;
@@ -77,7 +77,7 @@ namespace Insight.Utils.Common
         /// <returns>int 受影响行数</returns>
         public int SqlNonQuery(SqlCommand cmd)
         {
-            using (var conn = new SqlConnection(_ConStr))
+            using (var conn = new SqlConnection(conStr))
             {
                 conn.Open();
                 cmd.Connection = conn;
@@ -111,7 +111,7 @@ namespace Insight.Utils.Common
         /// <returns>执行SQL语句后的第一行第一列内容</returns>
         public object SqlScalar(SqlCommand cmd)
         {
-            using (var conn = new SqlConnection(_ConStr))
+            using (var conn = new SqlConnection(conStr))
             {
                 conn.Open();
                 cmd.Connection = conn;
@@ -133,7 +133,7 @@ namespace Insight.Utils.Common
         /// <returns>bool 执行是否成功</returns>
         public bool SqlExecute(IEnumerable<SqlCommand> cmds)
         {
-            using (var conn = new SqlConnection(_ConStr))
+            using (var conn = new SqlConnection(conStr))
             {
                 conn.Open();
                 var ids = new List<object>();
@@ -175,7 +175,7 @@ namespace Insight.Utils.Common
         /// <returns>object 指定索引位置的ID</returns>
         public object SqlExecute(IEnumerable<SqlCommand> cmds, int index)
         {
-            using (var conn = new SqlConnection(_ConStr))
+            using (var conn = new SqlConnection(conStr))
             {
                 conn.Open();
                 var ids = new List<object>();

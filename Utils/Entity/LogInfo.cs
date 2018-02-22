@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Insight.Utils.Entity
 {
@@ -8,51 +7,51 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 日志接口
         /// </summary>
-        public string Interface { get; set; }
+        public string logUrl { get; set; }
 
         /// <summary>
         /// AccessToken(Logger)
         /// </summary>
-        public string Token { get; set; }
+        public string token { get; set; }
 
         /// <summary>
         /// 系统日志事件源
         /// </summary>
-        public string EventSource { get; set; }
+        public string eventSource { get; set; }
 
         /// <summary>
         /// 系统日志事件类型
         /// </summary>
-        public EventLogEntryType EventType { get; set; }
+        public EventLogEntryType eventType { get; set; }
 
         /// <summary>
-        /// 事件代码
+        /// 操作代码
         /// </summary>
-        public string Code { get; set; }
+        public string code { get; set; }
 
         /// <summary>
-        /// 事件消息
+        /// 事件来源
         /// </summary>
-        public string Message { get; set; }
+        public string source { get; set; }
 
         /// <summary>
-        /// 事件源
+        /// 操作名称
         /// </summary>
-        public string Source { get; set; }
+        public string action { get; set; }
 
         /// <summary>
-        /// 事件名称
+        /// 日志内容
         /// </summary>
-        public string Action { get; set; }
+        public string message { get; set; }
 
         /// <summary>
-        /// 查询关键词
+        /// 关键词
         /// </summary>
-        public string Key { get; set; }
+        public string key { get; set; }
 
         /// <summary>
-        /// 创建者用户ID
+        /// 来源用户ID
         /// </summary>
-        public Guid? CreatorUserId { get; set; }
+        public string userId { get; set; }
     }
 }

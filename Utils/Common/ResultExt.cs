@@ -167,7 +167,7 @@ namespace Insight.Utils.Common
             result.successful = false;
             result.code = "407";
             result.name = "InvalidAuthenticationInfo";
-            result.message = "用户名或密码错误";
+            result.message = "账号或密码错误";
             return result;
         }
 
@@ -208,12 +208,36 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
-        /// 账号在线数量过多（411）
+        /// 用户已被锁定（411）
+        /// </summary>
+        public static Result<T> Locked<T>(this Result<T> result)
+        {
+            result.successful = false;
+            result.code = "411";
+            result.name = "UserLocked";
+            result.message = "用户已被锁定，请10分钟后再试";
+            return result;
+        }
+
+        /// <summary>
+        /// 租户已过期（412）
+        /// </summary>
+        public static Result<T> TenantIsExpiry<T>(this Result<T> result)
+        {
+            result.successful = false;
+            result.code = "412";
+            result.name = "TenantIsExpiry";
+            result.message = "租户已过期！请在续租后重新登录系统";
+            return result;
+        }
+
+        /// <summary>
+        /// 不存在指定的用户（413）
         /// </summary>
         public static Result<T> NotExists<T>(this Result<T> result)
         {
             result.successful = false;
-            result.code = "411";
+            result.code = "413";
             result.name = "UserNotExists";
             result.message = "不存在指定的用户";
             return result;

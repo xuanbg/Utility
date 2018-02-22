@@ -48,20 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AliasAttribute.cs" />
-    <Compile Include="Common\BoolParse.cs" />
-    <Compile Include="Common\DateParse.cs" />
     <Compile Include="Common\HttpRequest.cs" />
     <Compile Include="Common\InputCheck.cs" />
-    <Compile Include="Common\IntParse.cs" />
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
-    <Compile Include="Entity\AccessToken.cs" />
-    <Compile Include="Entity\CompressType.cs" />
+    <Compile Include="Entity\Enums.cs" />
     <Compile Include="Entity\FileInfo.cs" />
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\Result.cs" />
-    <Compile Include="Common\GuidParse.cs" />
     <Compile Include="Client\HttpClient.cs" />
     <Compile Include="Client\LogClient.cs" />
     <Compile Include="Client\TokenHelper.cs" />

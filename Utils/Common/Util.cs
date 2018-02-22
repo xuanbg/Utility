@@ -261,11 +261,11 @@ namespace Insight.Utils.Common
                         where file.DirectoryName != null && (ext == "*.*" || ext.Contains(file.Extension))
                         select new Entity.FileInfo
                         {
-                            ID = Hash(file.Name),
-                            Name = file.Name,
-                            Path = file.DirectoryName.Replace(root, ""),
-                            FullPath = file.FullName,
-                            Version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion
+                            id = Hash(file.Name),
+                            name = file.Name,
+                            path = file.DirectoryName.Replace(root, ""),
+                            fullPath = file.FullName,
+                            version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion
                         };
             list.AddRange(infos);
             Directory.GetDirectories(path ?? root).ToList().ForEach(p => GetLocalFiles(list, root, ext, p));
@@ -303,13 +303,13 @@ namespace Insight.Utils.Common
         public static bool UpdateFile(Entity.FileInfo file, string root, byte[] bytes)
         {
             var rename = false;
-            var path = root + file.Path + "\\";
+            var path = root + file.path + "\\";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            path += file.Name;
+            path += file.name;
             try
             {
                 File.Delete(path);
@@ -479,6 +479,27 @@ namespace Insight.Utils.Common
             catch (Exception)
             {
                 return default(T);
+            }
+        }
+
+        /// <summary>
+        /// 将result数据使用Json.NET序列化，并按指定的压缩模式压缩为一个字节数组
+        /// </summary>
+        /// <param name="result">响应结果数据</param>
+        /// <param name="model">压缩模式</param>
+        /// <returns>byte[] 压缩后的字节数组</returns>
+        public static byte[] JsonWrite(object result, CompressType model)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var streamWriter = new StreamWriter(stream, Encoding.UTF8))
+                {
+                    var writer = new JsonTextWriter(streamWriter) {Formatting = Formatting.Indented};
+                    new JsonSerializer().Serialize(writer, result);
+                    streamWriter.Flush();
+
+                    return Compress(stream.ToArray(), model);
+                }
             }
         }
 
