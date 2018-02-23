@@ -58,6 +58,11 @@ namespace Insight.Utils.Client
         public string appId { get; set; }
 
         /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string userId { get; set; }
+
+        /// <summary>
         /// 登录账号
         /// </summary>
         public string account { get; set; }
@@ -87,8 +92,7 @@ namespace Insight.Utils.Client
             var key = Util.Hash(sign + code);
             var url = $"{baseServer}/authapi/v1.0/{account}/tokens?signature={key}&tenantid={tenantId}&appid={appId}&deptid={deptId}";
             var request = new HttpRequest();
-            success = request.Send(url);
-            if (!success)
+            if (!request.Send(url))
             {
                 Messages.ShowError(request.message);
                 return;
@@ -101,11 +105,14 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            time = DateTime.Now;
             accessToken = result.data.accessToken;
             refreshToken = result.data.refreshToken;
             expiryTime = result.data.expiryTime;
             failureTime = result.data.failureTime;
+
+            time = DateTime.Now;
+            userId = Util.Base64ToAccessToken(accessToken).userId;
+            success = true;
         }
 
         /// <summary>
@@ -115,8 +122,7 @@ namespace Insight.Utils.Client
         {
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(token);
-            success = request.Send(url, null, RequestMethod.DELETE);
-            if (success) return;
+            if (request.Send(url, null, RequestMethod.DELETE)) return;
 
             Messages.ShowError(request.message);
         }
@@ -129,8 +135,7 @@ namespace Insight.Utils.Client
         {
             var url = $"{baseServer}/authapi/v1.0/{account}/codes";
             var request = new HttpRequest();
-            success = request.Send(url);
-            if (!success)
+            if (!request.Send(url))
             {
                 Messages.ShowError(request.message);
                 return null;
@@ -169,11 +174,13 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            time = DateTime.Now;
             accessToken = result.data.accessToken;
             refreshToken = result.data.refreshToken;
             expiryTime = result.data.expiryTime;
             failureTime = result.data.failureTime;
+
+            time = DateTime.Now;
+            success = true;
         }
     }
 }
