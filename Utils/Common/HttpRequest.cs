@@ -65,7 +65,8 @@ namespace Insight.Utils.Common
             Create(url, method);
             if (method == RequestMethod.GET) return GetResponse();
 
-            var buffer = Encoding.UTF8.GetBytes(new JavaScriptSerializer().Serialize(body));
+            var json = new JavaScriptSerializer().Serialize(body ?? new object());
+            var buffer = Encoding.UTF8.GetBytes(json);
             try
             {
                 var ms = new MemoryStream();
