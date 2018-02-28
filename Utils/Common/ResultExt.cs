@@ -73,14 +73,14 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="message">错误详细信息（可选）</param>
-        public static Result<T> BadRequest<T>(this Result<T> result, string message = null)
+        public static Result<T> BadRequest<T>(this Result<T> result, string message = null) where T : new()
         {
             result.successful = false;
             result.code = "400";
             result.name = "BadRequest";
             result.message = $"请求参数错误！{message}";
             result.option = null;
-            result.data = default(T);
+            result.data = new T();
             return result;
         }
 

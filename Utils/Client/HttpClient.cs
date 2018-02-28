@@ -52,7 +52,6 @@ namespace Insight.Utils.Client
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
             Messages.ShowError($"{message}{newline}{msg}");
-            result.data = new T();
 
             return false;
         }
@@ -141,7 +140,10 @@ namespace Insight.Utils.Client
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
             LogAsync(method.ToString(), u, message);
 #endif
-            return result.successful;
+            if (result.successful) return true;
+
+            result.data = new T();
+            return false;
         }
 
         /// <summary>
