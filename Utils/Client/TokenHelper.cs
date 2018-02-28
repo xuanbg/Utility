@@ -122,7 +122,7 @@ namespace Insight.Utils.Client
         {
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(token);
-            if (request.Send(url, null, RequestMethod.DELETE)) return;
+            if (request.Send(url, RequestMethod.DELETE)) return;
 
             Messages.ShowError(request.message);
         }
@@ -155,7 +155,7 @@ namespace Insight.Utils.Client
         {
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
-            if (!request.Send(url))
+            if (!request.Send(url, RequestMethod.PUT))
             {
                 Messages.ShowError(request.message);
                 return;

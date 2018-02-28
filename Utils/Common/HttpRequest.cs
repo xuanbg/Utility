@@ -61,10 +61,10 @@ namespace Insight.Utils.Common
         /// 发送Http请求
         /// </summary>
         /// <param name="url">请求地址</param>
-        /// <param name="body">BODY数据</param>
         /// <param name="method">请求方法，默认GET</param>
+        /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, string body = null, RequestMethod method = RequestMethod.GET)
+        public bool Send(string url, RequestMethod method = RequestMethod.GET, string body = null)
         {
             Create(url, method);
             if (method == RequestMethod.GET) return GetResponse();
@@ -183,7 +183,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="response">GZip压缩的流</param>
         /// <returns>string 流中的数据</returns>
-        private string FromGZipStream(Stream response)
+        private static string FromGZipStream(Stream response)
         {
             using (var stream = new GZipStream(response, CompressionMode.Decompress))
             {
@@ -196,7 +196,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="response">Deflate压缩的流</param>
         /// <returns>string 流中的数据</returns>
-        private string FromDeflateStream(Stream response)
+        private static string FromDeflateStream(Stream response)
         {
             using (var stream = new DeflateStream(response, CompressionMode.Decompress))
             {
@@ -209,7 +209,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <returns>string 流中的数据</returns>
-        private string FromStream(Stream stream)
+        private static string FromStream(Stream stream)
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {

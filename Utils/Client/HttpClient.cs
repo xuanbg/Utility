@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpClient<T>
+    public class HttpClient<T> where T : new()
     {
         private readonly TokenHelper token;
         private readonly DateTime time = DateTime.Now;
@@ -45,15 +44,16 @@ namespace Insight.Utils.Client
         /// HttpRequest:GET方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="message">错误消息，默认NULL</param>
+        /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Get(string url, string message = null)
+        public bool Get(string url, string msg = null)
         {
             if (Request(url)) return true;
 
-            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
+            Messages.ShowError($"{message}{newline}{msg}");
+            result.data = new T();
+
             return false;
         }
 
@@ -61,16 +61,16 @@ namespace Insight.Utils.Client
         /// HttpRequest:POST方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="data">POST的数据</param>
-        /// <param name="message">错误消息，默认NULL</param>
+        /// <param name="body">POST的数据</param>
+        /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Post(string url, object data, string message = null)
+        public bool Post(string url, object body, string msg = null)
         {
-            if (Request(url, RequestMethod.POST, data)) return true;
+            if (Request(url, RequestMethod.POST, body)) return true;
 
-            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
+            Messages.ShowError($"{message}{newline}{msg}");
+
             return false;
         }
 
@@ -78,16 +78,16 @@ namespace Insight.Utils.Client
         /// HttpRequest:PUT方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="data">PUT的数据</param>
-        /// <param name="message">错误消息，默认NULL</param>
+        /// <param name="body">PUT的数据</param>
+        /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Put(string url, object data, string message = null)
+        public bool Put(string url, object body, string msg = null)
         {
-            if (Request(url, RequestMethod.PUT, data)) return true;
+            if (Request(url, RequestMethod.PUT, body)) return true;
 
-            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
+            Messages.ShowError($"{message}{newline}{msg}");
+
             return false;
         }
 
@@ -95,27 +95,27 @@ namespace Insight.Utils.Client
         /// HttpRequest:DELETE方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="data">DELETE的数据，默认NULL</param>
-        /// <param name="message">错误消息，默认NULL</param>
+        /// <param name="body">DELETE的数据，默认NULL</param>
+        /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Delete(string url, object data = null, string message = null)
+        public bool Delete(string url, object body = null, string msg = null)
         {
-            if (Request(url, RequestMethod.DELETE, data)) return true;
+            if (Request(url, RequestMethod.DELETE, body)) return true;
 
-            var newline = string.IsNullOrEmpty(message) ? "" : "\r\n";
-            var msg = $"{result.message}{newline}{message}";
-            Messages.ShowError(msg);
+            var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
+            Messages.ShowError($"{result.message}{newline}{msg}");
+
             return false;
         }
 
         /// <summary>
         /// 请求数据
         /// </summary>
-        /// <param name="url">接口URL</param>
+        /// <param name="u">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="data">Body中的数据</param>
+        /// <param name="body">Body中的数据</param>
         /// <returns>bool 是否成功</returns>
-        private bool Request(string url, RequestMethod method = RequestMethod.GET, object data = null)
+        private bool Request(string u, RequestMethod method = RequestMethod.GET, object body = null)
         {
             var request = new HttpRequest(token?.token);
             if (!token?.success ?? false)
@@ -124,8 +124,7 @@ namespace Insight.Utils.Client
                 return false;
             }
 
-            var body = new JavaScriptSerializer().Serialize(data ?? "");
-            if (!request.Send(url, body, method))
+            if (!request.Send(u, method, Util.Serialize(body ?? "")))
             {
                 result.BadRequest(request.message);
                 return false;
@@ -135,12 +134,12 @@ namespace Insight.Utils.Client
             if (token != null && "401,406".Contains(code))
             {
                 token.GetTokens();
-                return Request(url, method, data);
+                return Request(u, method, body);
             }
 
 #if DEBUG
             // 在DEBUG模式下且AccessToken有效时记录接口调用日志
-            LogAsync(method.ToString(), url, message);
+            LogAsync(method.ToString(), u, message);
 #endif
             return result.successful;
         }
@@ -149,9 +148,9 @@ namespace Insight.Utils.Client
         /// 记录接口调用日志
         /// </summary>
         /// <param name="method">请求方法</param>
-        /// <param name="url">请求地址</param>
-        /// <param name="message">接口返回消息</param>
-        private void Log(string method, string url, string message)
+        /// <param name="u">请求地址</param>
+        /// <param name="m">接口返回消息</param>
+        private void Log(string method, string u, string m)
         {
             var ts = DateTime.Now - time;
             var loginfo = new LogInfo
@@ -161,7 +160,7 @@ namespace Insight.Utils.Client
                 code = "700101",
                 source = "系统平台",
                 action = "接口调用",
-                message = $"[{method}]{url};{message};用时{ts.TotalMilliseconds}毫秒"
+                message = $"[{method}]{u};{m};用时{ts.TotalMilliseconds}毫秒"
             };
             var log = new LogClient(loginfo);
             log.LogToServer();
@@ -171,13 +170,13 @@ namespace Insight.Utils.Client
         /// 异步记录接口调用日志
         /// </summary>
         /// <param name="method">请求方法</param>
-        /// <param name="url">请求地址</param>
-        /// <param name="message">接口返回消息</param>
-        private void LogAsync(string method, string url, string message)
+        /// <param name="u">请求地址</param>
+        /// <param name="m">接口返回消息</param>
+        private void LogAsync(string method, string u, string m)
         {
             if (token == null) return;
 
-            new Task(() => Log(method, url, message)).Start();
+            new Task(() => Log(method, u, m)).Start();
         }
     }
 }

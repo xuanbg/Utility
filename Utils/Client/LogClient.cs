@@ -12,7 +12,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回结果
         /// </summary>
-        public Result<string> result = new Result<string>();
+        public Result<object> result = new Result<object>();
 
         /// <summary>
         /// 日志信息
@@ -48,7 +48,7 @@ namespace Insight.Utils.Client
             };
             var body = new JavaScriptSerializer().Serialize(dict);
             var request = new HttpRequest(info.token);
-            request.Send(info.logUrl, body, RequestMethod.POST);
+            request.Send(info.logUrl, RequestMethod.POST, body);
         }
 
         /// <summary>
