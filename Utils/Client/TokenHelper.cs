@@ -6,11 +6,11 @@ namespace Insight.Utils.Client
 {
     public class TokenHelper
     {
-        private DateTime time;
+        private bool isAutoRefres;
         private string accessToken;
         private string refreshToken;
-        private int expiryTime;
-        private int failureTime;
+        private DateTime expiryTime;
+        private DateTime failureTime;
 
         /// <summary>
         /// AccessToken字符串
@@ -20,13 +20,14 @@ namespace Insight.Utils.Client
             get
             {
                 var now = DateTime.Now;
-                if (string.IsNullOrEmpty(accessToken) || now > time.AddSeconds(failureTime))
+                if (string.IsNullOrEmpty(accessToken) || now > failureTime)
                 {
                     GetTokens();
-                    if (!success) return null;
                 }
-
-                if (expiryTime >= 3600 && now > time.AddSeconds(expiryTime)) RefresTokens();
+                else if (!isAutoRefres && now > expiryTime)
+                {
+                    RefresTokens();
+                }
 
                 return accessToken;
             }
@@ -56,11 +57,6 @@ namespace Insight.Utils.Client
         /// 应用ID
         /// </summary>
         public string appId { get; set; }
-
-        /// <summary>
-        /// 用户ID
-        /// </summary>
-        public string userId { get; set; }
 
         /// <summary>
         /// 登录账号
@@ -107,11 +103,12 @@ namespace Insight.Utils.Client
 
             accessToken = result.data.accessToken;
             refreshToken = result.data.refreshToken;
-            expiryTime = result.data.expiryTime;
-            failureTime = result.data.failureTime;
 
-            time = DateTime.Now;
-            userId = Util.Base64ToAccessToken(accessToken).userId;
+            var now = DateTime.Now;
+            expiryTime = now.AddSeconds(result.data.expiryTime);
+            failureTime = now.AddSeconds(result.data.failureTime);
+            isAutoRefres = result.data.expiryTime < 3600;
+
             success = true;
         }
 
@@ -122,9 +119,14 @@ namespace Insight.Utils.Client
         {
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(token);
-            if (request.Send(url, RequestMethod.DELETE)) return;
+            if (!request.Send(url, RequestMethod.DELETE))
+            {
+                Messages.ShowError(request.message);
+                return;
+            }
 
-            Messages.ShowError(request.message);
+            accessToken = null;
+            refreshToken = null;
         }
 
         /// <summary>
@@ -176,10 +178,12 @@ namespace Insight.Utils.Client
 
             accessToken = result.data.accessToken;
             refreshToken = result.data.refreshToken;
-            expiryTime = result.data.expiryTime;
-            failureTime = result.data.failureTime;
 
-            time = DateTime.Now;
+            var now = DateTime.Now;
+            expiryTime = now.AddSeconds(result.data.expiryTime);
+            failureTime = now.AddSeconds(result.data.failureTime);
+            isAutoRefres = result.data.expiryTime < 3600;
+
             success = true;
         }
     }
