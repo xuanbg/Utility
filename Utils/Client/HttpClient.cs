@@ -124,7 +124,7 @@ namespace Insight.Utils.Client
                 return false;
             }
 
-            if (!request.Send(u, method, Util.Serialize(body ?? "")))
+            if (!request.Send(u, method, body))
             {
                 result.BadRequest(request.message);
                 return false;

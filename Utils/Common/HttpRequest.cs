@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Web.Script.Serialization;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
@@ -12,11 +13,6 @@ namespace Insight.Utils.Common
     {
         private HttpWebRequest request;
         private readonly string token;
-
-        /// <summary>
-        /// 请求是否成功返回结果
-        /// </summary>
-        public bool success { get; private set; }
 
         /// <summary>
         /// 错误消息
@@ -64,12 +60,12 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, RequestMethod method = RequestMethod.GET, string body = null)
+        public bool Send(string url, RequestMethod method = RequestMethod.GET, object body = null)
         {
             Create(url, method);
             if (method == RequestMethod.GET) return GetResponse();
 
-            var buffer = Encoding.UTF8.GetBytes(body ?? "");
+            var buffer = Encoding.UTF8.GetBytes(new JavaScriptSerializer().Serialize(body));
             try
             {
                 var ms = new MemoryStream();
@@ -168,7 +164,6 @@ namespace Insight.Utils.Common
                     stream.Flush();
                 }
 
-                success = true;
                 return true;
             }
             catch (Exception ex)
