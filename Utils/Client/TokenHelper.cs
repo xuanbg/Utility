@@ -34,11 +34,6 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
-        /// 请求状态
-        /// </summary>
-        public bool success { get; private set; }
-
-        /// <summary>
         /// 用户签名
         /// </summary>
         public string sign { get; private set; }
@@ -82,6 +77,9 @@ namespace Insight.Utils.Client
         /// </summary>
         public void GetTokens()
         {
+            accessToken = null;
+            refreshToken = null;
+
             var code = GetCode();
             if (code == null) return;
 
@@ -108,8 +106,6 @@ namespace Insight.Utils.Client
             expiryTime = now.AddSeconds(result.data.expiryTime);
             failureTime = now.AddSeconds(result.data.failureTime);
             isAutoRefres = result.data.expiryTime < 3600;
-
-            success = true;
         }
 
         /// <summary>
@@ -155,6 +151,9 @@ namespace Insight.Utils.Client
         /// </summary>
         private void RefresTokens()
         {
+            accessToken = null;
+            refreshToken = null;
+
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
             if (!request.Send(url, RequestMethod.PUT))
@@ -183,8 +182,6 @@ namespace Insight.Utils.Client
             expiryTime = now.AddSeconds(result.data.expiryTime);
             failureTime = now.AddSeconds(result.data.failureTime);
             isAutoRefres = result.data.expiryTime < 3600;
-
-            success = true;
         }
     }
 }

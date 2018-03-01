@@ -11,7 +11,6 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
-        private HttpWebRequest request;
         private readonly string token;
 
         /// <summary>
@@ -62,57 +61,8 @@ namespace Insight.Utils.Common
         /// <returns>bool 是否成功</returns>
         public bool Send(string url, RequestMethod method = RequestMethod.GET, object body = null)
         {
-            Create(url, method);
-            if (method == RequestMethod.GET) return GetResponse();
-
-            var json = new JavaScriptSerializer().Serialize(body ?? new object());
-            var buffer = Encoding.UTF8.GetBytes(json);
-            try
-            {
-                var ms = new MemoryStream();
-                switch (contentEncoding)
-                {
-                    case CompressType.Gzip:
-                        using (var stream = new GZipStream(ms, CompressionMode.Compress))
-                        {
-                            stream.Write(buffer, 0, buffer.Length);
-                        }
-                        buffer = ms.GetBuffer();
-                        break;
-                    case CompressType.Deflate:
-                        using (var stream = new DeflateStream(ms, CompressionMode.Compress))
-                        {
-                            stream.Write(buffer, 0, buffer.Length);
-                        }
-                        buffer = ms.GetBuffer();
-                        break;
-                    case CompressType.None:
-                        break;
-                }
-
-                request.ContentLength = buffer.Length;
-                using (var stream = request.GetRequestStream())
-                {
-                    stream.Write(buffer, 0, buffer.Length);
-                }
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                return false;
-            }
-
-            return GetResponse();
-        }
-
-        /// <summary>
-        /// 新建并初始化一个Http请求
-        /// </summary>
-        /// <param name="url">请求地址</param>
-        /// <param name="method">请求方法</param>
-        private void Create(string url, RequestMethod method)
-        {
-            request = (HttpWebRequest)WebRequest.Create(url);
+            // 初始化请求对象及默认请求头
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();
             request.Accept = "application/json";
             request.ContentType = contentType;
@@ -131,22 +81,30 @@ namespace Insight.Utils.Common
                 request.Headers.Add(HttpRequestHeader.ContentEncoding, contentEncoding.ToString().ToLower());
             }
 
-            if (headers == null) return;
-
-            foreach (var header in headers)
+            // 覆写指定的请求头
+            if (headers != null)
             {
-                request.Headers[header.Key] = header.Value;
+                foreach (var header in headers)
+                {
+                    request.Headers[header.Key] = header.Value;
+                }
             }
-        }
 
-        /// <summary>
-        /// 获取Request响应数据
-        /// </summary>
-        private bool GetResponse()
-        {
+            // 上传数据
+            if (method != RequestMethod.GET)
+            {
+                var buffer = EncodingBody(body);
+                request.ContentLength = buffer.Length;
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(buffer, 0, buffer.Length);
+                }
+            }
+
+            // 读取返回数据
             try
             {
-                var response = (HttpWebResponse) request.GetResponse();
+                var response = (HttpWebResponse)request.GetResponse();
                 using (var stream = response.GetResponseStream())
                 {
                     switch (response.ContentEncoding.ToLower())
@@ -161,16 +119,46 @@ namespace Insight.Utils.Common
                             data = FromStream(stream);
                             break;
                     }
-                    // ReSharper disable once PossibleNullReferenceException
-                    stream.Flush();
-                }
 
-                return true;
+                    stream?.Flush();
+                    return true;
+                }
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// 将请求体数据编码为字节数组
+        /// </summary>
+        /// <param name="body">请求体数据</param>
+        /// <returns>byte[]</returns>
+        private byte[] EncodingBody(object body)
+        {
+            var json = new JavaScriptSerializer().Serialize(body ?? new object());
+            var buffer = Encoding.UTF8.GetBytes(json);
+            var ms = new MemoryStream();
+            switch (contentEncoding)
+            {
+                case CompressType.Gzip:
+                    using (var stream = new GZipStream(ms, CompressionMode.Compress))
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
+                        return ms.GetBuffer();
+                    }
+
+                case CompressType.Deflate:
+                    using (var stream = new DeflateStream(ms, CompressionMode.Compress))
+                    {
+                        stream.Write(buffer, 0, buffer.Length);
+                        return ms.GetBuffer();
+                    }
+
+                default:
+                    return buffer;
             }
         }
 

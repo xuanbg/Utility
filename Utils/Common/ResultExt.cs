@@ -80,7 +80,7 @@ namespace Insight.Utils.Common
             result.name = "BadRequest";
             result.message = $"请求参数错误！{message}";
             result.option = null;
-            result.data = new T();
+            result.data = default(T);
             return result;
         }
 
