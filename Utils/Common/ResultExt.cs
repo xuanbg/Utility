@@ -64,7 +64,7 @@ namespace Insight.Utils.Common
             result.name = "WithoutRefresh";
             result.message = "尚未过期，无需刷新";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -80,7 +80,7 @@ namespace Insight.Utils.Common
             result.name = "BadRequest";
             result.message = $"请求参数错误！{message}";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -95,7 +95,7 @@ namespace Insight.Utils.Common
             result.name = "InvalidAuthenticationInfo";
             result.message = "提供的身份验证信息不正确";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -111,7 +111,7 @@ namespace Insight.Utils.Common
             result.name = "CallInterfaceTooFrequent";
             result.message = "调用接口过于频繁";
             result.option = option;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -126,7 +126,7 @@ namespace Insight.Utils.Common
             result.name = "Forbidden";
             result.message = "当前用户未取得授权";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -142,7 +142,7 @@ namespace Insight.Utils.Common
             result.name = "ResourceNotFound";
             result.message = msg ?? "指定的资源不存在";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -157,7 +157,7 @@ namespace Insight.Utils.Common
             result.name = "AccessTokenExpired";
             result.message = "AccessToken已过期";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -171,7 +171,7 @@ namespace Insight.Utils.Common
             result.name = "AccessTokenFailured";
             result.message = "AccessToken已失效";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -186,7 +186,7 @@ namespace Insight.Utils.Common
             result.name = "InvalidAuthenticationInfo";
             result.message = "账号或密码错误";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -200,7 +200,7 @@ namespace Insight.Utils.Common
             result.name = "GetCodeFailured";
             result.message = "获取Code失败";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -214,7 +214,7 @@ namespace Insight.Utils.Common
             result.name = "AccountAlreadyExists";
             result.message = "用户已存在";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -228,7 +228,7 @@ namespace Insight.Utils.Common
             result.name = "AccountIsDisabled";
             result.message = "当前用户被禁止登录";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -242,7 +242,7 @@ namespace Insight.Utils.Common
             result.name = "UserLocked";
             result.message = "用户已被锁定，请10分钟后再试";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -256,7 +256,7 @@ namespace Insight.Utils.Common
             result.name = "TenantIsExpiry";
             result.message = "租户已过期！请在续租后重新登录系统";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -270,7 +270,7 @@ namespace Insight.Utils.Common
             result.name = "UserNotExists";
             result.message = "不存在指定的用户";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -284,7 +284,7 @@ namespace Insight.Utils.Common
             result.name = "InvalidGUID";
             result.message = "错误的GUID数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -298,7 +298,7 @@ namespace Insight.Utils.Common
             result.name = "InvalidDateTime";
             result.message = "错误的DateTime数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -312,7 +312,7 @@ namespace Insight.Utils.Common
             result.name = "InvalidValue";
             result.message = "错误的数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -326,7 +326,7 @@ namespace Insight.Utils.Common
             result.name = "FileNotExists";
             result.message = "未找到指定的文件";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -340,7 +340,7 @@ namespace Insight.Utils.Common
             result.name = "SheetNotExists";
             result.message = "未找到指定的Sheet";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -354,7 +354,7 @@ namespace Insight.Utils.Common
             result.name = "NoRowsRead";
             result.message = "未从文件中读取任何数据行";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -368,7 +368,7 @@ namespace Insight.Utils.Common
             result.name = "IncorrectExcelFormat";
             result.message = "Excel格式不正确";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -382,7 +382,7 @@ namespace Insight.Utils.Common
             result.name = "ServerError";
             result.message = message;
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -396,7 +396,7 @@ namespace Insight.Utils.Common
             result.name = "DataBaseError";
             result.message = "写数据库失败";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -410,7 +410,7 @@ namespace Insight.Utils.Common
             result.name = "DataAlreadyExists";
             result.message = "数据已存在";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -424,7 +424,7 @@ namespace Insight.Utils.Common
             result.name = "ServiceUnavailable";
             result.message = "当前服务不可用";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -438,7 +438,7 @@ namespace Insight.Utils.Common
             result.name = "DataNotUpdate";
             result.message = "未更新任何数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -452,7 +452,7 @@ namespace Insight.Utils.Common
             result.name = "NotBeModified";
             result.message = "不允许修改和删除的数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
 
@@ -466,7 +466,7 @@ namespace Insight.Utils.Common
             result.name = "NotBeDeleted";
             result.message = "不允许删除的数据";
             result.option = null;
-            result.data = default(T);
+            
             return result;
         }
     }

@@ -123,21 +123,21 @@ namespace Insight.Utils.Client
                 if (request.Send(url, method, body))
                 {
                     result = Util.Deserialize<Result<T>>(request.data);
-                    if ("401,406".Contains(code))
+                    if (code == "406")
                     {
                         helper.GetTokens();
                         return Request(url, method, body);
                     }
 
                     if (result.successful) return true;
-
                 }
-
-                result.BadRequest(request.message);
+                else
+                {
+                    result.BadRequest(request.message);
+                }
             }
 
-            if (typeof(T).Name.Contains("List")) result.data = new T();
-
+            result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
             return false;
         }
     }
