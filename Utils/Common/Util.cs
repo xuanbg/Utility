@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
@@ -152,6 +153,24 @@ namespace Insight.Utils.Common
         public static bool StringCompare(string s1, string s2)
         {
             return string.Equals(s1, s2, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// 复制源对象的属性值到目标对象
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="source">源对象</param>
+        /// <param name="target">目标对象</param>
+        public static void CopyValue<T>(T source, T target)
+        {
+            var propertys = typeof(T).GetProperties();
+            foreach (var property in propertys)
+            {
+                if (!property.CanRead || !property.CanWrite) continue;
+
+                var value = property.GetValue(source, null);
+                property.SetValue(target, value, null);
+            }
         }
 
         /// <summary>
@@ -380,8 +399,37 @@ namespace Insight.Utils.Common
 
             using (var ms = new MemoryStream())
             {
-                img.Save(ms, ImageFormat.Jpeg);
+                img.Save(ms, img.RawFormat);
                 return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 缩放图片
+        /// </summary>
+        /// <param name="img">原图片</param>
+        /// <param name="width">目标宽度(像素)</param>
+        /// <param name="height">目标高度(像素)</param>
+        /// <returns>byte[] 缩放后图片的字节数组</returns>
+        public static byte[] Resize(Image img, int width, int height)
+        {
+            if (img == null) return null;
+
+            var image = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            var graphics = Graphics.FromImage(image);
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.Bilinear;
+
+            var rect = new Rectangle(0, 0, width, height);
+            graphics.DrawImage(img, rect);
+            graphics.Dispose();
+
+            using (var stream = new MemoryStream())
+            {
+                image.Save(stream, img.RawFormat);
+                image.Dispose();
+
+                return stream.ToArray();
             }
         }
 
