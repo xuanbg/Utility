@@ -56,6 +56,7 @@
     <Compile Include="Entity\Enums.cs" />
     <Compile Include="Entity\FileInfo.cs" />
     <Compile Include="Entity\LogInfo.cs" />
+    <Compile Include="Entity\LookUpMember.cs" />
     <Compile Include="Entity\Result.cs" />
     <Compile Include="Client\HttpClient.cs" />
     <Compile Include="Client\LogClient.cs" />
