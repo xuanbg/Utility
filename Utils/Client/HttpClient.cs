@@ -1,4 +1,6 @@
-﻿using Insight.Utils.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
@@ -41,10 +43,17 @@ namespace Insight.Utils.Client
         /// HttpRequest:GET方法
         /// </summary>
         /// <param name="url">接口URL</param>
+        /// <param name="dict">参数集合</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Get(string url, string msg = null)
+        public bool Get(string url, Dictionary<string, string> dict = null, string msg = null)
         {
+            if (dict != null)
+            {
+                var param = dict.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
+                url += param.Replace("?&", "?");
+            }
+
             if (Request(url)) return true;
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
