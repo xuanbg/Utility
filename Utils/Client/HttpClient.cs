@@ -46,7 +46,7 @@ namespace Insight.Utils.Client
         /// <param name="dict">参数集合</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Get(string url, Dictionary<string, string> dict = null, string msg = null)
+        public bool Get(string url, Dictionary<string, object> dict = null, string msg = null)
         {
             if (dict != null)
             {
