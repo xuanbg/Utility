@@ -122,7 +122,6 @@ namespace Insight.Utils.Client
         public void RefresTokens()
         {
             accessToken = null;
-            refreshToken = null;
 
             var url = $"{baseServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
