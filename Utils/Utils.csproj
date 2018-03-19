@@ -54,7 +54,7 @@
     <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
     <Compile Include="Entity\Enums.cs" />
-    <Compile Include="Entity\FileInfo.cs" />
+    <Compile Include="Entity\ClientFile.cs" />
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\LookUpMember.cs" />
     <Compile Include="Entity\Result.cs" />
