@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web.Script.Serialization;
@@ -59,8 +60,14 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, RequestMethod method = RequestMethod.GET, object body = null)
+        public bool Send(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> body = null)
         {
+            if (method == RequestMethod.GET && body != null)
+            {
+                var param = body.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
+                url += param.Replace("?&", "?");
+            }
+
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();

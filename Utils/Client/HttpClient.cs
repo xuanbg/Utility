@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -48,13 +47,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool Get(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            if (dict != null)
-            {
-                var param = dict.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
-                url += param.Replace("?&", "?");
-            }
-
-            if (Request(url)) return true;
+            if (Request(url, RequestMethod.GET, dict)) return true;
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
             Messages.ShowError($"{message}{newline}{msg}");
@@ -66,12 +59,12 @@ namespace Insight.Utils.Client
         /// HttpRequest:POST方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="body">POST的数据</param>
+        /// <param name="dict">POST的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Post(string url, object body, string msg = null)
+        public bool Post(string url, Dictionary<string, object> dict, string msg = null)
         {
-            if (Request(url, RequestMethod.POST, body)) return true;
+            if (Request(url, RequestMethod.POST, dict)) return true;
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
             Messages.ShowError($"{message}{newline}{msg}");
@@ -83,12 +76,12 @@ namespace Insight.Utils.Client
         /// HttpRequest:PUT方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="body">PUT的数据</param>
+        /// <param name="dict">PUT的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Put(string url, object body, string msg = null)
+        public bool Put(string url, Dictionary<string, object> dict, string msg = null)
         {
-            if (Request(url, RequestMethod.PUT, body)) return true;
+            if (Request(url, RequestMethod.PUT, dict)) return true;
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
             Messages.ShowError($"{message}{newline}{msg}");
@@ -100,12 +93,12 @@ namespace Insight.Utils.Client
         /// HttpRequest:DELETE方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="body">DELETE的数据，默认NULL</param>
+        /// <param name="dict">DELETE的数据，默认NULL</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Delete(string url, object body = null, string msg = null)
+        public bool Delete(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            if (Request(url, RequestMethod.DELETE, body)) return true;
+            if (Request(url, RequestMethod.DELETE, dict)) return true;
 
             var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
             Messages.ShowError($"{result.message}{newline}{msg}");
@@ -118,9 +111,9 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="body">Body中的数据</param>
+        /// <param name="dict">请求参数/Body中的数据</param>
         /// <returns>bool 是否成功</returns>
-        private bool Request(string url, RequestMethod method = RequestMethod.GET, object body = null)
+        private bool Request(string url, RequestMethod method, Dictionary<string, object> dict = null)
         {
             if (helper?.token == null)
             {
@@ -129,13 +122,13 @@ namespace Insight.Utils.Client
             else
             {
                 var request = new HttpRequest(helper.token);
-                if (request.Send(url, method, body))
+                if (request.Send(url, method, dict))
                 {
                     result = Util.Deserialize<Result<T>>(request.data);
                     if (code == "406")
                     {
                         helper.GetTokens();
-                        return Request(url, method, body);
+                        return Request(url, method, dict);
                     }
 
                     if (result.successful) return true;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -84,9 +85,16 @@ namespace Insight.Utils.Client
             if (code == null) return;
 
             var key = Util.Hash(sign + code);
-            var url = $"{baseServer}/authapi/v1.0/{account}/tokens?signature={key}&tenantid={tenantId}&appid={appId}&deptid={deptId}";
+            var url = $"{baseServer}/authapi/v1.0/{account}/tokens";
+            var dict = new Dictionary<string, object>
+            {
+                {"signature", key},
+                {"tenantid", tenantId},
+                {"appid", appId},
+                {"deptid", deptId},
+            };
             var request = new HttpRequest();
-            if (!request.Send(url))
+            if (!request.Send(url, RequestMethod.GET, dict))
             {
                 Messages.ShowError(request.message);
                 return;
