@@ -125,13 +125,18 @@ namespace Insight.Utils.Client
                 if (request.Send(url, method, dict))
                 {
                     result = Util.Deserialize<Result<T>>(request.data);
-                    if (code == "406")
-                    {
-                        helper.GetTokens();
-                        return Request(url, method, dict);
-                    }
-
                     if (result.successful) return true;
+
+                    switch (code)
+                    {
+                        case "405":
+                            helper.RefresTokens();
+                            return Request(url, method, dict);
+
+                        case "406":
+                            helper.GetTokens();
+                            return Request(url, method, dict);
+                    }
                 }
                 else
                 {

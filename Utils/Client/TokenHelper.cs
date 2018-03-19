@@ -117,6 +117,44 @@ namespace Insight.Utils.Client
         }
 
         /// <summary>
+        /// 刷新AccessToken过期时间
+        /// </summary>
+        public void RefresTokens()
+        {
+            accessToken = null;
+            refreshToken = null;
+
+            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var request = new HttpRequest(refreshToken);
+            if (!request.Send(url, RequestMethod.PUT))
+            {
+                Messages.ShowError(request.message);
+                return;
+            }
+
+            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
+            if (result.code == "406")
+            {
+                GetTokens();
+                return;
+            }
+
+            if (!result.successful)
+            {
+                Messages.ShowError(result.message);
+                return;
+            }
+
+            accessToken = result.data.accessToken;
+            refreshToken = result.data.refreshToken;
+
+            var now = DateTime.Now;
+            expiryTime = now.AddSeconds(result.data.expiryTime);
+            failureTime = now.AddSeconds(result.data.failureTime);
+            isAutoRefres = result.data.expiryTime < 3600;
+        }
+
+        /// <summary>
         /// 注销令牌
         /// </summary>
         public void DeleteToken()
@@ -152,44 +190,6 @@ namespace Insight.Utils.Client
 
             Messages.ShowError(result.message);
             return null;
-        }
-
-        /// <summary>
-        /// 刷新AccessToken过期时间
-        /// </summary>
-        private void RefresTokens()
-        {
-            accessToken = null;
-            refreshToken = null;
-
-            var url = $"{baseServer}/authapi/v1.0/tokens";
-            var request = new HttpRequest(refreshToken);
-            if (!request.Send(url, RequestMethod.PUT))
-            {
-                Messages.ShowError(request.message);
-                return;
-            }
-
-            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
-            if (result.code == "406")
-            {
-                GetTokens();
-                return;
-            }
-
-            if (!result.successful)
-            {
-                Messages.ShowError(result.message);
-                return;
-            }
-
-            accessToken = result.data.accessToken;
-            refreshToken = result.data.refreshToken;
-
-            var now = DateTime.Now;
-            expiryTime = now.AddSeconds(result.data.expiryTime);
-            failureTime = now.AddSeconds(result.data.failureTime);
-            isAutoRefres = result.data.expiryTime < 3600;
         }
     }
 }
