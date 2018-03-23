@@ -367,7 +367,7 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="sheetName">Sheet名称</param>
         public void CreateSheet<T>(List<T> list, string sheetName)
         {
-            if (workbook == null || list == null || list.Count == 0) return;
+            if (workbook == null || list == null) return;
 
             // 创建Sheet并生成标题行
             var sheet = CreateTitel<T>(sheetName);
