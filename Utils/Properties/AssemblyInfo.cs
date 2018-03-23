@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Utils 公共模块")]
+[assembly: AssemblyTitle("Utils Common Util")]
 [assembly: AssemblyDescription("Insight Utils 公共模块")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Insight Software Ltd.")]
