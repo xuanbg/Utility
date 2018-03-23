@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Utils NPOI模块")]
-[assembly: AssemblyDescription("Insight Utils NPOI模块")]
+[assembly: AssemblyTitle("Utils 电子影像模块")]
+[assembly: AssemblyDescription("Insight Utils 电子影像模块")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Insight Software Ltd.")]
 [assembly: AssemblyProduct("Insight Utils")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("72775862-4b64-4916-821c-85e7b3f5af94")]
+[assembly: Guid("f519f1e9-29c7-4032-9a0e-68a0ebf1496b")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

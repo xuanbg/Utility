@@ -1,6 +1,5 @@
 ﻿namespace Insight.Utils.Entity
 {
-
     public class TokenPackage
     {
         /// <summary>
@@ -42,8 +41,13 @@
         public string secret { get; set; }
     }
 
-    public class Session
+    public class UserInfo
     {
+        /// <summary>
+        /// ID，唯一标识
+        /// </summary>
+        public string id { get; set; }
+
         /// <summary>
         /// 租户ID
         /// </summary>
@@ -55,14 +59,9 @@
         public string deptId { get; set; }
 
         /// <summary>
-        /// 用户ID
+        /// 姓名/昵称
         /// </summary>
-        public string userId { get; set; }
-
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        public string userName { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         /// 登录账号
@@ -70,13 +69,18 @@
         public string account { get; set; }
 
         /// <summary>
-        /// 用户手机号
+        /// 手机号
         /// </summary>
         public string mobile { get; set; }
 
         /// <summary>
-        /// 用户E-mail
+        /// 注册邮箱
         /// </summary>
         public string email { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string remark { get; set; }
     }
 }
