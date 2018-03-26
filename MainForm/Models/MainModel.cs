@@ -44,7 +44,7 @@ namespace Insight.Utils.MainForm.Models
             view.StbDept.Caption = Setting.deptName;
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
-            view.StbServer.Caption = Setting.appServer;
+            view.StbServer.Caption = Setting.appServer ?? Setting.baseServer;
             if (SystemInformation.WorkingArea.Height > 755) return;
 
             view.WindowState = FormWindowState.Maximized;
@@ -62,16 +62,16 @@ namespace Insight.Utils.MainForm.Models
         /// 打开MDI子窗体
         /// </summary>
         /// <param name="name"></param>
-        public void AddPageMdi(object name)
+        public void AddPageMdi(string name)
         {
-            var form = Application.OpenForms[name.ToString()];
+            var form = Application.OpenForms[name];
             if (form != null)
             {
                 form.Activate();
                 return;
             }
 
-            var mod = navItems.Single(m => m.alias == name.ToString());
+            var mod = navItems.Single(m => m.alias == name);
             var path = $"{Application.StartupPath}\\{mod.url}";
             if (!File.Exists(path))
             {
@@ -92,7 +92,8 @@ namespace Insight.Utils.MainForm.Models
                 return;
             }
 
-            asm.CreateInstance(type.FullName ?? "", false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
             view.Loading.CloseWaitForm();
         }
 

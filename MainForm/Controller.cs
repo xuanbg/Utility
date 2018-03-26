@@ -37,7 +37,7 @@ namespace Insight.Utils.MainForm
             view.Closed += (sender, args) => Exit();
 
             // 订阅导航栏点击事件
-            manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.AddPageMdi(args.Link.Item.Tag));
+            manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.AddPageMdi(args.Link.Item.Tag.ToString()));
         }
 
         /// <summary>
