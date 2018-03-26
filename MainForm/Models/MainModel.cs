@@ -82,12 +82,9 @@ namespace Insight.Utils.MainForm.Models
 
             view.Loading.ShowWaitForm();
             var asm = Assembly.LoadFrom(path);
-            var start = mod.url.LastIndexOf("/", StringComparison.Ordinal);
-            if (start < 0) start = 0;
-
-            var end = mod.url.LastIndexOf(".", StringComparison.Ordinal);
-            var className = mod.url.Substring(start, end - start);
-            var cont = asm.CreateInstance($"Insight.GOM.Client.{className}.{mod.alias}.Controller", false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            var ctl = $"{mod.alias}.Controller";
+            var type = asm.GetTypes().Single(i => i.FullName != null && i.FullName.EndsWith(ctl));
+            var cont = asm.CreateInstance(type.FullName ?? "", false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
             view.Loading.CloseWaitForm();
             if (cont == null)
             {
