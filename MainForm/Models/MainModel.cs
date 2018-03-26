@@ -44,7 +44,7 @@ namespace Insight.Utils.MainForm.Models
             view.StbDept.Caption = Setting.deptName;
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
-            view.StbServer.Caption = Setting.baseServer;
+            view.StbServer.Caption = Setting.appServer;
             if (SystemInformation.WorkingArea.Height > 755) return;
 
             view.WindowState = FormWindowState.Maximized;
@@ -82,15 +82,18 @@ namespace Insight.Utils.MainForm.Models
 
             view.Loading.ShowWaitForm();
             var asm = Assembly.LoadFrom(path);
-            var ctl = $"{mod.alias}.Controller";
-            var type = asm.GetTypes().Single(i => i.FullName != null && i.FullName.EndsWith(ctl));
-            var cont = asm.CreateInstance(type.FullName ?? "", false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
-            view.Loading.CloseWaitForm();
-            if (cont == null)
+            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.alias}.Controller"));
+            if (type == null)
             {
+                view.Loading.CloseWaitForm();
                 var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
                 Messages.ShowError(msg);
+
+                return;
             }
+
+            asm.CreateInstance(type.FullName ?? "", false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            view.Loading.CloseWaitForm();
         }
 
         /// <summary>
