@@ -44,7 +44,7 @@ namespace Insight.Utils.MainForm.Models
             view.StbDept.Caption = Setting.deptName;
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
-            view.StbServer.Caption = Setting.appServer ?? Setting.baseServer;
+            view.StbServer.Caption = Setting.appServer;
             if (SystemInformation.WorkingArea.Height > 755) return;
 
             view.WindowState = FormWindowState.Maximized;
@@ -123,7 +123,7 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         private void InitNavBar()
         {
-            var url = $"{baseServer}/moduleapi/v1.0/navigations";
+            var url = $"{baseServer}/commonapi/v1.0/navigations";
             var client = new HttpClient<List<Navigation>>(tokenHelper);
             if (!client.Get(url)) return;
 

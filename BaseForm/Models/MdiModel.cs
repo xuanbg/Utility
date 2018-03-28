@@ -17,7 +17,6 @@ namespace Insight.Utils.Models
     public class MdiModel<T> where T : BaseMDI, new()
     {
         private const int MinWaitTime = 800;
-        private readonly string moduleId;
         private int waits;
         private DateTime wait;
         private GridHitInfo hitInfo = new GridHitInfo();
@@ -46,6 +45,11 @@ namespace Insight.Utils.Models
         /// 基础服务地址
         /// </summary>
         public string baseServer = Setting.baseServer;
+
+        /// <summary>
+        /// 业务模块ID
+        /// </summary>
+        public readonly string moduleId;
 
         /// <summary>
         /// 构造函数，初始化MDI窗体并显示
@@ -179,7 +183,7 @@ namespace Insight.Utils.Models
         /// <returns>功能按钮集合</returns>
         private IEnumerable<Function> GetActions()
         {
-            var url = $"{baseServer}/moduleapi/v1.0/modules/{moduleId}/functions";
+            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/functions";
             var client = new HttpClient<List<Function>>(tokenHelper);
             return client.Get(url) ? client.data : new List<Function>();
         }

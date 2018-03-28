@@ -17,7 +17,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 应用服务地址
         /// </summary>
-        public static string appServer = Util.GetAppSetting("AppServer");
+        public static string appServer = GetAppServer();
 
         /// <summary>
         /// 基础服务地址
@@ -73,6 +73,14 @@ namespace Insight.Utils.Client
         /// 是否需要修改密码
         /// </summary>
         public static bool needChangePw;
+
+        private static string GetAppServer()
+        {
+            var server = Util.GetAppSetting("AppServer");
+            if (string.IsNullOrEmpty(server)) server = Util.GetAppSetting("BaseServer");
+
+            return server;
+        }
 
         /// <summary>
         /// 获取是否保存用户名选项设置
