@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Insight.Utils.Common
 {
@@ -20,6 +21,8 @@ namespace Insight.Utils.Common
                 if (!string.IsNullOrEmpty(item.key)) continue;
 
                 Messages.ShowWarning(item.message);
+                item.control.Focus();
+
                 result = false;
                 return;
             }
@@ -31,6 +34,11 @@ namespace Insight.Utils.Common
     /// </summary>
     public class InputItem
     {
+        /// <summary>
+        /// 窗体控件
+        /// </summary>
+        public Control control { get; set; }
+
         /// <summary>
         /// 检查内容
         /// </summary>

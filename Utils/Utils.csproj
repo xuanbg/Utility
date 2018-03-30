@@ -55,7 +55,7 @@
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
-    <Compile Include="Entity\CategoryBses.cs" />
+    <Compile Include="Entity\Catalog.cs" />
     <Compile Include="Entity\Enums.cs" />
     <Compile Include="Entity\ClientFile.cs" />
     <Compile Include="Entity\ImageData.cs" />

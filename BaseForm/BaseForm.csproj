@@ -84,6 +84,7 @@
     <Compile Include="Controller\BaseController.cs" />
     <Compile Include="Controls\Format.cs" />
     <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\MdiModel.cs" />
     <Compile Include="Controls\PageControl.cs">
       <SubType>UserControl</SubType>
@@ -92,6 +93,12 @@
       <DependentUpon>PageControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\Category.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Category.Designer.cs">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BaseForm\BaseDialog.resx">
@@ -109,6 +116,9 @@
     <EmbeddedResource Include="Controls\PageControl.resx">
       <DependentUpon>PageControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Category.resx">
+      <DependentUpon>Category.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj">
@@ -116,5 +126,6 @@
       <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

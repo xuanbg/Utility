@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 
@@ -26,14 +27,15 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 设置一个输入检查对象
         /// </summary>
+        /// <param name="control"></param>
         /// <param name="key">输入对象的值</param>
         /// <param name="message">错误消息</param>
         /// <param name="clear">是否清除集合</param>
-        public void SetCheckItem(string key, string message, bool clear = false)
+        public void SetCheckItem(Control control, string key, string message, bool clear = false)
         {
             if (clear) checkItems.Clear();
 
-            var item = new InputItem{key = key, message = message};
+            var item = new InputItem{control = control, key = key, message = message};
             checkItems.Add(item);
         }
 
