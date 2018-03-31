@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\CategoryHelper.cs" />
     <Compile Include="Client\Setting.cs" />
     <Compile Include="Common\RegexHelper.cs" />
     <Compile Include="Common\AliasAttribute.cs" />

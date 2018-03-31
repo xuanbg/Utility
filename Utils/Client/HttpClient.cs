@@ -125,6 +125,12 @@ namespace Insight.Utils.Client
                 if (request.Send(url, method, dict))
                 {
                     result = Util.Deserialize<Result<T>>(request.data);
+                    if (result == null)
+                    {
+                        result = new Result<T>().ServerError($"Response data:{request.data}");
+                        return false;
+                    }
+
                     if (result.successful) return true;
 
                     switch (code)
