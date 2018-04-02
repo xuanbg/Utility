@@ -6,7 +6,7 @@ namespace Insight.Utils.Entity
     /// <summary>
     /// 报表
     /// </summary>
-    public class ReportDef
+    public class Definition
     {
         /// <summary>
         /// 唯一ID
@@ -46,7 +46,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 数据源
         /// </summary>
-        public string dataSource { get; set; }
+        public int dataSource { get; set; }
 
         /// <summary>
         /// 描述
