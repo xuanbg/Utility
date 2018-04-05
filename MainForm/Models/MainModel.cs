@@ -31,7 +31,11 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         public MainModel()
         {
-            view = new MainWindow {Text = Setting.appName};
+            view = new MainWindow
+            {
+                Text = Setting.appName,
+                Icon = new Icon("logo.ico")
+            };
 
             // 加载模块数据并初始化导航栏
             InitNavBar();

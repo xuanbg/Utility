@@ -22,6 +22,7 @@ namespace Insight.Utils.MainForm.Login.Models
                 SaveUserCheckBox = {Checked = saveUser}
             };
 
+            // 订阅控件事件实现数据双向绑定
             view.BaseInupt.EditValueChanged += (sender, args) => baseServer = view.BaseInupt.Text;
             view.SaveUserCheckBox.CheckStateChanged += (sender, args) => saveUser = view.SaveUserCheckBox.Checked;
         }

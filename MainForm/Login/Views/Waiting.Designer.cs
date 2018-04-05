@@ -37,17 +37,15 @@ namespace Insight.Utils.MainForm.Login.Views
             // 
             // labLoading
             // 
-            this.labLoading.Location = new System.Drawing.Point(190, 190);
+            this.labLoading.Location = new System.Drawing.Point(190, 150);
             this.labLoading.Name = "labLoading";
-            this.labLoading.Size = new System.Drawing.Size(231, 22);
+            this.labLoading.Size = new System.Drawing.Size(154, 14);
             this.labLoading.TabIndex = 0;
             this.labLoading.Text = "正在加载应用程序，请稍候…";
             // 
             // Waiting
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackgroundImageLayoutStore = System.Windows.Forms.ImageLayout.Zoom;
-            this.BackgroundImageStore = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImageStore")));
             this.ClientSize = new System.Drawing.Size(520, 320);
             this.Controls.Add(this.labLoading);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -55,7 +53,6 @@ namespace Insight.Utils.MainForm.Login.Views
             this.Name = "Waiting";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Insight Workstation 3";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();

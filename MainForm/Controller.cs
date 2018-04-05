@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
+using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controller;
 using Insight.Utils.MainForm.Models;
@@ -38,14 +39,17 @@ namespace Insight.Utils.MainForm
 
             // 订阅导航栏点击事件
             manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.AddPageMdi(args.Link.Item.Tag.ToString()));
+
+            if (Setting.needChangePw) ChangPassword(true);
         }
 
         /// <summary>
         /// 点击菜单项：修改密码，弹出修改密码对话框
         /// </summary>
-        private void ChangPassword()
+        /// <param name="isFirst"></param>
+        private void ChangPassword(bool isFirst = false)
         {
-            var changPw = new ChangPwModel();
+            var changPw = new ChangPwModel(isFirst);
             var view = changPw.view;
 
             SubCloseEvent(view);

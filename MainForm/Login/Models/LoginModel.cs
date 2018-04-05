@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
@@ -22,7 +24,15 @@ namespace Insight.Utils.MainForm.Login.Models
         /// </summary>
         public LoginModel()
         {
-            view = new Views.Login {Text = Setting.appName};
+            view = new Views.Login
+            {
+                Text = Setting.appName,
+                Icon = new Icon("logo.ico"),
+                BackgroundImage = Util.GetImage("bg.png"),
+                BackgroundImageLayout = ImageLayout.Stretch
+            };
+
+            // 订阅控件事件实现数据双向绑定
             view.UserNameInput.EditValueChanged += (sender, args) => account = view.UserNameInput.Text.Trim();
             view.PassWordInput.EditValueChanged += (sender, args) => password = view.PassWordInput.Text;
             view.UserNameInput.Leave += (sender, args) => GetDepts();
@@ -87,6 +97,8 @@ namespace Insight.Utils.MainForm.Login.Models
         /// </summary>
         public void GetDepts()
         {
+            if (string.IsNullOrEmpty(account)) return;
+
             var url = $"{baseServer}/userapi/v1.0/users/{account}/depts";
             var request = new HttpRequest();
             if (!request.Send(url))

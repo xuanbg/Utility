@@ -33,54 +33,32 @@ namespace Insight.Utils.MainForm.Login.Views
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            this.labUser = new DevExpress.XtraEditors.LabelControl();
-            this.labPassword = new DevExpress.XtraEditors.LabelControl();
             this.UserNameInput = new DevExpress.XtraEditors.TextEdit();
             this.PassWordInput = new DevExpress.XtraEditors.TextEdit();
             this.CloseButton = new DevExpress.XtraEditors.SimpleButton();
             this.SetButton = new DevExpress.XtraEditors.SimpleButton();
             this.LoginButton = new DevExpress.XtraEditors.SimpleButton();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.lueDept = new DevExpress.XtraEditors.TreeListLookUpEdit();
             this.treeListLookUpEdit2TreeList = new DevExpress.XtraTreeList.TreeList();
             this.colName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.OrgTreeNode = new DevExpress.Utils.ImageCollection(this.components);
+            this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
+            this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
+            this.pictureEdit3 = new DevExpress.XtraEditors.PictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit3.Properties)).BeginInit();
             this.SuspendLayout();
-            // 
-            // labUser
-            // 
-            this.labUser.Appearance.Options.UseTextOptions = true;
-            this.labUser.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labUser.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
-            this.labUser.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labUser.Location = new System.Drawing.Point(130, 130);
-            this.labUser.Name = "labUser";
-            this.labUser.Size = new System.Drawing.Size(80, 21);
-            this.labUser.TabIndex = 0;
-            this.labUser.Text = "用 户 名：";
-            // 
-            // labPassword
-            // 
-            this.labPassword.Appearance.Options.UseTextOptions = true;
-            this.labPassword.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labPassword.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
-            this.labPassword.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labPassword.CausesValidation = false;
-            this.labPassword.Location = new System.Drawing.Point(130, 165);
-            this.labPassword.Name = "labPassword";
-            this.labPassword.Size = new System.Drawing.Size(80, 21);
-            this.labPassword.TabIndex = 0;
-            this.labPassword.Text = "密 码：";
             // 
             // UserNameInput
             // 
             this.UserNameInput.EnterMoveNextControl = true;
-            this.UserNameInput.Location = new System.Drawing.Point(210, 130);
+            this.UserNameInput.Location = new System.Drawing.Point(190, 130);
             this.UserNameInput.Name = "UserNameInput";
             this.UserNameInput.Properties.AutoHeight = false;
             this.UserNameInput.Size = new System.Drawing.Size(160, 21);
@@ -90,7 +68,7 @@ namespace Insight.Utils.MainForm.Login.Views
             // 
             this.PassWordInput.EditValue = "";
             this.PassWordInput.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.PassWordInput.Location = new System.Drawing.Point(210, 165);
+            this.PassWordInput.Location = new System.Drawing.Point(190, 165);
             this.PassWordInput.Name = "PassWordInput";
             this.PassWordInput.Properties.AutoHeight = false;
             this.PassWordInput.Properties.PasswordChar = '○';
@@ -128,22 +106,9 @@ namespace Insight.Utils.MainForm.Login.Views
             this.LoginButton.TabIndex = 3;
             this.LoginButton.Text = "登  录";
             // 
-            // labelControl1
-            // 
-            this.labelControl1.Appearance.Options.UseTextOptions = true;
-            this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.labelControl1.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
-            this.labelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl1.CausesValidation = false;
-            this.labelControl1.Location = new System.Drawing.Point(130, 199);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(80, 21);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "机 构：";
-            // 
             // lueDept
             // 
-            this.lueDept.Location = new System.Drawing.Point(210, 200);
+            this.lueDept.Location = new System.Drawing.Point(190, 200);
             this.lueDept.Name = "lueDept";
             this.lueDept.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -180,20 +145,60 @@ namespace Insight.Utils.MainForm.Login.Views
             this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
             this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
+            // pictureEdit1
+            // 
+            this.pictureEdit1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureEdit1.EditValue = ((object)(resources.GetObject("pictureEdit1.EditValue")));
+            this.pictureEdit1.Location = new System.Drawing.Point(160, 128);
+            this.pictureEdit1.Name = "pictureEdit1";
+            this.pictureEdit1.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.pictureEdit1.Properties.Appearance.Options.UseBackColor = true;
+            this.pictureEdit1.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pictureEdit1.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.pictureEdit1.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.pictureEdit1.Size = new System.Drawing.Size(24, 24);
+            this.pictureEdit1.TabIndex = 0;
+            // 
+            // pictureEdit2
+            // 
+            this.pictureEdit2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureEdit2.EditValue = ((object)(resources.GetObject("pictureEdit2.EditValue")));
+            this.pictureEdit2.Location = new System.Drawing.Point(160, 163);
+            this.pictureEdit2.Name = "pictureEdit2";
+            this.pictureEdit2.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.pictureEdit2.Properties.Appearance.Options.UseBackColor = true;
+            this.pictureEdit2.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pictureEdit2.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.pictureEdit2.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.pictureEdit2.Size = new System.Drawing.Size(24, 24);
+            this.pictureEdit2.TabIndex = 0;
+            // 
+            // pictureEdit3
+            // 
+            this.pictureEdit3.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureEdit3.EditValue = ((object)(resources.GetObject("pictureEdit3.EditValue")));
+            this.pictureEdit3.Location = new System.Drawing.Point(160, 198);
+            this.pictureEdit3.Name = "pictureEdit3";
+            this.pictureEdit3.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.pictureEdit3.Properties.Appearance.Options.UseBackColor = true;
+            this.pictureEdit3.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pictureEdit3.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.pictureEdit3.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.pictureEdit3.Size = new System.Drawing.Size(24, 24);
+            this.pictureEdit3.TabIndex = 0;
+            // 
             // Login
             // 
             this.AcceptButton = this.LoginButton;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BackgroundImageLayoutStore = System.Windows.Forms.ImageLayout.Zoom;
-            this.BackgroundImageStore = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImageStore")));
             this.CancelButton = this.CloseButton;
             this.ClientSize = new System.Drawing.Size(520, 320);
+            this.Controls.Add(this.pictureEdit3);
+            this.Controls.Add(this.pictureEdit2);
+            this.Controls.Add(this.pictureEdit1);
             this.Controls.Add(this.lueDept);
             this.Controls.Add(this.LoginButton);
-            this.Controls.Add(this.labUser);
             this.Controls.Add(this.SetButton);
-            this.Controls.Add(this.labelControl1);
-            this.Controls.Add(this.labPassword);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.PassWordInput);
             this.Controls.Add(this.UserNameInput);
@@ -201,28 +206,30 @@ namespace Insight.Utils.MainForm.Login.Views
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Insight SRM Client";
             ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit3.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private LabelControl labUser;
-        private LabelControl labPassword;
         internal TextEdit UserNameInput;
         internal TextEdit PassWordInput;
         internal SimpleButton CloseButton;
         internal SimpleButton SetButton;
         internal SimpleButton LoginButton;
-        private LabelControl labelControl1;
         internal TreeListLookUpEdit lueDept;
         private DevExpress.XtraTreeList.TreeList treeListLookUpEdit2TreeList;
         protected DevExpress.Utils.ImageCollection OrgTreeNode;
         private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
+        private PictureEdit pictureEdit1;
+        private PictureEdit pictureEdit2;
+        private PictureEdit pictureEdit3;
     }
 }
