@@ -32,6 +32,8 @@ namespace Insight.Utils.MainForm
             // 订阅主窗体事件
             view.Shown += (sender, args) =>
             {
+                if (Setting.needChangePw) ChangPassword(true);
+
                 manage.needOpens.ForEach(manage.AddPageMdi);
             };
             view.Closing += (sender, args) => args.Cancel = manage.Logout();
@@ -39,8 +41,6 @@ namespace Insight.Utils.MainForm
 
             // 订阅导航栏点击事件
             manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.AddPageMdi(args.Link.Item.Tag.ToString()));
-
-            if (Setting.needChangePw) ChangPassword(true);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Insight.Utils.MainForm
         /// <param name="isFirst"></param>
         private void ChangPassword(bool isFirst = false)
         {
-            var changPw = new ChangPwModel(isFirst);
+            var changPw = new ChangPwModel();
             var view = changPw.view;
 
             SubCloseEvent(view);
@@ -60,7 +60,7 @@ namespace Insight.Utils.MainForm
                 CloseDialog(view);
             };
 
-            changPw.Init();
+            changPw.Init(isFirst ? "123456" : null);
             view.ShowDialog();
         }
 

@@ -17,15 +17,10 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 构造函数
         /// 通过订阅事件实现双向数据绑定
-        /// <param name="isFirst">是否初始密码</param>
         /// </summary>
-        public ChangPwModel(bool isFirst)
+        public ChangPwModel()
         {
-            view = new ChangePw
-            {
-                Text = "修改密码",
-                Password = {EditValue = isFirst ? "123456" : null}
-            };
+            view = new ChangePw {Text = "修改密码"};
 
             // 订阅控件事件实现数据双向绑定
             view.Password.EditValueChanged += (sender, args) => sing = Util.Hash(tokenHelper.account + Util.Hash(view.Password.Text));

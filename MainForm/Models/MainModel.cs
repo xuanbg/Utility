@@ -55,14 +55,6 @@ namespace Insight.Utils.MainForm.Models
         }
 
         /// <summary>
-        /// 加载默认启动模块
-        /// </summary>
-        public void LoadDefault()
-        {
-            needOpens.ForEach(AddPageMdi);
-        }
-
-        /// <summary>
         /// 打开MDI子窗体
         /// </summary>
         /// <param name="name"></param>
