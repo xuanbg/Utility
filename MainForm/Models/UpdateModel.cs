@@ -47,11 +47,11 @@ namespace Insight.Utils.MainForm.Models
 
             // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
             updates = (from sf in GetFiles(appId)
-                        let cf = locals[sf.Key]
-                        let cv = new Version(cf?.version ?? "1.0.0")
-                        let sv = new Version(sf.Value?.version ?? "1.0.0")
-                        where cf == null || cv < sv
-                        select sf.Value).ToList();
+                let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
+                let cv = new Version(cf?.version ?? "1.0.0")
+                let sv = new Version(sf.Value?.version ?? "1.0.0")
+                where cf == null || cv < sv
+                select sf.Value).ToList();
             return updates.Count;
         }
 
