@@ -70,6 +70,51 @@ namespace Insight.Utils.Common
         }
 
         /// <summary>
+        /// 金额大写转换
+        /// </summary>
+        /// <param name="amount">金额</param>
+        /// <param name="type">补整类型:0到元补整；1到角补整</param>
+        /// <returns>string 中文大写金额</returns>
+        public static string AmountConvertToCn(decimal amount, int type = 1)
+        {
+            if (amount == 0) return "零元整";
+
+            const string digital = "零壹贰叁肆伍陆柒捌玖";
+            const string position = "万仟佰拾亿仟佰拾万仟佰拾元角分";
+            var zeroCount = 0;
+            var isNegative = amount < 0;
+            var amountCn = isNegative ? "(负)" : "";
+            var value = (Math.Abs(amount) * 100).ToString("####");
+            var length = value.Length;
+            var pos = position.Substring(15 - length);
+            for (var i = 0; i < length; i++)
+            {
+                var val = Convert.ToInt32(value.Substring(i, 1));
+                var digVal = digital.Substring(val, 1);
+                var posVal = pos.Substring(i, 1);
+                if (val > 0)
+                {
+                    if (zeroCount > 0 && (length - i + 2) % 4 > 0) amountCn += "零";
+
+                    zeroCount = 0;
+                }
+                else
+                {
+                    digVal = "";
+                    if ((length - i + 1) % 4 > 0 || zeroCount > 2 && i == length - 7) posVal = "";
+
+                    if (zeroCount + type > 0 && i == length - 1) posVal = "整";
+
+                    zeroCount++;
+                }
+
+                amountCn = amountCn + digVal + posVal;
+            }
+
+            return amountCn;
+        }
+
+        /// <summary>
         /// 将对象序列化为Json后再进行Base64编码
         /// </summary>
         /// <param name="obj">用于转换的数据对象</param>
