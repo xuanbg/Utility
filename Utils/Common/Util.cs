@@ -77,7 +77,7 @@ namespace Insight.Utils.Common
         /// <returns>string 中文大写金额</returns>
         public static string AmountConvertToCn(decimal amount, int type = 1)
         {
-            if (amount > (decimal) 999999999999.99) return "金额不能支持万亿及更高";
+            if (amount >= 1000000000000) return "金额不能支持万亿及更高";
 
             if (amount == 0) return "零元整";
 
