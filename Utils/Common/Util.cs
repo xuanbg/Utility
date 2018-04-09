@@ -77,16 +77,18 @@ namespace Insight.Utils.Common
         /// <returns>string 中文大写金额</returns>
         public static string AmountConvertToCn(decimal amount, int type = 1)
         {
+            if (amount > (decimal) 999999999999.99) return "金额不能支持万亿及更高";
+
             if (amount == 0) return "零元整";
 
             const string digital = "零壹贰叁肆伍陆柒捌玖";
-            const string position = "万仟佰拾亿仟佰拾万仟佰拾元角分";
+            const string position = "仟佰拾亿仟佰拾万仟佰拾元角分";
             var zeroCount = 0;
             var isNegative = amount < 0;
             var amountCn = isNegative ? "(负)" : "";
             var value = (Math.Abs(amount) * 100).ToString("####");
             var length = value.Length;
-            var pos = position.Substring(15 - length);
+            var pos = position.Substring(14 - length);
             for (var i = 0; i < length; i++)
             {
                 var val = Convert.ToInt32(value.Substring(i, 1));
