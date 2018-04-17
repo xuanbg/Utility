@@ -157,6 +157,8 @@ namespace Insight.Utils.MainForm.Login.Models
                 tokenHelper.tenantId = dept.remark;
                 tokenHelper.deptId = id;
             }
+
+            Setting.deptName = view.lueDept.Text;
         }
 
         /// <summary>

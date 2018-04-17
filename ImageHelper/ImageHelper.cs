@@ -13,18 +13,6 @@ namespace Insight.Utils
     public class ImageHelper
     {
         /// <summary>
-        /// 使用指定的模板预览数据
-        /// </summary>
-        /// <param name="id">数据对象ID</param>
-        /// <param name="tid">模板ID</param>
-        public static void PreviewImage(string id, string tid)
-        {
-            var print = BuildReport(id, tid);
-
-            print.ShowPrepared(true);
-        }
-
-        /// <summary>
         /// 生成报表
         /// </summary>
         /// <param name="id">数据ID</param>
@@ -138,23 +126,33 @@ namespace Insight.Utils
         /// <summary>
         /// 获取电子影像数据
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">影像ID</param>
         /// <returns>ImageData 电子影像数据</returns>
         private static ImageData GetImageData(string id)
         {
-            return null;
+            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id}";
+            var client = new HttpClient<ImageData>(Setting.tokenHelper);
+
+            return client.Get(url) ? client.data : null;
         }
 
         /// <summary>
         /// 生成电子影像数据
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tid"></param>
+        /// <param name="id">业务数据ID</param>
+        /// <param name="templateId">模板ID</param>
         /// <returns></returns>
-        private static ImageData BuildImageData(string id, string tid)
+        private static ImageData BuildImageData(string id, string templateId)
         {
-            return null;
-        }
+            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id}";
+            var client = new HttpClient<ImageData>(Setting.tokenHelper);
+            var dict = new Dictionary<string, object>
+            {
+                {"templateId", templateId},
+                {"deptName", Setting.deptName}
+            };
 
+            return client.Post(url, dict) ? client.data : null;
+        }
     }
 }

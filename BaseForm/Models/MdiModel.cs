@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using FastReport;
 using Insight.Utils.BaseForm;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
@@ -76,6 +77,48 @@ namespace Insight.Utils.Models
             view.Show();
             InitToolBar();
             GetParams();
+        }
+
+        /// <summary>
+        /// 打印预览
+        /// </summary>
+        /// <param name="id">数据ID</param>
+        /// <param name="tid">模板ID</param>
+        public void Preview(string id, string tid)
+        {
+            var print = ImageHelper.BuildReport(id, tid);
+
+            print?.ShowPrepared(true);
+        }
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        /// <param name="id">数据ID</param>
+        /// <param name="tid">模板ID</param>
+        /// <param name="printer">打印机名称</param>
+        /// <param name="onSheet">合并打印模式</param>
+        /// <returns>string 打印文档名称</returns>
+        protected string Print(string id, string tid, string printer = null, int onSheet = 0)
+        {
+            var print = ImageHelper.BuildReport(id, tid);
+            if (print == null) return null;
+
+            var type = (PagesOnSheet) onSheet;
+            if (type != PagesOnSheet.One)
+            {
+                print.PrintSettings.PrintMode = PrintMode.Scale;
+                print.PrintSettings.PagesOnSheet = type;
+            }
+
+            if (!string.IsNullOrEmpty(printer))
+            {
+                print.PrintSettings.ShowDialog = false;
+                print.PrintSettings.Printer = printer;
+            }
+
+            print.PrintPrepared();
+            return print.FileName;
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 当前登录部门ID
         /// </summary>
-        public static string deptId;
+        public static string deptId => tokenHelper.deptId;
 
         /// <summary>
         /// 当前登录部门全称
