@@ -86,6 +86,12 @@ namespace Insight.Utils.Models
         /// <param name="tid">模板ID</param>
         public void Preview(string id, string tid)
         {
+            if (string.IsNullOrEmpty(tid))
+            {
+                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return;
+            }
+
             var print = ImageHelper.BuildReport(id, tid);
 
             print?.ShowPrepared(true);
@@ -101,6 +107,12 @@ namespace Insight.Utils.Models
         /// <returns>string 打印文档名称</returns>
         protected string Print(string id, string tid, string printer = null, int onSheet = 0)
         {
+            if (string.IsNullOrEmpty(tid))
+            {
+                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return null;
+            }
+
             var print = ImageHelper.BuildReport(id, tid);
             if (print == null) return null;
 
