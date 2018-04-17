@@ -7,7 +7,7 @@
     <ProjectGuid>{F519F1E9-29C7-4032-9A0E-68A0EBF1496B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Insight.Utils.ImageHelper</RootNamespace>
+    <RootNamespace>Insight.Utils</RootNamespace>
     <AssemblyName>ImageHelper</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

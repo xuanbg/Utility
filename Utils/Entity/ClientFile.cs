@@ -37,6 +37,6 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 更新时间
         /// </summary>
-        public DateTime upDateTime { get; set; }
+        public DateTime updateTime { get; set; }
     }
 }

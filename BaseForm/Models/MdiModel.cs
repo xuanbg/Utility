@@ -10,6 +10,7 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using Insight.Utils.BaseForm;
 using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Models
@@ -52,10 +53,15 @@ namespace Insight.Utils.Models
         public readonly string moduleId;
 
         /// <summary>
+        /// 模块选项集合
+        /// </summary>
+        public List<ModuleParam> moduleParams;
+
+        /// <summary>
         /// 构造函数，初始化MDI窗体并显示
         /// </summary>
         /// <param name="nav">导航信息</param>
-        protected MdiModel(Navigation nav)
+        public MdiModel(Navigation nav)
         {
             moduleId = nav.id;
             view = new T
@@ -69,6 +75,7 @@ namespace Insight.Utils.Models
 
             view.Show();
             InitToolBar();
+            GetParams();
         }
 
         /// <summary>
@@ -79,7 +86,9 @@ namespace Insight.Utils.Models
         {
             foreach (var obj in dict)
             {
-                var item = buttons.Single(b => b.Name == obj.Key);
+                var item = buttons.SingleOrDefault(b => b.Name == obj.Key);
+                if (item == null) continue;
+
                 item.Enabled = obj.Value && (bool)item.Tag;
             }
         }
@@ -159,6 +168,45 @@ namespace Insight.Utils.Models
         }
 
         /// <summary>
+        /// 获取选项数据
+        /// </summary>
+        /// <param name="key">选项代码</param>
+        /// <param name="deptId">部门ID</param>
+        /// <param name="userId">用户ID</param>
+        /// <returns>ModuleParam 选项数据</returns>
+        public ModuleParam GetParam(string key, string deptId = null, string userId = null)
+        {
+            var param = moduleParams.FirstOrDefault(i => i.code == key && i.deptId == deptId && i.userId == userId);
+            if (param == null)
+            {
+                param = new ModuleParam
+                {
+                    id = Util.NewId(),
+                    moduleId = moduleId,
+                    code = key,
+                    deptId = deptId,
+                    userId = userId
+                };
+                moduleParams.Add(param);
+            }
+
+            return param;
+        }
+
+        /// <summary>
+        /// 保存选项数据
+        /// </summary>
+        /// <returns>bool 是否成功</returns>
+        public bool SaveParam()
+        {
+            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
+            var dict = new Dictionary<string, object> {{"list", moduleParams}};
+            var client = new HttpClient<List<ModuleParam>>(tokenHelper);
+
+            return client.Put(url, dict);
+        }
+
+        /// <summary>
         /// 初始化模块工具栏
         /// </summary>
         private void InitToolBar()
@@ -185,7 +233,20 @@ namespace Insight.Utils.Models
         {
             var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/functions";
             var client = new HttpClient<List<Function>>(tokenHelper);
+
             return client.Get(url) ? client.data : new List<Function>();
+        }
+
+        /// <summary>
+        /// 获取选项数据
+        /// </summary>
+        private void GetParams()
+        {
+            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
+            var client = new HttpClient<List<ModuleParam>>(tokenHelper);
+            if (!client.Get(url)) return;
+
+            moduleParams = client.data;
         }
     }
 }

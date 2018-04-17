@@ -336,7 +336,7 @@ namespace Insight.Utils.Common
                     path = file.DirectoryName?.Replace(root, ""),
                     fullPath = file.FullName,
                     version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                    upDateTime = DateTime.Now
+                    updateTime = DateTime.Now
                 };
                 dict[id] = info;
             }

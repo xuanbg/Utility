@@ -164,4 +164,55 @@ namespace Insight.Utils.Entity
         /// </summary>
         public bool permit { get; set; }
     }
+
+    /// <summary>
+    /// 业务模块选项
+    /// </summary>
+    public class ModuleParam
+    {
+        /// <summary>
+        /// ID，唯一标识
+        /// </summary>
+        public string id { get; set; }
+
+        /// <summary>
+        /// 租户ID
+        /// </summary>
+        public string tenantId { get; set; }
+
+        /// <summary>
+        /// 模块ID
+        /// </summary>
+        public string moduleId { get; set; }
+
+        /// <summary>
+        /// 选项ID
+        /// </summary>
+        public string code { get; set; }
+
+        /// <summary>
+        /// 选项参数值
+        /// </summary>
+        public string value { get; set; }
+
+        /// <summary>
+        /// 生效机构ID
+        /// </summary>
+        public string deptId { get; set; }
+
+        /// <summary>
+        /// 所属用户
+        /// </summary>
+        public string userId { get; set; }
+
+        /// <summary>
+        /// 创建人ID
+        /// </summary>
+        public string creatorId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime createTime { get; set; }
+    }
 }

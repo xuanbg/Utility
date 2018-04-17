@@ -4,13 +4,59 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using FastReport;
+using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils.ImageHelper
+namespace Insight.Utils
 {
     public class ImageHelper
     {
+        /// <summary>
+        /// 使用指定的模板预览数据
+        /// </summary>
+        /// <param name="id">数据对象ID</param>
+        /// <param name="tid">模板ID</param>
+        public static void PreviewImage(string id, string tid)
+        {
+            var print = BuildReport(id, tid);
+
+            print.ShowPrepared(true);
+        }
+
+        /// <summary>
+        /// 生成报表
+        /// </summary>
+        /// <param name="id">数据ID</param>
+        /// <param name="tid">模板ID</param>
+        /// <returns></returns>
+        public static Report BuildReport(string id, string tid)
+        {
+            var isCopy = false;
+            ImageData img;
+            if (string.IsNullOrEmpty(tid))
+            {
+                isCopy = true;
+                img = GetImageData(id);
+                if (img == null)
+                {
+                    Messages.ShowError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
+                    return null;
+                }
+            }
+            else
+            {
+                img = BuildImageData(id, tid);
+            }
+
+            var print = new Report { FileName = img.id };
+            print.LoadPrepared(new MemoryStream(img.image));
+
+            if (isCopy) AddWatermark(print, "副 本");
+
+            return print;
+        }
+
         /// <summary>
         /// 增加水印
         /// </summary>
@@ -88,5 +134,27 @@ namespace Insight.Utils.ImageHelper
             var fn = img.name + img.id.Substring(23) + img.expand;
             Util.SaveFile(img.image, fn, true);
         }
+
+        /// <summary>
+        /// 获取电子影像数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>ImageData 电子影像数据</returns>
+        private static ImageData GetImageData(string id)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 生成电子影像数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tid"></param>
+        /// <returns></returns>
+        private static ImageData BuildImageData(string id, string tid)
+        {
+            return null;
+        }
+
     }
 }
