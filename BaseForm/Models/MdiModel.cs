@@ -82,9 +82,9 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印预览
         /// </summary>
-        /// <param name="id">数据ID</param>
         /// <param name="tid">模板ID</param>
-        public void Preview(string id, string tid)
+        /// <param name="id">数据ID</param>
+        public void Preview(string tid, string id = null)
         {
             if (string.IsNullOrEmpty(tid))
             {
@@ -92,7 +92,7 @@ namespace Insight.Utils.Models
                 return;
             }
 
-            var print = ImageHelper.BuildReport(id, tid);
+            var print = BuildReport(tid, id);
 
             print?.ShowPrepared(true);
         }
@@ -100,12 +100,12 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印
         /// </summary>
-        /// <param name="id">数据ID</param>
-        /// <param name="tid">模板ID</param>
         /// <param name="printer">打印机名称</param>
+        /// <param name="tid">模板ID</param>
+        /// <param name="id">数据ID</param>
         /// <param name="onSheet">合并打印模式</param>
         /// <returns>string 打印文档名称</returns>
-        protected string Print(string id, string tid, string printer = null, int onSheet = 0)
+        protected string Print(string printer, string tid, string id = null, int onSheet = 0)
         {
             if (string.IsNullOrEmpty(tid))
             {
@@ -113,7 +113,7 @@ namespace Insight.Utils.Models
                 return null;
             }
 
-            var print = ImageHelper.BuildReport(id, tid);
+            var print = BuildReport(tid, id);
             if (print == null) return null;
 
             var type = (PagesOnSheet) onSheet;
@@ -278,6 +278,107 @@ namespace Insight.Utils.Models
                            PaintStyle = a.isShowText ? BarItemPaintStyle.CaptionGlyph : BarItemPaintStyle.Standard,
                        }).ToList();
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
+        }
+
+        /// <summary>
+        /// 生成报表
+        /// </summary>
+        /// <param name="tid">模板ID</param>
+        /// <param name="id">数据ID</param>
+        /// <returns></returns>
+        private Report BuildReport(string tid, string id)
+        {
+            var isCopy = false;
+            ImageData img;
+            if (string.IsNullOrEmpty(tid))
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    Messages.ShowError("尚未选定需要打印的数据！请先选择数据。");
+                    return null;
+                }
+
+                isCopy = true;
+                img = GetImageData(id);
+                if (img == null)
+                {
+                    Messages.ShowError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
+                    return null;
+                }
+            }
+            else
+            {
+                img = BuildImageData(id, tid);
+            }
+
+            if (img == null)
+            {
+                Messages.ShowError("生成打印数据错误");
+                return null;
+            }
+
+            var print = new Report {FileName = img.id};
+            print.LoadPrepared(new MemoryStream(img.image));
+
+            if (isCopy) AddWatermark(print, "副 本");
+
+            return print;
+        }
+
+        /// <summary>
+        /// 获取电子影像数据
+        /// </summary>
+        /// <param name="id">影像ID</param>
+        /// <returns>ImageData 电子影像数据</returns>
+        private ImageData GetImageData(string id)
+        {
+            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id}";
+            var client = new HttpClient<ImageData>(Setting.tokenHelper);
+
+            return client.Get(url) ? client.data : null;
+        }
+
+        /// <summary>
+        /// 生成电子影像数据
+        /// </summary>
+        /// <param name="id">业务数据ID</param>
+        /// <param name="templateId">模板ID</param>
+        /// <returns></returns>
+        private ImageData BuildImageData(string id, string templateId)
+        {
+            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id ?? "null"}";
+            var client = new HttpClient<ImageData>(Setting.tokenHelper);
+            var dict = new Dictionary<string, object>
+            {
+                {"templateId", templateId},
+                {"deptName", Setting.deptName}
+            };
+
+            return client.Post(url, dict) ? client.data : null;
+        }
+
+        /// <summary>
+        /// 增加水印
+        /// </summary>
+        /// <param name="fr">Report对象实体</param>
+        /// <param name="str">水印文字</param>
+        /// <param name="size"></param>
+        /// <returns>Report对象实体</returns>
+        private void AddWatermark(Report fr, string str, int size = 72)
+        {
+            var wm = new Watermark
+            {
+                Enabled = true,
+                Text = str,
+                Font = new Font("宋体", size, FontStyle.Bold)
+            };
+
+            for (var i = 0; i < fr.PreparedPages.Count; i++)
+            {
+                var pag = fr.PreparedPages.GetPage(i);
+                pag.Watermark = wm;
+                fr.PreparedPages.ModifyPage(i, pag);
+            }
         }
 
         /// <summary>
