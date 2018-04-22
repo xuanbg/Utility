@@ -172,7 +172,7 @@
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{0C3F2F08-6816-49FD-BB13-8526E43ACCC6}</Project>
       <Name>Utils</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
