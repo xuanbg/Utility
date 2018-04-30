@@ -82,6 +82,31 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印预览
         /// </summary>
+        /// <typeparam name="E">类型</typeparam>
+        /// <param name="tid">模板ID</param>
+        /// <param name="name">数据源名称</param>
+        /// <param name="data">数据</param>
+        public void Design<E>(string tid, string name, List<E> data)
+        {
+            if (string.IsNullOrEmpty(tid))
+            {
+                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return;
+            }
+
+            var report = BuildReport(tid, name, data);
+            if (report == null)
+            {
+                Messages.ShowError("初始化报表失败！");
+                return;
+            }
+
+            report.Design();
+        }
+
+        /// <summary>
+        /// 打印预览
+        /// </summary>
         /// <param name="tid">模板ID</param>
         /// <param name="id">数据ID</param>
         public void Preview(string tid, string id = null)
@@ -93,8 +118,32 @@ namespace Insight.Utils.Models
             }
 
             var print = BuildReport(tid, id);
-
             print?.ShowPrepared(true);
+        }
+
+        /// <summary>
+        /// 打印预览
+        /// </summary>
+        /// <typeparam name="E">类型</typeparam>
+        /// <param name="tid">模板ID</param>
+        /// <param name="name">数据源名称</param>
+        /// <param name="data">数据</param>
+        public void Preview<E>(string tid, string name, List<E> data)
+        {
+            if (string.IsNullOrEmpty(tid))
+            {
+                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return;
+            }
+
+            var report = BuildReport(tid, name, data);
+            if (report == null || !report.Prepare())
+            {
+                Messages.ShowError("生成报表失败！");
+                return;
+            }
+
+            report.ShowPrepared(true);
         }
 
         /// <summary>
@@ -105,7 +154,7 @@ namespace Insight.Utils.Models
         /// <param name="id">数据ID</param>
         /// <param name="onSheet">合并打印模式</param>
         /// <returns>string 打印文档名称</returns>
-        protected string Print(string printer, string tid, string id = null, int onSheet = 0)
+        public string Print(string printer, string tid, string id = null, int onSheet = 0)
         {
             if (string.IsNullOrEmpty(tid))
             {
@@ -131,6 +180,35 @@ namespace Insight.Utils.Models
 
             print.PrintPrepared();
             return print.FileName;
+        }
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        /// <typeparam name="E"></typeparam>
+        /// <param name="printer">打印机名称</param>
+        /// <param name="tid">模板ID</param>
+        /// <param name="name">数据源名称</param>
+        /// <param name="data">数据</param>
+        /// <param name="onSheet">合并打印模式</param>
+        /// <returns>string 打印文档名称</returns>
+        public string Print<E>(string printer, string tid, string name, List<E> data, int onSheet = 0)
+        {
+            if (string.IsNullOrEmpty(tid))
+            {
+                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return null;
+            }
+
+            var report = BuildReport(tid, name, data);
+            if (report == null || !report.Prepare())
+            {
+                Messages.ShowError("生成报表失败！");
+                return null;
+            }
+
+            report.PrintPrepared();
+            return report.FileName;
         }
 
         /// <summary>
@@ -278,6 +356,27 @@ namespace Insight.Utils.Models
                            PaintStyle = a.isShowText ? BarItemPaintStyle.CaptionGlyph : BarItemPaintStyle.Standard,
                        }).ToList();
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
+        }
+
+        /// <summary>
+        /// 生成报表
+        /// </summary>
+        /// <typeparam name="E">类型</typeparam>
+        /// <param name="tid">模板ID</param>
+        /// <param name="name">数据源名称</param>
+        /// <param name="data">数据</param>
+        /// <returns>Report FastReport报表</returns>
+        private Report BuildReport<E>(string tid, string name, List<E> data)
+        {
+            var url = $"{baseServer}/commonapi/v1.0/templates/{tid}";
+            var client = new HttpClient<object>(tokenHelper);
+            if (!client.Get(url)) return null;
+
+            var report = new Report();
+            report.LoadFromString(client.data.ToString());
+            report.RegisterData(data, name);
+
+            return report;
         }
 
         /// <summary>
