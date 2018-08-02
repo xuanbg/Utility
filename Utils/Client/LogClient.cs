@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -54,19 +52,14 @@ namespace Insight.Utils.Client
         /// </summary>
         public void LogToEvent()
         {
-            try
+            var error = Util.LogToEvent(info.eventSource, info.message, info.eventType);
+            if (error == null)
             {
-                if (!EventLog.SourceExists(info.eventSource))
-                {
-                    EventLog.CreateEventSource(info.eventSource, "应用程序");
-                }
-
-                EventLog.WriteEntry(info.eventSource, info.message, info.eventType);
                 result.Success();
             }
-            catch (ArgumentException ex)
+            else
             {
-                result.BadRequest(ex.Message);
+                result.BadRequest(error);
             }
         }
     }

@@ -799,5 +799,33 @@ namespace Insight.Utils.Common
         }
 
         #endregion
+
+        #region Loger
+
+        /// <summary>
+        /// 将事件消息写入系统日志
+        /// </summary>
+        /// <param name="source">事件源</param>
+        /// <param name="message"></param>
+        /// <param name="type"></param>
+        public static string LogToEvent(string source, string message, EventLogEntryType type)
+        {
+            try
+            {
+                if (!EventLog.Exists("应用程序") || !EventLog.SourceExists(source))
+                {
+                    EventLog.CreateEventSource(source, "应用程序");
+                }
+
+                EventLog.WriteEntry(source, message, type);
+                return null;
+            }
+            catch (ArgumentException ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        #endregion
     }
 }
