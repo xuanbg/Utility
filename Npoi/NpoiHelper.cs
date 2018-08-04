@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Insight.Utils.ExcelHelper.Attribute;
@@ -468,25 +469,28 @@ namespace Insight.Utils.ExcelHelper
             switch (cell.CellType)
             {
                 case CellType.String:
-                    var value = cell.StringCellValue;
+                    var str = cell.StringCellValue;
                     switch (type)
                     {
                         case "DateTime":
-                            return DateTime.Parse(value);
+                            return DateTime.Parse(str);
                         case "Boolean":
-                            return bool.Parse(value);
-                        case "String":
-                            return cell.StringCellValue;
+                            return bool.Parse(str);
                         default:
                             return cell.StringCellValue;
                     }
                 case CellType.Numeric:
+                    var num = cell.NumericCellValue.ToString(CultureInfo.InvariantCulture);
                     switch (type)
                     {
                         case "Date":
                             return cell.DateCellValue;
+                        case "Boolean":
+                            return bool.Parse(num);
+                        case "String":
+                            return num;
                         default:
-                            return cell.NumericCellValue;
+                            return (decimal)cell.NumericCellValue;
                     }
                 case CellType.Formula:
                     switch (type)
@@ -498,7 +502,7 @@ namespace Insight.Utils.ExcelHelper
                         case "String":
                             return cell.StringCellValue;
                         default:
-                            return cell.NumericCellValue;
+                            return (decimal) cell.NumericCellValue;
                     }
                 case CellType.Boolean:
                     return cell.BooleanCellValue;

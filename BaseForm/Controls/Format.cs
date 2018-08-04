@@ -13,6 +13,7 @@ using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using Insight.Utils.Entity;
 using DrawFocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle;
+using RowClickEventArgs = DevExpress.XtraGrid.Views.Grid.RowClickEventArgs;
 using ScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility;
 
 namespace Insight.Utils.Controls
