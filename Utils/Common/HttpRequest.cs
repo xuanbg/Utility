@@ -60,14 +60,32 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> body = null)
+        public bool Send(string url, RequestMethod method, Dictionary<string, object> body)
         {
-            if (method == RequestMethod.GET && body != null)
+            if (method != RequestMethod.GET)
+            {
+                var json = body == null ? null : new JavaScriptSerializer().Serialize(body);
+                return Send(url, method, json);
+            }
+
+            if (body != null)
             {
                 var param = body.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
                 url += param.Replace("?&", "?");
             }
 
+            return Send(url);
+        }
+
+        /// <summary>
+        /// 发送Http请求
+        /// </summary>
+        /// <param name="url">请求地址</param>
+        /// <param name="method">请求方法，默认GET</param>
+        /// <param name="body">BODY数据</param>
+        /// <returns>bool 是否成功</returns>
+        public bool Send(string url, RequestMethod method = RequestMethod.GET, string body = null)
+        {
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();
@@ -98,7 +116,7 @@ namespace Insight.Utils.Common
             }
 
             // 上传数据
-            if (method != RequestMethod.GET)
+            if (!string.IsNullOrEmpty(body))
             {
                 var buffer = EncodingBody(body);
                 request.ContentLength = buffer.Length;
@@ -143,10 +161,9 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="body">请求体数据</param>
         /// <returns>byte[]</returns>
-        private byte[] EncodingBody(object body)
+        private byte[] EncodingBody(string body)
         {
-            var json = new JavaScriptSerializer().Serialize(body ?? new object());
-            var buffer = Encoding.UTF8.GetBytes(json);
+            var buffer = Encoding.UTF8.GetBytes(body);
             var ms = new MemoryStream();
             switch (contentEncoding)
             {

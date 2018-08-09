@@ -42,7 +42,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 当前连接基础应用服务器
         /// </summary>
-        public string baseServer { get; set; } = Util.GetAppSetting("BaseServer");
+        public string baseServer { get; set; } = Util.GetAppSetting("AppServer");
 
         /// <summary>
         /// 租户ID
@@ -85,13 +85,14 @@ namespace Insight.Utils.Client
             if (code == null) return;
 
             var key = Util.Hash(sign + code);
-            var url = $"{baseServer}/authapi/v1.0/{account}/tokens";
+            var url = $"{baseServer}/authapi/v1.0/tokens";
             var dict = new Dictionary<string, object>
             {
-                {"signature", key},
-                {"tenantid", tenantId},
                 {"appid", appId},
+                {"tenantid", tenantId},
                 {"deptid", deptId},
+                {"account", account},
+                {"signature", key}
             };
             var request = new HttpRequest();
             if (!request.Send(url, RequestMethod.GET, dict))
@@ -176,9 +177,14 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string GetCode()
         {
-            var url = $"{baseServer}/authapi/v1.0/{account}/codes";
+            var url = $"{baseServer}/authapi/v1.0/tokens/codes";
+            var dict = new Dictionary<string, object>
+            {
+                {"account", account},
+                {"type", 0}
+            };
             var request = new HttpRequest();
-            if (!request.Send(url))
+            if (!request.Send(url, RequestMethod.GET, dict))
             {
                 Messages.ShowError(request.message);
                 return null;
