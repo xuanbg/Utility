@@ -40,9 +40,9 @@ namespace Insight.Utils.Client
         public string sign { get; private set; }
 
         /// <summary>
-        /// 当前连接基础应用服务器
+        /// 当前连接鉴权服务器
         /// </summary>
-        public string baseServer { get; set; } = Util.GetAppSetting("AppServer");
+        public string authServer { get; set; } = Util.GetAppSetting("AuthServer");
 
         /// <summary>
         /// 租户ID
@@ -85,7 +85,7 @@ namespace Insight.Utils.Client
             if (code == null) return;
 
             var key = Util.Hash(sign + code);
-            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var url = $"{authServer}/authapi/v1.0/tokens";
             var dict = new Dictionary<string, object>
             {
                 {"appid", appId},
@@ -124,7 +124,7 @@ namespace Insight.Utils.Client
         {
             accessToken = null;
 
-            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var url = $"{authServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
             if (!request.Send(url, RequestMethod.PUT))
             {
@@ -159,7 +159,7 @@ namespace Insight.Utils.Client
         /// </summary>
         public void DeleteToken()
         {
-            var url = $"{baseServer}/authapi/v1.0/tokens";
+            var url = $"{authServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(token);
             if (!request.Send(url, RequestMethod.DELETE))
             {
@@ -177,7 +177,7 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string GetCode()
         {
-            var url = $"{baseServer}/authapi/v1.0/tokens/codes";
+            var url = $"{authServer}/authapi/v1.0/tokens/codes";
             var dict = new Dictionary<string, object>
             {
                 {"account", account},

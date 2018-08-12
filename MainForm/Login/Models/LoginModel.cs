@@ -99,7 +99,7 @@ namespace Insight.Utils.MainForm.Login.Models
         {
             if (string.IsNullOrEmpty(account)) return;
 
-            var url = $"{appServer}/authapi/v1.0/{account}/depts";
+            var url = $"{baseServer}/userapi/v1.0/users/{account}/depts";
             var request = new HttpRequest();
             if (!request.Send(url))
             {
@@ -166,7 +166,7 @@ namespace Insight.Utils.MainForm.Login.Models
         /// </summary>
         private void GetUserInfo()
         {
-            var url = $"{appServer}/authapi/v1.0/myself";
+            var url = $"{baseServer}/userapi/v1.0/users/myself";
             var client = new HttpClient<UserInfo>(tokenHelper);
             if (!client.Get(url)) return;
 

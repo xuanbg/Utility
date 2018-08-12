@@ -5,11 +5,6 @@ namespace Insight.Utils.Client
     public class Setting
     {
         /// <summary>
-        /// 令牌管理器
-        /// </summary>
-        public static TokenHelper tokenHelper = new TokenHelper{appId = Util.GetAppSetting("AppId")};
-
-        /// <summary>
         /// 应用名称
         /// </summary>
         public static string appName = Util.GetAppSetting("AppName");
@@ -17,12 +12,12 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 应用服务地址
         /// </summary>
-        public static string appServer = GetAppServer();
+        public static string appServer = Util.GetAppSetting("AppServer"); 
 
         /// <summary>
         /// 基础服务地址
         /// </summary>
-        public static string baseServer = Util.GetAppSetting("BaseServer");
+        public static string baseServer = GetBaseServer();
 
         /// <summary>
         /// 界面主题样式
@@ -50,6 +45,11 @@ namespace Insight.Utils.Client
         public static bool isMergerPrint = bool.Parse(Util.GetAppSetting("IsMergerPrint"));
 
         /// <summary>
+        /// 令牌管理器
+        /// </summary>
+        public static TokenHelper tokenHelper = new TokenHelper { appId = Util.GetAppSetting("AppId") };
+
+        /// <summary>
         /// 当前登录部门ID
         /// </summary>
         public static string deptId => tokenHelper.deptId;
@@ -74,10 +74,14 @@ namespace Insight.Utils.Client
         /// </summary>
         public static bool needChangePw;
 
-        private static string GetAppServer()
+        /// <summary>
+        /// 获取基础服务地址
+        /// </summary>
+        /// <returns></returns>
+        private static string GetBaseServer()
         {
-            var server = Util.GetAppSetting("AppServer");
-            if (string.IsNullOrEmpty(server)) server = Util.GetAppSetting("BaseServer");
+            var server = Util.GetAppSetting("BaseServer");
+            if (string.IsNullOrEmpty(server)) server = appServer;
 
             return server;
         }
