@@ -62,7 +62,7 @@ namespace Insight.Utils.Client
         /// <param name="dict">POST的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Post(string url, Dictionary<string, object> dict, string msg = null)
+        public bool Post(string url, Dictionary<string, object> dict = null, string msg = null)
         {
             if (Request(url, RequestMethod.POST, dict)) return true;
 
@@ -79,7 +79,7 @@ namespace Insight.Utils.Client
         /// <param name="dict">PUT的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool Put(string url, Dictionary<string, object> dict, string msg = null)
+        public bool Put(string url, Dictionary<string, object> dict = null, string msg = null)
         {
             if (Request(url, RequestMethod.PUT, dict)) return true;
 
@@ -113,7 +113,7 @@ namespace Insight.Utils.Client
         /// <param name="method">请求方法</param>
         /// <param name="dict">请求参数/Body中的数据</param>
         /// <returns>bool 是否成功</returns>
-        private bool Request(string url, RequestMethod method, Dictionary<string, object> dict = null)
+        private bool Request(string url, RequestMethod method, Dictionary<string, object> dict)
         {
             if (helper?.token == null)
             {

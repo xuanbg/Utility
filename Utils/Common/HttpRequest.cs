@@ -64,7 +64,7 @@ namespace Insight.Utils.Common
         {
             if (method != RequestMethod.GET)
             {
-                var json = body == null ? null : new JavaScriptSerializer().Serialize(body);
+                var json = body == null ? "" : new JavaScriptSerializer().Serialize(body);
                 return Send(url, method, json);
             }
 
@@ -116,7 +116,7 @@ namespace Insight.Utils.Common
             }
 
             // 上传数据
-            if (!string.IsNullOrEmpty(body))
+            if (body != null)
             {
                 var buffer = EncodingBody(body);
                 request.ContentLength = buffer.Length;
