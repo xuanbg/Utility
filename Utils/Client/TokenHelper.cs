@@ -7,7 +7,6 @@ namespace Insight.Utils.Client
 {
     public class TokenHelper
     {
-        private bool isAutoRefres;
         private string accessToken;
         private string refreshToken;
         private DateTime expiryTime;
@@ -25,7 +24,7 @@ namespace Insight.Utils.Client
                 {
                     GetTokens();
                 }
-                else if (!isAutoRefres && now > expiryTime)
+                else if (now > expiryTime)
                 {
                     RefresTokens();
                 }
@@ -114,7 +113,6 @@ namespace Insight.Utils.Client
             var now = DateTime.Now;
             expiryTime = now.AddSeconds(result.data.expiryTime);
             failureTime = now.AddSeconds(result.data.failureTime);
-            isAutoRefres = result.data.expiryTime < 3600;
         }
 
         /// <summary>
@@ -151,7 +149,6 @@ namespace Insight.Utils.Client
             var now = DateTime.Now;
             expiryTime = now.AddSeconds(result.data.expiryTime);
             failureTime = now.AddSeconds(result.data.failureTime);
-            isAutoRefres = result.data.expiryTime < 3600;
         }
 
         /// <summary>
