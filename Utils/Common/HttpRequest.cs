@@ -116,9 +116,9 @@ namespace Insight.Utils.Common
             }
 
             // 上传数据
-            if (body != null)
+            if (method != RequestMethod.GET)
             {
-                var buffer = EncodingBody(body);
+                var buffer = EncodingBody(body ?? "");
                 request.ContentLength = buffer.Length;
                 using (var stream = request.GetRequestStream())
                 {
