@@ -5,9 +5,9 @@
     /// </summary>
     public enum CompressType
     {
-        None,
-        Gzip,
-        Deflate
+        NONE,
+        GZIP,
+        DEFLATE
     }
 
     /// <summary>
@@ -15,8 +15,8 @@
     /// </summary>
     public enum TokenType
     {
-        AccessToken,
-        RefreshToken
+        ACCESS_TOKEN,
+        REFRESH_TOKEN
     }
 
     /// <summary>
@@ -24,14 +24,14 @@
     /// </summary>
     public enum Level
     {
-        Emergency,
-        Alert,
-        Critical,
-        Error,
-        Warning,
-        Notice,
-        Informational,
-        Debug
+        EMERGENCY,
+        ALERT,
+        CRITICAL,
+        ERROR,
+        WARNING,
+        NOTICE,
+        INFORMATIONAL,
+        DEBUG
     }
 
     /// <summary>
@@ -39,11 +39,11 @@
     /// </summary>
     public enum NodeIconType
     {
-        General,
-        Category,
-        NodeType,
-        Organization,
-        OnlyLevel0,
-        Custom
+        GENERAL,
+        CATEGORY,
+        NODE_TYPE,
+        ORGANIZATION,
+        ONLY_LEVEL0,
+        CUSTOM
     }
 }

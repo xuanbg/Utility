@@ -25,14 +25,14 @@ namespace Insight.Utils.Client
             this.info = info;
             if (string.IsNullOrEmpty(info.eventSource) && string.IsNullOrEmpty(info.logUrl))
             {
-                result.BadRequest("未知的日志存储目标");
+                result.badRequest("未知的日志存储目标");
             }
         }
 
         /// <summary>
         /// 将事件消息写到日志服务器
         /// </summary>
-        public void LogToServer()
+        public void logToServer()
         {
             var dict = new Dictionary<string, object>
             {
@@ -44,22 +44,22 @@ namespace Insight.Utils.Client
                 {"userid", info.userId}
             };
             var request = new HttpRequest(info.token);
-            request.Send(info.logUrl, RequestMethod.POST, dict);
+            request.send(info.logUrl, RequestMethod.POST, dict);
         }
 
         /// <summary>
         /// 将事件消息写入系统日志
         /// </summary>
-        public void LogToEvent()
+        public void logToEvent()
         {
-            var error = Util.LogToEvent(info.eventSource, info.message, info.eventType);
+            var error = Util.logToEvent(info.eventSource, info.message, info.eventType);
             if (error == null)
             {
-                result.Success();
+                result.success();
             }
             else
             {
-                result.BadRequest(error);
+                result.badRequest(error);
             }
         }
     }

@@ -21,75 +21,75 @@ namespace Insight.Utils.MainForm
             view.Refresh();
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => ChangPassword();
-            view.MubLock.ItemClick += (sender, args) => Lock();
-            view.MubLogout.ItemClick += (sender, args) => Logout();
+            view.MubChangPassWord.ItemClick += (sender, args) => changPassword();
+            view.MubLock.ItemClick += (sender, args) => lockWindow();
+            view.MubLogout.ItemClick += (sender, args) => logout();
             view.MubExit.ItemClick += (sender, args) => view.Close();
-            view.MubPrintSet.ItemClick += (sender, args) => PrintSet();
-            view.MubUpdate.ItemClick += (sender, args) => Update();
-            view.MubAbout.ItemClick += (sender, args) => About();
+            view.MubPrintSet.ItemClick += (sender, args) => printSet();
+            view.MubUpdate.ItemClick += (sender, args) => update();
+            view.MubAbout.ItemClick += (sender, args) => about();
 
             // 订阅主窗体事件
             view.Shown += (sender, args) =>
             {
-                if (Setting.needChangePw) ChangPassword(true);
+                if (Setting.needChangePw) changPassword(true);
 
-                manage.needOpens.ForEach(manage.AddPageMdi);
+                manage.needOpens.ForEach(manage.addPageMdi);
             };
-            view.Closing += (sender, args) => args.Cancel = manage.Logout();
-            view.Closed += (sender, args) => Exit();
+            view.Closing += (sender, args) => args.Cancel = manage.logout();
+            view.Closed += (sender, args) => exit();
 
             // 订阅导航栏点击事件
-            manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.AddPageMdi(args.Link.Item.Tag.ToString()));
+            manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.addPageMdi(args.Link.Item.Tag.ToString()));
         }
 
         /// <summary>
         /// 点击菜单项：修改密码，弹出修改密码对话框
         /// </summary>
         /// <param name="isFirst"></param>
-        private void ChangPassword(bool isFirst = false)
+        private void changPassword(bool isFirst = false)
         {
             var changPw = new ChangPwModel();
             var view = changPw.view;
 
-            SubCloseEvent(view);
+            subCloseEvent(view);
             view.Confirm.Click += (sender, args) =>
             {
-                if (!changPw.Save()) return;
+                if (!changPw.save()) return;
 
-                CloseDialog(view);
+                closeDialog(view);
             };
 
-            changPw.Init(isFirst ? "123456" : null);
+            changPw.init(isFirst ? "123456" : null);
             view.ShowDialog();
         }
 
         /// <summary>
         /// 点击菜单项：锁定，弹出解锁对话框
         /// </summary>
-        private void Lock()
+        private void lockWindow()
         {
             var model = new LockModel();
             var view = model.view;
 
             view.Confirm.Click += (sender, args) =>
             {
-                if (!model.Unlock()) return;
+                if (!model.unlock()) return;
 
-                CloseDialog(view);
+                closeDialog(view);
             };
 
-            model.Init();
+            model.init();
             view.ShowDialog();
         }
 
         /// <summary>
         /// 点击菜单项：注销，弹出询问对话框，确认注销后重启应用程序
         /// </summary>
-        private void Logout()
+        private static void logout()
         {
             const string msg = "注销用户将导致当前未完成的输入内容丢失！\r\n您确定要注销吗？";
-            if (!Messages.ShowConfirm(msg)) return;
+            if (!Messages.showConfirm(msg)) return;
 
             Application.Restart();
         }
@@ -97,25 +97,25 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 退出系统前保存当前应用的皮肤
         /// </summary>
-        private void Exit()
+        private void exit()
         {
-            manage.SaveLookAndFeel();
+            manage.saveLookAndFeel();
             Application.Exit();
         }
 
         /// <summary>
         /// 点击菜单项：打印机设置，打开打印机设置对话框
         /// </summary>
-        private void PrintSet()
+        private void printSet()
         {
             var model = new PrintModel();
             var view = model.view;
 
-            SubCloseEvent(view);
+            subCloseEvent(view);
             view.Confirm.Click += (sender, args) =>
             {
-                model.Save();
-                CloseDialog(view);
+                model.save();
+                closeDialog(view);
             };
 
             view.ShowDialog();
@@ -125,31 +125,31 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：检查更新，如有更新，提示是否更新
         /// </summary>
-        private void Update(bool confirm = true)
+        private void update(bool confirm = true)
         {
             var model = new UpdateModel();
             var view = model.view;
 
             view.Confirm.Click += (sender, args) =>
             {
-                CloseDialog(view);
+                closeDialog(view);
                 if (!model.restart) return;
 
                 // 运行restart.bat重启应用程序
-                Process.Start(model.CreateBat());
+                Process.Start(model.createBat());
                 Application.Exit();
             };
 
             // 检查更新
-            var count = model.CheckUpdate();
+            var count = model.checkUpdate();
             if (count == 0)
             {
-                if (confirm) Messages.ShowMessage("当前无可用更新！");
+                if (confirm) Messages.showMessage("当前无可用更新！");
                 return;
             }
 
             var msg = $"当前有 {count} 个文件需要更新，是否立即更新？";
-            if (confirm && !Messages.ShowConfirm(msg)) return;
+            if (confirm && !Messages.showConfirm(msg)) return;
 
             view.ShowDialog();
         }
@@ -157,12 +157,12 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：关于，打开关于对话框
         /// </summary>
-        private void About()
+        private void about()
         {
             var model = new AboutModel();
             var view = model.view;
 
-            SubCloseEvent(view, true);
+            subCloseEvent(view, true);
             view.ShowDialog();
         }
     }

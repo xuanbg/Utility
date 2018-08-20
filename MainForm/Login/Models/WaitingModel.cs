@@ -12,7 +12,7 @@ namespace Insight.Utils.MainForm.Login.Models
         {
             Text = Setting.appName,
             Icon = new Icon("logo.ico"),
-            BackgroundImage = Util.GetImage("bg.png"),
+            BackgroundImage = Util.getImage("bg.png"),
             BackgroundImageLayout = ImageLayout.Stretch
         };
     }

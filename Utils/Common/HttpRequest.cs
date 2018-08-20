@@ -32,12 +32,12 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 下行数据压缩方式(默认Gzip)
         /// </summary>
-        public CompressType acceptEncoding { private get; set; } = CompressType.Gzip;
+        public CompressType acceptEncoding { private get; set; } = CompressType.GZIP;
 
         /// <summary>
         /// 上行数据压缩方式(默认无压缩)
         /// </summary>
-        public CompressType contentEncoding { private get; set; } = CompressType.None;
+        public CompressType contentEncoding { private get; set; } = CompressType.NONE;
 
         /// <summary>
         /// 自定义请求头内容
@@ -60,12 +60,12 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, RequestMethod method, Dictionary<string, object> body)
+        public bool send(string url, RequestMethod method, Dictionary<string, object> body)
         {
             if (method != RequestMethod.GET)
             {
                 var json = body == null ? "" : new JavaScriptSerializer().Serialize(body);
-                return Send(url, method, json);
+                return send(url, method, json);
             }
 
             if (body != null)
@@ -74,7 +74,7 @@ namespace Insight.Utils.Common
                 url += param.Replace("?&", "?");
             }
 
-            return Send(url);
+            return send(url);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool Send(string url, RequestMethod method = RequestMethod.GET, string body = null)
+        public bool send(string url, RequestMethod method = RequestMethod.GET, string body = null)
         {
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);
@@ -96,12 +96,12 @@ namespace Insight.Utils.Common
                 request.Headers.Add(HttpRequestHeader.Authorization, token);
             }
 
-            if (acceptEncoding != CompressType.None)
+            if (acceptEncoding != CompressType.NONE)
             {
                 request.Headers.Add(HttpRequestHeader.AcceptEncoding, acceptEncoding.ToString().ToLower());
             }
 
-            if (contentEncoding != CompressType.None)
+            if (contentEncoding != CompressType.NONE)
             {
                 request.Headers.Add(HttpRequestHeader.ContentEncoding, contentEncoding.ToString().ToLower());
             }
@@ -118,7 +118,7 @@ namespace Insight.Utils.Common
             // 上传数据
             if (method != RequestMethod.GET)
             {
-                var buffer = EncodingBody(body ?? "");
+                var buffer = encodingBody(body ?? "");
                 request.ContentLength = buffer.Length;
                 using (var stream = request.GetRequestStream())
                 {
@@ -135,13 +135,13 @@ namespace Insight.Utils.Common
                     switch (response.ContentEncoding.ToLower())
                     {
                         case "gzip":
-                            data = FromGZipStream(stream);
+                            data = fromGZipStream(stream);
                             break;
                         case "deflate":
-                            data = FromDeflateStream(stream);
+                            data = fromDeflateStream(stream);
                             break;
                         default:
-                            data = FromStream(stream);
+                            data = fromStream(stream);
                             break;
                     }
 
@@ -161,20 +161,20 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="body">请求体数据</param>
         /// <returns>byte[]</returns>
-        private byte[] EncodingBody(string body)
+        private byte[] encodingBody(string body)
         {
             var buffer = Encoding.UTF8.GetBytes(body);
             var ms = new MemoryStream();
             switch (contentEncoding)
             {
-                case CompressType.Gzip:
+                case CompressType.GZIP:
                     using (var stream = new GZipStream(ms, CompressionMode.Compress))
                     {
                         stream.Write(buffer, 0, buffer.Length);
                         return ms.GetBuffer();
                     }
 
-                case CompressType.Deflate:
+                case CompressType.DEFLATE:
                     using (var stream = new DeflateStream(ms, CompressionMode.Compress))
                     {
                         stream.Write(buffer, 0, buffer.Length);
@@ -191,11 +191,11 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="response">GZip压缩的流</param>
         /// <returns>string 流中的数据</returns>
-        private static string FromGZipStream(Stream response)
+        private static string fromGZipStream(Stream response)
         {
             using (var stream = new GZipStream(response, CompressionMode.Decompress))
             {
-                return FromStream(stream);
+                return fromStream(stream);
             }
         }
 
@@ -204,11 +204,11 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="response">Deflate压缩的流</param>
         /// <returns>string 流中的数据</returns>
-        private static string FromDeflateStream(Stream response)
+        private static string fromDeflateStream(Stream response)
         {
             using (var stream = new DeflateStream(response, CompressionMode.Decompress))
             {
-                return FromStream(stream);
+                return fromStream(stream);
             }
         }
 
@@ -217,7 +217,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <returns>string 流中的数据</returns>
-        private static string FromStream(Stream stream)
+        private static string fromStream(Stream stream)
         {
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {

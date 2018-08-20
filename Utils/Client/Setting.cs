@@ -7,47 +7,47 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 应用名称
         /// </summary>
-        public static string appName = Util.GetAppSetting("AppName");
+        public static string appName = Util.getAppSetting("AppName");
 
         /// <summary>
         /// 应用服务地址
         /// </summary>
-        public static string appServer = Util.GetAppSetting("AppServer"); 
+        public static string appServer = Util.getAppSetting("AppServer"); 
 
         /// <summary>
         /// 基础服务地址
         /// </summary>
-        public static string baseServer = GetBaseServer();
+        public static string baseServer = getBaseServer();
 
         /// <summary>
         /// 界面主题样式
         /// </summary>
-        public static string lookAndFeel = Util.GetAppSetting("DefaultLookAndFeel");
+        public static string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
 
         /// <summary>
         /// 文档打印机
         /// </summary>
-        public static string docPrint = Util.GetAppSetting("DocPrint");
+        public static string docPrint = Util.getAppSetting("DocPrint");
 
         /// <summary>
         /// 标签打印机
         /// </summary>
-        public static string tagPrint = Util.GetAppSetting("TagPrint");
+        public static string tagPrint = Util.getAppSetting("TagPrint");
 
         /// <summary>
         /// 票据打印机
         /// </summary>
-        public static string bilPrint = Util.GetAppSetting("BilPrint");
+        public static string bilPrint = Util.getAppSetting("BilPrint");
 
         /// <summary>
         /// 票据是否合并打印
         /// </summary>
-        public static bool isMergerPrint = bool.Parse(Util.GetAppSetting("IsMergerPrint"));
+        public static bool isMergerPrint = bool.Parse(Util.getAppSetting("IsMergerPrint"));
 
         /// <summary>
         /// 令牌管理器
         /// </summary>
-        public static TokenHelper tokenHelper = new TokenHelper { appId = Util.GetAppSetting("AppId") };
+        public static TokenHelper tokenHelper = new TokenHelper { appId = Util.getAppSetting("AppId") };
 
         /// <summary>
         /// 当前登录部门ID
@@ -78,9 +78,9 @@ namespace Insight.Utils.Client
         /// 获取基础服务地址
         /// </summary>
         /// <returns></returns>
-        private static string GetBaseServer()
+        private static string getBaseServer()
         {
-            var server = Util.GetAppSetting("BaseServer");
+            var server = Util.getAppSetting("BaseServer");
             if (string.IsNullOrEmpty(server)) server = appServer;
 
             return server;
@@ -90,27 +90,27 @@ namespace Insight.Utils.Client
         /// 获取是否保存用户名选项设置
         /// </summary>
         /// <returns></returns>
-        public static bool IsSaveUserInfo()
+        public static bool isSaveUserInfo()
         {
-            return bool.Parse(Util.GetAppSetting("IsSaveUserInfo"));
+            return bool.Parse(Util.getAppSetting("IsSaveUserInfo"));
         }
 
         /// <summary>
         /// 获取保存的用户名
         /// </summary>
         /// <returns></returns>
-        public static string GetAccount()
+        public static string getAccount()
         {
-            return Util.GetAppSetting("UserName");
+            return Util.getAppSetting("UserName");
         }
 
         /// <summary>
         /// 保存默认样式
         /// </summary>
         /// <param name="defaultLookAndFeel"></param>
-        public static void SaveLookAndFeel(string defaultLookAndFeel)
+        public static void saveLookAndFeel(string defaultLookAndFeel)
         {
-            Util.SaveAppSetting("DefaultLookAndFeel", defaultLookAndFeel);
+            Util.saveAppSetting("DefaultLookAndFeel", defaultLookAndFeel);
         }
 
         /// <summary>
@@ -118,51 +118,51 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="print"></param>
         /// <param name="printName"></param>
-        public static void SavePrinter(string print, string printName)
+        public static void savePrinter(string print, string printName)
         {
-            Util.SaveAppSetting(print, printName);
+            Util.saveAppSetting(print, printName);
         }
 
         /// <summary>
         /// 保存用户信息保存选项
         /// </summary>
-        public static void SaveIsMergerPrint()
+        public static void saveIsMergerPrint()
         {
-            Util.SaveAppSetting("IsMergerPrint", isMergerPrint.ToString());
+            Util.saveAppSetting("IsMergerPrint", isMergerPrint.ToString());
         }
 
         /// <summary>
         /// 保存用户信息保存选项
         /// </summary>
         /// <param name="isSave"></param>
-        public static void SaveIsSaveUserInfo(bool isSave)
+        public static void saveIsSaveUserInfo(bool isSave)
         {
-            Util.SaveAppSetting("IsSaveUserInfo", isSave.ToString());
+            Util.saveAppSetting("IsSaveUserInfo", isSave.ToString());
         }
 
         /// <summary>
         /// 保存用户名
         /// </summary>
         /// <param name="account"></param>
-        public static void SaveUserName(string account)
+        public static void saveUserName(string account)
         {
-            Util.SaveAppSetting("UserName", account);
+            Util.saveAppSetting("UserName", account);
         }
 
         /// <summary>
         /// 保存应用服务地址和端口
         /// </summary>
-        public static void SaveAppServer()
+        public static void saveAppServer()
         {
-            Util.SaveAppSetting("AppServer", appServer);
+            Util.saveAppSetting("AppServer", appServer);
         }
 
         /// <summary>
         /// 保存验证服务地址和端口
         /// </summary>
-        public static void SaveBaseServer()
+        public static void saveBaseServer()
         {
-            Util.SaveAppSetting("BaseServer", baseServer);
+            Util.saveAppSetting("BaseServer", baseServer);
         }
     }
 }

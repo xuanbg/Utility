@@ -92,7 +92,7 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <param name="sheetIndex">Sheet位置</param>
         /// <returns>Sheet是否存在</returns>
-        public bool SheetIsExist(int sheetIndex)
+        public bool sheetIsExist(int sheetIndex)
         {
             return workbook.GetSheetAt(sheetIndex) != null;
         }
@@ -102,7 +102,7 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Sheet是否存在</returns>
-        public bool SheetIsExist(string sheetName)
+        public bool sheetIsExist(string sheetName)
         {
             return workbook.GetSheet(sheetName) != null;
         }
@@ -113,11 +113,11 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="sheetIndex">Sheet位置</param>
         /// <param name="keys">关键列名称(英文逗号分隔)</param>
         /// <returns>是否通过校验</returns>
-        public bool VerifyColumns(int sheetIndex, string keys)
+        public bool verifyColumns(int sheetIndex, string keys)
         {
             var sheetName = workbook.GetSheetName(sheetIndex);
 
-            return VerifyColumns(sheetName, keys);
+            return verifyColumns(sheetName, keys);
         }
 
         /// <summary>
@@ -126,14 +126,14 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="sheetName">Sheet名称</param>
         /// <param name="keys">关键列名称(英文逗号分隔)</param>
         /// <returns>是否通过校验</returns>
-        public bool VerifyColumns(string sheetName, string keys)
+        public bool verifyColumns(string sheetName, string keys)
         {
             if (string.IsNullOrEmpty(keys)) return false;
 
             var sheet = workbook.GetSheet(sheetName);
             if (sheet == null) return false;
 
-            InitTitel(sheet);
+            initTitel(sheet);
             if (title == null || title.Count == 0) return false;
 
             return !keys.Split(',').Except(title).Any();
@@ -145,11 +145,11 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetIndex">Sheet位置</param>
         /// <returns>是否通过校验</returns>
-        public bool VerifyColumns<T>(int sheetIndex)
+        public bool verifyColumns<T>(int sheetIndex)
         {
             var sheetName = workbook.GetSheetName(sheetIndex);
 
-            return VerifyColumns<T>(sheetName);
+            return verifyColumns<T>(sheetName);
         }
 
         /// <summary>
@@ -158,13 +158,13 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>是否通过校验</returns>
-        public bool VerifyColumns<T>(string sheetName)
+        public bool verifyColumns<T>(string sheetName)
         {
             var sheet = workbook.GetSheet(sheetName);
             if (sheet == null) return false;
 
             // 读取标题
-            InitTitel(sheet);
+            initTitel(sheet);
             if (title == null || title.Count == 0) return false;
 
             // 读取关键列到集合并取标题集合的差集
@@ -185,13 +185,13 @@ namespace Insight.Utils.ExcelHelper
         /// 导出工作簿到Excel文件
         /// </summary>
         /// <param name="file"></param>
-        public void ExportFile(string file)
+        public void exportFile(string file)
         {
             if (workbook == null) return;
 
             using (var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                var ms = ExportStream();
+                var ms = exportStream();
                 var data = ms.ToArray();
                 stream.Write(data, 0, data.Length);
                 stream.Flush();
@@ -204,9 +204,9 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file"></param>
         /// <param name="list"></param>
-        public void ExportFile<T>(string file, List<T> list)
+        public void exportFile<T>(string file, List<T> list)
         {
-            ExportFile(file, list, null);
+            exportFile(file, list, null);
         }
 
         /// <summary>
@@ -216,17 +216,17 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="file">输出Excel文件(.xls|.xlsx)的路径及文件名</param>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void ExportFile<T>(string file, List<T> list, string sheetName)
+        public void exportFile<T>(string file, List<T> list, string sheetName)
         {
-            CreateSheet(list, sheetName);
-            ExportFile(file);
+            createSheet(list, sheetName);
+            exportFile(file);
         }
 
         /// <summary>
         /// 导出工作簿到数据流
         /// </summary>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream ExportStream()
+        public MemoryStream exportStream()
         {
             var stream = new MemoryStream();
             if (workbook == null) return stream;
@@ -242,9 +242,9 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream ExportStream<T>(List<T> list)
+        public MemoryStream exportStream<T>(List<T> list)
         {
-            return ExportStream(list, null);
+            return exportStream(list, null);
         }
 
         /// <summary>
@@ -254,20 +254,20 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream ExportStream<T>(List<T> list, string sheetName)
+        public MemoryStream exportStream<T>(List<T> list, string sheetName)
         {
-            CreateSheet(list, sheetName);
+            createSheet(list, sheetName);
 
-            return ExportStream();
+            return exportStream();
         }
 
         /// <summary>
         /// 导出工作簿到字节数组
         /// </summary>
         /// <returns>字节流</returns>
-        public byte[] ExportByteArray()
+        public byte[] exportByteArray()
         {
-            return ExportStream().ToArray();
+            return exportStream().ToArray();
         }
 
         /// <summary>
@@ -276,9 +276,9 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <returns>字节流</returns>
-        public byte[] ExportByteArray<T>(List<T> list)
+        public byte[] exportByteArray<T>(List<T> list)
         {
-            return ExportStream(list).ToArray();
+            return exportStream(list).ToArray();
         }
 
         /// <summary>
@@ -288,9 +288,9 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>字节流</returns>
-        public byte[] ExportByteArray<T>(List<T> list, string sheetName)
+        public byte[] exportByteArray<T>(List<T> list, string sheetName)
         {
-            return ExportStream(list, sheetName).ToArray();
+            return exportStream(list, sheetName).ToArray();
         }
 
         /// <summary>
@@ -298,9 +298,9 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <returns>指定类型的集合</returns>
-        public List<T> ImportSheet<T>() where T : new()
+        public List<T> importSheet<T>() where T : new()
         {
-            return ImportSheet<T>(0);
+            return importSheet<T>(0);
         }
 
         /// <summary>
@@ -309,11 +309,11 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetIndex">Sheet位置</param>
         /// <returns>指定类型的集合</returns>
-        public List<T> ImportSheet<T>(int sheetIndex) where T : new()
+        public List<T> importSheet<T>(int sheetIndex) where T : new()
         {
             var sheetName = workbook.GetSheetName(sheetIndex);
 
-            return ImportSheet<T>(sheetName);
+            return importSheet<T>(sheetName);
         }
 
         /// <summary>
@@ -322,20 +322,20 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>指定类型的集合</returns>
-        public List<T> ImportSheet<T>(string sheetName) where T : new()
+        public List<T> importSheet<T>(string sheetName) where T : new()
         {
             var sheet = workbook.GetSheet(sheetName);
 
-            return ToList<T>(sheet);
+            return toList<T>(sheet);
         }
 
         /// <summary>
         /// 创建一个用于导入数据的模板Sheet
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
-        public void CreateTemplate<T>()
+        public void createTemplate<T>()
         {
-            CreateTemplate<T>(null);
+            createTemplate<T>(null);
         }
 
         /// <summary>
@@ -343,11 +343,11 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
-        public void CreateTemplate<T>(string sheetName)
+        public void createTemplate<T>(string sheetName)
         {
             if (workbook == null) return;
 
-            CreateTitel<T>(sheetName);
+            createTitel<T>(sheetName);
         }
 
         /// <summary>
@@ -355,9 +355,9 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
-        public void CreateSheet<T>(List<T> list)
+        public void createSheet<T>(List<T> list)
         {
-            CreateSheet(list, null);
+            createSheet(list, null);
         }
 
         /// <summary>
@@ -366,12 +366,12 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void CreateSheet<T>(List<T> list, string sheetName)
+        public void createSheet<T>(List<T> list, string sheetName)
         {
             if (workbook == null || list == null) return;
 
             // 创建Sheet并生成标题行
-            var sheet = CreateTitel<T>(sheetName);
+            var sheet = createTitel<T>(sheetName);
 
             // 根据字段类型设置单元格格式并生成数据
             var i = 1;
@@ -380,7 +380,7 @@ namespace Insight.Utils.ExcelHelper
                 if (item == null) continue;
 
                 var row = sheet.CreateRow(i++);
-                WriteRow(row, item);
+                writeRow(row, item);
             }
         }
 
@@ -390,13 +390,13 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheet">Sheet</param>
         /// <returns>指定类型的集合</returns>
-        private List<T> ToList<T>(ISheet sheet) where T : new()
+        private List<T> toList<T>(ISheet sheet) where T : new()
         {
             if (sheet == null) return null;
 
             // 初始化字段信息字典和标题字典
-            InitFieldsInfo<T>();
-            InitTitel(sheet);
+            initFieldsInfo<T>();
+            initTitel(sheet);
 
             // 如标题为空,则返回一个空集合
             var table = new List<T>();
@@ -406,7 +406,7 @@ namespace Insight.Utils.ExcelHelper
             for (var i = 1; i <= sheet.LastRowNum; i++)
             {
                 var row = sheet.GetRow(i);
-                var item = ReadRow<T>(row);
+                var item = readRow<T>(row);
                 table.Add(item);
             }
 
@@ -419,7 +419,7 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="row">输入的行数据</param>
         /// <returns>T 指定类型的数据对象</returns>
-        private T ReadRow<T>(IRow row) where T : new()
+        private T readRow<T>(IRow row) where T : new()
         {
             if (row == null) return default(T);
 
@@ -441,7 +441,7 @@ namespace Insight.Utils.ExcelHelper
 
                 // 读取单元格数据,如该属性/字段不允许写入或单元格值为空,则跳过该单元格
                 var cell = row.GetCell(i);
-                var value = ReadCell(cell, info.typeName);
+                var value = readCell(cell, info.typeName);
                 var property = propertys.First(p => p.Name == info.fieldName);
                 if (!property.CanWrite || value == null)
                 {
@@ -462,7 +462,7 @@ namespace Insight.Utils.ExcelHelper
         /// <param name="cell"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private static object ReadCell(ICell cell, string type)
+        private static object readCell(ICell cell, string type)
         {
             if (cell == null) return null;
 
@@ -517,9 +517,9 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Sheet</returns>
-        private ISheet CreateTitel<T>(string sheetName)
+        private ISheet createTitel<T>(string sheetName)
         {
-            InitFieldsInfo<T>();
+            initFieldsInfo<T>();
             if (string.IsNullOrEmpty(sheetName)) sheetName = $"Sheet{workbook.NumberOfSheets + 1}";
 
             var sheet = workbook.CreateSheet(sheetName);
@@ -541,13 +541,13 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="row">行数据</param>
         /// <param name="item">指定类型的数据对象</param>
-        private void WriteRow<T>(IRow row, T item)
+        private void writeRow<T>(IRow row, T item)
         {
             var propertys = typeof(T).GetProperties();
             for (var i = 0; i < exportfields.Count; i++)
             {
                 var field = exportfields[i];
-                var cell = row.CreateCell(i, GetCellType(field.typeName));
+                var cell = row.CreateCell(i, getCellType(field.typeName));
                 var property = propertys.First(p => p.Name == field.fieldName);
                 if (!property.CanRead) continue;
 
@@ -572,7 +572,7 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <param name="type">属性/字段类型</param>
         /// <returns>单元格格式</returns>
-        private static CellType GetCellType(string type)
+        private static CellType getCellType(string type)
         {
             switch (type)
             {
@@ -594,7 +594,7 @@ namespace Insight.Utils.ExcelHelper
         /// 读取标题,生成标题和对应的数据类型的字典
         /// </summary>
         /// <param name="sheet">数据表</param>
-        private void InitTitel(ISheet sheet)
+        private void initTitel(ISheet sheet)
         {
             title = new List<string>();
             var row = sheet.GetRow(0);
@@ -615,7 +615,7 @@ namespace Insight.Utils.ExcelHelper
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <returns>指定类型对应的需要导出的字段信息集合</returns>
-        private void InitFieldsInfo<T>()
+        private void initFieldsInfo<T>()
         {
             fieldInfos = new List<FieldInfo>();
             var propertys = typeof(T).GetProperties();

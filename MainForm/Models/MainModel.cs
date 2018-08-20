@@ -38,7 +38,7 @@ namespace Insight.Utils.MainForm.Models
             };
 
             // 加载模块数据并初始化导航栏
-            InitNavBar();
+            initNavBar();
 
             // 初始化界面
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
@@ -58,7 +58,7 @@ namespace Insight.Utils.MainForm.Models
         /// 打开MDI子窗体
         /// </summary>
         /// <param name="name"></param>
-        public void AddPageMdi(string name)
+        public void addPageMdi(string name)
         {
             var form = Application.OpenForms[name];
             if (form != null)
@@ -72,7 +72,7 @@ namespace Insight.Utils.MainForm.Models
             if (!File.Exists(path))
             {
                 var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
-                Messages.ShowError(msg);
+                Messages.showError(msg);
                 return;
             }
 
@@ -83,7 +83,7 @@ namespace Insight.Utils.MainForm.Models
             {
                 view.Loading.CloseWaitForm();
                 var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
-                Messages.ShowError(msg);
+                Messages.showError(msg);
 
                 return;
             }
@@ -96,12 +96,12 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 如注销用户失败，弹出询问对话框。
         /// </summary>
-        public bool Logout()
+        public bool logout()
         {
             const string msg = "退出应用程序将导致当前未完成的输入内容丢失！\r\n您确定要退出吗？";
-            if (!Messages.ShowConfirm(msg)) return true;
+            if (!Messages.showConfirm(msg)) return true;
 
-            tokenHelper.DeleteToken();
+            tokenHelper.deleteToken();
 
             return false;
         }
@@ -109,19 +109,19 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 保存当前主题样式到配置文件
         /// </summary>
-        public void SaveLookAndFeel()
+        public void saveLookAndFeel()
         {
-            Setting.SaveLookAndFeel(view.MyFeel.LookAndFeel.SkinName);
+            Setting.saveLookAndFeel(view.MyFeel.LookAndFeel.SkinName);
         }
 
         /// <summary>
         /// 初始化导航栏
         /// </summary>
-        private void InitNavBar()
+        private void initNavBar()
         {
             var url = $"{baseServer}/commonapi/v1.0/navigations";
             var client = new HttpClient<List<Navigation>>(tokenHelper);
-            if (!client.Get(url)) return;
+            if (!client.get(url)) return;
 
             navItems = client.data.Where(i => i.parentId != null).ToList();
             var groups = client.data.Where(i => i.parentId == null).ToList();

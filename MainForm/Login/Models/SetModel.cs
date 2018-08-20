@@ -8,7 +8,7 @@ namespace Insight.Utils.MainForm.Login.Models
     {
         public LoginSet view;
 
-        private bool saveUser = Setting.IsSaveUserInfo();
+        private bool saveUser = Setting.isSaveUserInfo();
 
         /// <summary>
         /// 构造函数，初始化视图
@@ -30,12 +30,12 @@ namespace Insight.Utils.MainForm.Login.Models
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void Save()
+        public void save()
         {
-            if (!saveUser) Setting.SaveUserName(string.Empty);
+            if (!saveUser) Setting.saveUserName(string.Empty);
 
-            Setting.SaveIsSaveUserInfo(saveUser);
-            Setting.SaveBaseServer();
+            Setting.saveIsSaveUserInfo(saveUser);
+            Setting.saveBaseServer();
         }
     }
 }

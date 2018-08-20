@@ -27,7 +27,7 @@ namespace Insight.Utils.Models
         public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url)
         {
             item = cat;
-            list = GetTreeList(cats);
+            list = getTreeList(cats);
             baseUrl = $"{appServer}/{url}";
             parentId = cat.parentId;
             index = cat.index;
@@ -47,13 +47,13 @@ namespace Insight.Utils.Models
             view.trlParent.EditValueChanged += (sender, args) =>
             {
                 item.parentId = view.trlParent.EditValue?.ToString();
-                SetIndexValue();
+                setIndexValue();
             };
             view.trlParent.ButtonPressed += (sender, args) => view.trlParent.EditValue = null;
             view.txtName.EditValueChanged += (sender, args) =>
             {
                 item.name = view.txtName.Text.Trim();
-                SetCheckItem(view.txtName, item.name, "请输入分类名称！", true);
+                setCheckItem(view.txtName, item.name, "请输入分类名称！", true);
             };
             view.spiIndex.ValueChanged += (sender, args) => item.index = (int) view.spiIndex.Value;
             view.txtAlias.EditValueChanged += (sender, args) => item.alias = view.txtAlias.Text.Trim();
@@ -64,45 +64,45 @@ namespace Insight.Utils.Models
                 item.remark = string.IsNullOrEmpty(text) ? null : text;
             };
 
-            Format.InitTreeListLookUpEdit(view.trlParent, list, NodeIconType.Category);
-            SetIndexValue();
-            SetCheckItem(view.txtName, item.name, "请输入分类名称！", true);
+            Format.initTreeListLookUpEdit(view.trlParent, list, NodeIconType.CATEGORY);
+            setIndexValue();
+            setCheckItem(view.txtName, item.name, "请输入分类名称！", true);
         }
 
         /// <summary>
         /// 新增分类
         /// </summary>
         /// <returns>分类对象实体</returns>
-        public Catalog<T> Add()
+        public Catalog<T> add()
         {
-            if (!InputExamine()) return null;
+            if (!inputExamine()) return null;
 
             var msg = $"新建分类【{item.name}】失败！";
             var dict = new Dictionary<string, object> {{"catalog", item}};
             var client = new HttpClient<Catalog<T>>(tokenHelper);
 
-            return client.Post(baseUrl, dict, msg) ? client.data : null;
+            return client.post(baseUrl, dict, msg) ? client.data : null;
         }
 
         /// <summary>
         /// 编辑分类
         /// </summary>
         /// <returns>分类对象实体</returns>
-        public Catalog<T> Edit()
+        public Catalog<T> edit()
         {
-            if (!InputExamine()) return null;
+            if (!inputExamine()) return null;
 
             var msg = $"编辑分类【{item.name}】失败！";
             var dict = new Dictionary<string, object> {{"catalog", item}};
             var client = new HttpClient<object>(tokenHelper);
 
-            return client.Put($"{baseUrl}/{item.id}", dict, msg) ? item : null;
+            return client.put($"{baseUrl}/{item.id}", dict, msg) ? item : null;
         }
 
         /// <summary>
         /// 设置Index值
         /// </summary>
-        private void SetIndexValue()
+        private void setIndexValue()
         {
             var maxValue = list.Count(i => i.parentId == item.parentId) + 1;
             view.spiIndex.Properties.MinValue = 1;
@@ -115,7 +115,7 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="cats">分类集合</param>
         /// <returns>分类树节点集合</returns>
-        private List<TreeLookUpMember> GetTreeList(List<Catalog<T>> cats)
+        private List<TreeLookUpMember> getTreeList(List<Catalog<T>> cats)
         {
             var catalogs = cats.Where(i => item.id == null || i.id != item.id).Select(i => new TreeLookUpMember
                 {
@@ -127,7 +127,7 @@ namespace Insight.Utils.Models
 
             if (item.id == null) return catalogs;
 
-            RemoveItem(item.id, catalogs);
+            removeItem(item.id, catalogs);
 
             return catalogs.Where(i => i.id != null).ToList();
         }
@@ -137,11 +137,11 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="id">节点ID</param>
         /// <param name="list">数据集</param>
-        private static void RemoveItem(string id, List<TreeLookUpMember> list)
+        private static void removeItem(string id, List<TreeLookUpMember> list)
         {
             foreach (var node in list.Where(i => i.parentId == id))
             {
-                RemoveItem(node.id, list);
+                removeItem(node.id, list);
                 node.id = null;
             }
         }

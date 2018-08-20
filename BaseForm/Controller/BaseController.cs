@@ -14,10 +14,10 @@ namespace Insight.Utils.Controller
         /// 订阅对话框关闭事件
         /// </summary>
         /// <param name="view">对话框视图</param>
-        protected void SubCloseEvent(BaseDialog view)
+        protected void subCloseEvent(BaseDialog view)
         {
             view.Cancel.Click += (sender, args) => view.Close();
-            view.Closing += (sender, args) => DialogClosing(view, args);
+            view.Closing += (sender, args) => dialogClosing(view, args);
             view.Closed += (sender, args) => view.Dispose();
         }
 
@@ -26,32 +26,32 @@ namespace Insight.Utils.Controller
         /// </summary>
         /// <param name="view">对话框视图</param>
         /// <param name="confirm">是否订阅确定按钮默认事件</param>
-        protected void SubCloseEvent(BaseDialog view, bool confirm)
+        protected void subCloseEvent(BaseDialog view, bool confirm)
         {
-            SubCloseEvent(view);
+            subCloseEvent(view);
             if (!confirm) return;
 
-            view.Confirm.Click += (sender, args) => CloseDialog(view);
+            view.Confirm.Click += (sender, args) => closeDialog(view);
         }
 
         /// <summary>
         /// 订阅向导关闭事件
         /// </summary>
         /// <param name="view">向导视图</param>
-        protected void SubCloseEvent(BaseWizard view)
+        protected void subCloseEvent(BaseWizard view)
         {
-            view.FormClosing += (sender, args) => WizardClosing(view, args);
+            view.FormClosing += (sender, args) => wizardClosing(view, args);
         }
 
         /// <summary>
         /// 关闭对话框
         /// </summary>
         /// <param name="view">对话框视图</param>
-        protected void CloseDialog(BaseDialog view)
+        protected void closeDialog(BaseDialog view)
         {
-            view.Confirm.Click -= (sender, args) => CloseDialog(view);
+            view.Confirm.Click -= (sender, args) => closeDialog(view);
             view.Cancel.Click -= (sender, args) => view.Close();
-            view.Closing -= (sender, args) => DialogClosing(view, args);
+            view.Closing -= (sender, args) => dialogClosing(view, args);
             view.Closed -= (sender, args) => view.Dispose();
 
             view.DialogResult = DialogResult.OK;
@@ -63,16 +63,16 @@ namespace Insight.Utils.Controller
         /// </summary>
         /// <param name="view">对话框视图</param>
         /// <param name="e">对话框视图关闭事件</param>
-        private void DialogClosing(BaseDialog view, CancelEventArgs e)
+        private void dialogClosing(BaseDialog view, CancelEventArgs e)
         {
             if (view.DialogResult == DialogResult.OK) return;
 
             const string msg = "您确定要放弃所做的变更，并关闭对话框吗？";
-            if (!Messages.ShowConfirm(msg)) e.Cancel = true;
+            if (!Messages.showConfirm(msg)) e.Cancel = true;
 
-            view.Confirm.Click -= (sender, args) => CloseDialog(view);
+            view.Confirm.Click -= (sender, args) => closeDialog(view);
             view.Cancel.Click -= (sender, args) => view.Close();
-            view.Closing -= (sender, args) => DialogClosing(view, args);
+            view.Closing -= (sender, args) => dialogClosing(view, args);
             view.Closed -= (sender, args) => view.Dispose();
 
             view.DialogResult = DialogResult.Cancel;
@@ -83,14 +83,14 @@ namespace Insight.Utils.Controller
         /// </summary>
         /// <param name="view">向导视图</param>
         /// <param name="e">向导视图关闭事件</param>
-        private static void WizardClosing(Form view, CancelEventArgs e)
+        private static void wizardClosing(Form view, CancelEventArgs e)
         {
             if (view.DialogResult == DialogResult.OK) return;
 
             const string msg = "您确定要放弃所做的变更，离开向导吗？";
-            if (!Messages.ShowConfirm(msg)) e.Cancel = true;
+            if (!Messages.showConfirm(msg)) e.Cancel = true;
 
-            view.FormClosing -= (sender, args) => WizardClosing(view, args);
+            view.FormClosing -= (sender, args) => wizardClosing(view, args);
             view.DialogResult = DialogResult.Cancel;
         }
     }

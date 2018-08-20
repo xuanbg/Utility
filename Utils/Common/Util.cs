@@ -28,7 +28,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="format">输出格式(N:无分隔符;默认D:有分隔符)</param>
         /// <returns>ID</returns>
-        public static string NewId(string format = "D")
+        public static string newId(string format = "D")
         {
             return Guid.NewGuid().ToString(format);
         }
@@ -38,7 +38,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="key">配置项</param>
         /// <returns>配置项的值</returns>
-        public static string GetAppSetting(string key)
+        public static string getAppSetting(string key)
         {
             return ConfigurationManager.AppSettings[key];
         }
@@ -48,7 +48,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="key">配置项</param>
         /// <param name="value">配置项的值</param>
-        public static void SaveAppSetting(string key, string value)
+        public static void saveAppSetting(string key, string value)
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
@@ -63,7 +63,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>String Hash值</returns>
-        public static string Hash(string str)
+        public static string hash(string str)
         {
             var md5 = MD5.Create();
             var s = md5.ComputeHash(Encoding.UTF8.GetBytes(str.Trim()));
@@ -76,7 +76,7 @@ namespace Insight.Utils.Common
         /// <param name="amount">金额</param>
         /// <param name="type">补整类型:0到元补整；1到角补整</param>
         /// <returns>string 中文大写金额</returns>
-        public static string AmountConvertToCn(decimal amount, int type = 1)
+        public static string amountConvertToCn(decimal amount, int type = 1)
         {
             if (amount >= 1000000000000) return "金额不能支持万亿及更高";
 
@@ -122,9 +122,9 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="obj">用于转换的数据对象</param>
         /// <returns>string Base64编码的字符串</returns>
-        public static string Base64(object obj)
+        public static string base64(object obj)
         {
-            return Base64Encode(Serialize(obj));
+            return base64Encode(serialize(obj));
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>string Base64编码的字符串</returns>
-        public static string Base64Encode(string str)
+        public static string base64Encode(string str)
         {
             var buff = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(buff);
@@ -143,13 +143,13 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>AccessToken</returns>
-        public static AccessToken Base64ToAccessToken(string str)
+        public static AccessToken base64ToAccessToken(string str)
         {
             try
             {
                 var buffer = Convert.FromBase64String(str);
                 var json = Encoding.UTF8.GetString(buffer);
-                return Deserialize<AccessToken>(json);
+                return deserialize<AccessToken>(json);
             }
             catch (Exception)
             {
@@ -162,7 +162,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>string Base64编码的字符串</returns>
-        public static string Base64Decode(string str)
+        public static string base64Decode(string str)
         {
             try
             {
@@ -180,7 +180,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="str">输入字符串</param>
         /// <returns>byte[]</returns>
-        public static byte[] HexToByteArray(string str)
+        public static byte[] hexToByteArray(string str)
         {
             var hex = str.Replace("0x", "");
             var bytes = new byte[hex.Length / 2];
@@ -198,7 +198,7 @@ namespace Insight.Utils.Common
         /// <param name="s1">字符串1</param>
         /// <param name="s2">字符串2</param>
         /// <returns>bool 是否相同</returns>
-        public static bool StringCompare(string s1, string s2)
+        public static bool stringCompare(string s1, string s2)
         {
             return string.Equals(s1, s2, StringComparison.CurrentCultureIgnoreCase);
         }
@@ -209,7 +209,7 @@ namespace Insight.Utils.Common
         /// <typeparam name="T">类型</typeparam>
         /// <param name="source">源对象</param>
         /// <param name="target">目标对象</param>
-        public static void CopyValue<T>(T source, T target)
+        public static void copyValue<T>(T source, T target)
         {
             var propertys = typeof(T).GetProperties();
             foreach (var property in propertys)
@@ -227,10 +227,10 @@ namespace Insight.Utils.Common
         /// <typeparam name="T">类型</typeparam>
         /// <param name="obj">源对象</param>
         /// <returns>T 复制的对象</returns>
-        public static T Clone<T>(T obj)
+        public static T clone<T>(T obj)
         {
-            var str = Serialize(obj);
-            return Deserialize<T>(str);
+            var str = serialize(obj);
+            return deserialize<T>(str);
         }
 
         /// <summary>
@@ -239,10 +239,10 @@ namespace Insight.Utils.Common
         /// <typeparam name="T">转换目标类型</typeparam>
         /// <param name="obj">任意对象</param>
         /// <returns>T 转换后的类型</returns>
-        public static T ConvertTo<T>(object obj)
+        public static T convertTo<T>(object obj)
         {
-            var str = Serialize(obj);
-            return Deserialize<T>(str);
+            var str = serialize(obj);
+            return deserialize<T>(str);
         }
 
         /// <summary>
@@ -251,16 +251,16 @@ namespace Insight.Utils.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static DataTable ConvertToDataTable<T>(List<T> list)
+        public static DataTable convertToDataTable<T>(List<T> list)
         {
             var table = new DataTable();
             var propertys = typeof(T).GetProperties().ToList();
-            propertys.ForEach(p => table.Columns.Add(GetPropertyName(p), p.PropertyType));
+            propertys.ForEach(p => table.Columns.Add(getPropertyName(p), p.PropertyType));
 
             foreach (var item in list)
             {
                 var row = table.NewRow();
-                propertys.ForEach(p => row[GetPropertyName(p)] = p.GetValue(item, null));
+                propertys.ForEach(p => row[getPropertyName(p)] = p.GetValue(item, null));
                 table.Rows.Add(row);
             }
             return table;
@@ -271,7 +271,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="table">DataTable</param>
         /// <returns>List</returns>
-        public static List<T> ConvertToList<T>(DataTable table) where T : new()
+        public static List<T> convertToList<T>(DataTable table) where T : new()
         {
             var list = new List<T>();
             var propertys = typeof(T).GetProperties();
@@ -280,7 +280,7 @@ namespace Insight.Utils.Common
                 var obj = new T();
                 foreach (var p in propertys)
                 {
-                    var name = GetPropertyName(p);
+                    var name = getPropertyName(p);
                     if (!p.CanWrite || !table.Columns.Contains(name)) continue;
 
                     var value = row[name];
@@ -298,7 +298,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="info">PropertyInfo</param>
         /// <returns>string 属性别名或名称</returns>
-        public static string GetPropertyName(PropertyInfo info)
+        public static string getPropertyName(PropertyInfo info)
         {
             if (info == null) return null;
 
@@ -306,7 +306,7 @@ namespace Insight.Utils.Common
             if (attributes.Length <= 0) return info.Name;
 
             var type = (AliasAttribute)attributes[0];
-            return type.Alias;
+            return type.alias;
         }
 
         #endregion
@@ -321,14 +321,14 @@ namespace Insight.Utils.Common
         /// <param name="root">根目录</param>
         /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="path">当前目录</param>
-        public static void GetClientFiles(Dictionary<string, ClientFile> dict, string appId, string root, string ext = "*.*", string path = null)
+        public static void getClientFiles(Dictionary<string, ClientFile> dict, string appId, string root, string ext = "*.*", string path = null)
         {
             // 读取目录下文件信息
             var dirInfo = new DirectoryInfo(path ?? root);
             var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
             foreach (var file in files)
             {
-                var id = Hash(file.Name);
+                var id = hash(file.Name);
                 var info = new ClientFile
                 {
                     id = id,
@@ -341,7 +341,7 @@ namespace Insight.Utils.Common
                 };
                 dict[id] = info;
             }
-            Directory.GetDirectories(path ?? root).ToList().ForEach(p => GetClientFiles(dict, appId, root, ext, p));
+            Directory.GetDirectories(path ?? root).ToList().ForEach(p => getClientFiles(dict, appId, root, ext, p));
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace Insight.Utils.Common
         /// <param name="file">文件内容</param>
         /// <param name="name">文件名</param>
         /// <param name="open">是否打开文件，默认不打开</param>
-        public static void SaveFile(byte[] file, string name, bool open = false)
+        public static void saveFile(byte[] file, string name, bool open = false)
         {
             var path = Path.GetTempPath() + name;
             if (!File.Exists(path))
@@ -373,7 +373,7 @@ namespace Insight.Utils.Common
         /// <param name="root">根目录</param>
         /// <param name="bytes">文件字节流</param>
         /// <returns>bool 是否重命名</returns>
-        public static bool UpdateFile(ClientFile file, string root, byte[] bytes)
+        public static bool updateFile(ClientFile file, string root, byte[] bytes)
         {
             var rename = false;
             var path = root + file.path + "\\";
@@ -406,24 +406,24 @@ namespace Insight.Utils.Common
         /// <param name="path">文件路径</param>
         /// <param name="warning">是否显示删除信息</param>
         /// <returns>bool 是否删除成功</returns>
-        public static bool DeleteFile(string path, bool warning = false)
+        public static bool deleteFile(string path, bool warning = false)
         {
             if (!File.Exists(path))
             {
-                Messages.ShowWarning("未找到指定的文件！");
+                Messages.showWarning("未找到指定的文件！");
                 return true;
             }
 
             try
             {
                 File.Delete(path);
-                if (warning) Messages.ShowMessage("指定的文件已删除！");
+                if (warning) Messages.showMessage("指定的文件已删除！");
 
                 return true;
             }
             catch
             {
-                Messages.ShowWarning("未能删除指定的文件！");
+                Messages.showWarning("未能删除指定的文件！");
                 return false;
             }
         }
@@ -437,11 +437,11 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="path">文件路径</param>
         /// <returns>ImageData 电子影像数据</returns>
-        public static ImageData GetImageData(string path)
+        public static ImageData getImageData(string path)
         {
-            var image = GetImage(path);
+            var image = getImage(path);
 
-            return image == null ? null : new ImageData {image = ImageToByteArray(image)};
+            return image == null ? null : new ImageData {image = imageToByteArray(image)};
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace Insight.Utils.Common
         /// <param name="did">登录部门ID</param>
         /// <param name="type">附件类型（默认0：附件）</param>
         /// <returns>ImageData 电子影像数据</returns>
-        public static ImageData AddFile(string slv, string uid, string did = null, int type = 0)
+        public static ImageData addFile(string slv, string uid, string did = null, int type = 0)
         {
             using (var dialog = new OpenFileDialog())
             {
@@ -466,7 +466,7 @@ namespace Insight.Utils.Common
 
                     return new ImageData
                     {
-                        id = NewId(),
+                        id = newId(),
                         imageType = type,
                         name = Path.GetFileNameWithoutExtension(fileName),
                         expand = Path.GetExtension(fileName),
@@ -488,7 +488,7 @@ namespace Insight.Utils.Common
         /// <param name="did">登录部门ID</param>
         /// <param name="type">附件类型（默认0：附件）</param>
         /// <returns>ImageData List 电子影像数据集</returns>
-        public static List<ImageData> AddFiles(string slv, string uid, string did = null, int type = 0)
+        public static List<ImageData> addFiles(string slv, string uid, string did = null, int type = 0)
         {
             var imgs = new List<ImageData>();
             using (var dialog = new OpenFileDialog())
@@ -506,7 +506,7 @@ namespace Insight.Utils.Common
 
                         var img = new ImageData
                         {
-                            id = NewId(),
+                            id = newId(),
                             imageType = type,
                             name = Path.GetFileNameWithoutExtension(fileName),
                             expand = Path.GetExtension(fileName),
@@ -529,11 +529,11 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="id">电子影像ID</param>
         /// <returns>ImageData 电子影像对象实体</returns>
-        public static void OpenAttach(Guid id)
+        public static void openAttach(Guid id)
         {
             var img = new ImageData();
             var fn = img.name + img.id.Substring(23) + img.expand;
-            SaveFile(img.image, fn, true);
+            saveFile(img.image, fn, true);
         }
 
         /// <summary>
@@ -541,7 +541,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="path">图片路径</param>
         /// <returns>图片对象</returns>
-        public static Image GetImage(string path)
+        public static Image getImage(string path)
         {
             if (!File.Exists(path)) return null;
 
@@ -560,7 +560,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="img">图片</param>
         /// <returns>byte[] 数组</returns>
-        public static byte[] ImageToByteArray(Image img)
+        public static byte[] imageToByteArray(Image img)
         {
             if (img == null) return null;
 
@@ -578,7 +578,7 @@ namespace Insight.Utils.Common
         /// <param name="width">目标宽度(像素)</param>
         /// <param name="height">目标高度(像素)</param>
         /// <returns>byte[] 缩放后图片的字节数组</returns>
-        public static byte[] Resize(Image img, int width, int height)
+        public static byte[] resize(Image img, int width, int height)
         {
             if (img == null) return null;
 
@@ -605,15 +605,15 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="img">原图片</param>
         /// <returns>Image 缩略图</returns>
-        public static Image GetThumbnail(Image img)
+        public static Image getThumbnail(Image img)
         {
             if (img == null) return null;
 
-            var callb = new Image.GetThumbnailImageAbort(Callback);
+            var callb = new Image.GetThumbnailImageAbort(callback);
             return img.GetThumbnailImage(120, 150, callb, IntPtr.Zero);
         }
 
-        private static bool Callback()
+        private static bool callback()
         {
             return false;
         }
@@ -626,7 +626,7 @@ namespace Insight.Utils.Common
         /// 获取CPU序列号
         /// </summary>
         /// <returns>String 序列号</returns>
-        public static string GetCpuId()
+        public static string getCpuId()
         {
             var myCpu = new ManagementClass("win32_Processor").GetInstances();
             var data = from ManagementObject cpu in myCpu
@@ -638,7 +638,7 @@ namespace Insight.Utils.Common
         /// 获取主板序列号
         /// </summary>
         /// <returns>String 序列号</returns>
-        public static string GetMbId()
+        public static string getMbId()
         {
             var myMb = new ManagementClass("Win32_BaseBoard").GetInstances();
             var data = from ManagementObject mb in myMb
@@ -650,7 +650,7 @@ namespace Insight.Utils.Common
         /// 获取硬盘序列号
         /// </summary>
         /// <returns>String 序列号</returns>
-        public static string GetHdId()
+        public static string getHdId()
         {
             var lpm = new ManagementClass("Win32_PhysicalMedia").GetInstances();
             var data = from ManagementObject hd in lpm
@@ -667,7 +667,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="obj">对象</param>
         /// <returns>string Json字符串</returns>
-        public static string Serialize(object obj)
+        public static string serialize(object obj)
         {
             try
             {
@@ -685,7 +685,7 @@ namespace Insight.Utils.Common
         /// <typeparam name="T">对象类型</typeparam>
         /// <param name="json">Json字符串</param>
         /// <returns>T 反序列化的对象</returns>
-        public static T Deserialize<T>(string json)
+        public static T deserialize<T>(string json)
         {
             try
             {
@@ -703,7 +703,7 @@ namespace Insight.Utils.Common
         /// <param name="result">响应结果数据</param>
         /// <param name="model">压缩模式</param>
         /// <returns>byte[] 压缩后的字节数组</returns>
-        public static byte[] JsonWrite(object result, CompressType model)
+        public static byte[] jsonWrite(object result, CompressType model)
         {
             using (var stream = new MemoryStream())
             {
@@ -713,7 +713,7 @@ namespace Insight.Utils.Common
                     new JsonSerializer().Serialize(writer, result);
                     streamWriter.Flush();
 
-                    return Compress(stream.ToArray(), model);
+                    return compress(stream.ToArray(), model);
                 }
             }
         }
@@ -728,25 +728,25 @@ namespace Insight.Utils.Common
         /// <param name="data">输入字节数组</param>
         /// <param name="model">压缩模式，默认Gzip</param>
         /// <returns>byte[] 压缩后的字节数组</returns>
-        public static byte[] Compress(byte[] data, CompressType model = CompressType.Gzip)
+        public static byte[] compress(byte[] data, CompressType model = CompressType.GZIP)
         {
             using (var ms = new MemoryStream())
             {
                 switch (model)
                 {
-                    case CompressType.Gzip:
+                    case CompressType.GZIP:
                         using (var stream = new GZipStream(ms, CompressionMode.Compress, true))
                         {
                             stream.Write(data, 0, data.Length);
                         }
                         break;
-                    case CompressType.Deflate:
+                    case CompressType.DEFLATE:
                         using (var stream = new DeflateStream(ms, CompressionMode.Compress, true))
                         {
                             stream.Write(data, 0, data.Length);
                         }
                         break;
-                    case CompressType.None:
+                    case CompressType.NONE:
                         return data;
                     default:
                         return data;
@@ -761,7 +761,7 @@ namespace Insight.Utils.Common
         /// <param name="data">输入字节数组</param>
         /// <param name="model">压缩模式，默认Gzip</param>
         /// <returns>byte[] 解压缩后的字节数组</returns>
-        public static byte[] Decompress(byte[] data, CompressType model = CompressType.Gzip)
+        public static byte[] decompress(byte[] data, CompressType model = CompressType.GZIP)
         {
             using (var ms = new MemoryStream(data))
             {
@@ -769,7 +769,7 @@ namespace Insight.Utils.Common
                 var block = new byte[1024];
                 switch (model)
                 {
-                    case CompressType.Gzip:
+                    case CompressType.GZIP:
                         using (var stream = new GZipStream(ms, CompressionMode.Decompress))
                         {
                             while (true)
@@ -780,7 +780,7 @@ namespace Insight.Utils.Common
                             }
                         }
                         break;
-                    case CompressType.Deflate:
+                    case CompressType.DEFLATE:
                         using (var stream = new DeflateStream(ms, CompressionMode.Decompress))
                         {
                             while (true)
@@ -791,7 +791,7 @@ namespace Insight.Utils.Common
                             }
                         }
                         break;
-                    case CompressType.None:
+                    case CompressType.NONE:
                         return data;
                     default:
                         return data;
@@ -808,15 +808,15 @@ namespace Insight.Utils.Common
         /// 生成RSA密钥
         /// </summary>
         /// <returns>string 包含RSA公私钥对的JSON字符串</returns>
-        public static string CreateKey()
+        public static string createKey()
         {
             var provider = new RSACryptoServiceProvider();
             var key = new
             {
-                PublicKey = Base64Encode(provider.ToXmlString(false)),
-                PrivateKey = Base64Encode(provider.ToXmlString(true))
+                PublicKey = base64Encode(provider.ToXmlString(false)),
+                PrivateKey = base64Encode(provider.ToXmlString(true))
             };
-            return Serialize(key);
+            return serialize(key);
         }
 
         /// <summary>
@@ -825,7 +825,7 @@ namespace Insight.Utils.Common
         /// <param name="key">RSA公钥(xml)</param>
         /// <param name="source">输入明文</param>
         /// <returns>string RSA密文</returns>
-        public static string Encrypt(string key, string source)
+        public static string encrypt(string key, string source)
         {
             var provider = new RSACryptoServiceProvider();
             provider.FromXmlString(key);
@@ -840,7 +840,7 @@ namespace Insight.Utils.Common
         /// <param name="key">RSA私钥(xml)</param>
         /// <param name="source">RSA密文</param>
         /// <returns>string 输出明文</returns>
-        public static string Decrypt(string key, string source)
+        public static string decrypt(string key, string source)
         {
             try
             {
@@ -866,7 +866,7 @@ namespace Insight.Utils.Common
         /// <param name="source">事件源</param>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        public static string LogToEvent(string source, string message, EventLogEntryType type)
+        public static string logToEvent(string source, string message, EventLogEntryType type)
         {
             try
             {

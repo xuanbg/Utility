@@ -64,7 +64,7 @@ namespace Insight.Utils.Common
         /// <param name="input">输入字符串</param>
         /// <param name="regex">正则表达式</param>
         /// <returns>替换后字符串</returns>
-        public static string ReplaceInput(string input, string regex)
+        public static string replaceInput(string input, string regex)
         {
             return Regex.Replace(input, regex, string.Empty);
         }
@@ -76,7 +76,7 @@ namespace Insight.Utils.Common
         /// <param name="regex">正则表达式</param>
         /// <param name="replace">替换字符串</param>
         /// <returns>替换后字符串</returns>
-        public static string ReplaceInput(string input, string regex, string replace)
+        public static string replaceInput(string input, string regex, string replace)
         {
             return Regex.Replace(input, regex, replace);
         }
@@ -87,7 +87,7 @@ namespace Insight.Utils.Common
         /// <param name="input">输入字符串</param>
         /// <param name="regex">正则表达式</param>
         /// <returns>是否验证通过</returns>
-        public static bool CheckInput(string input, string regex)
+        public static bool checkInput(string input, string regex)
         {
             return Regex.IsMatch(input, regex);
         }
@@ -100,13 +100,13 @@ namespace Insight.Utils.Common
         /// <param name="begin">开始数字</param>
         /// <param name="end">结尾数字</param>
         /// <returns>是否验证通过</returns>
-        public static bool ValidByte(string input, string regex, int begin, int end)
+        public static bool validByte(string input, string regex, int begin, int end)
         {
             if (string.IsNullOrEmpty(regex)) return false;
 
             var rep = regex.Replace("#0#", begin.ToString(CultureInfo.InvariantCulture));
             rep = rep.Replace("#1#", end.ToString(CultureInfo.InvariantCulture));
-            var ret = CheckInput(input, rep);
+            var ret = checkInput(input, rep);
             return ret;
         }
 
@@ -117,10 +117,10 @@ namespace Insight.Utils.Common
         /// <param name="regex">正则表达式</param>
         /// <param name="fix">后缀名</param>
         /// <returns>是否验证通过</returns>
-        public static bool ValidPostfix(string input, string regex, string fix)
+        public static bool validPostfix(string input, string regex, string fix)
         {
             var ret = string.Format(CultureInfo.InvariantCulture, regex, fix);
-            return CheckInput(input, ret);
+            return checkInput(input, ret);
         }
 
         #endregion
@@ -132,24 +132,25 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="id">身份证号</param>
         /// <returns>bool 是否合法</returns>
-        public static bool CheckIdCard18(string id)
+        public static bool checkIdCard18(string id)
         {
-            long n;
-            if (long.TryParse(id.Remove(17), out n) == false || n < Math.Pow(10, 16) || long.TryParse(id.Replace('x', '0').Replace('X', '0'), out n) == false)
+            if (long.TryParse(id.Remove(17), out var n) == false || n < Math.Pow(10, 16) || long.TryParse(id.Replace('x', '0').Replace('X', '0'), out n) == false)
             {
                 return false;//数字验证
             }
+
             const string address = "11x22x35x44x53x12x23x36x45x54x13x31x37x46x61x14x32x41x50x62x15x33x42x51x63x21x34x43x52x64x65x71x81x82x91";
             if (!address.Contains(id.Remove(2)))
             {
                 return false;//省份验证
             }
+
             var birth = id.Substring(6, 8).Insert(6, "-").Insert(4, "-");
-            DateTime time;
-            if (DateTime.TryParse(birth, out time) == false)
+            if (DateTime.TryParse(birth, out _) == false)
             {
                 return false;//生日验证
             }
+
             var arrVarifyCode = ("1,0,x,9,8,7,6,5,4,3,2").Split(',');
             var wi = ("7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2").Split(',');
             var ai = id.Remove(17).ToCharArray();
@@ -158,8 +159,8 @@ namespace Insight.Utils.Common
             {
                 sum += int.Parse(wi[i]) * int.Parse(ai[i].ToString());
             }
-            int y;
-            Math.DivRem(sum, 11, out y);
+
+            Math.DivRem(sum, 11, out var y);
             return arrVarifyCode[y] == id.Substring(17, 1).ToLower();
         }
 
@@ -168,21 +169,21 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="id">身份证号</param>
         /// <returns>bool 是否合法</returns>
-        public static bool CheckIdCard15(string id)
+        public static bool checkIdCard15(string id)
         {
-            long n;
-            if (long.TryParse(id, out n) == false || n < Math.Pow(10, 14))
+            if (long.TryParse(id, out long n) == false || n < Math.Pow(10, 14))
             {
                 return false;//数字验证
             }
+
             const string address = "11x22x35x44x53x12x23x36x45x54x13x31x37x46x61x14x32x41x50x62x15x33x42x51x63x21x34x43x52x64x65x71x81x82x91";
             if (!address.Contains(id.Remove(2)))
             {
                 return false;//省份验证
             }
+
             var birth = id.Substring(6, 6).Insert(4, "-").Insert(2, "-");
-            DateTime time;
-            return DateTime.TryParse(birth, out time);
+            return DateTime.TryParse(birth, out _);
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace Insight.Utils.Common
         /// <param name="type">输入类型</param>
         /// <param name="number">输入内容</param>
         /// <returns>bool 是否合法</returns>
-        public static bool Check(string type, string number)
+        public static bool check(string type, string number)
         {
             if (string.IsNullOrEmpty(number)) return false;
 
@@ -199,19 +200,19 @@ namespace Insight.Utils.Common
             switch (type)
             {
                 case "Tel":
-                    result = CheckInput(number, IsValidTel);
+                    result = checkInput(number, IsValidTel);
                     break;
 
                 case "Mobile":
-                    result = CheckInput(number, IsValidMobile);
+                    result = checkInput(number, IsValidMobile);
                     break;
 
                 case "Fax":
-                    result = CheckInput(number, IsValidTel);
+                    result = checkInput(number, IsValidTel);
                     break;
 
                 case "Email":
-                    result = CheckInput(number, IsValidEmail);
+                    result = checkInput(number, IsValidEmail);
                     break;
 
                 default:

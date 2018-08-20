@@ -8,7 +8,7 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 属性别名
         /// </summary>
-        public string Alias { get; }
+        public string alias { get; }
 
         /// <summary>
         /// 构造方法
@@ -16,7 +16,7 @@ namespace Insight.Utils.Common
         /// <param name="alias">别名</param>
         public AliasAttribute(string alias)
         {
-            Alias = alias;
+            this.alias = alias;
         }
     }
 }

@@ -27,26 +27,26 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         public UpdateModel()
         {
-            view.Shown += (sender, args) => Update();
+            view.Shown += (sender, args) => update();
         }
 
         /// <summary>
         /// 检查客户端文件更新
         /// </summary>
         /// <returns>int 更新文件数</returns>
-        public int CheckUpdate()
+        public int checkUpdate()
         {
             // 读取本地客户端文件信息
             var appId = Setting.tokenHelper.appId;
             var locals = new Dictionary<string, ClientFile>();
-            Util.GetClientFiles(locals, appId, root, ".bak");
-            locals.ForEach(f => Util.DeleteFile(f.Value.fullPath));
+            Util.getClientFiles(locals, appId, root, ".bak");
+            locals.ForEach(f => Util.deleteFile(f.Value.fullPath));
 
             locals = new Dictionary<string, ClientFile>();
-            Util.GetClientFiles(locals, appId, root, ".exe|.dll|.frl");
+            Util.getClientFiles(locals, appId, root, ".exe|.dll|.frl");
 
             // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
-            updates = (from sf in GetFiles(appId)
+            updates = (from sf in getFiles(appId)
                 let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
                 let cv = new Version(cf?.version ?? "1.0.0")
                 let sv = new Version(sf.Value?.version ?? "1.0.0")
@@ -58,7 +58,7 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 生成批处理文件
         /// </summary>
-        public ProcessStartInfo CreateBat()
+        public ProcessStartInfo createBat()
         {
             using (var bat = File.CreateText("restart.bat"))
             {
@@ -79,7 +79,7 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 更新文件
         /// </summary>
-        private void Update()
+        private void update()
         {
             view.Confirm.Enabled = false;
             foreach (var file in updates)
@@ -87,12 +87,12 @@ namespace Insight.Utils.MainForm.Models
                 view.Progress.EditValue = $"正在更新：{file.name}……";
                 view.Refresh();
                 Thread.Sleep(1000);
-                var data = GetFile(file.id);
+                var data = getFile(file.id);
                 if (data == null) continue;
 
                 var buffer = Convert.FromBase64String(data);
-                var bytes = Util.Decompress(buffer);
-                restart = Util.UpdateFile(file, root, bytes) || restart;
+                var bytes = Util.decompress(buffer);
+                restart = Util.updateFile(file, root, bytes) || restart;
             }
 
             view.Confirm.Enabled = true;
@@ -106,12 +106,12 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         /// <param name="id">应用ID</param>
         /// <returns>文件版本信息</returns>
-        private Dictionary<string, ClientFile> GetFiles(string id)
+        private Dictionary<string, ClientFile> getFiles(string id)
         {
             var url = $"{baseServer}/commonapi/v1.0/apps/{id}/files";
             var client = new HttpClient<Dictionary<string, ClientFile>>(tokenHelper);
 
-            return client.Get(url) ? client.data : new Dictionary<string, ClientFile>();
+            return client.get(url) ? client.data : new Dictionary<string, ClientFile>();
         }
 
         /// <summary>
@@ -119,12 +119,12 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         /// <param name="id">更新文件ID</param>
         /// <returns>Result</returns>
-        private string GetFile(string id)
+        private string getFile(string id)
         {
             var url = $"{baseServer}/commonapi/v1.0/apps/files/{id}";
             var client = new HttpClient<object>(tokenHelper);
 
-            return client.Get(url) ? client.data.ToString() : null;
+            return client.get(url) ? client.data.ToString() : null;
         }
     }
 }

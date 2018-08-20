@@ -46,12 +46,12 @@ namespace Insight.Utils.MainForm.Models
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void Save()
+        public void save()
         {
-            Setting.SavePrinter("docPrint", Setting.docPrint);
-            Setting.SavePrinter("tagPrint", Setting.tagPrint);
-            Setting.SavePrinter("bilPrint", Setting.bilPrint);
-            Setting.SaveIsMergerPrint();
+            Setting.savePrinter("docPrint", Setting.docPrint);
+            Setting.savePrinter("tagPrint", Setting.tagPrint);
+            Setting.savePrinter("bilPrint", Setting.bilPrint);
+            Setting.saveIsMergerPrint();
         }
     }
 }

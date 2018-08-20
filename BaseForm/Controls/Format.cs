@@ -30,19 +30,19 @@ namespace Insight.Utils.Controls
         /// <param name="width">指示列宽度（像素，默认36）</param>
         /// <param name="editable">是否可编辑（默认false）</param>
         /// <param name="rowclick">点击行选中（默认true）</param>
-        public static void GridFormat(GridView view, int width = 36, bool editable = false, bool rowclick = true)
+        public static void gridFormat(GridView view, int width = 36, bool editable = false, bool rowclick = true)
         {
             if (rowclick)
             {
-                view.RowClick -= RowClick;
-                view.RowClick += RowClick;
+                view.RowClick -= rowClick;
+                view.RowClick += rowClick;
             }
 
             // 格式化指示列样式
             if (width > 0)
             {
-                view.CustomDrawRowIndicator -= CustomDrawRowIndicator;
-                view.CustomDrawRowIndicator += CustomDrawRowIndicator;
+                view.CustomDrawRowIndicator -= customDrawRowIndicator;
+                view.CustomDrawRowIndicator += customDrawRowIndicator;
                 view.IndicatorWidth = width;
             }
             else
@@ -108,7 +108,7 @@ namespace Insight.Utils.Controls
         /// <param name="type"></param>
         /// <param name="showColumns">显示列头</param>
         /// <param name="showIndicator">显示指示列</param>
-        public static void TreeFormat(TreeList tree, NodeIconType type = NodeIconType.General, bool showColumns = false, bool showIndicator = false)
+        public static void treeFormat(TreeList tree, NodeIconType type = NodeIconType.GENERAL, bool showColumns = false, bool showIndicator = false)
         {
             // 使列标题文字居中显示
             foreach (TreeListColumn column in tree.Columns)
@@ -131,7 +131,7 @@ namespace Insight.Utils.Controls
             tree.RowHeight = 23;
             tree.VertScrollVisibility = DevExpress.XtraTreeList.ScrollVisibility.Always;
 
-            CustomDrawNodeImages(tree, type);
+            customDrawNodeImages(tree, type);
         }
 
 
@@ -141,7 +141,7 @@ namespace Insight.Utils.Controls
         /// <param name="control">LookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
         /// <param name="index">选中项索引，默认不选中</param>
-        public static void InitComboBoxEdit(ComboBoxEdit control, List<LookUpMember> list, int index = -1)
+        public static void initComboBoxEdit(ComboBoxEdit control, List<LookUpMember> list, int index = -1)
         {
             control.Properties.ImmediatePopup = true;
             control.Properties.PopupFormMinSize = new Size(60, 0);
@@ -162,7 +162,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">LookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        public static void InitComboBoxEdit(RepositoryItemComboBox control, List<LookUpMember> list)
+        public static void initComboBoxEdit(RepositoryItemComboBox control, List<LookUpMember> list)
         {
             control.ImmediatePopup = true;
             control.PopupFormMinSize = new Size(60, 0);
@@ -181,7 +181,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">LookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        public static void InitLookUpEdit(LookUpEdit control, List<LookUpMember> list)
+        public static void initLookUpEdit(LookUpEdit control, List<LookUpMember> list)
         {
             control.Properties.ShowHeader = false;
             control.Properties.ShowFooter = false;
@@ -197,7 +197,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">RepositoryItemLookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        public static void InitLookUpEdit(RepositoryItemLookUpEdit control, List<LookUpMember> list)
+        public static void initLookUpEdit(RepositoryItemLookUpEdit control, List<LookUpMember> list)
         {
             control.ShowHeader = false;
             control.ShowFooter = false;
@@ -213,14 +213,14 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">GridLookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        public static void InitGridLookUpEdit(GridLookUpEdit control, List<LookUpMember> list)
+        public static void initGridLookUpEdit(GridLookUpEdit control, List<LookUpMember> list)
         {
             control.Properties.DataSource = list;
             control.Properties.DisplayMember = "name";
             control.Properties.ValueMember = "id";
             control.Properties.PopulateViewColumns();
             control.Properties.PopupFormMinSize = new Size(60, 0);
-            GridFormat(control.Properties.View);
+            gridFormat(control.Properties.View);
         }
 
         /// <summary>
@@ -228,13 +228,13 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">SearchLookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        public static void InitSearchLookUpEdit(SearchLookUpEdit control, List<LookUpMember> list)
+        public static void initSearchLookUpEdit(SearchLookUpEdit control, List<LookUpMember> list)
         {
             control.Properties.DataSource = list;
             control.Properties.DisplayMember = "name";
             control.Properties.ValueMember = "id";
             control.Properties.PopulateViewColumns();
-            GridFormat(control.Properties.View);
+            gridFormat(control.Properties.View);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Insight.Utils.Controls
         /// <param name="control">TreeListLookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
         /// <param name="type">图标类型</param>
-        public static void InitTreeListLookUpEdit(TreeListLookUpEdit control, List<TreeLookUpMember> list, NodeIconType type = NodeIconType.General)
+        public static void initTreeListLookUpEdit(TreeListLookUpEdit control, List<TreeLookUpMember> list, NodeIconType type = NodeIconType.GENERAL)
         {
             control.Properties.DataSource = list;
             control.Properties.DisplayMember = "name";
@@ -251,7 +251,7 @@ namespace Insight.Utils.Controls
             control.Properties.PopupFormMinSize = new Size(60, 0);
             control.Properties.TreeList.ParentFieldName = "parentId";
 
-            TreeFormat(control.Properties.TreeList, type);
+            treeFormat(control.Properties.TreeList, type);
         }
 
         /// <summary>
@@ -259,31 +259,31 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="tree">TreeList</param>
         /// <param name="type">图标类型</param>
-        private static void CustomDrawNodeImages(TreeList tree, NodeIconType type)
+        private static void customDrawNodeImages(TreeList tree, NodeIconType type)
         {
             tree.CustomDrawNodeImages += (sender, args) =>
             {
                 switch (type)
                 {
-                    case NodeIconType.General:
+                    case NodeIconType.GENERAL:
                         var node = args.Node;
                         args.SelectImageIndex = node.Level == 0 || node.HasChildren ? (node.Expanded ? 2 : 1) : 0;
                         break;
-                    case NodeIconType.Category:
+                    case NodeIconType.CATEGORY:
                         args.SelectImageIndex = args.Node.Expanded ? 2 : 1;
                         break;
-                    case NodeIconType.NodeType:
+                    case NodeIconType.NODE_TYPE:
                         args.SelectImageIndex = (int)args.Node.GetValue("nodeType");
                         break;
-                    case NodeIconType.Organization:
+                    case NodeIconType.ORGANIZATION:
                         args.SelectImageIndex = (int) args.Node.GetValue("nodeType") - 1;
                         break;
-                    case NodeIconType.OnlyLevel0:
+                    case NodeIconType.ONLY_LEVEL0:
                         if (args.Node.Level > 0) return;
 
                         args.SelectImageIndex = (int) args.Node.GetValue("nodeType");
                         break;
-                    case NodeIconType.Custom:
+                    case NodeIconType.CUSTOM:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -296,7 +296,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
+        private static void customDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
         {
             e.Appearance.TextOptions.HAlignment = HorzAlignment.Far;
             if (e.Info.IsRowIndicator && e.RowHandle > -1000)
@@ -310,7 +310,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void RowClick(object sender, RowClickEventArgs e)
+        private static void rowClick(object sender, RowClickEventArgs e)
         {
             var view = (GridView)sender;
             if (e.X <= view.IndicatorWidth + view.OptionsSelection.CheckBoxSelectorColumnWidth) return;

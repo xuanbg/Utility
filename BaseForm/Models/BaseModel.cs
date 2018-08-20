@@ -31,7 +31,7 @@ namespace Insight.Utils.Models
         /// <param name="key">输入对象的值</param>
         /// <param name="message">错误消息</param>
         /// <param name="clear">是否清除集合</param>
-        public void SetCheckItem(Control control, string key, string message, bool clear = false)
+        public void setCheckItem(Control control, string key, string message, bool clear = false)
         {
             if (clear) checkItems.Clear();
 
@@ -44,7 +44,7 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="items">输入检查对象集合</param>
         /// <param name="clear">是否清除集合</param>
-        public void SetCheckItems(IEnumerable<InputItem> items, bool clear = false)
+        public void setCheckItems(IEnumerable<InputItem> items, bool clear = false)
         {
             checkItems.AddRange(items);
         }
@@ -53,7 +53,7 @@ namespace Insight.Utils.Models
         /// 检查输入检查对象是否都有值
         /// </summary>
         /// <returns>bool 对象是否都有值</returns>
-        public bool InputExamine()
+        public bool inputExamine()
         {
             return new InputCheck(checkItems).result;
         }

@@ -12,6 +12,7 @@ using FastReport;
 using Insight.Utils.BaseForm;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
+using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Models
@@ -27,6 +28,11 @@ namespace Insight.Utils.Models
         /// MDI视图
         /// </summary>
         public T view;
+
+        /// <summary>
+        /// 主列表分页控件
+        /// </summary>
+        public PageControl tab;
 
         /// <summary>
         /// 工具栏按钮集合
@@ -75,29 +81,29 @@ namespace Insight.Utils.Models
             };
 
             view.Show();
-            InitToolBar();
-            GetParams();
+            initToolBar();
+            getParams();
         }
 
         /// <summary>
-        /// 打印预览
+        /// 设计报表
         /// </summary>
-        /// <typeparam name="E">类型</typeparam>
+        /// <typeparam name="TE">类型</typeparam>
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
-        public void Design<E>(string tid, string name, List<E> data)
+        public void design<TE>(string tid, string name, List<TE> data)
         {
             if (string.IsNullOrEmpty(tid))
             {
-                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return;
             }
 
-            var report = BuildReport(tid, name, data);
+            var report = buildReport(tid, name, data);
             if (report == null)
             {
-                Messages.ShowError("初始化报表失败！");
+                Messages.showError("初始化报表失败！");
                 return;
             }
 
@@ -109,37 +115,37 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="tid">模板ID</param>
         /// <param name="id">数据ID</param>
-        public void Preview(string tid, string id = null)
+        public void preview(string tid, string id = null)
         {
             if (string.IsNullOrEmpty(tid))
             {
-                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return;
             }
 
-            var print = BuildReport(tid, id);
+            var print = buildReport(tid, id);
             print?.ShowPrepared(true);
         }
 
         /// <summary>
         /// 打印预览
         /// </summary>
-        /// <typeparam name="E">类型</typeparam>
+        /// <typeparam name="TE">类型</typeparam>
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
-        public void Preview<E>(string tid, string name, List<E> data)
+        public void preview<TE>(string tid, string name, List<TE> data)
         {
             if (string.IsNullOrEmpty(tid))
             {
-                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return;
             }
 
-            var report = BuildReport(tid, name, data);
+            var report = buildReport(tid, name, data);
             if (report == null || !report.Prepare())
             {
-                Messages.ShowError("生成报表失败！");
+                Messages.showError("生成报表失败！");
                 return;
             }
 
@@ -154,15 +160,15 @@ namespace Insight.Utils.Models
         /// <param name="id">数据ID</param>
         /// <param name="onSheet">合并打印模式</param>
         /// <returns>string 打印文档名称</returns>
-        public string Print(string printer, string tid, string id = null, int onSheet = 0)
+        public string print(string printer, string tid, string id = null, int onSheet = 0)
         {
             if (string.IsNullOrEmpty(tid))
             {
-                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return null;
             }
 
-            var print = BuildReport(tid, id);
+            var print = buildReport(tid, id);
             if (print == null) return null;
 
             var type = (PagesOnSheet) onSheet;
@@ -185,25 +191,25 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印
         /// </summary>
-        /// <typeparam name="E"></typeparam>
+        /// <typeparam name="TE"></typeparam>
         /// <param name="printer">打印机名称</param>
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
         /// <param name="onSheet">合并打印模式</param>
         /// <returns>string 打印文档名称</returns>
-        public string Print<E>(string printer, string tid, string name, List<E> data, int onSheet = 0)
+        public string print<TE>(string printer, string tid, string name, List<TE> data, int onSheet = 0)
         {
             if (string.IsNullOrEmpty(tid))
             {
-                Messages.ShowError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return null;
             }
 
-            var report = BuildReport(tid, name, data);
+            var report = buildReport(tid, name, data);
             if (report == null || !report.Prepare())
             {
-                Messages.ShowError("生成报表失败！");
+                Messages.showError("生成报表失败！");
                 return null;
             }
 
@@ -215,7 +221,7 @@ namespace Insight.Utils.Models
         /// 切换工具栏按钮状态
         /// </summary>
         /// <param name="dict"></param>
-        public void SwitchItemStatus(Dictionary<string, bool> dict)
+        public void switchItemStatus(Dictionary<string, bool> dict)
         {
             foreach (var obj in dict)
             {
@@ -231,7 +237,7 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="key">操作名称</param>
         /// <returns>是否允许双击</returns>
-        public bool AllowDoubleClick(string key)
+        public bool allowDoubleClick(string key)
         {
             var button = buttons.SingleOrDefault(i => i.Name == key);
             return button != null && button.Enabled;
@@ -240,7 +246,7 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 显示等待提示
         /// </summary>
-        public void ShowWaitForm()
+        public void showWaitForm()
         {
             waits++;
             if (view.Wait.IsSplashFormVisible) return;
@@ -252,7 +258,7 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 关闭等待提示
         /// </summary>
-        public void CloseWaitForm()
+        public void closeWaitForm()
         {
             waits--;
             if (waits > 0) return;
@@ -268,7 +274,7 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="gridView">GridView</param>
         /// <param name="args">MouseEventArgs</param>
-        public void MouseDownEvent(GridView gridView, MouseEventArgs args)
+        public void mouseDownEvent(GridView gridView, MouseEventArgs args)
         {
             if (args.Button != MouseButtons.Right) return;
 
@@ -281,9 +287,9 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="gridView">GridView</param>
         /// <returns>ContextMenuStrip</returns>
-        public ContextMenuStrip CreateCopyMenu(GridView gridView)
+        public ContextMenuStrip createCopyMenu(GridView gridView)
         {
-            var tsmi = new ToolStripMenuItem { Text = "复制" };
+            var tsmi = new ToolStripMenuItem { Text = @"复制" };
             tsmi.Click += (sender, args) =>
             {
                 if (hitInfo.Column == null) return;
@@ -307,14 +313,14 @@ namespace Insight.Utils.Models
         /// <param name="deptId">部门ID</param>
         /// <param name="userId">用户ID</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public ModuleParam GetParam(string key, string deptId = null, string userId = null)
+        public ModuleParam getParam(string key, string deptId = null, string userId = null)
         {
             var param = moduleParams.FirstOrDefault(i => i.code == key && i.deptId == deptId && i.userId == userId);
             if (param == null)
             {
                 param = new ModuleParam
                 {
-                    id = Util.NewId(),
+                    id = Util.newId(),
                     moduleId = moduleId,
                     code = key,
                     deptId = deptId,
@@ -330,21 +336,21 @@ namespace Insight.Utils.Models
         /// 保存选项数据
         /// </summary>
         /// <returns>bool 是否成功</returns>
-        public bool SaveParam()
+        public bool saveParam()
         {
             var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
             var dict = new Dictionary<string, object> {{"list", moduleParams}};
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
 
-            return client.Put(url, dict);
+            return client.put(url, dict);
         }
 
         /// <summary>
         /// 初始化模块工具栏
         /// </summary>
-        private void InitToolBar()
+        private void initToolBar()
         {
-            buttons = (from a in GetActions()
+            buttons = (from a in getActions()
                        select new BarButtonItem
                        {
                            AllowDrawArrow = a.isBegin,
@@ -361,16 +367,16 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 生成报表
         /// </summary>
-        /// <typeparam name="E">类型</typeparam>
+        /// <typeparam name="TE">类型</typeparam>
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
         /// <returns>Report FastReport报表</returns>
-        private Report BuildReport<E>(string tid, string name, List<E> data)
+        private Report buildReport<TE>(string tid, string name, List<TE> data)
         {
             var url = $"{baseServer}/commonapi/v1.0/templates/{tid}";
             var client = new HttpClient<object>(tokenHelper);
-            if (!client.Get(url)) return null;
+            if (!client.get(url)) return null;
 
             var report = new Report();
             report.LoadFromString(client.data.ToString());
@@ -385,7 +391,7 @@ namespace Insight.Utils.Models
         /// <param name="tid">模板ID</param>
         /// <param name="id">数据ID</param>
         /// <returns></returns>
-        private Report BuildReport(string tid, string id)
+        private Report buildReport(string tid, string id)
         {
             var isCopy = false;
             ImageData img;
@@ -393,33 +399,33 @@ namespace Insight.Utils.Models
             {
                 if (string.IsNullOrEmpty(id))
                 {
-                    Messages.ShowError("尚未选定需要打印的数据！请先选择数据。");
+                    Messages.showError("尚未选定需要打印的数据！请先选择数据。");
                     return null;
                 }
 
                 isCopy = true;
-                img = GetImageData(id);
+                img = getImageData(id);
                 if (img == null)
                 {
-                    Messages.ShowError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
+                    Messages.showError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
                     return null;
                 }
             }
             else
             {
-                img = BuildImageData(id, tid);
+                img = buildImageData(id, tid);
             }
 
             if (img == null)
             {
-                Messages.ShowError("生成打印数据错误");
+                Messages.showError("生成打印数据错误");
                 return null;
             }
 
             var print = new Report {FileName = img.id};
             print.LoadPrepared(new MemoryStream(img.image));
 
-            if (isCopy) AddWatermark(print, "副 本");
+            if (isCopy) addWatermark(print, "副 本");
 
             return print;
         }
@@ -429,12 +435,12 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="id">影像ID</param>
         /// <returns>ImageData 电子影像数据</returns>
-        private ImageData GetImageData(string id)
+        private ImageData getImageData(string id)
         {
             var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id}";
             var client = new HttpClient<ImageData>(Setting.tokenHelper);
 
-            return client.Get(url) ? client.data : null;
+            return client.get(url) ? client.data : null;
         }
 
         /// <summary>
@@ -443,7 +449,7 @@ namespace Insight.Utils.Models
         /// <param name="id">业务数据ID</param>
         /// <param name="templateId">模板ID</param>
         /// <returns></returns>
-        private ImageData BuildImageData(string id, string templateId)
+        private ImageData buildImageData(string id, string templateId)
         {
             var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id ?? "null"}";
             var client = new HttpClient<ImageData>(Setting.tokenHelper);
@@ -453,7 +459,7 @@ namespace Insight.Utils.Models
                 {"deptName", Setting.deptName}
             };
 
-            return client.Post(url, dict) ? client.data : null;
+            return client.post(url, dict) ? client.data : null;
         }
 
         /// <summary>
@@ -463,7 +469,7 @@ namespace Insight.Utils.Models
         /// <param name="str">水印文字</param>
         /// <param name="size"></param>
         /// <returns>Report对象实体</returns>
-        private void AddWatermark(Report fr, string str, int size = 72)
+        private void addWatermark(Report fr, string str, int size = 72)
         {
             var wm = new Watermark
             {
@@ -484,22 +490,22 @@ namespace Insight.Utils.Models
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
-        private IEnumerable<Function> GetActions()
+        private IEnumerable<Function> getActions()
         {
             var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/functions";
             var client = new HttpClient<List<Function>>(tokenHelper);
 
-            return client.Get(url) ? client.data : new List<Function>();
+            return client.get(url) ? client.data : new List<Function>();
         }
 
         /// <summary>
         /// 获取选项数据
         /// </summary>
-        private void GetParams()
+        private void getParams()
         {
             var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
-            if (!client.Get(url)) return;
+            if (!client.get(url)) return;
 
             moduleParams = client.data;
         }

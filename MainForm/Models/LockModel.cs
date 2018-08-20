@@ -16,13 +16,13 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         public LockModel()
         {
-            view.Password.EditValueChanged += (sender, args) => sing = Util.Hash(tokenHelper.account + Util.Hash(view.Password.Text));
+            view.Password.EditValueChanged += (sender, args) => sing = Util.hash(tokenHelper.account + Util.hash(view.Password.Text));
         }
 
         /// <summary>
         /// 初始化对话框
         /// </summary>
-        public void Init()
+        public void init()
         {
             view.Password.EditValue = null;
             view.Refresh();
@@ -32,11 +32,11 @@ namespace Insight.Utils.MainForm.Models
         /// 解锁
         /// </summary>
         /// <returns>bool 是否解锁成功</returns>
-        public bool Unlock()
+        public bool unlock()
         {
             if (sing == tokenHelper.sign) return true;
 
-            Messages.ShowError("请输入正确的密码，否则无法为您解除锁定！");
+            Messages.showError("请输入正确的密码，否则无法为您解除锁定！");
             view.Password.Text = string.Empty;
             view.Password.Focus();
             return false;

@@ -11,7 +11,7 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="cats"></param>
         /// <param name="cat"></param>
-        public static void InsertIndex(List<Catalog<T>> cats, Catalog<T> cat)
+        public static void insertIndex(List<Catalog<T>> cats, Catalog<T> cat)
         {
             var list = cats.Where(i => i.parentId == cat.parentId && i.index >= cat.index);
             foreach (var item in list)
@@ -26,7 +26,7 @@ namespace Insight.Utils.Client
         /// <param name="cats"></param>
         /// <param name="old"></param>
         /// <param name="cat"></param>
-        public static void UpdateIndex(List<Catalog<T>> cats, Catalog<T> old, Catalog<T> cat)
+        public static void updateIndex(List<Catalog<T>> cats, Catalog<T> old, Catalog<T> cat)
         {
             if (cat.parentId == old.parentId)
             {
@@ -68,7 +68,7 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="cats"></param>
         /// <param name="cat"></param>
-        public static void DeleteIndex(List<Catalog<T>> cats, Catalog<T> cat)
+        public static void deleteIndex(List<Catalog<T>> cats, Catalog<T> cat)
         {
             var list = cats.Where(i => i.parentId == cat.parentId && i.index > cat.index);
             foreach (var item in list)

@@ -22,11 +22,11 @@ namespace Insight.Utils.Client
                 var now = DateTime.Now;
                 if (string.IsNullOrEmpty(accessToken) || now > failureTime)
                 {
-                    GetTokens();
+                    getTokens();
                 }
                 else if (now > expiryTime)
                 {
-                    RefresTokens();
+                    refresTokens();
                 }
 
                 return accessToken;
@@ -41,7 +41,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 当前连接鉴权服务器
         /// </summary>
-        public string authServer { get; set; } = Util.GetAppSetting("AuthServer");
+        public string authServer { get; set; } = Util.getAppSetting("AuthServer");
 
         /// <summary>
         /// 租户ID
@@ -67,23 +67,23 @@ namespace Insight.Utils.Client
         /// 生成签名
         /// </summary>
         /// <param name="secret">用户密钥</param>
-        public void Signature(string secret)
+        public void signature(string secret)
         {
-            sign = Util.Hash(account + Util.Hash(secret));
+            sign = Util.hash(account + Util.hash(secret));
         }
 
         /// <summary>
         /// 获取令牌
         /// </summary>
-        public void GetTokens()
+        public void getTokens()
         {
             accessToken = null;
             refreshToken = null;
 
-            var code = GetCode();
+            var code = getCode();
             if (code == null) return;
 
-            var key = Util.Hash(sign + code);
+            var key = Util.hash(sign + code);
             var url = $"{authServer}/authapi/v1.0/tokens";
             var dict = new Dictionary<string, object>
             {
@@ -94,16 +94,16 @@ namespace Insight.Utils.Client
                 {"signature", key}
             };
             var request = new HttpRequest();
-            if (!request.Send(url, RequestMethod.GET, dict))
+            if (!request.send(url, RequestMethod.GET, dict))
             {
-                Messages.ShowError(request.message);
+                Messages.showError(request.message);
                 return;
             }
 
-            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
+            var result = Util.deserialize<Result<TokenPackage>>(request.data);
             if (!result.successful)
             {
-                Messages.ShowError(result.message);
+                Messages.showError(result.message);
                 return;
             }
 
@@ -118,28 +118,28 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 刷新AccessToken过期时间
         /// </summary>
-        public void RefresTokens()
+        public void refresTokens()
         {
             accessToken = null;
 
             var url = $"{authServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
-            if (!request.Send(url, RequestMethod.PUT))
+            if (!request.send(url, RequestMethod.PUT))
             {
-                Messages.ShowError(request.message);
+                Messages.showError(request.message);
                 return;
             }
 
-            var result = Util.Deserialize<Result<TokenPackage>>(request.data);
+            var result = Util.deserialize<Result<TokenPackage>>(request.data);
             if (result.code == "406")
             {
-                GetTokens();
+                getTokens();
                 return;
             }
 
             if (!result.successful)
             {
-                Messages.ShowError(result.message);
+                Messages.showError(result.message);
                 return;
             }
 
@@ -154,13 +154,13 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 注销令牌
         /// </summary>
-        public void DeleteToken()
+        public void deleteToken()
         {
             var url = $"{authServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(token);
-            if (!request.Send(url, RequestMethod.DELETE))
+            if (!request.send(url, RequestMethod.DELETE))
             {
-                Messages.ShowError(request.message);
+                Messages.showError(request.message);
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace Insight.Utils.Client
         /// 获取Code
         /// </summary>
         /// <returns>string Code</returns>
-        private string GetCode()
+        private string getCode()
         {
             var url = $"{authServer}/authapi/v1.0/tokens/codes";
             var dict = new Dictionary<string, object>
@@ -181,16 +181,16 @@ namespace Insight.Utils.Client
                 {"type", 0}
             };
             var request = new HttpRequest();
-            if (!request.Send(url, RequestMethod.GET, dict))
+            if (!request.send(url, RequestMethod.GET, dict))
             {
-                Messages.ShowError(request.message);
+                Messages.showError(request.message);
                 return null;
             }
 
-            var result = Util.Deserialize<Result<string>>(request.data);
+            var result = Util.deserialize<Result<string>>(request.data);
             if (result.successful) return result.data;
 
-            Messages.ShowError(result.message);
+            Messages.showError(result.message);
             return null;
         }
     }

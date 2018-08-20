@@ -15,23 +15,23 @@ namespace Insight.Utils.MainForm.Login
             // 构造登录Model并订阅登录窗体事件
             manage = new LoginModel();
             var view = manage.view;
-            view.LoginButton.Click += (sender, args) => UserLogin();
-            view.SetButton.Click += (sender, args) => ConfigServer();
+            view.LoginButton.Click += (sender, args) => userLogin();
+            view.SetButton.Click += (sender, args) => configServer();
             view.CloseButton.Click += (sender, args) => Application.Exit();
 
             // 显示登录界面
             view.Show();
             view.Refresh();
 
-            manage.InitUserName();
+            manage.initUserName();
         }
 
         /// <summary>
         /// 用户登录
         /// </summary>
-        private void UserLogin()
+        private void userLogin()
         {
-            if (!manage.Login()) return;
+            if (!manage.login()) return;
 
             // 显示等待界面
             var waiting = new WaitingModel();
@@ -53,18 +53,18 @@ namespace Insight.Utils.MainForm.Login
         /// <summary>
         /// 修改服务器配置
         /// </summary>
-        private void ConfigServer()
+        private void configServer()
         {
             var set = new SetModel();
             var view = set.view;
 
-            SubCloseEvent(view);
+            subCloseEvent(view);
             view.Confirm.Click += (sender, args) =>
             {
-                manage.InitUserName();
-                set.Save();
+                manage.initUserName();
+                set.save();
 
-                CloseDialog(view);
+                closeDialog(view);
             };
 
             view.ShowDialog();

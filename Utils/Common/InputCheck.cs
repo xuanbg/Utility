@@ -20,7 +20,7 @@ namespace Insight.Utils.Common
             {
                 if (!string.IsNullOrEmpty(item.key)) continue;
 
-                Messages.ShowWarning(item.message);
+                Messages.showWarning(item.message);
                 item.control.Focus();
 
                 result = false;

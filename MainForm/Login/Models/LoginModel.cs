@@ -14,7 +14,7 @@ namespace Insight.Utils.MainForm.Login.Models
     {
         public Views.Login view;
 
-        private string account = Setting.GetAccount();
+        private string account = Setting.getAccount();
         private string password;
         private readonly List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
 
@@ -28,23 +28,23 @@ namespace Insight.Utils.MainForm.Login.Models
             {
                 Text = Setting.appName,
                 Icon = new Icon("logo.ico"),
-                BackgroundImage = Util.GetImage("bg.png"),
+                BackgroundImage = Util.getImage("bg.png"),
                 BackgroundImageLayout = ImageLayout.Stretch
             };
 
             // 订阅控件事件实现数据双向绑定
             view.UserNameInput.EditValueChanged += (sender, args) => account = view.UserNameInput.Text.Trim();
             view.PassWordInput.EditValueChanged += (sender, args) => password = view.PassWordInput.Text;
-            view.UserNameInput.Leave += (sender, args) => GetDepts();
-            view.lueDept.EditValueChanged += (sender, args) => DeptChanged();
+            view.UserNameInput.Leave += (sender, args) => getDepts();
+            view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
-            Format.InitTreeListLookUpEdit(view.lueDept, depts, NodeIconType.Organization);
+            Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
         }
 
         /// <summary>
         /// 初始化默认登录用户
         /// </summary>
-        public void InitUserName()
+        public void initUserName()
         {
             if (string.IsNullOrEmpty(account)) return;
 
@@ -58,36 +58,36 @@ namespace Insight.Utils.MainForm.Login.Models
         /// 验证用户输入，通过验证后获取用户AccessToken
         /// </summary>
         /// <returns>bool 是否登录成功</returns>
-        public bool Login()
+        public bool login()
         {
             if (string.IsNullOrEmpty(account))
             {
-                Messages.ShowMessage("请输入用户名！");
+                Messages.showMessage("请输入用户名！");
                 view.UserNameInput.Focus();
                 return false;
             }
 
             if (string.IsNullOrEmpty(password))
             {
-                Messages.ShowWarning("密码不能为空！");
+                Messages.showWarning("密码不能为空！");
                 view.PassWordInput.Focus();
                 return false;
             }
 
             if (string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
             {
-                Messages.ShowWarning("请选择登录的企业/部门！");
+                Messages.showWarning("请选择登录的企业/部门！");
                 view.lueDept.Focus();
                 return false;
             }
 
             tokenHelper.account = account;
-            tokenHelper.Signature(password);
+            tokenHelper.signature(password);
             if (tokenHelper.token == null) return false;
 
             Setting.needChangePw = password == "123456";
-            Setting.SaveUserName(account);
-            GetUserInfo();
+            Setting.saveUserName(account);
+            getUserInfo();
 
             return true;
         }
@@ -95,22 +95,22 @@ namespace Insight.Utils.MainForm.Login.Models
         /// <summary>
         /// 获取可登录部门
         /// </summary>
-        public void GetDepts()
+        public void getDepts()
         {
             if (string.IsNullOrEmpty(account)) return;
 
             var url = $"{baseServer}/userapi/v1.0/users/{account}/depts";
             var request = new HttpRequest();
-            if (!request.Send(url))
+            if (!request.send(url))
             {
-                Messages.ShowError(request.message);
+                Messages.showError(request.message);
                 return;
             }
 
-            var result = Util.Deserialize<Result<List<TreeLookUpMember>>>(request.data);
+            var result = Util.deserialize<Result<List<TreeLookUpMember>>>(request.data);
             if (!result.successful)
             {
-                Messages.ShowError(result.message);
+                Messages.showError(result.message);
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace Insight.Utils.MainForm.Login.Models
         /// <summary>
         /// 登录部门变化后更新相关信息
         /// </summary>
-        private void DeptChanged()
+        private void deptChanged()
         {
             var id = view.lueDept.EditValue?.ToString();
             if (string.IsNullOrEmpty(id))
@@ -140,7 +140,7 @@ namespace Insight.Utils.MainForm.Login.Models
             var node = view.lueDept.Properties.TreeList.FocusedNode;
             if (node?.HasChildren ?? false)
             {
-                Messages.ShowMessage("请选择部门");
+                Messages.showMessage("请选择部门");
                 view.lueDept.EditValue = null;
 
                 return;
@@ -164,11 +164,11 @@ namespace Insight.Utils.MainForm.Login.Models
         /// <summary>
         /// 获取用户信息
         /// </summary>
-        private void GetUserInfo()
+        private void getUserInfo()
         {
             var url = $"{baseServer}/userapi/v1.0/users/myself";
             var client = new HttpClient<UserInfo>(tokenHelper);
-            if (!client.Get(url)) return;
+            if (!client.get(url)) return;
 
             Setting.userId = client.data.id;
             Setting.userName = client.data.name;

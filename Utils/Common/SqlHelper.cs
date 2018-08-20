@@ -26,10 +26,10 @@ namespace Insight.Utils.Common
         /// <param name="sql">sql命令</param>
         /// <param name="parameters">可变长参数组</param>
         /// <returns>DataTable 查询结果集</returns>
-        public DataTable SqlQuery(string sql, params SqlParameter[] parameters)
+        public DataTable sqlQuery(string sql, params SqlParameter[] parameters)
         {
-            var cmd = MakeCommand(sql, parameters);
-            return SqlQuery(cmd);
+            var cmd = makeCommand(sql, parameters);
+            return sqlQuery(cmd);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="cmd">SqlCommand</param>
         /// <returns>DataTable 查询结果集</returns>
-        public DataTable SqlQuery(SqlCommand cmd)
+        public DataTable sqlQuery(SqlCommand cmd)
         {
             using (var conn = new SqlConnection(conStr))
             {
@@ -64,10 +64,10 @@ namespace Insight.Utils.Common
         /// <param name="sql">sql命令</param>
         /// <param name="parameters">可变长参数组</param>
         /// <returns>int 受影响行数</returns>
-        public int SqlNonQuery(string sql, params SqlParameter[] parameters)
+        public int sqlNonQuery(string sql, params SqlParameter[] parameters)
         {
-            var cmd = MakeCommand(sql, parameters);
-            return SqlNonQuery(cmd);
+            var cmd = makeCommand(sql, parameters);
+            return sqlNonQuery(cmd);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="cmd">SqlCommand</param>
         /// <returns>int 受影响行数</returns>
-        public int SqlNonQuery(SqlCommand cmd)
+        public int sqlNonQuery(SqlCommand cmd)
         {
             using (var conn = new SqlConnection(conStr))
             {
@@ -98,10 +98,10 @@ namespace Insight.Utils.Common
         /// <param name="sql">sql命令</param>
         /// <param name="parameters">可变长参数组</param>
         /// <returns>执行SQL语句后的第一行第一列内容</returns>
-        public object SqlScalar(string sql, params SqlParameter[] parameters)
+        public object sqlScalar(string sql, params SqlParameter[] parameters)
         {
-            var cmd = MakeCommand(sql, parameters);
-            return SqlScalar(cmd);
+            var cmd = makeCommand(sql, parameters);
+            return sqlScalar(cmd);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="cmd">SqlCommand</param>
         /// <returns>执行SQL语句后的第一行第一列内容</returns>
-        public object SqlScalar(SqlCommand cmd)
+        public object sqlScalar(SqlCommand cmd)
         {
             using (var conn = new SqlConnection(conStr))
             {
@@ -131,7 +131,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="cmds">多条SQL语句</param>
         /// <returns>bool 执行是否成功</returns>
-        public bool SqlExecute(IEnumerable<SqlCommand> cmds)
+        public bool sqlExecute(IEnumerable<SqlCommand> cmds)
         {
             using (var conn = new SqlConnection(conStr))
             {
@@ -173,7 +173,7 @@ namespace Insight.Utils.Common
         /// <param name="cmds">多条SQL语句</param>
         /// <param name="index">返回ID索引位置</param>
         /// <returns>object 指定索引位置的ID</returns>
-        public object SqlExecute(IEnumerable<SqlCommand> cmds, int index)
+        public object sqlExecute(IEnumerable<SqlCommand> cmds, int index)
         {
             using (var conn = new SqlConnection(conStr))
             {
@@ -215,7 +215,7 @@ namespace Insight.Utils.Common
         /// <param name="sql">sql命令</param>
         /// <param name="parameters">可变长参数组</param>
         /// <returns>SqlCommand 组装完成的SqlCommand对象</returns>
-        public SqlCommand MakeCommand(string sql, params SqlParameter[] parameters)
+        public SqlCommand makeCommand(string sql, params SqlParameter[] parameters)
         {
             var cmd = new SqlCommand(sql);
             foreach (var p in parameters)
