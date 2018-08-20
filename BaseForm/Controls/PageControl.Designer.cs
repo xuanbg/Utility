@@ -122,7 +122,6 @@
             this.btnJump.Size = new System.Drawing.Size(18, 22);
             this.btnJump.TabIndex = 0;
             this.btnJump.ToolTipTitle = "指定页";
-            this.btnJump.Click += new System.EventHandler(this.jump_Click);
             // 
             // txtPage
             // 
@@ -138,8 +137,6 @@
             this.txtPage.Size = new System.Drawing.Size(62, 20);
             this.txtPage.TabIndex = 1;
             this.txtPage.Visible = false;
-            this.txtPage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.pageInput_KeyPress);
-            this.txtPage.Leave += new System.EventHandler(this.pageInput_Leave);
             // 
             // PageControl
             // 

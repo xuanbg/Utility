@@ -106,6 +106,9 @@ namespace Insight.Utils.Controls
             btnPrev.Click += (sender, args) => changePage(current - 1);
             btnNext.Click += (sender, args) => changePage(current + 1);
             btnLast.Click += (sender, args) => changePage(totalPages - 1);
+            btnJump.Click += (sender, args) =>  jumpClick();
+            txtPage.KeyPress += (sender, args) => pageInputKeyPress(args);
+            txtPage.Leave += (sender, args) => pageInputLeave();
         }
 
         /// <summary>
@@ -217,9 +220,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 跳转到指定页
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void jump_Click(object sender, EventArgs e)
+        private void jumpClick()
         {
             txtPage.Visible = true;
             txtPage.Focus();
@@ -228,9 +229,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 焦点离开输入框
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void pageInput_Leave(object sender, EventArgs e)
+        private void pageInputLeave()
         {
             txtPage.EditValue = null;
             txtPage.Visible = false;
@@ -239,9 +238,8 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 输入页码
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pageInput_KeyPress(object sender, KeyPressEventArgs e)
+        private void pageInputKeyPress(KeyPressEventArgs e)
         {
             if (e.KeyChar == 27)
             {
