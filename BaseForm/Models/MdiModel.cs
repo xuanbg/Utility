@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -168,24 +169,25 @@ namespace Insight.Utils.Models
                 return null;
             }
 
-            var print = buildReport(tid, id);
-            if (print == null) return null;
+            var report = buildReport(tid, id);
+            if (report == null) return null;
 
             var type = (PagesOnSheet) onSheet;
             if (type != PagesOnSheet.One)
             {
-                print.PrintSettings.PrintMode = PrintMode.Scale;
-                print.PrintSettings.PagesOnSheet = type;
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;
             }
 
             if (!string.IsNullOrEmpty(printer))
             {
-                print.PrintSettings.ShowDialog = false;
-                print.PrintSettings.Printer = printer;
+                report.PrintSettings.ShowDialog = false;
+                report.PrintSettings.Printer = printer;
             }
 
-            print.PrintPrepared();
-            return print.FileName;
+            report.PrintPrepared();
+
+            return report.FileName;
         }
 
         /// <summary>
@@ -213,7 +215,21 @@ namespace Insight.Utils.Models
                 return null;
             }
 
+            var type = (PagesOnSheet)onSheet;
+            if (type != PagesOnSheet.One)
+            {
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;
+            }
+
+            if (!string.IsNullOrEmpty(printer))
+            {
+                report.PrintSettings.ShowDialog = false;
+                report.PrintSettings.Printer = printer;
+            }
+
             report.PrintPrepared();
+
             return report.FileName;
         }
 
