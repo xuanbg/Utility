@@ -172,8 +172,7 @@ namespace Insight.Utils.Models
             var report = buildReport(tid, id);
             if (report == null) return null;
 
-            var type = (PagesOnSheet) onSheet;
-            if (type != PagesOnSheet.One)
+            if (onSheet > 0)
             {
                 report.PrintSettings.PrintMode = PrintMode.Scale;
                 report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;
@@ -215,8 +214,7 @@ namespace Insight.Utils.Models
                 return null;
             }
 
-            var type = (PagesOnSheet)onSheet;
-            if (type != PagesOnSheet.One)
+            if (onSheet > 0)
             {
                 report.PrintSettings.PrintMode = PrintMode.Scale;
                 report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;

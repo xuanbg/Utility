@@ -84,6 +84,18 @@ namespace Insight.Utils.Models
                 return null;
             }
 
+            if (onSheet > 0)
+            {
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;
+            }
+
+            if (!string.IsNullOrEmpty(printer))
+            {
+                report.PrintSettings.ShowDialog = false;
+                report.PrintSettings.Printer = printer;
+            }
+
             report.PrintPrepared();
             return report.FileName;
         }
