@@ -228,7 +228,7 @@ namespace Insight.Utils.Models
                 var item = buttons.SingleOrDefault(b => b.Name == obj.Key);
                 if (item == null) continue;
 
-                item.Enabled = obj.Value && (bool)item.Tag;
+                item.Enabled = obj.Value && (bool) item.Tag;
             }
         }
 
@@ -289,7 +289,7 @@ namespace Insight.Utils.Models
         /// <returns>ContextMenuStrip</returns>
         public ContextMenuStrip createCopyMenu(GridView gridView)
         {
-            var tsmi = new ToolStripMenuItem { Text = @"复制" };
+            var tsmi = new ToolStripMenuItem {Text = @"复制"};
             tsmi.Click += (sender, args) =>
             {
                 if (hitInfo.Column == null) return;
@@ -368,16 +368,16 @@ namespace Insight.Utils.Models
         private void initToolBar()
         {
             buttons = (from a in getActions()
-                       select new BarButtonItem
-                       {
-                           AllowDrawArrow = a.isBegin,
-                           Caption = a.name,
-                           Enabled = a.permit,
-                           Name = a.alias.Split(',')[0],
-                           Tag = a.permit,
-                           Glyph = Image.FromStream(new MemoryStream(a.icon)),
-                           PaintStyle = a.isShowText ? BarItemPaintStyle.CaptionGlyph : BarItemPaintStyle.Standard,
-                       }).ToList();
+                select new BarButtonItem
+                {
+                    AllowDrawArrow = a.isBegin,
+                    Caption = a.name,
+                    Enabled = a.permit,
+                    Name = a.alias.Split(',')[0],
+                    Tag = a.permit,
+                    Glyph = Image.FromStream(new MemoryStream(a.icon)),
+                    PaintStyle = a.isShowText ? BarItemPaintStyle.CaptionGlyph : BarItemPaintStyle.Standard,
+                }).ToList();
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
         }
 

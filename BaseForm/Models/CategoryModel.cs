@@ -28,7 +28,7 @@ namespace Insight.Utils.Models
         {
             item = cat;
             list = getTreeList(cats);
-            baseUrl = $"{appServer}/{url}";
+            baseUrl = $"{baseServer}/{url}";
             parentId = cat.parentId;
             index = cat.index;
 
