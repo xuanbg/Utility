@@ -309,6 +309,23 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 获取选项数据
         /// </summary>
+        /// <param name="keys">选项代码集</param>
+        /// <returns>ModuleParam 选项数据</returns>
+        public List<ModuleParam> getParams(List<Dictionary<string, string>> keys)
+        {
+            var datas = new List<ModuleParam>();
+            foreach (var key in keys)
+            {
+                var data = getParam(key["code"], key["deptId"], key["userId"]);
+                datas.Add(data);
+            }
+
+            return datas;
+        }
+
+        /// <summary>
+        /// 获取选项数据
+        /// </summary>
         /// <param name="key">选项代码</param>
         /// <param name="deptId">部门ID</param>
         /// <param name="userId">用户ID</param>
