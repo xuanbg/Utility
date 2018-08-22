@@ -27,19 +27,19 @@ namespace Insight.Utils.MainForm.Models
 
             // 使用系统安装打印机列表初始化下拉列表
             view.DocPrint.Properties.Items.AddRange(prints);
-            view.TagPrint.Properties.Items.AddRange(prints);
             view.BilPrint.Properties.Items.AddRange(prints);
+            view.TagPrint.Properties.Items.AddRange(prints);
 
             // 初始化控件初值
             view.DocPrint.EditValue = string.IsNullOrEmpty(Setting.docPrint) ? prints[0] : Setting.docPrint;
-            view.TagPrint.EditValue = string.IsNullOrEmpty(Setting.tagPrint) ? prints[0] : Setting.tagPrint;
             view.BilPrint.EditValue = string.IsNullOrEmpty(Setting.bilPrint) ? prints[0] : Setting.bilPrint;
+            view.TagPrint.EditValue = string.IsNullOrEmpty(Setting.tagPrint) ? prints[0] : Setting.tagPrint;
             view.MergerPrint.Checked = Setting.isMergerPrint;
 
             // 订阅下拉列表事件绑定数据
             view.DocPrint.EditValueChanged += (sender, args) => Setting.docPrint = view.DocPrint.SelectedIndex < 1 ? "" : view.DocPrint.Text;
-            view.BilPrint.EditValueChanged += (sender, args) => Setting.bilPrint = view.DocPrint.SelectedIndex < 1 ? "" : view.BilPrint.Text;
-            view.TagPrint.EditValueChanged += (sender, args) => Setting.tagPrint = view.DocPrint.SelectedIndex < 1 ? "" : view.TagPrint.Text;
+            view.BilPrint.EditValueChanged += (sender, args) => Setting.bilPrint = view.BilPrint.SelectedIndex < 1 ? "" : view.BilPrint.Text;
+            view.TagPrint.EditValueChanged += (sender, args) => Setting.tagPrint = view.TagPrint.SelectedIndex < 1 ? "" : view.TagPrint.Text;
             view.MergerPrint.CheckedChanged += (sender, args) => Setting.isMergerPrint = view.MergerPrint.Checked;
         }
 
@@ -49,8 +49,8 @@ namespace Insight.Utils.MainForm.Models
         public void save()
         {
             Setting.savePrinter("docPrint", Setting.docPrint);
-            Setting.savePrinter("tagPrint", Setting.tagPrint);
             Setting.savePrinter("bilPrint", Setting.bilPrint);
+            Setting.savePrinter("tagPrint", Setting.tagPrint);
             Setting.saveIsMergerPrint();
         }
     }
