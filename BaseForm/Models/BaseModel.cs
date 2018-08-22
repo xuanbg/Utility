@@ -67,9 +67,10 @@ namespace Insight.Utils.Models
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
+        /// <param name="param">参数集合</param>
         /// <param name="onSheet">合并打印模式</param>
         /// <returns>string 打印文档名称</returns>
-        public string print<TE>(string printer, string tid, string name, List<TE> data, int onSheet = 0)
+        public string print<TE>(string printer, string tid, string name, List<TE> data, Dictionary<string, object> param = null, int onSheet = 0)
         {
             if (string.IsNullOrEmpty(tid))
             {
@@ -77,7 +78,7 @@ namespace Insight.Utils.Models
                 return null;
             }
 
-            var report = buildReport(tid, name, data);
+            var report = buildReport(tid, name, data, param);
             if (report == null || !report.Prepare())
             {
                 Messages.showError("生成报表失败！");
@@ -107,8 +108,9 @@ namespace Insight.Utils.Models
         /// <param name="tid">模板ID</param>
         /// <param name="name">数据源名称</param>
         /// <param name="data">数据</param>
+        /// <param name="dict">参数集合</param>
         /// <returns>Report FastReport报表</returns>
-        private Report buildReport<TE>(string tid, string name, List<TE> data)
+        private Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
         {
             var url = $"{baseServer}/commonapi/v1.0/templates/{tid}";
             var client = new HttpClient<object>(tokenHelper);
@@ -117,6 +119,10 @@ namespace Insight.Utils.Models
             var report = new Report();
             report.LoadFromString(client.data.ToString());
             report.RegisterData(data, name);
+            foreach (var i in dict ?? new Dictionary<string, object>())
+            {
+                report.SetParameterValue(i.Key, i.Value);
+            }
 
             return report;
         }
