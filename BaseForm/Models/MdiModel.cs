@@ -340,7 +340,11 @@ namespace Insight.Utils.Models
             var datas = new List<ModuleParam>();
             foreach (var key in keys)
             {
-                var data = getParam(key["code"], key["deptId"], key["userId"]);
+                var code = key.ContainsKey("code") ? key["code"] : null;
+                var deptId = key.ContainsKey("deptId") ? key["deptId"] : null;
+                var userId = key.ContainsKey("userId") ? key["userId"] : null;
+                var byModule = key.ContainsKey("byModule");
+                var data = getParam(code, deptId, userId, byModule);
                 datas.Add(data);
             }
 
@@ -353,16 +357,18 @@ namespace Insight.Utils.Models
         /// <param name="key">选项代码</param>
         /// <param name="deptId">部门ID</param>
         /// <param name="userId">用户ID</param>
+        /// <param name="byModule">是否模块专用</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public ModuleParam getParam(string key, string deptId = null, string userId = null)
+        public ModuleParam getParam(string key, string deptId = null, string userId = null, bool byModule = false)
         {
-            var param = moduleParams.FirstOrDefault(i => i.code == key && i.deptId == deptId && i.userId == userId);
+            var param = moduleParams.FirstOrDefault(i => i.code == key && (!byModule || i.moduleId == moduleId) 
+                                                                       && i.deptId == deptId && i.userId == userId);
             if (param == null)
             {
                 param = new ModuleParam
                 {
                     id = Util.newId(),
-                    moduleId = moduleId,
+                    moduleId = byModule ? moduleId : null,
                     code = key,
                     deptId = deptId,
                     userId = userId
@@ -379,7 +385,7 @@ namespace Insight.Utils.Models
         /// <returns>bool 是否成功</returns>
         public bool saveParam()
         {
-            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
+            var url = $"{baseServer}/commonapi/v1.0/params";
             var dict = new Dictionary<string, object> {{"list", moduleParams}};
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
 
@@ -549,7 +555,7 @@ namespace Insight.Utils.Models
         /// </summary>
         private void getParams()
         {
-            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/params";
+            var url = $"{baseServer}/commonapi/v1.0/params";
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
             if (!client.get(url)) return;
 
