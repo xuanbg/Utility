@@ -2,27 +2,27 @@
 
 namespace Insight.Utils.Client
 {
-    public class Setting
+    public static class Setting
     {
         /// <summary>
         /// 应用名称
         /// </summary>
-        public static string appName = Util.getAppSetting("AppName");
+        public static readonly string appName = Util.getAppSetting("AppName");
 
         /// <summary>
         /// 应用服务地址
         /// </summary>
-        public static string appServer = Util.getAppSetting("AppServer"); 
+        public static readonly string appServer = Util.getAppSetting("AppServer"); 
 
         /// <summary>
         /// 基础服务地址
         /// </summary>
-        public static string baseServer = getBaseServer();
+        public static readonly string baseServer = getBaseServer();
 
         /// <summary>
         /// 界面主题样式
         /// </summary>
-        public static string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
+        public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
 
         /// <summary>
         /// 文档打印机
@@ -47,7 +47,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 令牌管理器
         /// </summary>
-        public static TokenHelper tokenHelper = new TokenHelper { appId = Util.getAppSetting("AppId") };
+        public static readonly TokenHelper tokenHelper = new TokenHelper { appId = Util.getAppSetting("AppId") };
 
         /// <summary>
         /// 当前登录部门ID
