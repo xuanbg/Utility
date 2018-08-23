@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="Controller\BaseController.cs" />
     <Compile Include="Controls\Format.cs" />
+    <Compile Include="Entities\PrintSetting.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\MdiModel.cs" />

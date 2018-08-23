@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,13 +13,14 @@ using Insight.Utils.BaseForm;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
+using Insight.Utils.Entities;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Models
 {
     public class MdiModel<T> where T : BaseMDI, new()
     {
-        private const int MinWaitTime = 800;
+        private const int minWaitTime = 800;
         private int waits;
         private DateTime wait;
         private GridHitInfo hitInfo = new GridHitInfo();
@@ -28,7 +28,7 @@ namespace Insight.Utils.Models
         /// <summary>
         /// MDI视图
         /// </summary>
-        public T view;
+        public readonly T view;
 
         /// <summary>
         /// 主列表分页控件
@@ -43,7 +43,7 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 令牌管理器
         /// </summary>
-        public TokenHelper tokenHelper = Setting.tokenHelper;
+        public readonly TokenHelper tokenHelper = Setting.tokenHelper;
 
         /// <summary>
         /// 应用服务地址
@@ -53,7 +53,7 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 基础服务地址
         /// </summary>
-        public string baseServer = Setting.baseServer;
+        public readonly string baseServer = Setting.baseServer;
 
         /// <summary>
         /// 业务模块ID
@@ -132,24 +132,31 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印预览
         /// </summary>
-        /// <typeparam name="TE">类型</typeparam>
-        /// <param name="tid">模板ID</param>
-        /// <param name="name">数据源名称</param>
-        /// <param name="data">数据</param>
-        /// <param name="param">参数集合</param>
-        public void preview<TE>(string tid, string name, List<TE> data, Dictionary<string, object> param = null)
+        /// <typeparam name="TE">数据类型</typeparam>
+        /// <param name="set">打印设置</param>
+        public void preview<TE>(PrintSetting<TE> set)
         {
-            if (string.IsNullOrEmpty(tid))
+            if (string.IsNullOrEmpty(set.templateId))
             {
                 Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return;
             }
 
-            var report = buildReport(tid, name, data, param);
+            var report = buildReport(set.templateId, set.dataName, set.data, set.parameter);
             if (report == null || !report.Prepare())
             {
                 Messages.showError("生成报表失败！");
                 return;
+            }
+
+            if (set.pagesOnSheet != PagesOnSheet.One)
+            {
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+            }
+            else
+            {
+                report.PrintSettings.PrintMode = set.printMode;
             }
 
             report.ShowPrepared(true);
@@ -194,39 +201,39 @@ namespace Insight.Utils.Models
         /// <summary>
         /// 打印
         /// </summary>
-        /// <typeparam name="TE"></typeparam>
-        /// <param name="printer">打印机名称</param>
-        /// <param name="tid">模板ID</param>
-        /// <param name="name">数据源名称</param>
-        /// <param name="data">数据</param>
-        /// <param name="param">参数集合</param>
-        /// <param name="onSheet">合并打印模式</param>
-        /// <returns>string 打印文档名称</returns>
-        public string print<TE>(string printer, string tid, string name, List<TE> data, Dictionary<string, object> param = null, int onSheet = 0)
+        /// <typeparam name="TE">数据类型</typeparam>
+        /// <param name="set">打印设置</param>
+        /// <returns>string 电子影像文件名</returns>
+        public string print<TE>(PrintSetting<TE> set)
         {
-            if (string.IsNullOrEmpty(tid))
+            if (string.IsNullOrEmpty(set.templateId))
             {
                 Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
                 return null;
             }
 
-            var report = buildReport(tid, name, data, param);
+            var report = buildReport(set.templateId, set.dataName, set.data, set.parameter);
             if (report == null || !report.Prepare())
             {
                 Messages.showError("生成报表失败！");
                 return null;
             }
 
-            if (onSheet > 0)
-            {
-                report.PrintSettings.PrintMode = PrintMode.Scale;
-                report.PrintSettings.PagesOnSheet = PagesOnSheet.Three;
-            }
-
-            if (!string.IsNullOrEmpty(printer))
+            report.PrintSettings.Copies = set.copies;
+            if (!string.IsNullOrEmpty(set.printer))
             {
                 report.PrintSettings.ShowDialog = false;
-                report.PrintSettings.Printer = printer;
+                report.PrintSettings.Printer = set.printer;
+            }
+
+            if (set.pagesOnSheet != PagesOnSheet.One)
+            {
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+            }
+            else
+            {
+                report.PrintSettings.PrintMode = set.printMode;
             }
 
             report.PrintPrepared();
@@ -281,7 +288,7 @@ namespace Insight.Utils.Models
             if (waits > 0) return;
 
             var time = (int) (DateTime.Now - wait).TotalMilliseconds;
-            if (time < MinWaitTime) Thread.Sleep(MinWaitTime - time);
+            if (time < minWaitTime) Thread.Sleep(minWaitTime - time);
 
             view.Wait.CloseWaitForm();
         }

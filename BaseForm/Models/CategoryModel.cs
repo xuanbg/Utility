@@ -15,7 +15,7 @@ namespace Insight.Utils.Models
         private readonly string parentId;
         private readonly int index;
 
-        public Category view;
+        public readonly Category view;
 
         /// <summary>
         /// 构造函数,初始化窗体及绑定事件
