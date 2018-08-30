@@ -94,11 +94,11 @@
     <Compile Include="Views\Locked.Designer.cs">
       <DependentUpon>Locked.cs</DependentUpon>
     </Compile>
-    <Compile Include="Login\Views\Login.cs">
+    <Compile Include="Login\Views\LoginDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Login\Views\Login.Designer.cs">
-      <DependentUpon>Login.cs</DependentUpon>
+    <Compile Include="Login\Views\LoginDialog.Designer.cs">
+      <DependentUpon>LoginDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Login\Views\LoginSet.cs">
       <SubType>Form</SubType>
@@ -143,8 +143,8 @@
     <EmbeddedResource Include="Views\Locked.resx">
       <DependentUpon>Locked.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Login\Views\Login.resx">
-      <DependentUpon>Login.cs</DependentUpon>
+    <EmbeddedResource Include="Login\Views\LoginDialog.resx">
+      <DependentUpon>LoginDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\Views\LoginSet.resx">
       <DependentUpon>LoginSet.cs</DependentUpon>

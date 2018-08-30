@@ -3,7 +3,7 @@ using DevExpress.XtraEditors;
 
 namespace Insight.Utils.MainForm.Login.Views
 {
-    public partial class Login
+    public partial class LoginDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace Insight.Utils.MainForm.Login.Views
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginDialog));
             this.UserNameInput = new DevExpress.XtraEditors.TextEdit();
             this.PassWordInput = new DevExpress.XtraEditors.TextEdit();
             this.CloseButton = new DevExpress.XtraEditors.SimpleButton();

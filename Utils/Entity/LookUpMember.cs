@@ -48,6 +48,11 @@
         public int index { get; set; }
 
         /// <summary>
+        /// 编码
+        /// </summary>
+        public string code { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string name { get; set; }

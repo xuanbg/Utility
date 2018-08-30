@@ -6,13 +6,14 @@ using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
+using Insight.Utils.MainForm.Login.Views;
 using Insight.Utils.Models;
 
 namespace Insight.Utils.MainForm.Login.Models
 {
     public class LoginModel : BaseModel
     {
-        public Views.Login view;
+        public readonly LoginDialog view;
 
         private string account = Setting.getAccount();
         private string password;
@@ -24,7 +25,7 @@ namespace Insight.Utils.MainForm.Login.Models
         /// </summary>
         public LoginModel()
         {
-            view = new Views.Login
+            view = new LoginDialog
             {
                 Text = Setting.appName,
                 Icon = new Icon("logo.ico"),
@@ -114,13 +115,26 @@ namespace Insight.Utils.MainForm.Login.Models
                 return;
             }
 
+            if (!result.data.Any()) return;
+
+            var tree = view.lueDept.Properties.TreeList;
             depts.Clear();
             depts.AddRange(result.data);
-            view.lueDept.Properties.TreeList.RefreshDataSource();
-            if (depts.Count != 1) return;
+            tree.RefreshDataSource();
+            if (depts.Count == 1)
+            {
+                tree.MoveFirst();
+                view.lueDept.EditValue = depts[0].id;
 
-            view.lueDept.Properties.TreeList.MoveFirst();
-            view.lueDept.EditValue = depts[0].id;
+                return;
+            }
+
+            if (depts.Count(i => i.nodeType == 2) > 1) return;
+
+            var id = depts.Single(i => i.nodeType == 2).id;
+            var node = tree.FindNodeByKeyID(id);
+            view.lueDept.Properties.TreeList.FocusedNode = node;
+            view.lueDept.EditValue = id;
         }
 
         /// <summary>
@@ -156,9 +170,10 @@ namespace Insight.Utils.MainForm.Login.Models
             {
                 tokenHelper.tenantId = dept.remark;
                 tokenHelper.deptId = id;
+                Setting.deptCode = dept.code;
             }
 
-            Setting.deptName = view.lueDept.Text;
+            Setting.deptName = dept.name;
         }
 
         /// <summary>
