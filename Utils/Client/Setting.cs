@@ -45,22 +45,37 @@ namespace Insight.Utils.Client
         public static bool isMergerPrint = bool.Parse(Util.getAppSetting("IsMergerPrint"));
 
         /// <summary>
+        /// 应用ID
+        /// </summary>
+        public static readonly string appId = Util.getAppSetting("AppId");
+
+        /// <summary>
         /// 令牌管理器
         /// </summary>
-        public static readonly TokenHelper tokenHelper = new TokenHelper { appId = Util.getAppSetting("AppId") };
+        public static readonly TokenHelper tokenHelper = new TokenHelper {appId = appId};
 
         /// <summary>
-        /// 当前登录部门ID
+        /// 租户ID
         /// </summary>
-        public static string deptId => tokenHelper.deptId;
+        public static string tenantId;
 
         /// <summary>
-        /// 当前登录部门编码
+        /// 租户名称
+        /// </summary>
+        public static string tenantName;
+
+        /// <summary>
+        /// 登录部门ID
+        /// </summary>
+        public static string deptId;
+
+        /// <summary>
+        /// 登录部门编码
         /// </summary>
         public static string deptCode;
 
         /// <summary>
-        /// 当前登录部门全称
+        /// 登录部门名称
         /// </summary>
         public static string deptName;
 
