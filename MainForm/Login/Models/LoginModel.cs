@@ -189,6 +189,7 @@ namespace Insight.Utils.MainForm.Login.Models
             Setting.userId = info.id;
             Setting.userName = info.name;
             Setting.tenantId = info.tenantId;
+            Setting.tenantCode = info.tenantCode;
             Setting.tenantName = info.tenantName;
             Setting.deptId = info.deptId;
             Setting.deptCode = info.deptCode;

@@ -60,6 +60,11 @@ namespace Insight.Utils.Client
         public static string tenantId;
 
         /// <summary>
+        /// 租户编码
+        /// </summary>
+        public static string tenantCode;
+
+        /// <summary>
         /// 租户名称
         /// </summary>
         public static string tenantName;
