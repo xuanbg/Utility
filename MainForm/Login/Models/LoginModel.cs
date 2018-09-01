@@ -185,8 +185,14 @@ namespace Insight.Utils.MainForm.Login.Models
             var client = new HttpClient<UserInfo>(tokenHelper);
             if (!client.get(url)) return;
 
-            Setting.userId = client.data.id;
-            Setting.userName = client.data.name;
+            var info = client.data;
+            Setting.userId = info.id;
+            Setting.userName = info.name;
+            Setting.tenantId = info.tenantId;
+            Setting.tenantName = info.tenantName;
+            Setting.deptId = info.deptId;
+            Setting.deptCode = info.deptCode;
+            Setting.deptName = info.deptName;
         }
     }
 }
