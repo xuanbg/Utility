@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Insight.Utils.Entity
+﻿namespace Insight.Utils.Entity
 {
     public class TokenPackage
     {
@@ -104,25 +102,5 @@ namespace Insight.Utils.Entity
         /// 描述
         /// </summary>
         public string remark { get; set; }
-
-        /// <summary>
-        /// 是否预置：0、自定；1、预置
-        /// </summary>
-        public bool isBuiltin { get; set; }
-
-        /// <summary>
-        /// 是否失效：0、有效；1、失效
-        /// </summary>
-        public bool isInvalid { get; set; }
-
-        /// <summary>
-        /// 创建人ID
-        /// </summary>
-        public string creatorId { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime createTime { get; set; }
     }
 }
