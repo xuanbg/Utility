@@ -71,6 +71,11 @@ namespace Insight.Utils.Entity
         public string email { get; set; }
 
         /// <summary>
+        /// 应用ID
+        /// </summary>
+        public string appId { get; set; }
+
+        /// <summary>
         /// 租户ID
         /// </summary>
         public string tenantId { get; set; }
