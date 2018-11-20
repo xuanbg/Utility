@@ -123,7 +123,7 @@ namespace Insight.Utils.Controls
             var page = current;
             refresh();
 
-            var eventArgs = new PageControlEventArgs(focusedRowHandle, current);
+            var eventArgs = new PageControlEventArgs(focusedRowHandle, current + 1);
             if (current > page)
             {
                 // 切换了页码需要重新加载数据
@@ -147,7 +147,7 @@ namespace Insight.Utils.Controls
             var page = current;
             refresh();
 
-            var eventArgs = new PageControlEventArgs(focusedRowHandle, current);
+            var eventArgs = new PageControlEventArgs(focusedRowHandle, current + 1);
             if ((rows > 0 && handle < pageSize*(totalPages - 1)) || current < page)
             {
                 // 不是末页或切换了页码需要重新加载数据
@@ -176,7 +176,7 @@ namespace Insight.Utils.Controls
             if (!change && current == page && focusedRowHandle == handel) return;
 
             // 切换了页码或当前页显示行数变化后需要重新加载数据
-            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current));
+            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current + 1));
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Insight.Utils.Controls
 
             refresh();
 
-            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current));
+            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current + 1));
         }
 
         /// <summary>

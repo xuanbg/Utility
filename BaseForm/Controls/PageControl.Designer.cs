@@ -53,8 +53,8 @@
             // 
             this.btnFirst.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnFirst.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnFirst.Image = ((System.Drawing.Image)(resources.GetObject("btnFirst.Image")));
-            this.btnFirst.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnFirst.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnFirst.ImageOptions.Image")));
+            this.btnFirst.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnFirst.Location = new System.Drawing.Point(214, 0);
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
@@ -65,8 +65,8 @@
             // 
             this.btnPrev.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnPrev.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnPrev.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.Image")));
-            this.btnPrev.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnPrev.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.ImageOptions.Image")));
+            this.btnPrev.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnPrev.Location = new System.Drawing.Point(236, 0);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
@@ -77,8 +77,8 @@
             // 
             this.btnNext.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnNext.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.Image")));
-            this.btnNext.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnNext.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.ImageOptions.Image")));
+            this.btnNext.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnNext.Location = new System.Drawing.Point(276, 0);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(22, 22);
@@ -89,8 +89,8 @@
             // 
             this.btnLast.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnLast.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnLast.Image = ((System.Drawing.Image)(resources.GetObject("btnLast.Image")));
-            this.btnLast.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnLast.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnLast.ImageOptions.Image")));
+            this.btnLast.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnLast.Location = new System.Drawing.Point(298, 0);
             this.btnLast.Name = "btnLast";
             this.btnLast.Size = new System.Drawing.Size(22, 22);
@@ -116,7 +116,7 @@
             // 
             this.btnJump.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnJump.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnJump.ImageLocation = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnJump.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnJump.Location = new System.Drawing.Point(258, 0);
             this.btnJump.Name = "btnJump";
             this.btnJump.Size = new System.Drawing.Size(18, 22);
