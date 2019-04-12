@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controller;
+using Insight.Utils.MainForm.Login.Models;
 using Insight.Utils.MainForm.Models;
 
 namespace Insight.Utils.MainForm
@@ -14,11 +16,11 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
+            login();
+
             // 构造主窗体并显示
             manage = new MainModel();
             var view = manage.view;
-            view.Show();
-            view.Refresh();
 
             // 订阅主窗体菜单事件
             view.MubChangPassWord.ItemClick += (sender, args) => changPassword();
@@ -38,9 +40,54 @@ namespace Insight.Utils.MainForm
             };
             view.Closing += (sender, args) => args.Cancel = manage.logout();
             view.Closed += (sender, args) => exit();
+        }
 
-            // 订阅导航栏点击事件
-            manage.links.ForEach(i => i.Item.LinkClicked += (sender, args) => manage.addPageMdi(args.Link.Item.Tag.ToString()));
+        /// <summary>
+        /// 登录
+        /// </summary>
+        private void login()
+        {
+            // 构造登录Model并订阅登录窗体事件
+            var login = new LoginModel();
+            var view = login.view;
+            view.CloseButton.Click += (sender, args) => Application.Exit();
+
+            view.SetButton.Click += (sender, args) => 
+            {
+                var set = new SetModel();
+                subCloseEvent(set.view);
+                set.view.Confirm.Click += (s, a) =>
+                {
+                    login.initUserName();
+                    set.save();
+
+                    closeDialog(set.view);
+                };
+
+                set.view.ShowDialog();
+            };
+
+            view.LoginButton.Click += (sender, args) =>
+            {
+                if (!login.login()) return;
+
+                // 显示等待界面
+                var waiting = new WaitingModel();
+                waiting.view.Show();
+                waiting.view.Refresh();
+
+                Thread.Sleep(800);
+                login.view.Close();
+                manage.show();
+
+                waiting.view.Close();
+            };
+
+            // 显示登录界面
+            view.Show();
+            view.Refresh();
+
+            login.initUserName();
         }
 
         /// <summary>

@@ -37,21 +37,30 @@ namespace Insight.Utils.MainForm.Models
                 Icon = new Icon("logo.ico")
             };
 
-            // 加载模块数据并初始化导航栏
-            initNavBar();
-
             // 初始化界面
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
             view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
 
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            view.StbDept.Caption = Setting.deptName;
-            view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
-            view.StbUser.Caption = Setting.userName;
             view.StbServer.Caption = Setting.appServer;
             if (SystemInformation.WorkingArea.Height > 755) return;
 
             view.WindowState = FormWindowState.Maximized;
+        }
+
+        /// <summary>
+        /// 主窗体初始化
+        /// </summary>
+        public void show()
+        {
+            view.StbDept.Caption = Setting.deptName;
+            view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
+            view.StbUser.Caption = Setting.userName;
+
+            initNavBar();
+            links.ForEach(i => i.Item.LinkClicked += (sender, args) => addPageMdi(args.Link.Item.Tag.ToString()));
+
+            view.Show();
         }
 
         /// <summary>
