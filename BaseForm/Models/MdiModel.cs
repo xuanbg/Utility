@@ -20,7 +20,6 @@ namespace Insight.Utils.Models
 {
     public class MdiModel<T> where T : BaseMDI, new()
     {
-        private const int minWaitTime = 800;
         private int waits;
         private DateTime wait;
         private GridHitInfo hitInfo = new GridHitInfo();
@@ -247,12 +246,16 @@ namespace Insight.Utils.Models
         /// <param name="dict"></param>
         public void switchItemStatus(Dictionary<string, bool> dict)
         {
+            var keys = new[] {"enable","disable"};
             foreach (var obj in dict)
             {
                 var item = buttons.SingleOrDefault(b => b.Name == obj.Key);
                 if (item == null) continue;
 
                 item.Enabled = obj.Value && (bool) item.Tag;
+                if (keys.All(i => !item.Name.Contains(i))) continue;
+
+                item.Visibility = item.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
             }
         }
 
@@ -288,7 +291,7 @@ namespace Insight.Utils.Models
             if (waits > 0) return;
 
             var time = (int) (DateTime.Now - wait).TotalMilliseconds;
-            if (time < minWaitTime) Thread.Sleep(minWaitTime - time);
+            if (time < 800) Thread.Sleep(800 - time);
 
             view.Wait.CloseWaitForm();
         }
