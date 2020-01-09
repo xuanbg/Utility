@@ -88,9 +88,11 @@ namespace Insight.Utils.Common
         {
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);
+            request.ServicePoint.Expect100Continue = false;
             request.Method = method.ToString();
             request.Accept = "application/json";
             request.ContentType = contentType;
+            request.UserAgent = "Windows Disktop App";
             if (token != null)
             {
                 request.Headers.Add(HttpRequestHeader.Authorization, token);
@@ -98,12 +100,7 @@ namespace Insight.Utils.Common
 
             if (acceptEncoding != CompressType.NONE)
             {
-                request.Headers.Add(HttpRequestHeader.AcceptEncoding, acceptEncoding.ToString().ToLower());
-            }
-
-            if (contentEncoding != CompressType.NONE)
-            {
-                request.Headers.Add(HttpRequestHeader.ContentEncoding, contentEncoding.ToString().ToLower());
+                request.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip, identity");
             }
 
             // 覆写指定的请求头

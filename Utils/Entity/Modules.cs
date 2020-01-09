@@ -19,9 +19,9 @@ namespace Insight.Utils.Entity
         public string parentId { get; set; }
 
         /// <summary>
-        /// 应用ID
+        /// 导航级别
         /// </summary>
-        public string appId { get; set; }
+        public int type { get; set; }
 
         /// <summary>
         /// 序号
@@ -34,49 +34,37 @@ namespace Insight.Utils.Entity
         public string name { get; set; }
 
         /// <summary>
-        /// 模块名称
+        /// 业务模块信息
         /// </summary>
-        public string alias { get; set; }
-
-        /// <summary>
-        /// 模块url
-        /// </summary>
-        public string url { get; set; }
-
-        /// <summary>
-        /// 图标url
-        /// </summary>
-        public string iconurl { get; set; }
-
-        /// <summary>
-        /// 图标
-        /// </summary>
-        public byte[] icon { get; set; }
-
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string remark { get; set; }
-
-        /// <summary>
-        /// 是否默认启动：0、否；1、是
-        /// </summary>
-        public bool isDefault { get; set; }
-
-        /// <summary>
-        /// 创建人ID
-        /// </summary>
-        public string creatorId { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime createTime { get; set; }
+        public ModuleInfo moduleInfo { get; set; }
 
         /// <summary>
         /// 功能集合
         /// </summary>
-        public List<Function> funcs { get; set; }
+        public List<Function> functions { get; set; }
+    }
+
+    public class ModuleInfo
+    {
+        /// <summary>
+        /// 图标url
+        /// </summary>
+        public string iconUrl { get; set; }
+
+        /// <summary>
+        /// 模块名称
+        /// </summary>
+        public string module { get; set; }
+
+        /// <summary>
+        /// 模块文件
+        /// </summary>
+        public string file { get; set; }
+
+        /// <summary>
+        /// 是否默认启动
+        /// </summary>
+        public bool autoLoad { get; set; }
     }
 
     /// <summary>
@@ -92,7 +80,12 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 导航ID
         /// </summary>
-        public string navigatorId { get; set; }
+        public string navId { get; set; }
+
+        /// <summary>
+        /// 功能类型
+        /// </summary>
+        public int type { get; set; }
 
         /// <summary>
         /// 序号
@@ -105,64 +98,45 @@ namespace Insight.Utils.Entity
         public string name { get; set; }
 
         /// <summary>
-        /// 别名
+        /// 授权码
         /// </summary>
-        public string alias { get; set; }
+        public string authCodes { get; set; }
+        
+        /// <summary>
+        /// 功能图标信息
+        /// </summary>
+        public FuncInfo funcInfo { get; set; }
 
         /// <summary>
-        /// 接口路由
+        /// 是否授权
         /// </summary>
-        public string routes { get; set; }
+        public bool permit { get; set; }
+    }
 
+    /// <summary>
+    /// 图标信息
+    /// </summary>
+    public class FuncInfo
+    {
         /// <summary>
-        /// 功能url
+        /// 方法名称
         /// </summary>
-        public string url { get; set; }
+        public string method { get; set; }
 
         /// <summary>
         /// 图标url
         /// </summary>
-        public string iconurl { get; set; }
+        public string iconUrl { get; set; }
 
         /// <summary>
-        /// 图标
+        /// 是否开始分组
         /// </summary>
-        public byte[] icon { get; set; }
+        public bool beginGroup { get; set; }
 
         /// <summary>
-        /// 描述
+        /// 是否隐藏文字
         /// </summary>
-        public string remark { get; set; }
-
-        /// <summary>
-        /// 是否开始分组：0、否；1、是
-        /// </summary>
-        public bool isBegin { get; set; }
-
-        /// <summary>
-        /// 是否显示文字：0、隐藏；1、显示
-        /// </summary>
-        public bool isShowText { get; set; }
-
-        /// <summary>
-        /// 是否可见：0、不可见；1、可见
-        /// </summary>
-        public bool isVisible { get; set; }
-
-        /// <summary>
-        /// 创建人ID
-        /// </summary>
-        public string creatorId { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime createTime { get; set; }
-
-        /// <summary>
-        /// 是否启用状态
-        /// </summary>
-        public bool permit { get; set; }
+        public bool hideText { get; set; }
     }
 
     /// <summary>

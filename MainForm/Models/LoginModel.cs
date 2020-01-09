@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -6,10 +7,10 @@ using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
-using Insight.Utils.MainForm.Login.Views;
+using Insight.Utils.MainForm.Views;
 using Insight.Utils.Models;
 
-namespace Insight.Utils.MainForm.Login.Models
+namespace Insight.Utils.MainForm.Models
 {
     public class LoginModel : BaseModel
     {
@@ -17,6 +18,7 @@ namespace Insight.Utils.MainForm.Login.Models
 
         private string account = Setting.getAccount();
         private string password;
+        private readonly bool showDept = Convert.ToBoolean(Util.getAppSetting("ShowDept"));
         private readonly List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
 
         /// <summary>
@@ -36,10 +38,15 @@ namespace Insight.Utils.MainForm.Login.Models
             // 订阅控件事件实现数据双向绑定
             view.UserNameInput.EditValueChanged += (sender, args) => account = view.UserNameInput.Text.Trim();
             view.PassWordInput.EditValueChanged += (sender, args) => password = view.PassWordInput.Text;
-            view.UserNameInput.Leave += (sender, args) => getDepts();
-            view.lueDept.EditValueChanged += (sender, args) => deptChanged();
+            view.peeDept.Visible = showDept;
+            view.lueDept.Visible = showDept;
+            if (showDept)
+            {
+                view.UserNameInput.Leave += (sender, args) => getDepts();
+                view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
-            Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
+                Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
+            }
         }
 
         /// <summary>
@@ -75,7 +82,7 @@ namespace Insight.Utils.MainForm.Login.Models
                 return false;
             }
 
-            if (string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
+            if (showDept && string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
             {
                 Messages.showWarning("请选择登录的企业/部门！");
                 view.lueDept.Focus();
@@ -88,7 +95,14 @@ namespace Insight.Utils.MainForm.Login.Models
 
             Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
-            getUserInfo();
+
+            var info = tokenHelper.userInfo;
+            Setting.userId = info.id;
+            Setting.userName = info.name;
+            Setting.tenantId = info.tenantId;
+            Setting.deptId = info.deptId;
+            Setting.deptCode = info.deptCode;
+            Setting.deptName = info.deptName;
 
             return true;
         }
@@ -100,7 +114,7 @@ namespace Insight.Utils.MainForm.Login.Models
         {
             if (string.IsNullOrEmpty(account)) return;
 
-            var url = $"{baseServer}/userapi/v1.0/users/{account}/depts";
+            var url = $"{gateway}/userapi/v1.0/users/{account}/depts";
             var request = new HttpRequest();
             if (!request.send(url))
             {
@@ -109,7 +123,7 @@ namespace Insight.Utils.MainForm.Login.Models
             }
 
             var result = Util.deserialize<Result<List<TreeLookUpMember>>>(request.data);
-            if (!result.successful)
+            if (!result.success)
             {
                 Messages.showError(result.message);
                 return;
@@ -174,26 +188,6 @@ namespace Insight.Utils.MainForm.Login.Models
             }
 
             Setting.deptName = dept.name;
-        }
-
-        /// <summary>
-        /// 获取用户信息
-        /// </summary>
-        private void getUserInfo()
-        {
-            var url = $"{baseServer}/userapi/v1.0/users/myself";
-            var client = new HttpClient<UserInfo>(tokenHelper);
-            if (!client.get(url)) return;
-
-            var info = client.data;
-            Setting.userId = info.id;
-            Setting.userName = info.name;
-            Setting.tenantId = info.tenantId;
-            Setting.tenantCode = info.tenantCode;
-            Setting.tenantName = info.tenantName;
-            Setting.deptId = info.deptId;
-            Setting.deptCode = info.deptCode;
-            Setting.deptName = info.deptName;
         }
     }
 }

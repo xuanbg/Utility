@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controller;
-using Insight.Utils.MainForm.Login.Models;
 using Insight.Utils.MainForm.Models;
 
 namespace Insight.Utils.MainForm

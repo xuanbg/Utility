@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using Insight.Utils.BaseForm;
 using Insight.Utils.Common;
 
-// ReSharper disable EventUnsubscriptionViaAnonymousDelegate
 namespace Insight.Utils.Controller
 {
     public class BaseController<T>

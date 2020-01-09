@@ -15,30 +15,17 @@
         /// <summary>
         /// Secret过期时间
         /// </summary>
-        public int expiryTime { get; set; }
+        public int expire { get; set; }
 
         /// <summary>
         /// Secret失效时间
         /// </summary>
-        public int failureTime { get; set; }
-    }
-
-    public class AccessToken
-    {
-        /// <summary>
-        /// ID
-        /// </summary>
-        public string id { get; set; }
+        public int failure { get; set; }
 
         /// <summary>
-        /// 用户ID
+        /// 登录用户信息
         /// </summary>
-        public string userId { get; set; }
-
-        /// <summary>
-        /// 随机密码
-        /// </summary>
-        public string secret { get; set; }
+        public UserInfo userInfo { get; set; }
     }
 
     public class UserInfo
@@ -47,6 +34,31 @@
         /// ID，唯一标识
         /// </summary>
         public string id { get; set; }
+
+        /// <summary>
+        /// 租户ID
+        /// </summary>
+        public string tenantId { get; set; }
+
+        /// <summary>
+        /// 登录部门ID
+        /// </summary>
+        public string deptId { get; set; }
+
+        /// <summary>
+        /// 登录部门编码
+        /// </summary>
+        public string deptCode { get; set; }
+
+        /// <summary>
+        /// 登录部门名称
+        /// </summary>
+        public string deptName { get; set; }
+
+        /// <summary>
+        /// 用户编码
+        /// </summary>
+        public string code { get; set; }
 
         /// <summary>
         /// 姓名/昵称
@@ -69,43 +81,18 @@
         public string email { get; set; }
 
         /// <summary>
-        /// 应用ID
+        /// 用户头像URL
         /// </summary>
-        public string appId { get; set; }
+        public string headImg { get; set; }
 
         /// <summary>
-        /// 租户ID
+        /// 是否内置
         /// </summary>
-        public string tenantId { get; set; }
+        public string builtin { get; set; }
 
         /// <summary>
-        /// 租户编码
+        /// 用户注册时间
         /// </summary>
-        public string tenantCode { get; set; }
-
-        /// <summary>
-        /// 租户名称
-        /// </summary>
-        public string tenantName { get; set; }
-
-        /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public string deptId { get; set; }
-
-        /// <summary>
-        /// 登录部门编码
-        /// </summary>
-        public string deptCode { get; set; }
-
-        /// <summary>
-        /// 登录部门名称
-        /// </summary>
-        public string deptName { get; set; }
-
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string remark { get; set; }
+        public string createdTime { get; set; }
     }
 }

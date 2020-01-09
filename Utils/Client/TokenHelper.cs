@@ -13,6 +13,11 @@ namespace Insight.Utils.Client
         private DateTime failureTime;
 
         /// <summary>
+        /// 登录用户信息
+        /// </summary>
+        public UserInfo userInfo { get; private set; }
+
+        /// <summary>
         /// AccessToken字符串
         /// </summary>
         public string token
@@ -39,17 +44,9 @@ namespace Insight.Utils.Client
         public string sign { get; private set; }
 
         /// <summary>
-        /// 当前连接鉴权服务器
+        /// 网关IP/域名
         /// </summary>
-        public string server {
-            get
-            {
-                var authServer = Util.getAppSetting("AuthServer");
-                var baseServer = Util.getAppSetting("BaseServer");
-
-                return string.IsNullOrEmpty(authServer) ? baseServer : authServer;
-            }
-        }
+        public string server => Util.getAppSetting("Gateway");
 
         /// <summary>
         /// 租户ID
@@ -92,35 +89,37 @@ namespace Insight.Utils.Client
             if (code == null) return;
 
             var key = Util.hash(sign + code);
-            var url = $"{server}/authapi/v1.0/tokens";
+            var url = $"{server}/base/auth/v1.0/tokens";
             var dict = new Dictionary<string, object>
             {
-                {"appid", appId},
-                {"tenantid", tenantId},
-                {"deptid", deptId},
                 {"account", account},
-                {"signature", key}
+                {"signature", key},
+                {"appId", appId},
+                {"tenantId", tenantId},
+                {"deptId", deptId}
             };
             var request = new HttpRequest();
-            if (!request.send(url, RequestMethod.GET, dict))
+            if (!request.send(url, RequestMethod.POST, dict))
             {
                 Messages.showError(request.message);
                 return;
             }
 
             var result = Util.deserialize<Result<TokenPackage>>(request.data);
-            if (!result.successful)
+            if (!result.success)
             {
                 Messages.showError(result.message);
                 return;
             }
 
-            accessToken = result.data.accessToken;
-            refreshToken = result.data.refreshToken;
+            var data = result.data;
+            accessToken = data.accessToken;
+            refreshToken = data.refreshToken;
 
             var now = DateTime.Now;
-            expiryTime = now.AddSeconds(result.data.expiryTime);
-            failureTime = now.AddSeconds(result.data.failureTime);
+            expiryTime = now.AddMilliseconds(data.expire);
+            failureTime = now.AddMilliseconds(data.failure);
+            userInfo = data.userInfo;
         }
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace Insight.Utils.Client
         {
             accessToken = null;
 
-            var url = $"{server}/authapi/v1.0/tokens";
+            var url = $"{server}/base/auth/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
             if (!request.send(url, RequestMethod.PUT))
             {
@@ -145,18 +144,20 @@ namespace Insight.Utils.Client
                 return;
             }
 
-            if (!result.successful)
+            if (!result.success)
             {
                 Messages.showError(result.message);
                 return;
             }
 
-            accessToken = result.data.accessToken;
-            refreshToken = result.data.refreshToken;
+            var data = result.data;
+            accessToken = data.accessToken;
+            refreshToken =data.refreshToken;
 
             var now = DateTime.Now;
-            expiryTime = now.AddSeconds(result.data.expiryTime);
-            failureTime = now.AddSeconds(result.data.failureTime);
+            expiryTime = now.AddMilliseconds(data.expire);
+            failureTime = now.AddMilliseconds(data.failure);
+            userInfo = data.userInfo;
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace Insight.Utils.Client
         /// </summary>
         public void deleteToken()
         {
-            var url = $"{server}/authapi/v1.0/tokens";
+            var url = $"{server}/base/auth/v1.0/tokens";
             var request = new HttpRequest(token);
             if (!request.send(url, RequestMethod.DELETE))
             {
@@ -182,11 +183,10 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string getCode()
         {
-            var url = $"{server}/authapi/v1.0/tokens/codes";
+            var url = $"{server}/base/auth/v1.0/tokens/codes";
             var dict = new Dictionary<string, object>
             {
-                {"account", account},
-                {"type", 0}
+                {"account", account}
             };
             var request = new HttpRequest();
             if (!request.send(url, RequestMethod.GET, dict))
@@ -196,7 +196,7 @@ namespace Insight.Utils.Client
             }
 
             var result = Util.deserialize<Result<string>>(request.data);
-            if (result.successful) return result.data;
+            if (result.success) return result.data;
 
             Messages.showError(result.message);
             return null;

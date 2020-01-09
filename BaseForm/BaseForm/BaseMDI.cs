@@ -2,12 +2,12 @@
 
 namespace Insight.Utils.BaseForm
 {
-    public partial class BaseMDI : XtraForm
+    public partial class BaseMdi : XtraForm
     {
         /// <summary>
         /// 构造函数
         /// </summary>
-        public BaseMDI()
+        public BaseMdi()
         {
             InitializeComponent();
         }

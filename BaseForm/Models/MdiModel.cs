@@ -18,7 +18,7 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Models
 {
-    public class MdiModel<T> where T : BaseMDI, new()
+    public class MdiModel<T> where T : BaseMdi, new()
     {
         private int waits;
         private DateTime wait;
@@ -45,14 +45,9 @@ namespace Insight.Utils.Models
         public readonly TokenHelper tokenHelper = Setting.tokenHelper;
 
         /// <summary>
-        /// 应用服务地址
+        /// 服务地址
         /// </summary>
-        public string appServer = Setting.appServer;
-
-        /// <summary>
-        /// 基础服务地址
-        /// </summary>
-        public readonly string baseServer = Setting.baseServer;
+        public readonly string gateway = Setting.gateway;
 
         /// <summary>
         /// 业务模块ID
@@ -75,8 +70,8 @@ namespace Insight.Utils.Models
             {
                 ControlBox = nav.index > 0,
                 MdiParent = Application.OpenForms["MainWindow"],
-                Icon = Icon.FromHandle(new Bitmap(new MemoryStream(nav.icon)).GetHicon()),
-                Name = nav.alias,
+                Icon = Icon.FromHandle(new Bitmap(Util.getImage(nav.moduleInfo.iconUrl)).GetHicon()),
+                Name = nav.moduleInfo.module,
                 Text = nav.name
             };
 
@@ -388,7 +383,7 @@ namespace Insight.Utils.Models
         /// <returns>bool 是否成功</returns>
         public bool saveParam()
         {
-            var url = $"{baseServer}/commonapi/v1.0/params";
+            var url = $"{gateway}/commonapi/v1.0/params";
             var dict = new Dictionary<string, object> {{"list", moduleParams}};
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
 
@@ -403,13 +398,13 @@ namespace Insight.Utils.Models
             buttons = (from a in getActions()
                 select new BarButtonItem
                 {
-                    AllowDrawArrow = a.isBegin,
+                    AllowDrawArrow = a.funcInfo.beginGroup,
                     Caption = a.name,
                     Enabled = a.permit,
-                    Name = a.alias.Split(',')[0],
+                    Name = a.funcInfo.method,
                     Tag = a.permit,
-                    Glyph = Image.FromStream(new MemoryStream(a.icon)),
-                    PaintStyle = a.isShowText ? BarItemPaintStyle.CaptionGlyph : BarItemPaintStyle.Standard,
+                    Glyph = Util.getImage(a.funcInfo.iconUrl),
+                    PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph,
                 }).ToList();
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
         }
@@ -425,7 +420,7 @@ namespace Insight.Utils.Models
         /// <returns>Report FastReport报表</returns>
         private Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
         {
-            var url = $"{baseServer}/commonapi/v1.0/templates/{tid}";
+            var url = $"{gateway}/commonapi/v1.0/templates/{tid}";
             var client = new HttpClient<object>(tokenHelper);
             if (!client.get(url)) return null;
 
@@ -492,7 +487,7 @@ namespace Insight.Utils.Models
         /// <returns>ImageData 电子影像数据</returns>
         private ImageData getImageData(string id)
         {
-            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id}";
+            var url = $"{gateway}/commonapi/v1.0/images/{id}";
             var client = new HttpClient<ImageData>(Setting.tokenHelper);
 
             return client.get(url) ? client.data : null;
@@ -506,7 +501,7 @@ namespace Insight.Utils.Models
         /// <returns></returns>
         private ImageData buildImageData(string id, string templateId)
         {
-            var url = $"{Setting.baseServer}/commonapi/v1.0/images/{id ?? "null"}";
+            var url = $"{gateway}/commonapi/v1.0/images/{id ?? "null"}";
             var client = new HttpClient<ImageData>(Setting.tokenHelper);
             var dict = new Dictionary<string, object>
             {
@@ -547,7 +542,7 @@ namespace Insight.Utils.Models
         /// <returns>功能按钮集合</returns>
         private IEnumerable<Function> getActions()
         {
-            var url = $"{baseServer}/commonapi/v1.0/navigations/{moduleId}/functions";
+            var url = $"{gateway}/commonapi/v1.0/navigations/{moduleId}/functions";
             var client = new HttpClient<List<Function>>(tokenHelper);
 
             return client.get(url) ? client.data : new List<Function>();
@@ -558,7 +553,7 @@ namespace Insight.Utils.Models
         /// </summary>
         private void getParams()
         {
-            var url = $"{baseServer}/commonapi/v1.0/params";
+            var url = $"{gateway}/commonapi/v1.0/params";
             var client = new HttpClient<List<ModuleParam>>(tokenHelper);
             if (!client.get(url)) return;
 

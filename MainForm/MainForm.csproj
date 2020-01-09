@@ -68,12 +68,12 @@
     <Compile Include="Models\AboutModel.cs" />
     <Compile Include="Models\ChangPwModel.cs" />
     <Compile Include="Models\LockModel.cs" />
-    <Compile Include="Login\Models\LoginModel.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\PrintModel.cs" />
-    <Compile Include="Login\Models\SetModel.cs" />
+    <Compile Include="Models\SetModel.cs" />
     <Compile Include="Models\UpdateModel.cs" />
-    <Compile Include="Login\Models\WaitingModel.cs" />
+    <Compile Include="Models\WaitingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\About.cs">
       <SubType>Form</SubType>
@@ -93,16 +93,16 @@
     <Compile Include="Views\Locked.Designer.cs">
       <DependentUpon>Locked.cs</DependentUpon>
     </Compile>
-    <Compile Include="Login\Views\LoginDialog.cs">
+    <Compile Include="Views\LoginDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Login\Views\LoginDialog.Designer.cs">
+    <Compile Include="Views\LoginDialog.Designer.cs">
       <DependentUpon>LoginDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Login\Views\LoginSet.cs">
+    <Compile Include="Views\LoginSet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Login\Views\LoginSet.Designer.cs">
+    <Compile Include="Views\LoginSet.Designer.cs">
       <DependentUpon>LoginSet.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\MainForm.cs">
@@ -123,10 +123,10 @@
     <Compile Include="Views\Update.Designer.cs">
       <DependentUpon>Update.cs</DependentUpon>
     </Compile>
-    <Compile Include="Login\Views\Waiting.cs">
+    <Compile Include="Views\Waiting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Login\Views\Waiting.Designer.cs">
+    <Compile Include="Views\Waiting.Designer.cs">
       <DependentUpon>Waiting.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -142,10 +142,10 @@
     <EmbeddedResource Include="Views\Locked.resx">
       <DependentUpon>Locked.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Login\Views\LoginDialog.resx">
+    <EmbeddedResource Include="Views\LoginDialog.resx">
       <DependentUpon>LoginDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Login\Views\LoginSet.resx">
+    <EmbeddedResource Include="Views\LoginSet.resx">
       <DependentUpon>LoginSet.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -158,7 +158,7 @@
     <EmbeddedResource Include="Views\Update.resx">
       <DependentUpon>Update.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Login\Views\Waiting.resx">
+    <EmbeddedResource Include="Views\Waiting.resx">
       <DependentUpon>Waiting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

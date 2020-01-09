@@ -10,14 +10,9 @@ namespace Insight.Utils.Client
         public static readonly string appName = Util.getAppSetting("AppName");
 
         /// <summary>
-        /// 应用服务地址
-        /// </summary>
-        public static readonly string appServer = Util.getAppSetting("AppServer"); 
-
-        /// <summary>
         /// 基础服务地址
         /// </summary>
-        public static readonly string baseServer = getBaseServer();
+        public static readonly string gateway = Util.getAppSetting("Gateway");
 
         /// <summary>
         /// 界面主题样式
@@ -60,16 +55,6 @@ namespace Insight.Utils.Client
         public static string tenantId;
 
         /// <summary>
-        /// 租户编码
-        /// </summary>
-        public static string tenantCode;
-
-        /// <summary>
-        /// 租户名称
-        /// </summary>
-        public static string tenantName;
-
-        /// <summary>
         /// 登录部门ID
         /// </summary>
         public static string deptId;
@@ -98,18 +83,6 @@ namespace Insight.Utils.Client
         /// 是否需要修改密码
         /// </summary>
         public static bool needChangePw;
-
-        /// <summary>
-        /// 获取基础服务地址
-        /// </summary>
-        /// <returns></returns>
-        private static string getBaseServer()
-        {
-            var server = Util.getAppSetting("BaseServer");
-            if (string.IsNullOrEmpty(server)) server = appServer;
-
-            return server;
-        }
 
         /// <summary>
         /// 获取是否保存用户名选项设置
@@ -173,21 +146,13 @@ namespace Insight.Utils.Client
         {
             Util.saveAppSetting("UserName", account);
         }
-
-        /// <summary>
-        /// 保存应用服务地址和端口
-        /// </summary>
-        public static void saveAppServer()
-        {
-            Util.saveAppSetting("AppServer", appServer);
-        }
-
+        
         /// <summary>
         /// 保存验证服务地址和端口
         /// </summary>
-        public static void saveBaseServer()
+        public static void saveGateway()
         {
-            Util.saveAppSetting("BaseServer", baseServer);
+            Util.saveAppSetting("Gateway", gateway);
         }
     }
 }

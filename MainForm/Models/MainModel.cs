@@ -19,9 +19,9 @@ namespace Insight.Utils.MainForm.Models
 {
     public class MainModel : BaseModel
     {
-        public MainWindow view;
-        public List<NavBarItemLink> links = new List<NavBarItemLink>();
-        public List<string> needOpens = new List<string>();
+        public readonly MainWindow view;
+        public readonly List<NavBarItemLink> links = new List<NavBarItemLink>();
+        public readonly List<string> needOpens = new List<string>();
 
         private List<Navigation> navItems;
 
@@ -42,7 +42,7 @@ namespace Insight.Utils.MainForm.Models
             view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
 
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            view.StbServer.Caption = Setting.appServer;
+            view.StbServer.Caption = Setting.gateway;
             if (SystemInformation.WorkingArea.Height > 755) return;
 
             view.WindowState = FormWindowState.Maximized;
@@ -76,8 +76,8 @@ namespace Insight.Utils.MainForm.Models
                 return;
             }
 
-            var mod = navItems.Single(m => m.alias == name);
-            var path = $"{Application.StartupPath}\\{mod.url}";
+            var mod = navItems.Single(m => m.id == name);
+            var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
             if (!File.Exists(path))
             {
                 var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
@@ -87,7 +87,7 @@ namespace Insight.Utils.MainForm.Models
 
             view.Loading.ShowWaitForm();
             var asm = Assembly.LoadFrom(path);
-            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.alias}.Controller"));
+            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
             if (type == null)
             {
                 view.Loading.CloseWaitForm();
@@ -97,8 +97,7 @@ namespace Insight.Utils.MainForm.Models
                 return;
             }
 
-            // ReSharper disable once AssignNullToNotNullAttribute
-            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            asm.CreateInstance(type.FullName ?? throw new InvalidOperationException(), false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
             view.Loading.CloseWaitForm();
         }
 
@@ -128,7 +127,7 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         private void initNavBar()
         {
-            var url = $"{baseServer}/commonapi/v1.0/navigations";
+            var url = $"{gateway}/base/auth/v1.0/navigators";
             var client = new HttpClient<List<Navigation>>(tokenHelper);
             if (!client.get(url)) return;
 
@@ -141,14 +140,14 @@ namespace Insight.Utils.MainForm.Models
                 var items = new List<NavBarItemLink>();
                 foreach (var item in navItems.Where(i => i.parentId == g.id))
                 {
-                    if (item.isDefault)
+                    if (item.moduleInfo.autoLoad)
                     {
                         expand = true;
-                        needOpens.Add(item.alias);
+                        needOpens.Add(item.id);
                     }
 
-                    var icon = Image.FromStream(new MemoryStream(item.icon));
-                    var navBarItem = new NavBarItem(item.name) { Tag = item.alias, SmallImage = icon };
+                    var icon = Util.getImage(item.moduleInfo.iconUrl);
+                    var navBarItem = new NavBarItem(item.name) { Tag = item.id, SmallImage = icon };
                     items.Add(new NavBarItemLink(navBarItem));
                 }
 
@@ -156,7 +155,7 @@ namespace Insight.Utils.MainForm.Models
                 {
                     Caption = g.name,
                     Name = g.name,
-                    SmallImage = Image.FromStream(new MemoryStream(g.icon))
+                    SmallImage = Util.getImage(g.moduleInfo.iconUrl)
                 };
                 var count = links.Count + items.Count;
                 group.Expanded = groups.Count * 55 + count * 32 < height || expand;

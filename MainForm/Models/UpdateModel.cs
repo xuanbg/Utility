@@ -16,7 +16,7 @@ namespace Insight.Utils.MainForm.Models
 {
     public class UpdateModel : BaseModel
     {
-        public Update view = new Update();
+        public readonly Update view = new Update();
         public bool restart;
 
         private List<ClientFile> updates;
@@ -84,7 +84,7 @@ namespace Insight.Utils.MainForm.Models
             view.Confirm.Enabled = false;
             foreach (var file in updates)
             {
-                view.Progress.EditValue = $"正在更新：{file.name}……";
+                view.Progress.EditValue = $@"正在更新：{file.name}……";
                 view.Refresh();
                 Thread.Sleep(1000);
                 var data = getFile(file.id);
@@ -108,7 +108,7 @@ namespace Insight.Utils.MainForm.Models
         /// <returns>文件版本信息</returns>
         private Dictionary<string, ClientFile> getFiles(string id)
         {
-            var url = $"{baseServer}/commonapi/v1.0/apps/{id}/files";
+            var url = $"{gateway}/commonapi/v1.0/apps/{id}/files";
             var client = new HttpClient<Dictionary<string, ClientFile>>(tokenHelper);
 
             return client.get(url) ? client.data : new Dictionary<string, ClientFile>();
@@ -121,7 +121,7 @@ namespace Insight.Utils.MainForm.Models
         /// <returns>Result</returns>
         private string getFile(string id)
         {
-            var url = $"{baseServer}/commonapi/v1.0/apps/files/{id}";
+            var url = $"{gateway}/commonapi/v1.0/apps/files/{id}";
             var client = new HttpClient<object>(tokenHelper);
 
             return client.get(url) ? client.data.ToString() : null;

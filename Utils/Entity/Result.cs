@@ -8,17 +8,12 @@
         /// <summary>
         /// 结果
         /// </summary>
-        public bool successful { get; set; }
+        public bool success { get; set; }
 
         /// <summary>
         /// 错误代码
         /// </summary>
         public string code { get; set; }
-
-        /// <summary>
-        /// 错误名
-        /// </summary>
-        public string name { get; set; }
 
         /// <summary>
         /// 错误消息
@@ -41,7 +36,6 @@
         public Result()
         {
             code = "500";
-            name = "UnknownError";
             message = "未知错误";
         }
     }

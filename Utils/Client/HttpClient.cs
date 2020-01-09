@@ -131,7 +131,7 @@ namespace Insight.Utils.Client
                         return false;
                     }
 
-                    if (result.successful) return true;
+                    if (result.success) return true;
 
                     switch (code)
                     {

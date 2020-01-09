@@ -1,6 +1,6 @@
 ﻿using Insight.Utils.BaseForm;
 
-namespace Insight.Utils.MainForm.Login.Views
+namespace Insight.Utils.MainForm.Views
 {
     public partial class LoginSet : BaseDialog
     {

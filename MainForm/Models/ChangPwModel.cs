@@ -8,8 +8,9 @@ namespace Insight.Utils.MainForm.Models
 {
     public class ChangPwModel : BaseModel
     {
-        public ChangePw view;
+        public readonly ChangePw view;
 
+        private string oldPw;
         private string sing;
         private string newPw;
         private string confirmPw;
@@ -20,7 +21,7 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         public ChangPwModel()
         {
-            view = new ChangePw {Text = "修改密码"};
+            view = new ChangePw {Text = @"修改密码"};
 
             // 订阅控件事件实现数据双向绑定
             view.Password.EditValueChanged += (sender, args) => sing = Util.hash(tokenHelper.account + Util.hash(view.Password.Text));
@@ -34,6 +35,7 @@ namespace Insight.Utils.MainForm.Models
         /// <param name="old">旧密码</param>
         public void init(string old = null)
         {
+            oldPw = old;
             view.Password.EditValue = old;
             view.Password.Enabled = old == null;
 
@@ -81,8 +83,12 @@ namespace Insight.Utils.MainForm.Models
             }
 
             const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
-            var url = $"{baseServer}/userapi/v1.0/users/{Setting.userId}/signature";
-            var dict = new Dictionary<string, object> {{"password", Util.hash(newPw)}};
+            var url = $"{gateway}/base/user/v1.0/users/password";
+            var dict = new Dictionary<string, object>
+            {
+                {"password", Util.hash(newPw)},
+                {"old", Util.hash(oldPw)}
+            };
             var client = new HttpClient<object>(tokenHelper);
             if (!client.put(url, dict, msg)) return false;
 

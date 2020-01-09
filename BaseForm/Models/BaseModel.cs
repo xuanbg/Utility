@@ -17,14 +17,9 @@ namespace Insight.Utils.Models
         protected readonly TokenHelper tokenHelper = Setting.tokenHelper;
 
         /// <summary>
-        /// 应用服务地址
+        /// 服务地址
         /// </summary>
-        public string appServer = Setting.appServer;
-
-        /// <summary>
-        /// 基础服务地址
-        /// </summary>
-        protected string baseServer = Setting.baseServer;
+        protected string gateway = Setting.gateway;
 
         /// <summary>
         /// 设置一个输入检查对象
@@ -113,7 +108,7 @@ namespace Insight.Utils.Models
         /// <returns>Report FastReport报表</returns>
         private Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
         {
-            var url = $"{baseServer}/commonapi/v1.0/templates/{tid}";
+            var url = $"{gateway}/commonapi/v1.0/templates/{tid}";
             var client = new HttpClient<object>(tokenHelper);
             if (!client.get(url)) return null;
 

@@ -1,6 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 
-namespace Insight.Utils.MainForm.Login.Views
+namespace Insight.Utils.MainForm.Views
 {
     public partial class Waiting : XtraForm
     {

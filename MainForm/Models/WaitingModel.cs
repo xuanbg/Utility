@@ -2,9 +2,9 @@
 using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
-using Insight.Utils.MainForm.Login.Views;
+using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Login.Models
+namespace Insight.Utils.MainForm.Models
 {
     public class WaitingModel
     {

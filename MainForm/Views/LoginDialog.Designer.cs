@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.MainForm.Login.Views
+namespace Insight.Utils.MainForm.Views
 {
     public partial class LoginDialog
     {
@@ -44,7 +44,7 @@ namespace Insight.Utils.MainForm.Login.Views
             this.OrgTreeNode = new DevExpress.Utils.ImageCollection(this.components);
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
-            this.pictureEdit3 = new DevExpress.XtraEditors.PictureEdit();
+            this.peeDept = new DevExpress.XtraEditors.PictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).BeginInit();
@@ -52,7 +52,7 @@ namespace Insight.Utils.MainForm.Login.Views
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // UserNameInput
@@ -118,6 +118,7 @@ namespace Insight.Utils.MainForm.Login.Views
             this.lueDept.Properties.TreeList = this.treeListLookUpEdit2TreeList;
             this.lueDept.Size = new System.Drawing.Size(160, 20);
             this.lueDept.TabIndex = 2;
+            this.lueDept.Visible = false;
             // 
             // treeListLookUpEdit2TreeList
             // 
@@ -173,27 +174,28 @@ namespace Insight.Utils.MainForm.Login.Views
             this.pictureEdit2.Size = new System.Drawing.Size(24, 24);
             this.pictureEdit2.TabIndex = 0;
             // 
-            // pictureEdit3
+            // peeDept
             // 
-            this.pictureEdit3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureEdit3.EditValue = ((object)(resources.GetObject("pictureEdit3.EditValue")));
-            this.pictureEdit3.Location = new System.Drawing.Point(160, 198);
-            this.pictureEdit3.Name = "pictureEdit3";
-            this.pictureEdit3.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
-            this.pictureEdit3.Properties.Appearance.Options.UseBackColor = true;
-            this.pictureEdit3.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pictureEdit3.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            this.pictureEdit3.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
-            this.pictureEdit3.Size = new System.Drawing.Size(24, 24);
-            this.pictureEdit3.TabIndex = 0;
+            this.peeDept.Cursor = System.Windows.Forms.Cursors.Default;
+            this.peeDept.EditValue = ((object)(resources.GetObject("peeDept.EditValue")));
+            this.peeDept.Location = new System.Drawing.Point(160, 198);
+            this.peeDept.Name = "peeDept";
+            this.peeDept.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.peeDept.Properties.Appearance.Options.UseBackColor = true;
+            this.peeDept.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.peeDept.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.peeDept.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.peeDept.Size = new System.Drawing.Size(24, 24);
+            this.peeDept.TabIndex = 0;
+            this.peeDept.Visible = false;
             // 
-            // Login
+            // LoginDialog
             // 
             this.AcceptButton = this.LoginButton;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.CancelButton = this.CloseButton;
             this.ClientSize = new System.Drawing.Size(520, 320);
-            this.Controls.Add(this.pictureEdit3);
+            this.Controls.Add(this.peeDept);
             this.Controls.Add(this.pictureEdit2);
             this.Controls.Add(this.pictureEdit1);
             this.Controls.Add(this.lueDept);
@@ -204,7 +206,7 @@ namespace Insight.Utils.MainForm.Login.Views
             this.Controls.Add(this.UserNameInput);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Login";
+            this.Name = "LoginDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).EndInit();
@@ -213,7 +215,7 @@ namespace Insight.Utils.MainForm.Login.Views
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -230,6 +232,6 @@ namespace Insight.Utils.MainForm.Login.Views
         private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
         private PictureEdit pictureEdit1;
         private PictureEdit pictureEdit2;
-        private PictureEdit pictureEdit3;
+        public PictureEdit peeDept;
     }
 }

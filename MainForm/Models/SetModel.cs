@@ -1,12 +1,12 @@
 ﻿using Insight.Utils.Client;
-using Insight.Utils.MainForm.Login.Views;
+using Insight.Utils.MainForm.Views;
 using Insight.Utils.Models;
 
-namespace Insight.Utils.MainForm.Login.Models
+namespace Insight.Utils.MainForm.Models
 {
     public class SetModel : BaseModel
     {
-        public LoginSet view;
+        public readonly LoginSet view;
 
         private bool saveUser = Setting.isSaveUserInfo();
 
@@ -18,12 +18,12 @@ namespace Insight.Utils.MainForm.Login.Models
         {
             view = new LoginSet
             {
-                BaseInupt = {Text = baseServer },
+                BaseInupt = {Text = gateway },
                 SaveUserCheckBox = {Checked = saveUser}
             };
 
             // 订阅控件事件实现数据双向绑定
-            view.BaseInupt.EditValueChanged += (sender, args) => baseServer = view.BaseInupt.Text;
+            view.BaseInupt.EditValueChanged += (sender, args) => gateway = view.BaseInupt.Text;
             view.SaveUserCheckBox.CheckStateChanged += (sender, args) => saveUser = view.SaveUserCheckBox.Checked;
         }
 
@@ -35,7 +35,7 @@ namespace Insight.Utils.MainForm.Login.Models
             if (!saveUser) Setting.saveUserName(string.Empty);
 
             Setting.saveIsSaveUserInfo(saveUser);
-            Setting.saveBaseServer();
+            Setting.saveGateway();
         }
     }
 }

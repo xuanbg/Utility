@@ -5,7 +5,7 @@ using DevExpress.XtraEditors;
 
 namespace Insight.Utils.BaseForm
 {
-    partial class BaseMDI
+    partial class BaseMdi
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +33,7 @@ namespace Insight.Utils.BaseForm
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseMDI));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseMdi));
             this.Wait = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.BaseForm.Waiting), true, true);
             this.BarManager = new DevExpress.XtraBars.BarManager();
             this.ToolBar = new DevExpress.XtraBars.Bar();
@@ -134,7 +134,7 @@ namespace Insight.Utils.BaseForm
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "BaseMDI";
+            this.Name = "BaseMdi";
             ((System.ComponentModel.ISupportInitialize)(this.BarManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
             this.ResumeLayout(false);
