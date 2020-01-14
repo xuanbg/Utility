@@ -7,7 +7,7 @@ namespace Insight.Utils.MainForm.Models
 {
     public class PrintModel
     {
-        public PrintSet view = new PrintSet();
+        public readonly PrintSet view = new PrintSet();
 
         private readonly List<object> prints = new List<object>();
 

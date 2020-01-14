@@ -76,7 +76,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool get(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            return request(url, RequestMethod.DELETE, dict, msg);
+            return request(url, RequestMethod.GET, dict, msg);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool post(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            return request(url, RequestMethod.DELETE, dict, msg);
+            return request(url, RequestMethod.POST, dict, msg);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool put(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            return request(url, RequestMethod.DELETE, dict, msg);
+            return request(url, RequestMethod.PUT, dict, msg);
         }
 
         /// <summary>

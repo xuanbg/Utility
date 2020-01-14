@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraNavBar;
@@ -61,8 +60,6 @@ namespace Insight.Utils.MainForm
             mainWindow.Closed += (sender, args) => exit();
 
             login();
-            needOpens.ForEach(addPageMdi);
-            if (Setting.needChangePw) changPassword(true);
         }
 
         /// <summary>
@@ -98,12 +95,13 @@ namespace Insight.Utils.MainForm
                 var waiting = new WaitingModel();
                 waiting.view.Show();
                 waiting.view.Refresh();
-
-                Thread.Sleep(800);
                 login.view.Close();
-                show();
 
+                showMainWindow();
                 waiting.view.Close();
+                if (Setting.needChangePw) changPassword(true);
+
+                needOpens.ForEach(addPageMdi);
             };
 
             // 显示登录界面
@@ -116,7 +114,7 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 主窗体初始化
         /// </summary>
-        public void show()
+        public void showMainWindow()
         {
             mainWindow.StbDept.Caption = Setting.deptName;
             mainWindow.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;

@@ -8,7 +8,7 @@ namespace Insight.Utils.MainForm.Models
 {
     public class WaitingModel
     {
-        public Waiting view = new Waiting
+        public readonly Waiting view = new Waiting
         {
             Text = Setting.appName,
             Icon = new Icon("logo.ico"),
