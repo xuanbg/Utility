@@ -28,7 +28,7 @@ namespace Insight.Utils.ExcelHelper
         /// <summary>
         /// 类型成员字段信息集合
         /// </summary>
-        private List<FieldInfo> exportfields;
+        private List<FieldInfo> exportFields;
 
         /// <summary>
         /// 工作簿
@@ -133,7 +133,7 @@ namespace Insight.Utils.ExcelHelper
             var sheet = workbook.GetSheet(sheetName);
             if (sheet == null) return false;
 
-            initTitel(sheet);
+            initTitle(sheet);
             if (title == null || title.Count == 0) return false;
 
             return !keys.Split(',').Except(title).Any();
@@ -164,7 +164,7 @@ namespace Insight.Utils.ExcelHelper
             if (sheet == null) return false;
 
             // 读取标题
-            initTitel(sheet);
+            initTitle(sheet);
             if (title == null || title.Count == 0) return false;
 
             // 读取关键列到集合并取标题集合的差集
@@ -199,24 +199,13 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 使用指定的数据集生成Sheet并导出工作簿到Excel文件
-        /// </summary>
-        /// <typeparam name="T">类型参数</typeparam>
-        /// <param name="file"></param>
-        /// <param name="list"></param>
-        public void exportFile<T>(string file, List<T> list)
-        {
-            exportFile(file, list, null);
-        }
-
-        /// <summary>
         /// 使用指定的数据集生成指定名称的Sheet并导出工作簿到Excel文件
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="file">输出Excel文件(.xls|.xlsx)的路径及文件名</param>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void exportFile<T>(string file, List<T> list, string sheetName)
+        public void exportFile<T>(string file, List<T> list, string sheetName = null)
         {
             createSheet(list, sheetName);
             exportFile(file);
@@ -237,24 +226,13 @@ namespace Insight.Utils.ExcelHelper
         }
 
         /// <summary>
-        /// 使用指定的数据集生成Sheet并导出工作簿到数据流
-        /// </summary>
-        /// <typeparam name="T">类型参数</typeparam>
-        /// <param name="list">输入数据集合</param>
-        /// <returns>Stream 文件流</returns>
-        public MemoryStream exportStream<T>(List<T> list)
-        {
-            return exportStream(list, null);
-        }
-
-        /// <summary>
         /// 使用指定的数据集生成指定名称的Sheet并导出工作簿到数据流
         /// </summary>
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Stream 文件流</returns>
-        public MemoryStream exportStream<T>(List<T> list, string sheetName)
+        public MemoryStream exportStream<T>(List<T> list, string sheetName = null)
         {
             createSheet(list, sheetName);
 
@@ -347,17 +325,7 @@ namespace Insight.Utils.ExcelHelper
         {
             if (workbook == null) return;
 
-            createTitel<T>(sheetName);
-        }
-
-        /// <summary>
-        /// 使用指定的数据集在工作簿中创建一个Sheet
-        /// </summary>
-        /// <typeparam name="T">类型参数</typeparam>
-        /// <param name="list">输入数据集合</param>
-        public void createSheet<T>(List<T> list)
-        {
-            createSheet(list, null);
+            createTitle<T>(sheetName);
         }
 
         /// <summary>
@@ -366,12 +334,12 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="list">输入数据集合</param>
         /// <param name="sheetName">Sheet名称</param>
-        public void createSheet<T>(List<T> list, string sheetName)
+        public void createSheet<T>(List<T> list, string sheetName = null)
         {
             if (workbook == null || list == null) return;
 
             // 创建Sheet并生成标题行
-            var sheet = createTitel<T>(sheetName);
+            var sheet = createTitle<T>(sheetName);
 
             // 根据字段类型设置单元格格式并生成数据
             var i = 1;
@@ -396,7 +364,7 @@ namespace Insight.Utils.ExcelHelper
 
             // 初始化字段信息字典和标题字典
             initFieldsInfo<T>();
-            initTitel(sheet);
+            initTitle(sheet);
 
             // 如标题为空,则返回一个空集合
             var table = new List<T>();
@@ -517,7 +485,7 @@ namespace Insight.Utils.ExcelHelper
         /// <typeparam name="T">类型参数</typeparam>
         /// <param name="sheetName">Sheet名称</param>
         /// <returns>Sheet</returns>
-        private ISheet createTitel<T>(string sheetName)
+        private ISheet createTitle<T>(string sheetName)
         {
             initFieldsInfo<T>();
             if (string.IsNullOrEmpty(sheetName)) sheetName = $"Sheet{workbook.NumberOfSheets + 1}";
@@ -525,7 +493,7 @@ namespace Insight.Utils.ExcelHelper
             var sheet = workbook.CreateSheet(sheetName);
             var row = sheet.CreateRow(0);
             var i = 0;
-            foreach (var field in exportfields)
+            foreach (var field in exportFields)
             {
                 var cell = row.CreateCell(i++, CellType.String);
                 var columnName = field.columnName;
@@ -544,9 +512,9 @@ namespace Insight.Utils.ExcelHelper
         private void writeRow<T>(IRow row, T item)
         {
             var propertys = typeof(T).GetProperties();
-            for (var i = 0; i < exportfields.Count; i++)
+            for (var i = 0; i < exportFields.Count; i++)
             {
-                var field = exportfields[i];
+                var field = exportFields[i];
                 var cell = row.CreateCell(i, getCellType(field.typeName));
                 var property = propertys.First(p => p.Name == field.fieldName);
                 if (!property.CanRead) continue;
@@ -594,7 +562,7 @@ namespace Insight.Utils.ExcelHelper
         /// 读取标题,生成标题和对应的数据类型的字典
         /// </summary>
         /// <param name="sheet">数据表</param>
-        private void initTitel(ISheet sheet)
+        private void initTitle(ISheet sheet)
         {
             title = new List<string>();
             var row = sheet.GetRow(0);
@@ -639,7 +607,7 @@ namespace Insight.Utils.ExcelHelper
                 fieldInfos.Add(info);
             }
 
-            exportfields = fieldInfos.Where(i => i.columnPolicy != Ignorable).ToList();
+            exportFields = fieldInfos.Where(i => i.columnPolicy != Ignorable).ToList();
         }
     }
 }

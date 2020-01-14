@@ -90,6 +90,7 @@
       <DependentUpon>Waiting.cs</DependentUpon>
     </Compile>
     <Compile Include="Controller\BaseController.cs" />
+    <Compile Include="Controller\MdiController.cs" />
     <Compile Include="Controls\Format.cs" />
     <Compile Include="Entities\PrintSetting.cs" />
     <Compile Include="Models\BaseModel.cs" />

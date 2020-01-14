@@ -64,7 +64,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 是否默认启动
         /// </summary>
-        public bool autoLoad { get; set; }
+        public bool? autoLoad { get; set; }
     }
 
     /// <summary>

@@ -1,44 +1,68 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using DevExpress.XtraBars;
+using DevExpress.XtraNavBar;
+using FastReport.Utils;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controller;
+using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Models;
+using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm
 {
-    public class Controller : BaseController<MainModel>
-    {         
+    public class Controller : BaseController
+    {
+        public readonly MainModel mainModel;
+        public readonly MainWindow mainWindow;
+        public readonly List<NavBarItemLink> links = new List<NavBarItemLink>();
+        public readonly List<string> needOpens = new List<string>();
+
+        private List<Navigation> navItems;
+
         /// <summary>
         /// 构造函数
         /// </summary>
         public Controller()
         {
-            login();
-
             // 构造主窗体并显示
-            manage = new MainModel();
-            var view = manage.view;
+            mainModel = new MainModel();
+            mainWindow = new MainWindow
+            {
+                Text = Setting.appName,
+                Icon = new Icon("logo.ico")
+            };
+
+            // 初始化界面
+            Res.LoadLocale("Components\\Chinese (Simplified).frl");
+            mainWindow.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
+            mainWindow.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            mainWindow.StbServer.Caption = Setting.gateway;
+            mainWindow.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => changPassword();
-            view.MubLock.ItemClick += (sender, args) => lockWindow();
-            view.MubLogout.ItemClick += (sender, args) => logout();
-            view.MubExit.ItemClick += (sender, args) => view.Close();
-            view.MubPrintSet.ItemClick += (sender, args) => printSet();
-            view.MubUpdate.ItemClick += (sender, args) => update();
-            view.MubAbout.ItemClick += (sender, args) => about();
+            mainWindow.MubChangPassWord.ItemClick += (sender, args) => changPassword();
+            mainWindow.MubLock.ItemClick += (sender, args) => lockWindow();
+            mainWindow.MubLogout.ItemClick += (sender, args) => logout();
+            mainWindow.MubExit.ItemClick += (sender, args) => mainWindow.Close();
+            mainWindow.MubPrintSet.ItemClick += (sender, args) => printSet();
+            mainWindow.MubUpdate.ItemClick += (sender, args) => update();
+            mainWindow.MubAbout.ItemClick += (sender, args) => about();
+            mainWindow.Closing += (sender, args) => args.Cancel = mainModel.logout();
+            mainWindow.Closed += (sender, args) => exit();
 
-            // 订阅主窗体事件
-            view.Shown += (sender, args) =>
-            {
-                if (Setting.needChangePw) changPassword(true);
-
-                manage.needOpens.ForEach(manage.addPageMdi);
-            };
-            view.Closing += (sender, args) => args.Cancel = manage.logout();
-            view.Closed += (sender, args) => exit();
+            login();
+            needOpens.ForEach(addPageMdi);
+            if (Setting.needChangePw) changPassword(true);
         }
 
         /// <summary>
@@ -77,7 +101,7 @@ namespace Insight.Utils.MainForm
 
                 Thread.Sleep(800);
                 login.view.Close();
-                manage.show();
+                show();
 
                 waiting.view.Close();
             };
@@ -89,6 +113,99 @@ namespace Insight.Utils.MainForm
             login.initUserName();
         }
 
+        /// <summary>
+        /// 主窗体初始化
+        /// </summary>
+        public void show()
+        {
+            mainWindow.StbDept.Caption = Setting.deptName;
+            mainWindow.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
+            mainWindow.StbUser.Caption = Setting.userName;
+
+            initNavBar();
+            links.ForEach(i => i.Item.LinkClicked += (sender, args) => addPageMdi(args.Link.Item.Tag.ToString()));
+
+            mainWindow.Show();
+        }
+
+        /// <summary>
+        /// 打开MDI子窗体
+        /// </summary>
+        /// <param name="name"></param>
+        public void addPageMdi(string name)
+        {
+            var form = Application.OpenForms[name];
+            if (form != null)
+            {
+                form.Activate();
+                return;
+            }
+
+            var mod = navItems.Single(m => m.id == name);
+            var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
+            if (!File.Exists(path))
+            {
+                var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
+                Messages.showError(msg);
+                return;
+            }
+
+            mainWindow.Loading.ShowWaitForm();
+            var asm = Assembly.LoadFrom(path);
+            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
+            if (type == null)
+            {
+                mainWindow.Loading.CloseWaitForm();
+                var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
+                Messages.showError(msg);
+
+                return;
+            }
+
+            asm.CreateInstance(type.FullName ?? throw new InvalidOperationException(), false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            mainWindow.Loading.CloseWaitForm();
+        }
+
+        /// <summary>
+        /// 初始化导航栏
+        /// </summary>
+        private void initNavBar()
+        {
+            var navigators = mainModel.getNavigators();
+            navItems = navigators.Where(i => i.parentId != null).ToList();
+            var groups = navigators.Where(i => i.parentId == null).ToList();
+            var height = mainWindow.NavMain.Height;
+            foreach (var g in groups)
+            {
+                var expand = false;
+                var items = new List<NavBarItemLink>();
+                foreach (var item in navItems.Where(i => i.parentId == g.id))
+                {
+                    if (item.moduleInfo.autoLoad ?? false)
+                    {
+                        expand = true;
+                        needOpens.Add(item.id);
+                    }
+
+                    var icon = Util.getImage(item.moduleInfo.iconUrl);
+                    var navBarItem = new NavBarItem(item.name) { Tag = item.id, SmallImage = icon };
+                    items.Add(new NavBarItemLink(navBarItem));
+                }
+
+                var group = new NavBarGroup
+                {
+                    Caption = g.name,
+                    Name = g.name,
+                    SmallImage = Util.getImage(g.moduleInfo.iconUrl)
+                };
+                var count = links.Count + items.Count;
+                group.Expanded = groups.Count * 55 + count * 32 < height || expand;
+                group.ItemLinks.AddRange(items.ToArray());
+
+                mainWindow.NavMain.Groups.Add(group);
+                links.AddRange(items);
+            }
+        }
         /// <summary>
         /// 点击菜单项：修改密码，弹出修改密码对话框
         /// </summary>
@@ -145,7 +262,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         private void exit()
         {
-            manage.saveLookAndFeel();
+            MainModel.saveLookAndFeel(mainWindow.MyFeel.LookAndFeel.SkinName);
             Application.Exit();
         }
 

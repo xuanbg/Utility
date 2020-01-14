@@ -5,76 +5,74 @@ using Insight.Utils.Common;
 
 namespace Insight.Utils.Controller
 {
-    public class BaseController<T>
+    public class BaseController
     {
-        protected T manage;
-
         /// <summary>
         /// 订阅对话框关闭事件
         /// </summary>
-        /// <param name="view">对话框视图</param>
-        protected void subCloseEvent(BaseDialog view)
+        /// <param name="dialog">对话框视图</param>
+        protected void subCloseEvent(BaseDialog dialog)
         {
-            view.Cancel.Click += (sender, args) => view.Close();
-            view.Closing += (sender, args) => dialogClosing(view, args);
-            view.Closed += (sender, args) => view.Dispose();
+            dialog.Cancel.Click += (sender, args) => dialog.Close();
+            dialog.Closing += (sender, args) => dialogClosing(dialog, args);
+            dialog.Closed += (sender, args) => dialog.Dispose();
         }
 
         /// <summary>
         /// 订阅对话框关闭事件
         /// </summary>
-        /// <param name="view">对话框视图</param>
+        /// <param name="dialog">对话框视图</param>
         /// <param name="confirm">是否订阅确定按钮默认事件</param>
-        protected void subCloseEvent(BaseDialog view, bool confirm)
+        protected void subCloseEvent(BaseDialog dialog, bool confirm)
         {
-            subCloseEvent(view);
+            subCloseEvent(dialog);
             if (!confirm) return;
 
-            view.Confirm.Click += (sender, args) => closeDialog(view);
+            dialog.Confirm.Click += (sender, args) => closeDialog(dialog);
         }
 
         /// <summary>
         /// 订阅向导关闭事件
         /// </summary>
-        /// <param name="view">向导视图</param>
-        protected void subCloseEvent(BaseWizard view)
+        /// <param name="wizard">向导视图</param>
+        protected void subCloseEvent(BaseWizard wizard)
         {
-            view.FormClosing += (sender, args) => wizardClosing(view, args);
+            wizard.FormClosing += (sender, args) => wizardClosing(wizard, args);
         }
 
         /// <summary>
         /// 关闭对话框
         /// </summary>
-        /// <param name="view">对话框视图</param>
-        protected void closeDialog(BaseDialog view)
+        /// <param name="dialog">对话框视图</param>
+        protected void closeDialog(BaseDialog dialog)
         {
-            view.Confirm.Click -= (sender, args) => closeDialog(view);
-            view.Cancel.Click -= (sender, args) => view.Close();
-            view.Closing -= (sender, args) => dialogClosing(view, args);
-            view.Closed -= (sender, args) => view.Dispose();
+            dialog.Confirm.Click -= (sender, args) => closeDialog(dialog);
+            dialog.Cancel.Click -= (sender, args) => dialog.Close();
+            dialog.Closing -= (sender, args) => dialogClosing(dialog, args);
+            dialog.Closed -= (sender, args) => dialog.Dispose();
 
-            view.DialogResult = DialogResult.OK;
-            view.Close();
+            dialog.DialogResult = DialogResult.OK;
+            dialog.Close();
         }
 
         /// <summary>
         /// 对话框关闭时弹出确认信息
         /// </summary>
-        /// <param name="view">对话框视图</param>
+        /// <param name="dialog">对话框视图</param>
         /// <param name="e">对话框视图关闭事件</param>
-        private void dialogClosing(BaseDialog view, CancelEventArgs e)
+        private void dialogClosing(BaseDialog dialog, CancelEventArgs e)
         {
-            if (view.DialogResult == DialogResult.OK) return;
+            if (dialog.DialogResult == DialogResult.OK) return;
 
             const string msg = "您确定要放弃所做的变更，并关闭对话框吗？";
             if (!Messages.showConfirm(msg)) e.Cancel = true;
 
-            view.Confirm.Click -= (sender, args) => closeDialog(view);
-            view.Cancel.Click -= (sender, args) => view.Close();
-            view.Closing -= (sender, args) => dialogClosing(view, args);
-            view.Closed -= (sender, args) => view.Dispose();
+            dialog.Confirm.Click -= (sender, args) => closeDialog(dialog);
+            dialog.Cancel.Click -= (sender, args) => dialog.Close();
+            dialog.Closing -= (sender, args) => dialogClosing(dialog, args);
+            dialog.Closed -= (sender, args) => dialog.Dispose();
 
-            view.DialogResult = DialogResult.Cancel;
+            dialog.DialogResult = DialogResult.Cancel;
         }
 
         /// <summary>
