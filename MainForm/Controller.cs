@@ -141,7 +141,7 @@ namespace Insight.Utils.MainForm
                 return;
             }
 
-            var mod = navItems.Single(m => m.id == name);
+            var mod = navItems.Single(m => m.moduleInfo.module == name);
             var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
             if (!File.Exists(path))
             {
@@ -153,7 +153,7 @@ namespace Insight.Utils.MainForm
             mainWindow.Loading.ShowWaitForm();
             var asm = Assembly.LoadFrom(path);
             var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
-            if (type == null)
+            if (type == null || string.IsNullOrEmpty(type.FullName))
             {
                 mainWindow.Loading.CloseWaitForm();
                 var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
@@ -162,7 +162,7 @@ namespace Insight.Utils.MainForm
                 return;
             }
 
-            asm.CreateInstance(type.FullName ?? throw new InvalidOperationException(), false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
             mainWindow.Loading.CloseWaitForm();
         }
 
@@ -184,11 +184,11 @@ namespace Insight.Utils.MainForm
                     if (item.moduleInfo.autoLoad ?? false)
                     {
                         expand = true;
-                        needOpens.Add(item.id);
+                        needOpens.Add(item.moduleInfo.module);
                     }
 
                     var icon = Util.getImage(item.moduleInfo.iconUrl);
-                    var navBarItem = new NavBarItem(item.name) { Tag = item.id, SmallImage = icon };
+                    var navBarItem = new NavBarItem(item.name) { Tag = item.moduleInfo.module, SmallImage = icon };
                     items.Add(new NavBarItemLink(navBarItem));
                 }
 

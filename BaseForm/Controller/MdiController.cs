@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
@@ -37,7 +36,6 @@ namespace Insight.Utils.Controller
         /// <param name="nav">导航对象</param>
         protected MdiController(Navigation nav)
         {
-            mdiModel = new TM();
             mdiView = new TV
             {
                 ControlBox = nav.index > 0,
@@ -46,7 +44,9 @@ namespace Insight.Utils.Controller
                 Name = nav.moduleInfo.module,
                 Text = nav.name
             };
+            mdiView.Show();
 
+            mdiModel = new TM();
             buttons = (from a in mdiModel.getActions(nav.id)
                 select new BarButtonItem
                 {
@@ -56,12 +56,10 @@ namespace Insight.Utils.Controller
                     Name = a.funcInfo.method,
                     Tag = a.permit,
                     Glyph = Util.getImage(a.funcInfo.iconUrl),
-                    PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph,
+                    PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();
-            buttons.ForEach(i => mdiView.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
             buttons.ForEach(i => i.ItemClick += (sender, args) => itemClick(args.Item.Name));
-
-            mdiView.Show();
+            buttons.ForEach(i => mdiView.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
         }
 
         /// <summary>
@@ -281,14 +279,14 @@ namespace Insight.Utils.Controller
         /// <param name="action">功能操作</param>
         private void itemClick(string action)
         {
-            var method = typeof(TM).GetMethod(action, BindingFlags.Public);
+            var method = GetType().GetMethod(action);
             if (method == null)
             {
                 Messages.showError("对不起，该功能尚未实现！");
             }
             else
             {
-                method.Invoke(mdiModel, null);
+                method.Invoke(this, null);
             }
         }
     }
