@@ -11,10 +11,10 @@ namespace Insight.Utils.MainForm
         /// 获取导航数据
         /// </summary>
         /// <returns>导航数据集合</returns>
-        internal static List<Navigation> getNavigators()
+        internal static List<ModuleDto> getNavigators()
         {
             var url = "/base/auth/v1.0/navigators";
-            var client = new HttpClient<List<Navigation>>();
+            var client = new HttpClient<List<ModuleDto>>();
 
             return client.getData(url);
         }

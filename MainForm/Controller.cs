@@ -26,7 +26,7 @@ namespace Insight.Utils.MainForm
         public readonly List<NavBarItemLink> links = new List<NavBarItemLink>();
         public readonly List<string> needOpens = new List<string>();
 
-        private List<Navigation> navItems;
+        private List<ModuleDto> navItems;
 
         /// <summary>
         /// 构造函数

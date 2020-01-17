@@ -11,10 +11,10 @@ namespace Insight.Utils
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
-        internal static IEnumerable<Function> getActions(string moduleId)
+        internal static IEnumerable<FunctionDto> getActions(string moduleId)
         {
             var url = $"/base/auth/v1.0/navigators/{moduleId}/functions";
-            var client = new HttpClient<List<Function>>();
+            var client = new HttpClient<List<FunctionDto>>();
 
             return client.getData(url);
         }

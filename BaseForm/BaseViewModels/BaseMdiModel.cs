@@ -25,12 +25,17 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// MDI视图
         /// </summary>
-        public readonly TV view;
+        public TV view;
 
         /// <summary>
         /// 主列表分页控件
         /// </summary>
         public PageControl tab;
+
+        /// <summary>
+        /// 当前列表handle
+        /// </summary>
+        public int handle = 0;
 
         /// <summary>
         /// 列表数据
@@ -43,20 +48,23 @@ namespace Insight.Utils.BaseViewModels
         public T item;
 
         /// <summary>
-        /// 构造方法
+        /// 初始化视图
         /// </summary>
-        /// <param name="nav">导航信息</param>
-        public BaseMdiModel(Navigation nav)
+        /// <param name="module">模块信息</param>
+        public void initModule(ModuleDto module)
         {
-            var icon = Util.getImage(nav.moduleInfo.iconUrl);
+            if (module.moduleInfo.hasParams ?? false) moduleParams = BaseModel.getParams();
+
+            var icon = Util.getImage(module.moduleInfo.iconUrl);
             view = new TV
             {
-                ControlBox = nav.index > 0,
+                ControlBox = module.index > 0,
                 MdiParent = Application.OpenForms["MainWindow"],
                 Icon = Icon.FromHandle(new Bitmap(icon).GetHicon()),
-                Name = nav.moduleInfo.module,
-                Text = nav.name
+                Name = module.moduleInfo.module,
+                Text = module.name
             };
+            view.Show();
         }
 
         /// <summary>

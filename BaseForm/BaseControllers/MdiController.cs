@@ -12,9 +12,8 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.BaseControllers
 {
-    public class MdiController<T, TM, TV> : BaseController where TM : BaseMdiModel<T, TV>, new() where TV : BaseMdi, new()
+    public class MdiController<T, TV, TM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV>, new()
     {
-        private readonly TV mdiView;
         private readonly List<BarButtonItem> buttons;
         private int waits;
         private DateTime wait;
@@ -24,18 +23,22 @@ namespace Insight.Utils.BaseControllers
         /// </summary>
         protected readonly TM mdiModel;
 
+        /// <summary>
+        /// MDI View
+        /// </summary>
+        public readonly TV mdiView;
 
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="nav">导航对象</param>
-        protected MdiController(Navigation nav)
+        /// <param name="module">模块信息</param>
+        protected MdiController(ModuleDto module)
         {
             mdiModel = new TM();
+            mdiModel.initModule(module);
             mdiView = mdiModel.view;
-            mdiView.Show();
 
-            buttons = (from a in BaseModel.getActions(nav.id)
+            buttons = (from a in BaseModel.getActions(module.id)
                 select new BarButtonItem
                 {
                     AllowDrawArrow = a.funcInfo.beginGroup,

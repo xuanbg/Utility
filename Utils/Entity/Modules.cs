@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Insight.Utils.Entity
 {
     /// <summary>
-    /// 导航栏数据
+    /// 模块信息对象实体
     /// </summary>
-    public class Navigation
+    public class ModuleDto
     {
         /// <summary>
         /// ID，唯一标识
@@ -41,7 +41,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 功能集合
         /// </summary>
-        public List<Function> functions { get; set; }
+        public List<FunctionDto> functions { get; set; }
     }
 
     public class ModuleInfo
@@ -65,12 +65,17 @@ namespace Insight.Utils.Entity
         /// 是否默认启动
         /// </summary>
         public bool? autoLoad { get; set; }
+
+        /// <summary>
+        /// 是否拥有选项
+        /// </summary>
+        public bool? hasParams { get; set; }
     }
 
     /// <summary>
     /// 模块工具栏按钮
     /// </summary>
-    public class Function
+    public class FunctionDto
     {
         /// <summary>
         /// ID，唯一标识
