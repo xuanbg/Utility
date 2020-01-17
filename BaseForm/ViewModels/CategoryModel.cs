@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Insight.Utils.BaseForm;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 using Insight.Utils.Views;
 
-namespace Insight.Utils.Models
+namespace Insight.Utils.ViewModels
 {
-    public class CategoryModel<T> : BaseModel
+    public class CategoryModel<T> : BaseDialogModel<BaseDialog>
     {
         private readonly string baseUrl;
         private readonly List<TreeLookUpMember> list;
@@ -28,7 +30,7 @@ namespace Insight.Utils.Models
         {
             item = cat;
             list = getTreeList(cats);
-            baseUrl = $"{gateway}/{url}";
+            baseUrl = url;
             parentId = cat.parentId;
             index = cat.index;
 
@@ -67,36 +69,6 @@ namespace Insight.Utils.Models
             Format.initTreeListLookUpEdit(view.trlParent, list, NodeIconType.CATEGORY);
             setIndexValue();
             setCheckItem(view.txtName, item.name, "请输入分类名称！", true);
-        }
-
-        /// <summary>
-        /// 新增分类
-        /// </summary>
-        /// <returns>分类对象实体</returns>
-        public Catalog<T> add()
-        {
-            if (!inputExamine()) return null;
-
-            var msg = $"新建分类【{item.name}】失败！";
-            var dict = new Dictionary<string, object> {{"catalog", item}};
-            var client = new HttpClient<Catalog<T>>(tokenHelper);
-
-            return client.post(baseUrl, dict, msg) ? client.data : null;
-        }
-
-        /// <summary>
-        /// 编辑分类
-        /// </summary>
-        /// <returns>分类对象实体</returns>
-        public Catalog<T> edit()
-        {
-            if (!inputExamine()) return null;
-
-            var msg = $"编辑分类【{item.name}】失败！";
-            var dict = new Dictionary<string, object> {{"catalog", item}};
-            var client = new HttpClient<object>(tokenHelper);
-
-            return client.put($"{baseUrl}/{item.id}", dict, msg) ? item : null;
         }
 
         /// <summary>

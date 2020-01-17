@@ -12,7 +12,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 基础服务地址
         /// </summary>
-        public static readonly string gateway = Util.getAppSetting("Gateway");
+        public static string gateway = Util.getAppSetting("Gateway");
 
         /// <summary>
         /// 界面主题样式

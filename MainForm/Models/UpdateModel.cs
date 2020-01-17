@@ -6,17 +6,16 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.Utils.Extensions;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
-using Insight.Utils.Models;
 
 namespace Insight.Utils.MainForm.Models
 {
-    public class UpdateModel : BaseModel
+    public class UpdateModel : BaseDialogModel<Update>
     {
-        public readonly Update view = new Update();
         public bool restart;
 
         private List<ClientFile> updates;
@@ -46,7 +45,7 @@ namespace Insight.Utils.MainForm.Models
             Util.getClientFiles(locals, appId, root, ".exe|.dll|.frl");
 
             // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
-            updates = (from sf in getFiles(appId)
+            updates = (from sf in Model.getFiles(appId)
                 let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
                 let cv = new Version(cf?.version ?? "1.0.0")
                 let sv = new Version(sf.Value?.version ?? "1.0.0")
@@ -87,7 +86,7 @@ namespace Insight.Utils.MainForm.Models
                 view.Progress.EditValue = $@"正在更新：{file.name}……";
                 view.Refresh();
                 Thread.Sleep(1000);
-                var data = getFile(file.id);
+                var data = Model.getFile(file.id);
                 if (data == null) continue;
 
                 var buffer = Convert.FromBase64String(data);
@@ -101,30 +100,5 @@ namespace Insight.Utils.MainForm.Models
             view.Refresh();
         }
 
-        /// <summary>
-        /// 获取服务器上的客户端文件版本信息
-        /// </summary>
-        /// <param name="id">应用ID</param>
-        /// <returns>文件版本信息</returns>
-        private Dictionary<string, ClientFile> getFiles(string id)
-        {
-            var url = $"{gateway}/commonapi/v1.0/apps/{id}/files";
-            var client = new HttpClient<Dictionary<string, ClientFile>>(tokenHelper);
-
-            return client.get(url) ? client.data : new Dictionary<string, ClientFile>();
-        }
-
-        /// <summary>
-        /// 根据文件ID获取更新文件
-        /// </summary>
-        /// <param name="id">更新文件ID</param>
-        /// <returns>Result</returns>
-        private string getFile(string id)
-        {
-            var url = $"{gateway}/commonapi/v1.0/apps/files/{id}";
-            var client = new HttpClient<object>(tokenHelper);
-
-            return client.get(url) ? client.data.ToString() : null;
-        }
     }
 }

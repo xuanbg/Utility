@@ -1,13 +1,12 @@
-﻿using Insight.Utils.Common;
+﻿using Insight.Utils.BaseViewModels;
+using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.MainForm.Views;
-using Insight.Utils.Models;
 
 namespace Insight.Utils.MainForm.Models
 {
-    public class LockModel : BaseModel
+    public class LockModel : BaseDialogModel<Locked>
     {
-        public Locked view = new Locked();
-
         private string sing;
 
         /// <summary>
@@ -16,7 +15,7 @@ namespace Insight.Utils.MainForm.Models
         /// </summary>
         public LockModel()
         {
-            view.Password.EditValueChanged += (sender, args) => sing = Util.hash(tokenHelper.account + Util.hash(view.Password.Text));
+            view.Password.EditValueChanged += (sender, args) => sing = Util.hash(Setting.tokenHelper.account + Util.hash(view.Password.Text));
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace Insight.Utils.MainForm.Models
         /// <returns>bool 是否解锁成功</returns>
         public bool unlock()
         {
-            if (sing == tokenHelper.sign) return true;
+            if (sing == Setting.tokenHelper.sign) return true;
 
             Messages.showError("请输入正确的密码，否则无法为您解除锁定！");
             view.Password.Text = string.Empty;

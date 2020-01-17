@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 using DevExpress.XtraBars;
 using FastReport;
 using Insight.Utils.BaseForm;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Common;
 using Insight.Utils.Entities;
 using Insight.Utils.Entity;
-using Insight.Utils.Models;
 
-namespace Insight.Utils.Controller
+namespace Insight.Utils.BaseControllers
 {
-    public class MdiController<TM, TV> : BaseController where TM : MdiModel, new() where TV : BaseMdi, new()
+    public class MdiController<T, TM, TV> : BaseController where TM : BaseMdiModel<T, TV>, new() where TV : BaseMdi, new()
     {
+        private readonly TV mdiView;
         private readonly List<BarButtonItem> buttons;
         private int waits;
         private DateTime wait;
@@ -25,10 +24,6 @@ namespace Insight.Utils.Controller
         /// </summary>
         protected readonly TM mdiModel;
 
-        /// <summary>
-        /// MDI View
-        /// </summary>
-        protected readonly TV mdiView;
 
         /// <summary>
         /// 构造方法
@@ -36,18 +31,11 @@ namespace Insight.Utils.Controller
         /// <param name="nav">导航对象</param>
         protected MdiController(Navigation nav)
         {
-            mdiView = new TV
-            {
-                ControlBox = nav.index > 0,
-                MdiParent = Application.OpenForms["MainWindow"],
-                Icon = Icon.FromHandle(new Bitmap(Util.getImage(nav.moduleInfo.iconUrl)).GetHicon()),
-                Name = nav.moduleInfo.module,
-                Text = nav.name
-            };
+            mdiModel = new TM();
+            mdiView = mdiModel.view;
             mdiView.Show();
 
-            mdiModel = new TM();
-            buttons = (from a in mdiModel.getActions(nav.id)
+            buttons = (from a in BaseModel.getActions(nav.id)
                 select new BarButtonItem
                 {
                     AllowDrawArrow = a.funcInfo.beginGroup,

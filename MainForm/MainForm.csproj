@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Models\AboutModel.cs" />
     <Compile Include="Models\ChangPwModel.cs" />
     <Compile Include="Models\LockModel.cs" />

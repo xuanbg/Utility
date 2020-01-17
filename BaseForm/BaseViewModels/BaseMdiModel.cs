@@ -6,14 +6,14 @@ using System.Windows.Forms;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using FastReport;
-using Insight.Utils.Client;
+using Insight.Utils.BaseForm;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils.Models
+namespace Insight.Utils.BaseViewModels
 {
-    public class MdiModel
+    public class BaseMdiModel<T, TV> where TV : BaseMdi, new()
     {
         private GridHitInfo hitInfo = new GridHitInfo();
 
@@ -23,19 +23,41 @@ namespace Insight.Utils.Models
         public List<ModuleParam> moduleParams;
 
         /// <summary>
-        /// 令牌管理器
+        /// MDI视图
         /// </summary>
-        protected readonly TokenHelper tokenHelper = Setting.tokenHelper;
-
-        /// <summary>
-        /// 服务地址
-        /// </summary>
-        protected readonly string gateway = Setting.gateway;
+        public readonly TV view;
 
         /// <summary>
         /// 主列表分页控件
         /// </summary>
-        protected PageControl tab;
+        public PageControl tab;
+
+        /// <summary>
+        /// 列表数据
+        /// </summary>
+        public List<T> list;
+
+        /// <summary>
+        /// 列表当前选中数据对象
+        /// </summary>
+        public T item;
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="nav">导航信息</param>
+        public BaseMdiModel(Navigation nav)
+        {
+            var icon = Util.getImage(nav.moduleInfo.iconUrl);
+            view = new TV
+            {
+                ControlBox = nav.index > 0,
+                MdiParent = Application.OpenForms["MainWindow"],
+                Icon = Icon.FromHandle(new Bitmap(icon).GetHicon()),
+                Name = nav.moduleInfo.module,
+                Text = nav.name
+            };
+        }
 
         /// <summary>
         /// 鼠标点击事件
@@ -79,7 +101,7 @@ namespace Insight.Utils.Models
         /// </summary>
         /// <param name="keys">选项代码集</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public List<ModuleParam> getParams(List<Dictionary<string, string>> keys)
+        public List<ModuleParam> getParams(IEnumerable<Dictionary<string, string>> keys)
         {
             var datas = new List<ModuleParam>();
             foreach (var key in keys)
@@ -132,12 +154,11 @@ namespace Insight.Utils.Models
         /// <returns>Report FastReport报表</returns>
         public Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
         {
-            var url = $"{gateway}/report/v1.0/templates/{tid}";
-            var client = new HttpClient<object>(tokenHelper);
-            if (!client.get(url)) return null;
+            var template = BaseModel.getTemplate(tid);
+            if (template == null) return null;
 
             var report = new Report();
-            report.LoadFromString(client.data.ToString());
+            report.LoadFromString(template);
             report.RegisterData(data, name);
             foreach (var i in dict ?? new Dictionary<string, object>())
             {
@@ -166,11 +187,8 @@ namespace Insight.Utils.Models
                 }
 
                 // 获取电子影像
-                var url = $"{gateway}/report/v1.0/images/{id}";
-                var client = new HttpClient<ImageData>(tokenHelper);
-                if (!client.get(url)) return null;
 
-                img = client.data;
+                img = BaseModel.getImage(id);
                 if (img == null)
                 {
                     Messages.showError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
@@ -180,17 +198,8 @@ namespace Insight.Utils.Models
             else
             {
                 // 使用模板生成电子影像
-                var url = $"{gateway}/report/v1.0/images/{id ?? "null"}";
-                var client = new HttpClient<ImageData>(tokenHelper);
-                var dict = new Dictionary<string, object>
-                {
-                    {"templateId", tid},
-                    {"deptName", Setting.deptName}
-                };
-                if (!client.post(url, dict)) return null;
-
                 isCopy = false;
-                img = client.data;
+                img = BaseModel.newImage(id, tid);
                 if (img == null)
                 {
                     Messages.showError("生成打印数据错误");
@@ -219,42 +228,6 @@ namespace Insight.Utils.Models
             }
 
             return print;
-        }
-
-        /// <summary>
-        /// 获取模块功能按钮集合
-        /// </summary>
-        /// <returns>功能按钮集合</returns>
-        public IEnumerable<Function> getActions(string moduleId)
-        {
-            var url = $"{gateway}/base/auth/v1.0/navigators/{moduleId}/functions";
-            var client = new HttpClient<List<Function>>(tokenHelper);
-
-            return client.getData(url);
-        }
-
-        /// <summary>
-        /// 获取选项数据
-        /// </summary>
-        /// <returns>选项数据集合</returns>
-        public void getParams()
-        {
-            var url = $"{gateway}/common/v1.0/params";
-            var client = new HttpClient<List<ModuleParam>>(tokenHelper);
-
-            moduleParams = client.getData(url);
-        }
-
-        /// <summary>
-        /// 保存选项数据
-        /// </summary>
-        /// <returns>bool 是否成功</returns>
-        public void saveParam()
-        {
-            var url = $"{gateway}/common/v1.0/params";
-            var dict = new Dictionary<string, object> {{"list", moduleParams}};
-            var client = new HttpClient<List<ModuleParam>>(tokenHelper);
-            client.put(url, dict);
         }
     }
 }

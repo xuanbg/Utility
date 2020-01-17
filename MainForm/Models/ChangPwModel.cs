@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.MainForm.Views;
-using Insight.Utils.Models;
 
 namespace Insight.Utils.MainForm.Models
 {
-    public class ChangPwModel : BaseModel
+    public class ChangPwModel : BaseDialogModel<ChangePw>
     {
-        public readonly ChangePw view;
-
         private string oldPw;
         private string sing;
         private string newPw;
@@ -24,7 +22,7 @@ namespace Insight.Utils.MainForm.Models
             view = new ChangePw {Text = @"修改密码"};
 
             // 订阅控件事件实现数据双向绑定
-            view.Password.EditValueChanged += (sender, args) => sing = Util.hash(tokenHelper.account + Util.hash(view.Password.Text));
+            view.Password.EditValueChanged += (sender, args) => sing = Util.hash(Setting.tokenHelper.account + Util.hash(view.Password.Text));
             view.NewPw.EditValueChanged += (sender, args) => newPw = view.NewPw.Text;
             view.ConfirmPw.EditValueChanged += (sender, args) => confirmPw = view.ConfirmPw.Text;
         }
@@ -50,7 +48,7 @@ namespace Insight.Utils.MainForm.Models
         /// <returns>bool 是否修改成功</returns>
         public bool save()
         {
-            if (sing != tokenHelper.sign)
+            if (sing != Setting.tokenHelper.sign)
             {
                 Messages.showError("请输入正确的原密码，否则无法为您更换密码！");
                 view.Password.EditValue = null;
@@ -82,17 +80,9 @@ namespace Insight.Utils.MainForm.Models
                 return false;
             }
 
-            const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
-            var url = $"{gateway}/base/user/v1.0/users/password";
-            var dict = new Dictionary<string, object>
-            {
-                {"password", Util.hash(newPw)},
-                {"old", Util.hash(oldPw)}
-            };
-            var client = new HttpClient<object>(tokenHelper);
-            if (!client.put(url, dict, msg)) return false;
+            if (!Model.changPassword(oldPw, newPw)) return false;
 
-            tokenHelper.signature(newPw);
+            Setting.tokenHelper.signature(newPw);
             Messages.showMessage("更换密码成功！请牢记新密码并使用新密码登录系统。");
             return true;
         }

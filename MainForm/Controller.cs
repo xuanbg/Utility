@@ -10,9 +10,9 @@ using System.Windows.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraNavBar;
 using FastReport.Utils;
+using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
-using Insight.Utils.Controller;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Models;
 using Insight.Utils.MainForm.Views;
@@ -169,7 +169,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         private void initNavBar()
         {
-            var navigators = mainModel.getNavigators();
+            var navigators = Model.getNavigators();
             navItems = navigators.Where(i => i.parentId != null).ToList();
             var groups = navigators.Where(i => i.parentId == null).ToList();
             var height = mainWindow.NavMain.Height;

@@ -65,37 +65,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseForm\BaseDialog.cs">
+    <Compile Include="BaseControllers\BaseController.cs" />
+    <Compile Include="BaseForms\BaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForm\BaseDialog.Designer.cs">
+    <Compile Include="BaseForms\BaseDialog.Designer.cs">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForm\BaseMdi.cs">
+    <Compile Include="BaseForms\BaseMdi.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForm\BaseMdi.Designer.cs">
+    <Compile Include="BaseForms\BaseMdi.Designer.cs">
       <DependentUpon>BaseMdi.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForm\BaseWizard.cs">
+    <Compile Include="BaseForms\BaseWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForm\BaseWizard.Designer.cs">
+    <Compile Include="BaseForms\BaseWizard.Designer.cs">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForm\Waiting.cs">
+    <Compile Include="BaseModel.cs" />
+    <Compile Include="Views\Waiting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForm\Waiting.Designer.cs">
+    <Compile Include="Views\Waiting.Designer.cs">
       <DependentUpon>Waiting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controller\BaseController.cs" />
-    <Compile Include="Controller\MdiController.cs" />
+    <Compile Include="BaseControllers\MdiController.cs" />
     <Compile Include="Controls\Format.cs" />
     <Compile Include="Entities\PrintSetting.cs" />
-    <Compile Include="Models\BaseModel.cs" />
-    <Compile Include="Models\CategoryModel.cs" />
-    <Compile Include="Models\MdiModel.cs" />
+    <Compile Include="BaseViewModels\BaseDialogModel.cs" />
+    <Compile Include="ViewModels\CategoryModel.cs" />
+    <Compile Include="BaseViewModels\BaseMdiModel.cs" />
     <Compile Include="Controls\PageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -111,16 +112,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BaseForm\BaseDialog.resx">
+    <EmbeddedResource Include="BaseForms\BaseDialog.resx">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForm\BaseMdi.resx">
+    <EmbeddedResource Include="BaseForms\BaseMdi.resx">
       <DependentUpon>BaseMdi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForm\BaseWizard.resx">
+    <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForm\Waiting.resx">
+    <EmbeddedResource Include="Views\Waiting.resx">
       <DependentUpon>Waiting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PageControl.resx">

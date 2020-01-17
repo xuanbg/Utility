@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
-using Insight.Utils.Models;
 
 namespace Insight.Utils.MainForm.Models
 {
-    public class LoginModel : BaseModel
+    public class LoginModel : BaseDialogModel<LoginDialog>
     {
-        public readonly LoginDialog view;
-
+        private static readonly TokenHelper TokenHelper = Setting.tokenHelper;
         private string account = Setting.getAccount();
         private string password;
         private readonly bool showDept = Convert.ToBoolean(Util.getAppSetting("ShowDept"));
-        private readonly List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
+        private List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
 
         /// <summary>
         /// 构造函数，初始化视图
@@ -89,14 +88,14 @@ namespace Insight.Utils.MainForm.Models
                 return false;
             }
 
-            tokenHelper.account = account;
-            tokenHelper.signature(password);
-            if (tokenHelper.token == null) return false;
+            TokenHelper.account = account;
+            TokenHelper.signature(password);
+            if (TokenHelper.token == null) return false;
 
             Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
 
-            var info = tokenHelper.userInfo;
+            var info = TokenHelper.userInfo;
             Setting.userId = info.id;
             Setting.userName = info.name;
             Setting.tenantId = info.tenantId;
@@ -114,26 +113,12 @@ namespace Insight.Utils.MainForm.Models
         {
             if (string.IsNullOrEmpty(account)) return;
 
-            var url = $"{gateway}/userapi/v1.0/users/{account}/depts";
-            var request = new HttpRequest();
-            if (!request.send(url))
-            {
-                Messages.showError(request.message);
-                return;
-            }
-
-            var result = Util.deserialize<Result<List<TreeLookUpMember>>>(request.data);
-            if (!result.success)
-            {
-                Messages.showError(result.message);
-                return;
-            }
-
-            if (!result.data.Any()) return;
+            depts = Model.getDepts(account);
+            if (!depts.Any()) return;
 
             var tree = view.lueDept.Properties.TreeList;
             depts.Clear();
-            depts.AddRange(result.data);
+            depts.AddRange(depts);
             tree.RefreshDataSource();
             if (depts.Count == 1)
             {
@@ -159,8 +144,8 @@ namespace Insight.Utils.MainForm.Models
             var id = view.lueDept.EditValue?.ToString();
             if (string.IsNullOrEmpty(id))
             {
-                tokenHelper.tenantId = null;
-                tokenHelper.deptId = null;
+                TokenHelper.tenantId = null;
+                TokenHelper.deptId = null;
 
                 return;
             }
@@ -177,13 +162,13 @@ namespace Insight.Utils.MainForm.Models
             var dept = depts.Single(i => i.id == id);
             if (dept.parentId == null)
             {
-                tokenHelper.tenantId = id;
-                tokenHelper.deptId = null;
+                TokenHelper.tenantId = id;
+                TokenHelper.deptId = null;
             }
             else
             {
-                tokenHelper.tenantId = dept.remark;
-                tokenHelper.deptId = id;
+                TokenHelper.tenantId = dept.remark;
+                TokenHelper.deptId = id;
                 Setting.deptCode = dept.code;
             }
 

@@ -6,7 +6,6 @@ namespace Insight.Utils.Client
 {
     public class HttpClient<T> where T : new()
     {
-        private readonly TokenHelper helper;
         private Result<T> result = new Result<T>();
 
         /// <summary>
@@ -30,23 +29,15 @@ namespace Insight.Utils.Client
         public object option => result.option;
 
         /// <summary>
-        /// 构造函数，传入TokenHelper
-        /// </summary>
-        /// <param name="helper">TokenHelper</param>
-        public HttpClient(TokenHelper helper)
-        {
-            this.helper = helper;
-        }
-
-        /// <summary>
         /// 获取请求数据
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
         /// <param name="dict">参数集合</param>
         /// <param name="msg">错误消息，默认NULL</param>
-        /// <returns></returns>
-        public T getData(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null, string msg = null)
+        /// <returns>T</returns>
+        public T getData(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null,
+            string msg = null)
         {
             request(url, method, dict, msg);
 
@@ -59,8 +50,9 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
         /// <param name="dict">参数集合</param>
-        /// <returns></returns>
-        public Result<T> getResult(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null)
+        /// <returns>T</returns>
+        public Result<T> getResult(string url, RequestMethod method = RequestMethod.GET,
+            Dictionary<string, object> dict = null)
         {
             request(url, method, dict, null, false);
 
@@ -121,15 +113,43 @@ namespace Insight.Utils.Client
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
         /// <param name="dict">请求参数/Body中的数据</param>
+        /// <returns>T</returns>
+        public T request(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null)
+        {
+            var request = new HttpRequest();
+            if (request.send(Setting.gateway + url, method, dict))
+            {
+                result = Util.deserialize<Result<T>>(request.data);
+                if (result.success) return result.data;
+            }
+            else
+            {
+                result.badRequest(request.message);
+            }
+
+            result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
+            Messages.showError(result.message);
+
+            return data;
+        }
+
+        /// <summary>
+        /// 请求数据
+        /// </summary>
+        /// <param name="url">接口URL</param>
+        /// <param name="method">请求方法</param>
+        /// <param name="dict">请求参数/Body中的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <param name="log">是否输出错误消息</param>
         /// <returns>bool 是否成功</returns>
-        private bool request(string url, RequestMethod method, Dictionary<string, object> dict, string msg, bool log = true)
+        private bool request(string url, RequestMethod method, Dictionary<string, object> dict, string msg,
+            bool log = true)
         {
-            if (helper?.token != null)
+            var helper = Setting.tokenHelper;
+            if (helper.token != null)
             {
                 var request = new HttpRequest(helper.token);
-                if (request.send(url, method, dict))
+                if (request.send(Setting.gateway + url, method, dict))
                 {
                     result = Util.deserialize<Result<T>>(request.data);
                     if (result == null)
