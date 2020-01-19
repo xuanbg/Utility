@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using DevExpress.XtraBars;
 using FastReport;
-using Insight.Utils.BaseForm;
+using Insight.Utils.BaseForms;
 using Insight.Utils.BaseViewModels;
 using Insight.Utils.Common;
 using Insight.Utils.Entities;
@@ -49,7 +49,7 @@ namespace Insight.Utils.BaseControllers
                     Glyph = Util.getImage(a.funcInfo.iconUrl),
                     PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();
-            buttons.ForEach(i => i.ItemClick += (sender, args) => itemClick(args.Item.Name));
+            buttons.ForEach(i => i.ItemClick += (sender, args) => buttonClick(args.Item.Name));
             buttons.ForEach(i => mdiView.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
         }
 
@@ -262,23 +262,6 @@ namespace Insight.Utils.BaseControllers
             if (time < 800) Thread.Sleep(800 - time);
 
             mdiView.Wait.CloseWaitForm();
-        }
-
-        /// <summary>
-        /// 工具栏按钮点击事件路由
-        /// </summary>
-        /// <param name="action">功能操作</param>
-        private void itemClick(string action)
-        {
-            var method = GetType().GetMethod(action);
-            if (method == null)
-            {
-                Messages.showError("对不起，该功能尚未实现！");
-            }
-            else
-            {
-                method.Invoke(this, null);
-            }
         }
     }
 }

@@ -106,11 +106,11 @@
     <Compile Include="Views\LoginSet.Designer.cs">
       <DependentUpon>LoginSet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainForm.cs">
+    <Compile Include="Views\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="Views\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\PrintSet.cs">
       <SubType>Form</SubType>
@@ -150,8 +150,8 @@
       <DependentUpon>LoginSet.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PrintSet.resx">
       <DependentUpon>PrintSet.cs</DependentUpon>

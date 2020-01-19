@@ -1,6 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 
-namespace Insight.Utils.BaseForm
+namespace Insight.Utils.BaseForms
 {
     public partial class BaseMdi : XtraForm
     {

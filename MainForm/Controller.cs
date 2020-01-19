@@ -1,33 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
-using DevExpress.XtraBars;
-using DevExpress.XtraNavBar;
-using FastReport.Utils;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
-using Insight.Utils.Entity;
-using Insight.Utils.MainForm.Models;
 using Insight.Utils.MainForm.ViewModels;
-using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm
 {
     public class Controller : BaseController
     {
         public readonly MainModel mainModel;
-        public readonly MainWindow mainWindow;
-        public readonly List<NavBarItemLink> links = new List<NavBarItemLink>();
-        public readonly List<string> needOpens = new List<string>();
-
-        private List<ModuleDto> navItems;
 
         /// <summary>
         /// 构造函数
@@ -35,30 +17,8 @@ namespace Insight.Utils.MainForm
         public Controller()
         {
             // 构造主窗体并显示
-            mainModel = new MainModel();
-            mainWindow = new MainWindow
-            {
-                Text = Setting.appName,
-                Icon = new Icon("logo.ico")
-            };
-
-            // 初始化界面
-            Res.LoadLocale("Components\\Chinese (Simplified).frl");
-            mainWindow.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
-            mainWindow.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            mainWindow.StbServer.Caption = Setting.gateway;
-            mainWindow.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
-
-            // 订阅主窗体菜单事件
-            mainWindow.MubChangPassWord.ItemClick += (sender, args) => changPassword();
-            mainWindow.MubLock.ItemClick += (sender, args) => lockWindow();
-            mainWindow.MubLogout.ItemClick += (sender, args) => logout();
-            mainWindow.MubExit.ItemClick += (sender, args) => mainWindow.Close();
-            mainWindow.MubPrintSet.ItemClick += (sender, args) => printSet();
-            mainWindow.MubUpdate.ItemClick += (sender, args) => update();
-            mainWindow.MubAbout.ItemClick += (sender, args) => about();
-            mainWindow.Closing += (sender, args) => args.Cancel = mainModel.logout();
-            mainWindow.Closed += (sender, args) => exit();
+            mainModel = new MainModel(Setting.appName);
+            mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName);
 
             login();
         }
@@ -76,14 +36,8 @@ namespace Insight.Utils.MainForm
             view.SetButton.Click += (sender, args) => 
             {
                 var set = new SetModel("服务器设置");
-                set.view.Confirm.Click += (s, a) =>
-                {
                     login.initUserName();
                     set.save();
-
-                };
-
-                set.view.ShowDialog();
             };
 
             view.LoginButton.Click += (sender, args) =>
@@ -96,11 +50,11 @@ namespace Insight.Utils.MainForm
                 waiting.view.Refresh();
                 login.view.Close();
 
-                showMainWindow();
+                mainModel.showMainWindow(Model.getNavigators());
                 waiting.view.Close();
-                if (Setting.needChangePw) changPassword(true);
 
-                needOpens.ForEach(addPageMdi);
+                mainModel.autoLoad();
+                if (Setting.needChangePw) changPassword(true);
             };
 
             // 显示登录界面
@@ -111,142 +65,32 @@ namespace Insight.Utils.MainForm
         }
 
         /// <summary>
-        /// 主窗体初始化
-        /// </summary>
-        public void showMainWindow()
-        {
-            mainWindow.StbDept.Caption = Setting.deptName;
-            mainWindow.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
-            mainWindow.StbUser.Caption = Setting.userName;
-
-            initNavBar();
-            links.ForEach(i => i.Item.LinkClicked += (sender, args) => addPageMdi(args.Link.Item.Tag.ToString()));
-
-            mainWindow.Show();
-        }
-
-        /// <summary>
-        /// 打开MDI子窗体
-        /// </summary>
-        /// <param name="name"></param>
-        public void addPageMdi(string name)
-        {
-            var form = Application.OpenForms[name];
-            if (form != null)
-            {
-                form.Activate();
-                return;
-            }
-
-            var mod = navItems.Single(m => m.moduleInfo.module == name);
-            var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
-            if (!File.Exists(path))
-            {
-                var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
-                Messages.showError(msg);
-                return;
-            }
-
-            mainWindow.Loading.ShowWaitForm();
-            var asm = Assembly.LoadFrom(path);
-            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
-            if (type == null || string.IsNullOrEmpty(type.FullName))
-            {
-                mainWindow.Loading.CloseWaitForm();
-                var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
-                Messages.showError(msg);
-
-                return;
-            }
-
-            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
-            mainWindow.Loading.CloseWaitForm();
-        }
-
-        /// <summary>
-        /// 初始化导航栏
-        /// </summary>
-        private void initNavBar()
-        {
-            var navigators = Model.getNavigators();
-            navItems = navigators.Where(i => i.parentId != null).ToList();
-            var groups = navigators.Where(i => i.parentId == null).ToList();
-            var height = mainWindow.NavMain.Height;
-            foreach (var g in groups)
-            {
-                var expand = false;
-                var items = new List<NavBarItemLink>();
-                foreach (var item in navItems.Where(i => i.parentId == g.id))
-                {
-                    if (item.moduleInfo.autoLoad ?? false)
-                    {
-                        expand = true;
-                        needOpens.Add(item.moduleInfo.module);
-                    }
-
-                    var icon = Util.getImage(item.moduleInfo.iconUrl);
-                    var navBarItem = new NavBarItem(item.name) { Tag = item.moduleInfo.module, SmallImage = icon };
-                    items.Add(new NavBarItemLink(navBarItem));
-                }
-
-                var group = new NavBarGroup
-                {
-                    Caption = g.name,
-                    Name = g.name,
-                    SmallImage = Util.getImage(g.moduleInfo.iconUrl)
-                };
-                var count = links.Count + items.Count;
-                group.Expanded = groups.Count * 55 + count * 32 < height || expand;
-                group.ItemLinks.AddRange(items.ToArray());
-
-                mainWindow.NavMain.Groups.Add(group);
-                links.AddRange(items);
-            }
-        }
-        /// <summary>
         /// 点击菜单项：修改密码，弹出修改密码对话框
         /// </summary>
         /// <param name="isFirst"></param>
-        private void changPassword(bool isFirst = false)
+        public void changPassword(bool isFirst = false)
         {
-            var changPw = new ChangPwModel("修改密码");
-            var view = changPw.view;
-
-            view.Confirm.Click += (sender, args) =>
-            {
-                if (!changPw.save()) return;
-
-            };
-
-            changPw.init(isFirst ? "123456" : null);
-            view.ShowDialog();
+            var model = new ChangPwModel("修改密码");
+            model.init(isFirst ? "123456" : null);
         }
 
         /// <summary>
         /// 点击菜单项：锁定，弹出解锁对话框
         /// </summary>
-        private void lockWindow()
+        public void lockWindow()
         {
             var model = new LockModel("屏幕解锁");
-            var view = model.view;
-
-            view.Confirm.Click += (sender, args) =>
-            {
-                if (!model.unlock()) return;
-
-            };
 
             model.init();
-            view.ShowDialog();
         }
 
         /// <summary>
         /// 点击菜单项：注销，弹出询问对话框，确认注销后重启应用程序
         /// </summary>
-        private static void logout()
+        public void logout()
         {
             const string msg = "注销用户将导致当前未完成的输入内容丢失！\r\n您确定要注销吗？";
-            if (!Messages.showConfirm(msg)) return;
+            if (!logoutConfirm(msg)) return;
 
             Application.Restart();
         }
@@ -254,16 +98,19 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 退出系统前保存当前应用的皮肤
         /// </summary>
-        private void exit()
+        public void exit()
         {
-            MainModel.saveLookAndFeel(mainWindow.MyFeel.LookAndFeel.SkinName);
+            const string msg = "退出应用程序将导致当前未完成的输入内容丢失！\r\n您确定要退出吗？";
+            if (!logoutConfirm(msg)) return;
+
+            mainModel.saveLookAndFeel();
             Application.Exit();
         }
 
         /// <summary>
         /// 点击菜单项：打印机设置，打开打印机设置对话框
         /// </summary>
-        private void printSet()
+        public void printSet()
         {
             var model = new PrintModel();
             var view = model.view;
@@ -276,23 +123,17 @@ namespace Insight.Utils.MainForm
             view.ShowDialog();
         }
 
-
         /// <summary>
         /// 点击菜单项：检查更新，如有更新，提示是否更新
         /// </summary>
-        private void update(bool confirm = true)
+        public void update(bool confirm = true)
         {
             var model = new UpdateModel("检查更新");
-            var view = model.view;
-
-            view.Confirm.Click += (sender, args) =>
-            {
                 if (!model.restart) return;
 
                 // 运行restart.bat重启应用程序
                 Process.Start(model.createBat());
                 Application.Exit();
-            };
 
             // 检查更新
             var count = model.checkUpdate();
@@ -305,18 +146,28 @@ namespace Insight.Utils.MainForm
             var msg = $"当前有 {count} 个文件需要更新，是否立即更新？";
             if (confirm && !Messages.showConfirm(msg)) return;
 
-            view.ShowDialog();
         }
 
         /// <summary>
         /// 点击菜单项：关于，打开关于对话框
         /// </summary>
-        private void about()
+        public void about()
         {
             var model = new AboutModel("关于");
-            var view = model.view;
 
-            view.ShowDialog();
+            model.showDialog();
+        }
+
+        /// <summary>
+        /// 如注销用户失败，弹出询问对话框。
+        /// </summary>
+        /// <param name="msg">消息提示</param>
+        private bool logoutConfirm(string msg)
+        {
+            if (!Messages.showConfirm(msg)) return false;
+
+            Setting.tokenHelper.deleteToken();
+            return true;
         }
     }
 }

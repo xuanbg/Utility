@@ -1,4 +1,4 @@
-﻿using Insight.Utils.BaseForm;
+﻿using Insight.Utils.BaseForms;
 
 namespace Insight.Utils.Views
 {

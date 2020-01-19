@@ -2,7 +2,7 @@
 using DevExpress.Utils;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.BaseForm
+namespace Insight.Utils.BaseForms
 {
     partial class BaseDialog
     {
@@ -120,8 +120,8 @@ namespace Insight.Utils.BaseForm
             this.ClientSize = new System.Drawing.Size(384, 212);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.Cancel);
-            this.Controls.Add(this.Confirm);
             this.Controls.Add(this.Close);
+            this.Controls.Add(this.Confirm);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BaseDialog";

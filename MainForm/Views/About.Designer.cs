@@ -48,15 +48,30 @@
             // 
             // panel
             // 
-            this.panel.Controls.Add(this.txtDescription);
             this.panel.Controls.Add(this.labVersion);
             this.panel.Controls.Add(this.labDevelopers);
             this.panel.Controls.Add(this.labDev);
             this.panel.Controls.Add(this.labVer);
             this.panel.Controls.Add(this.labProduct);
             this.panel.Controls.Add(this.labProductName);
+            this.panel.Controls.Add(this.txtDescription);
             this.panel.Location = new System.Drawing.Point(177, 7);
             this.panel.Size = new System.Drawing.Size(300, 250);
+            // 
+            // Cancel
+            // 
+            this.Cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Cancel.Appearance.Options.UseFont = true;
+            this.Cancel.Location = new System.Drawing.Point(300, 275);
+            this.Cancel.Visible = false;
+            // 
+            // Confirm
+            // 
+            this.Confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Confirm.Appearance.Options.UseFont = true;
+            this.Confirm.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Confirm.Location = new System.Drawing.Point(390, 275);
+            this.Confirm.TabIndex = 0;
             // 
             // FolderNode
             // 
@@ -79,21 +94,11 @@
             this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
             this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
-            // Cancel
+            // Close
             // 
-            this.Cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Cancel.Appearance.Options.UseFont = true;
-            this.Cancel.Location = new System.Drawing.Point(300, 275);
-            this.Cancel.Visible = false;
-            // 
-            // Confirm
-            // 
-            this.Confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Confirm.Appearance.Options.UseFont = true;
-            this.Confirm.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Confirm.Location = new System.Drawing.Point(390, 275);
-            this.Confirm.TabIndex = 0;
-            this.Confirm.Text = "关  闭";
+            this.Close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Close.Appearance.Options.UseFont = true;
+            this.Close.Location = new System.Drawing.Point(390, 275);
             // 
             // picAbout
             // 
@@ -114,6 +119,7 @@
             // 
             // labVersion
             // 
+            this.labVersion.Appearance.Options.UseTextOptions = true;
             this.labVersion.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labVersion.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labVersion.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
@@ -125,6 +131,7 @@
             // 
             // labDevelopers
             // 
+            this.labDevelopers.Appearance.Options.UseTextOptions = true;
             this.labDevelopers.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labDevelopers.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labDevelopers.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
@@ -136,6 +143,7 @@
             // 
             // labDev
             // 
+            this.labDev.Appearance.Options.UseTextOptions = true;
             this.labDev.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labDev.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labDev.Location = new System.Drawing.Point(80, 69);
@@ -145,6 +153,7 @@
             // 
             // labVer
             // 
+            this.labVer.Appearance.Options.UseTextOptions = true;
             this.labVer.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labVer.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labVer.Location = new System.Drawing.Point(80, 42);
@@ -154,6 +163,7 @@
             // 
             // labProduct
             // 
+            this.labProduct.Appearance.Options.UseTextOptions = true;
             this.labProduct.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labProduct.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labProduct.Location = new System.Drawing.Point(80, 15);
@@ -163,6 +173,7 @@
             // 
             // labProductName
             // 
+            this.labProductName.Appearance.Options.UseTextOptions = true;
             this.labProductName.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labProductName.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Center;
             this.labProductName.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
@@ -179,10 +190,11 @@
             this.Controls.Add(this.picAbout);
             this.Name = "About";
             this.Text = "关于…";
+            this.Controls.SetChildIndex(this.Confirm, 0);
+            this.Controls.SetChildIndex(this.Close, 0);
             this.Controls.SetChildIndex(this.picAbout, 0);
             this.Controls.SetChildIndex(this.panel, 0);
             this.Controls.SetChildIndex(this.Cancel, 0);
-            this.Controls.SetChildIndex(this.Confirm, 0);
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();

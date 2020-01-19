@@ -3,7 +3,7 @@ using DevExpress.Utils;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.BaseForm
+namespace Insight.Utils.BaseForms
 {
     partial class BaseMdi
     {
@@ -34,7 +34,7 @@ namespace Insight.Utils.BaseForm
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseMdi));
-            this.Wait = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.BaseForm.Waiting), true, true);
+            this.Wait = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.Views.Waiting), true, true);
             this.BarManager = new DevExpress.XtraBars.BarManager();
             this.ToolBar = new DevExpress.XtraBars.Bar();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();

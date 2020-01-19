@@ -11,10 +11,11 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 构造函数，初始化视图
         /// </summary>
         /// <param name="title">窗体标题</param>
-        public AboutModel(string title) : base(title)
+        public AboutModel(string title) : base(title, null, true)
         {
             // 显示文件版本信息
             var fileVersion = FileVersionInfo.GetVersionInfo(Application.ExecutablePath);
+
             view.labProduct.Text = fileVersion.ProductName;
             view.labVer.Text = fileVersion.FileVersion;
             view.labDev.Text = fileVersion.CompanyName;

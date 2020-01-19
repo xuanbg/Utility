@@ -1,5 +1,6 @@
 ﻿using System.Linq;
-using Insight.Utils.BaseForm;
+using System.Windows.Forms;
+using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
 
 namespace Insight.Utils.BaseViewModels
@@ -9,7 +10,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 对话框数据实体
         /// </summary>
-        protected readonly T item;
+        protected T item;
 
         /// <summary>
         /// 构造方法
@@ -26,13 +27,25 @@ namespace Insight.Utils.BaseViewModels
 
             if (isShow)
             {
-                view.Close.Click += (sender, args) => view.Close();
+                view.Close.Click += (sender, args) =>
+                {
+                    view.DialogResult = DialogResult.OK;
+                    view.Close();
+                };
             }
             else
             {
                 view.Confirm.Click += (sender, args) => buttonClick("confirm");
                 view.Cancel.Click += (sender, args) => view.Close();
             }
+        }
+
+        /// <summary>
+        /// 显示对话框
+        /// </summary>
+        public void showDialog()
+        {
+            view.ShowDialog();
         }
 
         /// <summary>
@@ -62,17 +75,6 @@ namespace Insight.Utils.BaseViewModels
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// 按钮点击事件路由
-        /// </summary>
-        /// <param name="action">按钮名称</param>
-        protected void buttonClick(string action)
-        {
-            var method = GetType().GetMethod(action);
-            if (method == null) Messages.showError("对不起，该功能尚未实现！");
-            else method.Invoke(this, null);
         }
     }
 }

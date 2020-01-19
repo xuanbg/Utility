@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using FastReport;
-using Insight.Utils.BaseForm;
+using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;

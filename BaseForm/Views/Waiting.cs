@@ -1,7 +1,6 @@
-﻿using System;
-using DevExpress.XtraWaitForm;
+﻿using DevExpress.XtraWaitForm;
 
-namespace Insight.Utils.BaseForm
+namespace Insight.Utils.Views
 {
     public partial class Waiting : WaitForm
     {
@@ -23,11 +22,6 @@ namespace Insight.Utils.BaseForm
         {
             base.SetDescription(description);
             progressPanel1.Description = description;
-        }
-
-        public override void ProcessCommand(Enum cmd, object arg)
-        {
-            base.ProcessCommand(cmd, arg);
         }
 
         #endregion

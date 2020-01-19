@@ -3,7 +3,7 @@ using System.Drawing.Printing;
 using Insight.Utils.Client;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
     public class PrintModel
     {

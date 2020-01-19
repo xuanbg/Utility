@@ -61,7 +61,7 @@
             this.mdiManager = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(this.components);
             this.splitterControl = new DevExpress.XtraEditors.SplitterControl();
             this.MyFeel = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
-            this.Loading = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.BaseForm.Waiting), true, true);
+            this.Loading = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.Views.Waiting), true, true);
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NavMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mdiManager)).BeginInit();
@@ -402,7 +402,7 @@
             // 
             this.Loading.ClosingDelay = 500;
             // 
-            // MainWindow
+            // view
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.ClientSize = new System.Drawing.Size(1264, 722);
