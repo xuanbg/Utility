@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Insight.Utils.BaseViewModels;
+﻿using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
-    public class ChangPwModel : BaseDialogModel<ChangePw>
+    public class ChangPwModel : BaseDialogModel<object, ChangePw>
     {
         private string oldPw;
         private string sing;

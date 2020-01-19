@@ -1,52 +1,38 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System;
 
 namespace Insight.Utils.Common
 {
-    public class InputCheck
+    [AttributeUsage(AttributeTargets.Property)]
+    public class InputCheck : Attribute
     {
         /// <summary>
-        /// 检查结果
+        /// 不能为空字符串
         /// </summary>
-        public bool result = true;
+        public bool notEmpty { get; }
+
+        /// <summary>
+        /// 自定义错误消息
+        /// </summary>
+        public string message { get; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="items">要检查的对象集合</param>
-        public InputCheck(IEnumerable<InputItem> items)
+        /// <param name="message">自定义错误消息</param>
+        public InputCheck(string message)
         {
-            foreach (var item in items)
-            {
-                if (!string.IsNullOrEmpty(item.key)) continue;
-
-                Messages.showWarning(item.message);
-                item.control.Focus();
-
-                result = false;
-                return;
-            }
+            this.message = message;
         }
-    }
-
-    /// <summary>
-    /// 检查对象
-    /// </summary>
-    public class InputItem
-    {
-        /// <summary>
-        /// 窗体控件
-        /// </summary>
-        public Control control { get; set; }
 
         /// <summary>
-        /// 检查内容
+        /// 构造函数
         /// </summary>
-        public string key { get; set; }
-
-        /// <summary>
-        /// 错误消息
-        /// </summary>
-        public string message { get; set; }
+        /// <param name="notEmpty">不能为空字符串</param>
+        /// <param name="message">自定义错误消息</param>
+        public InputCheck(bool notEmpty, string message)
+        {
+            this.notEmpty = notEmpty;
+            this.message = message;
+        }
     }
 }

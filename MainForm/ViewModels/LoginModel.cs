@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
-    public class LoginModel : BaseDialogModel<LoginDialog>
+    public class LoginModel
     {
+        public LoginDialog view;
         private static readonly TokenHelper TokenHelper = Setting.tokenHelper;
         private string account = Setting.getAccount();
         private string password;
@@ -90,18 +90,10 @@ namespace Insight.Utils.MainForm.Models
 
             TokenHelper.account = account;
             TokenHelper.signature(password);
-            if (TokenHelper.token == null) return false;
+            if (!TokenHelper.getTokens()) return false;
 
             Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
-
-            var info = TokenHelper.userInfo;
-            Setting.userId = info.id;
-            Setting.userName = info.name;
-            Setting.tenantId = info.tenantId;
-            Setting.deptId = info.deptId;
-            Setting.deptCode = info.deptCode;
-            Setting.deptName = info.deptName;
 
             return true;
         }

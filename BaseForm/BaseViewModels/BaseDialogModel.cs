@@ -1,40 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Linq;
+using Insight.Utils.BaseForm;
 using Insight.Utils.Common;
 
 namespace Insight.Utils.BaseViewModels
 {
-    public class BaseDialogModel<T>
+    public class BaseDialogModel<T, TV> : BaseModel<TV> where TV : BaseDialog, new()
     {
-        private readonly List<InputItem> checkItems = new List<InputItem>();
+        /// <summary>
+        /// 对话框数据实体
+        /// </summary>
+        protected readonly T item;
 
         /// <summary>
-        /// 对话框视图
+        /// 构造方法
         /// </summary>
-        public T view;
-
-        /// <summary>
-        /// 设置一个输入检查对象
-        /// </summary>
-        /// <param name="control"></param>
-        /// <param name="key">输入对象的值</param>
-        /// <param name="message">错误消息</param>
-        /// <param name="clear">是否清除集合</param>
-        protected void setCheckItem(Control control, string key, string message, bool clear = false)
+        /// <param name="item">对话框数据对象</param>
+        /// <param name="isShow">是否查看模式</param>
+        protected BaseDialogModel(T item = default(T), bool isShow = false)
         {
-            if (clear) checkItems.Clear();
+            this.item = item;
+            view.Confirm.Visible = !isShow;
+            view.Cancel.Visible = !isShow;
+            view.Close.Visible = isShow;
 
-            var item = new InputItem{control = control, key = key, message = message};
-            checkItems.Add(item);
-        }
-
-        /// <summary>
-        /// 设置多个输入检查对象
-        /// </summary>
-        /// <param name="items">输入检查对象集合</param>
-        protected void setCheckItems(IEnumerable<InputItem> items)
-        {
-            checkItems.AddRange(items);
+            if (isShow)
+            {
+                view.Close.Click += (sender, args) => view.Close();
+            }
+            else
+            {
+                view.Confirm.Click += (sender, args) => buttonClick("confirm");
+                view.Cancel.Click += (sender, args) => view.Close();
+            }
         }
 
         /// <summary>
@@ -43,7 +40,38 @@ namespace Insight.Utils.BaseViewModels
         /// <returns>bool 对象是否都有值</returns>
         protected bool inputExamine()
         {
-            return new InputCheck(checkItems).result;
+            var propertys = typeof(T).GetProperties();
+            foreach (var property in propertys)
+            {
+                if (!property.CanRead) continue;
+
+                var attributes = property.GetCustomAttributes(typeof(InputCheck), false);
+                if (!(attributes.FirstOrDefault() is InputCheck att)) continue;
+
+                var val = property.GetValue(item);
+                if (val != null)
+                {
+                    if (!att.notEmpty) continue;
+
+                    if (!string.IsNullOrEmpty(val as string)) continue;
+                }
+
+                Messages.showError(att.message);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 按钮点击事件路由
+        /// </summary>
+        /// <param name="action">按钮名称</param>
+        protected void buttonClick(string action)
+        {
+            var method = GetType().GetMethod(action);
+            if (method == null) Messages.showError("对不起，该功能尚未实现！");
+            else method.Invoke(this, null);
         }
     }
 }

@@ -3,9 +3,9 @@ using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
-    public class LockModel : BaseDialogModel<Locked>
+    public class LockModel : BaseDialogModel<object, Locked>
     {
         private string sing;
 

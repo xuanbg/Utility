@@ -12,9 +12,9 @@ using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
-    public class UpdateModel : BaseDialogModel<Update>
+    public class UpdateModel : BaseDialogModel<object, Update>
     {
         public bool restart;
 

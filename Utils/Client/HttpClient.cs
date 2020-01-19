@@ -142,13 +142,12 @@ namespace Insight.Utils.Client
         /// <param name="msg">错误消息，默认NULL</param>
         /// <param name="log">是否输出错误消息</param>
         /// <returns>bool 是否成功</returns>
-        private bool request(string url, RequestMethod method, Dictionary<string, object> dict, string msg,
-            bool log = true)
+        private bool request(string url, RequestMethod method, Dictionary<string, object> dict, string msg, bool log = true)
         {
-            var helper = Setting.tokenHelper;
-            if (helper.token != null)
+            while (true)
             {
-                var request = new HttpRequest(helper.token);
+                var helper = Setting.tokenHelper;
+                var request = new HttpRequest(helper.accessToken);
                 if (request.send(Setting.gateway + url, method, dict))
                 {
                     result = Util.deserialize<Result<T>>(request.data);
@@ -162,32 +161,29 @@ namespace Insight.Utils.Client
 
                     switch (code)
                     {
-                        case "405":
-                            helper.refresTokens();
-                            return this.request(url, method, dict, msg, log);
-
-                        case "406":
-                            helper.getTokens();
-                            return this.request(url, method, dict, msg, log);
+                        case "422" when !helper.refresTokens():
+                            return false;
+                        case "422":
+                            continue;
+                        case "421" when !helper.getTokens():
+                            return false;
+                        case "421":
+                            continue;
                     }
                 }
                 else
                 {
                     result.badRequest(request.message);
                 }
+
+                result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
+                if (!log) return false;
+
+                var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
+                Messages.showError($"{result.message}{newline}{msg}");
+
+                return false;
             }
-            else
-            {
-                result.badRequest("Auth服务异常，未能获取Token！");
-            }
-
-            result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
-            if (!log) return false;
-
-            var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";
-            Messages.showError($"{result.message}{newline}{msg}");
-
-            return false;
         }
     }
 }

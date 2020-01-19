@@ -15,6 +15,7 @@ using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Models;
+using Insight.Utils.MainForm.ViewModels;
 using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm
@@ -75,13 +76,11 @@ namespace Insight.Utils.MainForm
             view.SetButton.Click += (sender, args) => 
             {
                 var set = new SetModel();
-                subCloseEvent(set.view);
                 set.view.Confirm.Click += (s, a) =>
                 {
                     login.initUserName();
                     set.save();
 
-                    closeDialog(set.view);
                 };
 
                 set.view.ShowDialog();
@@ -213,12 +212,10 @@ namespace Insight.Utils.MainForm
             var changPw = new ChangPwModel();
             var view = changPw.view;
 
-            subCloseEvent(view);
             view.Confirm.Click += (sender, args) =>
             {
                 if (!changPw.save()) return;
 
-                closeDialog(view);
             };
 
             changPw.init(isFirst ? "123456" : null);
@@ -237,7 +234,6 @@ namespace Insight.Utils.MainForm
             {
                 if (!model.unlock()) return;
 
-                closeDialog(view);
             };
 
             model.init();
@@ -272,11 +268,9 @@ namespace Insight.Utils.MainForm
             var model = new PrintModel();
             var view = model.view;
 
-            subCloseEvent(view);
             view.Confirm.Click += (sender, args) =>
             {
                 model.save();
-                closeDialog(view);
             };
 
             view.ShowDialog();
@@ -293,7 +287,6 @@ namespace Insight.Utils.MainForm
 
             view.Confirm.Click += (sender, args) =>
             {
-                closeDialog(view);
                 if (!model.restart) return;
 
                 // 运行restart.bat重启应用程序
@@ -323,7 +316,6 @@ namespace Insight.Utils.MainForm
             var model = new AboutModel();
             var view = model.view;
 
-            subCloseEvent(view, true);
             view.ShowDialog();
         }
     }

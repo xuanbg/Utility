@@ -172,7 +172,7 @@ namespace Insight.Utils.ExcelHelper
             foreach (var property in typeof(T).GetProperties())
             {
                 var attributes = property.GetCustomAttributes(typeof(ColumnName), false);
-                if (attributes.FirstOrDefault() is ColumnName att && att.policy == Required)
+                if (attributes.FirstOrDefault() is ColumnName att && att.policy == REQUIRED)
                 {
                     list.Add(att.name);
                 }
@@ -607,7 +607,7 @@ namespace Insight.Utils.ExcelHelper
                 fieldInfos.Add(info);
             }
 
-            exportFields = fieldInfos.Where(i => i.columnPolicy != Ignorable).ToList();
+            exportFields = fieldInfos.Where(i => i.columnPolicy != IGNORABLE).ToList();
         }
     }
 }

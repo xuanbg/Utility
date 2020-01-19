@@ -19,7 +19,7 @@ namespace Insight.Utils.ExcelHelper.Attribute
         /// <summary>
         /// 导入/导出策略
         /// </summary>
-        public Policy policy { get; set; } = Policy.None;
+        public Policy policy { get; set; } = Policy.NONE;
 
         /// <summary>
         /// 构造函数

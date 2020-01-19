@@ -46,16 +46,6 @@
         public string deptId { get; set; }
 
         /// <summary>
-        /// 登录部门编码
-        /// </summary>
-        public string deptCode { get; set; }
-
-        /// <summary>
-        /// 登录部门名称
-        /// </summary>
-        public string deptName { get; set; }
-
-        /// <summary>
         /// 用户编码
         /// </summary>
         public string code { get; set; }

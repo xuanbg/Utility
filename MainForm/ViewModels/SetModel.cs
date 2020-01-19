@@ -2,9 +2,9 @@
 using Insight.Utils.Client;
 using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.Models
+namespace Insight.Utils.MainForm.ViewModels
 {
-    public class SetModel : BaseDialogModel<LoginSet>
+    public class SetModel : BaseDialogModel<object, LoginSet>
     {
         private bool saveUser = Setting.isSaveUserInfo();
 

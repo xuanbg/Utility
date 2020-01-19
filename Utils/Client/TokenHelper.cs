@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
@@ -7,46 +6,17 @@ namespace Insight.Utils.Client
 {
     public class TokenHelper
     {
-        private string accessToken;
         private string refreshToken;
-        private DateTime expiryTime;
-        private DateTime failureTime;
-
-        /// <summary>
-        /// 登录用户信息
-        /// </summary>
-        public UserInfo userInfo { get; private set; }
 
         /// <summary>
         /// AccessToken字符串
         /// </summary>
-        public string token
-        {
-            get
-            {
-                var now = DateTime.Now;
-                if (string.IsNullOrEmpty(accessToken) || now > failureTime)
-                {
-                    getTokens();
-                }
-                else if (now > expiryTime)
-                {
-                    refresTokens();
-                }
-
-                return accessToken;
-            }
-        }
+        public string accessToken { get; private set; }
 
         /// <summary>
         /// 用户签名
         /// </summary>
         public string sign { get; private set; }
-
-        /// <summary>
-        /// 网关IP/域名
-        /// </summary>
-        public string server => Util.getAppSetting("Gateway");
 
         /// <summary>
         /// 租户ID
@@ -80,16 +50,15 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 获取令牌
         /// </summary>
-        public void getTokens()
+        public bool getTokens()
         {
             accessToken = null;
             refreshToken = null;
-
             var code = getCode();
-            if (code == null) return;
+            if (code == null) return false;
 
             var key = Util.hash(sign + code);
-            var url = $"{server}/base/auth/v1.0/tokens";
+            var url = "/base/auth/v1.0/tokens";
             var dict = new Dictionary<string, object>
             {
                 {"account", account},
@@ -98,66 +67,45 @@ namespace Insight.Utils.Client
                 {"tenantId", tenantId},
                 {"deptId", deptId}
             };
-            var request = new HttpRequest();
-            if (!request.send(url, RequestMethod.POST, dict))
-            {
-                Messages.showError(request.message);
-                return;
-            }
 
-            var result = Util.deserialize<Result<TokenPackage>>(request.data);
-            if (!result.success)
-            {
-                Messages.showError(result.message);
-                return;
-            }
-
-            var data = result.data;
+            var client = new HttpClient<TokenPackage>();
+            var data = client.request(url, RequestMethod.POST, dict);
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
 
-            var now = DateTime.Now;
-            expiryTime = now.AddMilliseconds(data.expire);
-            failureTime = now.AddMilliseconds(data.failure);
-            userInfo = data.userInfo;
+            Setting.userId = data.userInfo.id;
+            Setting.userName = data.userInfo.name;
+            Setting.tenantId = data.userInfo.tenantId;
+            Setting.deptId = data.userInfo.deptId;
+
+            return true;
         }
 
         /// <summary>
         /// 刷新AccessToken过期时间
         /// </summary>
-        public void refresTokens()
+        public bool refresTokens()
         {
             accessToken = null;
-
-            var url = $"{server}/base/auth/v1.0/tokens";
+            var url = $"{Setting.gateway}/base/auth/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
             if (!request.send(url, RequestMethod.PUT))
             {
                 Messages.showError(request.message);
-                return;
+                return false;
             }
 
             var result = Util.deserialize<Result<TokenPackage>>(request.data);
-            if (result.code == "406")
-            {
-                getTokens();
-                return;
-            }
-
             if (!result.success)
             {
                 Messages.showError(result.message);
-                return;
+                return false;
             }
 
-            var data = result.data;
-            accessToken = data.accessToken;
-            refreshToken =data.refreshToken;
+            accessToken = result.data.accessToken;
+            refreshToken = result.data.refreshToken;
 
-            var now = DateTime.Now;
-            expiryTime = now.AddMilliseconds(data.expire);
-            failureTime = now.AddMilliseconds(data.failure);
-            userInfo = data.userInfo;
+            return true;
         }
 
         /// <summary>
@@ -165,13 +113,9 @@ namespace Insight.Utils.Client
         /// </summary>
         public void deleteToken()
         {
-            var url = $"{server}/base/auth/v1.0/tokens";
-            var request = new HttpRequest(token);
-            if (!request.send(url, RequestMethod.DELETE))
-            {
-                Messages.showError(request.message);
-                return;
-            }
+            var url = "/base/auth/v1.0/tokens";
+            var client = new HttpClient<object>();
+            client.getData(url, RequestMethod.DELETE);
 
             accessToken = null;
             refreshToken = null;
@@ -183,23 +127,11 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string getCode()
         {
-            var url = $"{server}/base/auth/v1.0/tokens/codes";
-            var dict = new Dictionary<string, object>
-            {
-                {"account", account}
-            };
-            var request = new HttpRequest();
-            if (!request.send(url, RequestMethod.GET, dict))
-            {
-                Messages.showError(request.message);
-                return null;
-            }
+            var url = "/base/auth/v1.0/tokens/codes";
+            var dict = new Dictionary<string, object>{{"account", account}};
+            var client = new HttpClient<object>();
 
-            var result = Util.deserialize<Result<string>>(request.data);
-            if (result.success) return result.data;
-
-            Messages.showError(result.message);
-            return null;
+            return client.getData(url, RequestMethod.GET, dict)?.ToString();
         }
     }
 }

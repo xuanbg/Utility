@@ -1,23 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Insight.Utils.BaseForm;
 using Insight.Utils.BaseViewModels;
-using Insight.Utils.Client;
 using Insight.Utils.Controls;
 using Insight.Utils.Entity;
 using Insight.Utils.Views;
 
 namespace Insight.Utils.ViewModels
 {
-    public class CategoryModel<T> : BaseDialogModel<BaseDialog>
+    public class CategoryModel<T> : BaseDialogModel<Catalog<T>, Category>
     {
         private readonly string baseUrl;
         private readonly List<TreeLookUpMember> list;
-        private readonly Catalog<T> item;
         private readonly string parentId;
         private readonly int index;
-
-        public readonly Category view;
 
         /// <summary>
         /// 构造函数,初始化窗体及绑定事件
@@ -26,9 +21,8 @@ namespace Insight.Utils.ViewModels
         /// <param name="cat">当前分类</param>
         /// <param name="cats">分类集合</param>
         /// <param name="url">接口地址</param>
-        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url)
+        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url):base(cat)
         {
-            item = cat;
             list = getTreeList(cats);
             baseUrl = url;
             parentId = cat.parentId;
@@ -52,11 +46,7 @@ namespace Insight.Utils.ViewModels
                 setIndexValue();
             };
             view.trlParent.ButtonPressed += (sender, args) => view.trlParent.EditValue = null;
-            view.txtName.EditValueChanged += (sender, args) =>
-            {
-                item.name = view.txtName.Text.Trim();
-                setCheckItem(view.txtName, item.name, "请输入分类名称！", true);
-            };
+            view.txtName.EditValueChanged += (sender, args) =>{item.name = view.txtName.Text.Trim();};
             view.spiIndex.ValueChanged += (sender, args) => item.index = (int) view.spiIndex.Value;
             view.txtAlias.EditValueChanged += (sender, args) => item.alias = view.txtAlias.Text.Trim();
             view.txtCode.EditValueChanged += (sender, args) => item.code = view.txtCode.Text.Trim();
@@ -68,7 +58,6 @@ namespace Insight.Utils.ViewModels
 
             Format.initTreeListLookUpEdit(view.trlParent, list, NodeIconType.CATEGORY);
             setIndexValue();
-            setCheckItem(view.txtName, item.name, "请输入分类名称！", true);
         }
 
         /// <summary>

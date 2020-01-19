@@ -32,13 +32,15 @@ namespace Insight.Utils.BaseForm
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseDialog));
             this.panel = new DevExpress.XtraEditors.PanelControl();
             this.Confirm = new DevExpress.XtraEditors.SimpleButton();
             this.Cancel = new DevExpress.XtraEditors.SimpleButton();
-            this.FolderNode = new DevExpress.Utils.ImageCollection();
-            this.CategoryNode = new DevExpress.Utils.ImageCollection();
-            this.OrgTreeNode = new DevExpress.Utils.ImageCollection();
+            this.FolderNode = new DevExpress.Utils.ImageCollection(this.components);
+            this.CategoryNode = new DevExpress.Utils.ImageCollection(this.components);
+            this.OrgTreeNode = new DevExpress.Utils.ImageCollection(this.components);
+            this.Close = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).BeginInit();
@@ -99,6 +101,17 @@ namespace Insight.Utils.BaseForm
             this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
             this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
+            // Close
+            // 
+            this.Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Close.Appearance.Options.UseFont = true;
+            this.Close.Location = new System.Drawing.Point(290, 174);
+            this.Close.Name = "Close";
+            this.Close.Size = new System.Drawing.Size(80, 23);
+            this.Close.TabIndex = 103;
+            this.Close.Text = "关  闭";
+            // 
             // BaseDialog
             // 
             this.AcceptButton = this.Confirm;
@@ -106,8 +119,9 @@ namespace Insight.Utils.BaseForm
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(384, 212);
             this.Controls.Add(this.panel);
-            this.Controls.Add(this.Confirm);
             this.Controls.Add(this.Cancel);
+            this.Controls.Add(this.Confirm);
+            this.Controls.Add(this.Close);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BaseDialog";
@@ -131,5 +145,6 @@ namespace Insight.Utils.BaseForm
         protected ImageCollection FolderNode;
         protected ImageCollection CategoryNode;
         protected ImageCollection OrgTreeNode;
+        public SimpleButton Close;
     }
 }
