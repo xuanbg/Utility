@@ -24,7 +24,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 构造函数
         /// </summary>
-        public UpdateModel()
+        /// <param name="title">窗体标题</param>
+        public UpdateModel(string title) : base(title)
         {
             view.Shown += (sender, args) => update();
         }

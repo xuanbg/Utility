@@ -14,9 +14,10 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 构造方法
         /// </summary>
+        /// <param name="title">对话框标题</param>
         /// <param name="item">对话框数据对象</param>
         /// <param name="isShow">是否查看模式</param>
-        protected BaseDialogModel(T item = default(T), bool isShow = false)
+        protected BaseDialogModel(string title, T item = default(T), bool isShow = false) : base(title)
         {
             this.item = item;
             view.Confirm.Visible = !isShow;

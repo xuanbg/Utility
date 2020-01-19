@@ -21,23 +21,19 @@ namespace Insight.Utils.ViewModels
         /// <param name="cat">当前分类</param>
         /// <param name="cats">分类集合</param>
         /// <param name="url">接口地址</param>
-        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url):base(cat)
+        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url):base(title, cat)
         {
             list = getTreeList(cats);
             baseUrl = url;
             parentId = cat.parentId;
             index = cat.index;
 
-            view = new Category
-            {
-                Text = title,
-                trlParent = {EditValue = cat.parentId},
-                txtName = {EditValue = cat.name},
-                spiIndex = {Value = cat.index},
-                txtAlias = {EditValue = cat.alias},
-                txtCode = {EditValue = cat.code},
-                memRemark = {EditValue = cat.remark}
-            };
+            view.trlParent.EditValue = cat.parentId;
+            view.txtName.EditValue = cat.name;
+            view.spiIndex.Value = cat.index;
+            view.txtAlias.EditValue = cat.alias;
+            view.txtCode.EditValue = cat.code;
+            view.memRemark.EditValue = cat.remark;
 
             // 订阅控件事件实现数据双向绑定
             view.trlParent.EditValueChanged += (sender, args) =>

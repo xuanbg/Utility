@@ -75,7 +75,7 @@ namespace Insight.Utils.MainForm
 
             view.SetButton.Click += (sender, args) => 
             {
-                var set = new SetModel();
+                var set = new SetModel("服务器设置");
                 set.view.Confirm.Click += (s, a) =>
                 {
                     login.initUserName();
@@ -209,7 +209,7 @@ namespace Insight.Utils.MainForm
         /// <param name="isFirst"></param>
         private void changPassword(bool isFirst = false)
         {
-            var changPw = new ChangPwModel();
+            var changPw = new ChangPwModel("修改密码");
             var view = changPw.view;
 
             view.Confirm.Click += (sender, args) =>
@@ -227,7 +227,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         private void lockWindow()
         {
-            var model = new LockModel();
+            var model = new LockModel("屏幕解锁");
             var view = model.view;
 
             view.Confirm.Click += (sender, args) =>
@@ -282,7 +282,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         private void update(bool confirm = true)
         {
-            var model = new UpdateModel();
+            var model = new UpdateModel("检查更新");
             var view = model.view;
 
             view.Confirm.Click += (sender, args) =>
@@ -313,7 +313,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         private void about()
         {
-            var model = new AboutModel();
+            var model = new AboutModel("关于");
             var view = model.view;
 
             view.ShowDialog();

@@ -13,7 +13,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 构造函数
         /// 通过订阅事件实现双向数据绑定
         /// </summary>
-        public LockModel()
+        /// <param name="title">窗体标题</param>
+        public LockModel(string title) : base(title)
         {
             view.Password.EditValueChanged += (sender, args) => sing = Util.hash(Setting.tokenHelper.account + Util.hash(view.Password.Text));
         }

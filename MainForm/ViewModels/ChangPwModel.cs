@@ -16,10 +16,9 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 构造函数
         /// 通过订阅事件实现双向数据绑定
         /// </summary>
-        public ChangPwModel()
+        /// <param name="title">窗体标题</param>
+        public ChangPwModel(string title) : base(title)
         {
-            view = new ChangePw {Text = @"修改密码"};
-
             // 订阅控件事件实现数据双向绑定
             view.Password.EditValueChanged += (sender, args) => sing = Util.hash(Setting.tokenHelper.account + Util.hash(view.Password.Text));
             view.NewPw.EditValueChanged += (sender, args) => newPw = view.NewPw.Text;
