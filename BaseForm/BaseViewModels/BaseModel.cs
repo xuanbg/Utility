@@ -38,9 +38,10 @@ namespace Insight.Utils.BaseViewModels
         /// 回调方法
         /// </summary>
         /// <param name="methodName">方法名称</param>
-        protected void callback(string methodName)
+        /// <param name="param">回调参数</param>
+        protected void callback(string methodName, object param = null)
         {
-            callbackEvent?.Invoke(this, new CallbackEventArgs(methodName));
+            callbackEvent?.Invoke(this, new CallbackEventArgs(methodName, param));
         }
 
         /// <summary>
@@ -61,7 +62,16 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
-        /// 对话框关闭确认
+        /// 关闭对话框
+        /// </summary>
+        protected void close()
+        {
+            view.DialogResult = DialogResult.OK;
+            view.Close();
+        }
+
+        /// <summary>
+        /// 关闭对话框确认
         /// </summary>
         /// <param name="args">取消事件参数</param>
         protected void closeConfirm(CancelEventArgs args)
@@ -82,12 +92,19 @@ namespace Insight.Utils.BaseViewModels
         public string methodName { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public object param { get; }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="methodName">回调方法名称</param>
-        public CallbackEventArgs(string methodName)
+        /// <param name="param">回调参数</param>
+        public CallbackEventArgs(string methodName, object param)
         {
             this.methodName = methodName;
+            this.param = param;
         }
     }
 }

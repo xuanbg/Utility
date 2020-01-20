@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
@@ -81,8 +80,7 @@ namespace Insight.Utils.MainForm
         public void lockWindow()
         {
             var model = new LockModel("屏幕解锁");
-
-            model.init();
+            model.showDialog();
         }
 
         /// <summary>
