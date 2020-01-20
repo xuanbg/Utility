@@ -8,11 +8,8 @@ namespace Insight.Utils.MainForm
     public class Controller : BaseController
     {
         private readonly Model dataModel = new Model();
-
-        /// <summary>
-        /// 主窗体View Model
-        /// </summary>
-        public readonly MainModel mainModel;
+        private readonly MainModel mainModel;
+        private readonly LoginModel loginModel;
 
         /// <summary>
         /// 构造函数
@@ -23,24 +20,25 @@ namespace Insight.Utils.MainForm
             mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
 
-            var model = new LoginModel(title);
-            model.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
-            model.showDialog();
+            loginModel = new LoginModel(title);
+            loginModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
+            loginModel.showDialog();
         }
 
         /// <summary>
-        /// 登录
+        /// 加载主窗体
         /// </summary>
         public void loadMainWindow()
         {
-            var waiting = new WaitingModel();
-            waiting.view.Show();
-            waiting.view.Refresh();
+            var model = new WaitingModel(Setting.appName);
+            model.showDialog();
+            loginModel.close();
 
             mainModel.showMainWindow(dataModel.getNavigators());
-            waiting.view.Close();
+            model.close();
 
             mainModel.autoLoad();
+            if (Setting.needChangePw) changPassword("123456");
         }
 
         /// <summary>
@@ -58,8 +56,7 @@ namespace Insight.Utils.MainForm
         /// <param name="password">原密码</param>
         public void changPassword(string password)
         {
-            var dto = new PasswordDto {old = password};
-            var model = new ChangPwModel("修改密码", dto);
+            var model = new ChangPwModel("修改密码", password);
             model.callbackEvent += (sender, args) =>
             {
                 var data = (PasswordDto)args.param[0];

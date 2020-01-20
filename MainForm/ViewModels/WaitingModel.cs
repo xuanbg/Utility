@@ -1,19 +1,39 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using Insight.Utils.Client;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Common;
 using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class WaitingModel
+    public class WaitingModel : BaseModel<Waiting>
     {
-        public readonly Waiting view = new Waiting
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="title">窗体标题</param>
+        public WaitingModel(string title) : base(title)
         {
-            Text = Setting.appName,
-            Icon = new Icon("logo.ico"),
-            BackgroundImage = Util.getImage("bg.png"),
-            BackgroundImageLayout = ImageLayout.Stretch
-        };
+            view.Icon = new Icon("logo.ico");
+            view.BackgroundImage = Util.getImage("bg.png");
+            view.BackgroundImageLayout = ImageLayout.Stretch;
+        }
+
+        /// <summary>
+        /// 打开对话框
+        /// </summary>
+        public void showDialog()
+        {
+            view.Show();
+            view.Refresh();
+        }
+
+        /// <summary>
+        /// 关闭对话框
+        /// </summary>
+        public void close()
+        {
+            view.Close();
+        }
     }
 }

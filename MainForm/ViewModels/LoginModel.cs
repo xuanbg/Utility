@@ -51,7 +51,7 @@ namespace Insight.Utils.MainForm.ViewModels
         }
 
         /// <summary>
-        /// 初始化默认登录用户
+        /// 打开登录对话框
         /// </summary>
         public void showDialog()
         {
@@ -87,12 +87,24 @@ namespace Insight.Utils.MainForm.ViewModels
 
             tokenHelper.account = account;
             tokenHelper.signature(password);
-            if (!tokenHelper.getTokens()) return;
+            if (!tokenHelper.getTokens())
+            {
+                view.PassWordInput.EditValue = null;
+                return;
+            }
 
             Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
 
             callback("loadMainWindow");
+        }
+
+        /// <summary>
+        /// 关闭登录对话框
+        /// </summary>
+        public void close()
+        {
+            view.Close();
         }
 
         /// <summary>
