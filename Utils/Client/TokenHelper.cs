@@ -58,18 +58,10 @@ namespace Insight.Utils.Client
             if (code == null) return false;
 
             var key = Util.hash(sign + code);
+            var body = new LoginDto {appId = appId, tenantId = tenantId, deptId = deptId, account = account, signature = key};
             var url = "/base/auth/v1.0/tokens";
-            var dict = new Dictionary<string, object>
-            {
-                {"account", account},
-                {"signature", key},
-                {"appId", appId},
-                {"tenantId", tenantId},
-                {"deptId", deptId}
-            };
-
             var client = new HttpClient<TokenPackage>();
-            var data = client.request(url, RequestMethod.POST, dict);
+            var data = client.request(url, RequestMethod.POST, body);
             if (!client.success) return false;
 
             accessToken = data.accessToken;

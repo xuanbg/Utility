@@ -60,6 +60,7 @@
     <Compile Include="Entity\Enums.cs" />
     <Compile Include="Entity\ClientFile.cs" />
     <Compile Include="Entity\ImageData.cs" />
+    <Compile Include="Entity\LoginDto.cs" />
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\LookUpMember.cs" />
     <Compile Include="Entity\Modules.cs" />
