@@ -70,6 +70,8 @@ namespace Insight.Utils.Client
 
             var client = new HttpClient<TokenPackage>();
             var data = client.request(url, RequestMethod.POST, dict);
+            if (!client.success) return false;
+
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
 

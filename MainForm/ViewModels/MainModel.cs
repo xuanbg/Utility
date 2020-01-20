@@ -38,7 +38,7 @@ namespace Insight.Utils.MainForm.ViewModels
             view.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword");
+            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[1]);
             view.MubLock.ItemClick += (sender, args) => callback("lockWindow");
             view.MubLogout.ItemClick += (sender, args) => logout();
             view.MubExit.ItemClick += (sender, args) => view.Close();

@@ -81,7 +81,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// </summary>
         private void update()
         {
-            view.Confirm.Enabled = false;
+            view.confirm.Enabled = false;
             foreach (var file in updates)
             {
                 view.Progress.EditValue = $@"正在更新：{file.name}……";
@@ -95,9 +95,9 @@ namespace Insight.Utils.MainForm.ViewModels
                 restart = Util.updateFile(file, root, bytes) || restart;
             }
 
-            view.Confirm.Enabled = true;
+            view.confirm.Enabled = true;
             view.Progress.EditValue = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
-            view.Confirm.Text = restart ? "重  启" : "关  闭";
+            view.confirm.Text = restart ? "重  启" : "关  闭";
             view.Refresh();
         }
 

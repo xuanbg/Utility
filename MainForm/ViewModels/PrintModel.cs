@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Printing;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class PrintModel
+    public class PrintModel : BaseDialogModel<string, PrintSet>
     {
-        public readonly PrintSet view = new PrintSet();
-
         private readonly List<object> prints = new List<object>();
 
         /// <summary>
         /// 构造函数，初始化视图
         /// 通过订阅事件实现双向数据绑定
         /// </summary>
-        public PrintModel()
+        public PrintModel(string title) : base(title)
         {
             // 读取系统安装打印机列表
             var list = PrinterSettings.InstalledPrinters;
@@ -46,12 +45,14 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void save()
+        public void confirm()
         {
             Setting.savePrinter("docPrint", Setting.docPrint);
             Setting.savePrinter("tagPrint", Setting.tagPrint);
             Setting.savePrinter("bilPrint", Setting.bilPrint);
             Setting.saveIsMergerPrint();
+
+            closeDialog();
         }
     }
 }

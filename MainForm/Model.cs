@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Insight.Utils.Client;
-using Insight.Utils.Common;
 using Insight.Utils.Entity;
+using Insight.Utils.MainForm.Dtos;
 
 namespace Insight.Utils.MainForm
 {
@@ -19,18 +19,18 @@ namespace Insight.Utils.MainForm
             return client.getData(url);
         }
 
-        internal static bool changPassword(string oldPw, string newPw)
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        internal static bool changPassword(PasswordDto dto)
         {
             const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
             var url = "/base/user/v1.0/users/password";
-            var dict = new Dictionary<string, object>
-            {
-                {"password", Util.hash(newPw)},
-                {"old", Util.hash(oldPw)}
-            };
             var client = new HttpClient<object>();
 
-            return client.put(url, dict, msg);
+            return client.put(url, dto, msg);
         }
 
         internal static List<TreeLookUpMember> getDepts(string account)

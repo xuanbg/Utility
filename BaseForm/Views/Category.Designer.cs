@@ -82,15 +82,15 @@ namespace Insight.Utils.Views
             // 
             // Cancel
             // 
-            this.Cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Cancel.Appearance.Options.UseFont = true;
-            this.Cancel.Location = new System.Drawing.Point(200, 224);
+            this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cancel.Appearance.Options.UseFont = true;
+            this.cancel.Location = new System.Drawing.Point(200, 224);
             // 
             // Confirm
             // 
-            this.Confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Confirm.Appearance.Options.UseFont = true;
-            this.Confirm.Location = new System.Drawing.Point(290, 224);
+            this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.confirm.Appearance.Options.UseFont = true;
+            this.confirm.Location = new System.Drawing.Point(290, 224);
             // 
             // FolderNode
             // 

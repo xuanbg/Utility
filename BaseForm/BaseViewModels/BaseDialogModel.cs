@@ -21,14 +21,14 @@ namespace Insight.Utils.BaseViewModels
         protected BaseDialogModel(string title, T item = default(T), bool isShow = false) : base(title)
         {
             this.item = item;
-            view.Confirm.Visible = !isShow;
-            view.Cancel.Visible = !isShow;
-            view.Close.Visible = isShow;
+            view.confirm.Visible = !isShow;
+            view.cancel.Visible = !isShow;
+            view.close.Visible = isShow;
             view.Closed += (sender, args) => view.Dispose();
 
             if (isShow)
             {
-                view.Close.Click += (sender, args) =>
+                view.close.Click += (sender, args) =>
                 {
                     view.DialogResult = DialogResult.OK;
                     view.Close();
@@ -36,8 +36,8 @@ namespace Insight.Utils.BaseViewModels
             }
             else
             {
-                view.Confirm.Click += (sender, args) => buttonClick("confirm");
-                view.Cancel.Click += (sender, args) => view.Close();
+                view.confirm.Click += (sender, args) => buttonClick("confirm");
+                view.cancel.Click += (sender, args) => view.Close();
                 view.Closing += (sender, args) => closeConfirm(args);
             }
         }

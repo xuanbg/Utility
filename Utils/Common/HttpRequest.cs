@@ -60,7 +60,7 @@ namespace Insight.Utils.Common
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool send(string url, RequestMethod method, Dictionary<string, object> body)
+        public bool send(string url, RequestMethod method, object body)
         {
             if (method != RequestMethod.GET)
             {
@@ -70,7 +70,8 @@ namespace Insight.Utils.Common
 
             if (body != null)
             {
-                var param = body.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
+                var dict = Util.convertTo<Dictionary<string, object>>(body);
+                var param = dict.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
                 url += param.Replace("?&", "?");
             }
 

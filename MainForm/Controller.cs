@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
+using Insight.Utils.MainForm.Dtos;
 using Insight.Utils.MainForm.ViewModels;
 
 namespace Insight.Utils.MainForm
@@ -18,7 +19,7 @@ namespace Insight.Utils.MainForm
         {
             // 构造主窗体并显示
             mainModel = new MainModel(Setting.appName);
-            mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName);
+            mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
 
             login();
         }
@@ -54,7 +55,7 @@ namespace Insight.Utils.MainForm
                 waiting.view.Close();
 
                 mainModel.autoLoad();
-                if (Setting.needChangePw) changPassword(true);
+                if (Setting.needChangePw) changPassword(login.view.PassWordInput.Text);
             };
 
             // 显示登录界面
@@ -67,11 +68,20 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：修改密码，弹出修改密码对话框
         /// </summary>
-        /// <param name="isFirst"></param>
-        public void changPassword(bool isFirst = false)
+        /// <param name="password">原密码</param>
+        public void changPassword(string password)
         {
-            var model = new ChangPwModel("修改密码");
-            model.init(isFirst ? "123456" : null);
+            var dto = new PasswordDto {old = password};
+            var model = new ChangPwModel("修改密码", dto);
+            model.callbackEvent += (sender, args) =>
+            {
+                var data = (PasswordDto)args.param[0];
+                if (!Model.changPassword(data)) return;
+
+                model.close();
+            };
+
+            model.showDialog();
         }
 
         /// <summary>
@@ -79,7 +89,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public void lockWindow()
         {
-            var model = new LockModel("屏幕解锁");
+            var model = new LockModel("解除屏幕锁定");
             model.showDialog();
         }
 
@@ -88,15 +98,8 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public void printSet()
         {
-            var model = new PrintModel();
-            var view = model.view;
-
-            view.Confirm.Click += (sender, args) =>
-            {
-                model.save();
-            };
-
-            view.ShowDialog();
+            var model = new PrintModel("设置打印机");
+            model.showDialog();
         }
 
         /// <summary>

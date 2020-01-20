@@ -8,7 +8,8 @@ namespace Insight.Utils.BaseControllers
         /// 按钮点击事件路由
         /// </summary>
         /// <param name="methodName">回调方法名称</param>
-        protected void buttonClick(string methodName)
+        /// <param name="param">回调参数</param>
+        protected void buttonClick(string methodName, object[] param = null)
         {
             var method = GetType().GetMethod(methodName);
             if (method == null)
@@ -17,7 +18,7 @@ namespace Insight.Utils.BaseControllers
             }
             else
             {
-                method.Invoke(this, null);
+                method.Invoke(this, param);
             }
         }
     }

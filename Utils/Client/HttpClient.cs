@@ -9,6 +9,11 @@ namespace Insight.Utils.Client
         private Result<T> result = new Result<T>();
 
         /// <summary>
+        /// 返回是否成功
+        /// </summary>
+        public bool success => result.success;
+
+        /// <summary>
         /// 返回的错误代码
         /// </summary>
         public string code => result.code;
@@ -33,13 +38,12 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="dict">参数集合</param>
+        /// <param name="body">请求参数/Body中的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>T</returns>
-        public T getData(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null,
-            string msg = null)
+        public T getData(string url, RequestMethod method = RequestMethod.GET, object body = null, string msg = null)
         {
-            request(url, method, dict, msg);
+            request(url, method, body, msg);
 
             return data;
         }
@@ -49,12 +53,11 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="dict">参数集合</param>
+        /// <param name="body">请求参数/Body中的数据</param>
         /// <returns>T</returns>
-        public Result<T> getResult(string url, RequestMethod method = RequestMethod.GET,
-            Dictionary<string, object> dict = null)
+        public Result<T> getResult(string url, RequestMethod method = RequestMethod.GET, object body = null)
         {
-            request(url, method, dict, null, false);
+            request(url, method, body, null, false);
 
             return result;
         }
@@ -63,7 +66,7 @@ namespace Insight.Utils.Client
         /// HttpRequest:GET方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="dict">参数集合</param>
+        /// <param name="dict">URL参数集合</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
         public bool get(string url, Dictionary<string, object> dict = null, string msg = null)
@@ -75,36 +78,36 @@ namespace Insight.Utils.Client
         /// HttpRequest:POST方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="dict">POST的数据</param>
+        /// <param name="body">POST的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool post(string url, Dictionary<string, object> dict = null, string msg = null)
+        public bool post(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.POST, dict, msg);
+            return request(url, RequestMethod.POST, body, msg);
         }
 
         /// <summary>
         /// HttpRequest:PUT方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="dict">PUT的数据</param>
+        /// <param name="body">PUT的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool put(string url, Dictionary<string, object> dict = null, string msg = null)
+        public bool put(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.PUT, dict, msg);
+            return request(url, RequestMethod.PUT, body, msg);
         }
 
         /// <summary>
         /// HttpRequest:DELETE方法
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="dict">DELETE的数据，默认NULL</param>
+        /// <param name="body">DELETE的数据，默认NULL</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <returns>bool 是否成功</returns>
-        public bool delete(string url, Dictionary<string, object> dict = null, string msg = null)
+        public bool delete(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.DELETE, dict, msg);
+            return request(url, RequestMethod.DELETE, body, msg);
         }
 
         /// <summary>
@@ -112,12 +115,12 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="dict">请求参数/Body中的数据</param>
+        /// <param name="body">请求参数/Body中的数据</param>
         /// <returns>T</returns>
-        public T request(string url, RequestMethod method = RequestMethod.GET, Dictionary<string, object> dict = null)
+        public T request(string url, RequestMethod method = RequestMethod.GET, object body = null)
         {
             var request = new HttpRequest();
-            if (request.send(Setting.gateway + url, method, dict))
+            if (request.send(Setting.gateway + url, method, body))
             {
                 result = Util.deserialize<Result<T>>(request.data);
                 if (result.success) return result.data;
@@ -138,17 +141,17 @@ namespace Insight.Utils.Client
         /// </summary>
         /// <param name="url">接口URL</param>
         /// <param name="method">请求方法</param>
-        /// <param name="dict">请求参数/Body中的数据</param>
+        /// <param name="body">请求参数/Body中的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <param name="log">是否输出错误消息</param>
         /// <returns>bool 是否成功</returns>
-        private bool request(string url, RequestMethod method, Dictionary<string, object> dict, string msg, bool log = true)
+        private bool request(string url, RequestMethod method, object body, string msg, bool log = true)
         {
             while (true)
             {
                 var helper = Setting.tokenHelper;
                 var request = new HttpRequest(helper.accessToken);
-                if (request.send(Setting.gateway + url, method, dict))
+                if (request.send(Setting.gateway + url, method, body))
                 {
                     result = Util.deserialize<Result<T>>(request.data);
                     if (result == null)

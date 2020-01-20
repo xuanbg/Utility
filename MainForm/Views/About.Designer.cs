@@ -60,18 +60,18 @@
             // 
             // Cancel
             // 
-            this.Cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Cancel.Appearance.Options.UseFont = true;
-            this.Cancel.Location = new System.Drawing.Point(300, 275);
-            this.Cancel.Visible = false;
+            this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cancel.Appearance.Options.UseFont = true;
+            this.cancel.Location = new System.Drawing.Point(300, 275);
+            this.cancel.Visible = false;
             // 
             // Confirm
             // 
-            this.Confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Confirm.Appearance.Options.UseFont = true;
-            this.Confirm.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Confirm.Location = new System.Drawing.Point(390, 275);
-            this.Confirm.TabIndex = 0;
+            this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.confirm.Appearance.Options.UseFont = true;
+            this.confirm.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.confirm.Location = new System.Drawing.Point(390, 275);
+            this.confirm.TabIndex = 0;
             // 
             // FolderNode
             // 
@@ -96,9 +96,9 @@
             // 
             // Close
             // 
-            this.Close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Close.Appearance.Options.UseFont = true;
-            this.Close.Location = new System.Drawing.Point(390, 275);
+            this.close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.close.Appearance.Options.UseFont = true;
+            this.close.Location = new System.Drawing.Point(390, 275);
             // 
             // picAbout
             // 
@@ -190,11 +190,11 @@
             this.Controls.Add(this.picAbout);
             this.Name = "About";
             this.Text = "关于…";
-            this.Controls.SetChildIndex(this.Confirm, 0);
-            this.Controls.SetChildIndex(this.Close, 0);
+            this.Controls.SetChildIndex(this.confirm, 0);
+            this.Controls.SetChildIndex(this.close, 0);
             this.Controls.SetChildIndex(this.picAbout, 0);
             this.Controls.SetChildIndex(this.panel, 0);
-            this.Controls.SetChildIndex(this.Cancel, 0);
+            this.Controls.SetChildIndex(this.cancel, 0);
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();

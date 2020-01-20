@@ -67,15 +67,15 @@
             // 
             // Cancel
             // 
-            this.Cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Cancel.Appearance.Options.UseFont = true;
-            this.Cancel.Visible = false;
+            this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cancel.Appearance.Options.UseFont = true;
+            this.cancel.Visible = false;
             // 
             // Confirm
             // 
-            this.Confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Confirm.Appearance.Options.UseFont = true;
-            this.Confirm.Text = "解  锁";
+            this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.confirm.Appearance.Options.UseFont = true;
+            this.confirm.Text = "解  锁";
             // 
             // Password
             // 

@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller.cs" />
+    <Compile Include="Dtos\PasswordDto.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ViewModels\AboutModel.cs" />
     <Compile Include="ViewModels\ChangPwModel.cs" />

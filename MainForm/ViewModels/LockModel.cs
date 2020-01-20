@@ -14,8 +14,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <param name="title">窗体标题</param>
         public LockModel(string title) : base(title)
         {
-            view.Cancel.Visible = false;
-            view.Confirm.Text = "解  锁";
+            view.cancel.Visible = false;
+            view.confirm.Text = "解  锁";
             view.Password.EditValue = item;
 
             view.Password.EditValueChanged += (sender, args) => item = view.Password.Text;
@@ -30,7 +30,7 @@ namespace Insight.Utils.MainForm.ViewModels
             var sign = Util.hash(Setting.tokenHelper.account + Util.hash(item));
             if (sign == Setting.tokenHelper.sign)
             {
-                close();
+                closeDialog();
                 return;
             }
 
