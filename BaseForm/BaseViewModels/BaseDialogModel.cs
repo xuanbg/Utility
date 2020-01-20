@@ -24,6 +24,7 @@ namespace Insight.Utils.BaseViewModels
             view.Confirm.Visible = !isShow;
             view.Cancel.Visible = !isShow;
             view.Close.Visible = isShow;
+            view.Closed += (sender, args) => view.Dispose();
 
             if (isShow)
             {
@@ -37,6 +38,7 @@ namespace Insight.Utils.BaseViewModels
             {
                 view.Confirm.Click += (sender, args) => buttonClick("confirm");
                 view.Cancel.Click += (sender, args) => view.Close();
+                view.Closing += (sender, args) => closeConfirm(args);
             }
         }
 

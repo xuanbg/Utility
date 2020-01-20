@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -39,12 +40,13 @@ namespace Insight.Utils.MainForm.ViewModels
             // 订阅主窗体菜单事件
             view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword");
             view.MubLock.ItemClick += (sender, args) => callback("lockWindow");
-            view.MubLogout.ItemClick += (sender, args) => callback("logout");
-            view.MubExit.ItemClick += (sender, args) => callback("exit");
+            view.MubLogout.ItemClick += (sender, args) => logout();
+            view.MubExit.ItemClick += (sender, args) => view.Close();
             view.MubPrintSet.ItemClick += (sender, args) => callback("printSet");
             view.MubUpdate.ItemClick += (sender, args) => callback("update");
             view.MubAbout.ItemClick += (sender, args) => callback("about");
-            view.Closed += (sender, args) => callback("exit");
+
+            view.Closing += (sender, args) => exit(args);
         }
 
         /// <summary>
@@ -66,14 +68,6 @@ namespace Insight.Utils.MainForm.ViewModels
         public void autoLoad()
         {
             opens.ForEach(addPageMdi);
-        }
-
-        /// <summary>
-        /// 保存当前主题样式到配置文件
-        /// </summary>
-        public void saveLookAndFeel()
-        {
-            Setting.saveLookAndFeel(view.MyFeel.LookAndFeel.SkinName);
         }
 
         /// <summary>
@@ -154,6 +148,36 @@ namespace Insight.Utils.MainForm.ViewModels
             view.Loading.ShowWaitForm();
             asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
             view.Loading.CloseWaitForm();
+        }
+
+        /// <summary>
+        /// 点击菜单项：注销，弹出询问对话框，确认注销后重启应用程序
+        /// </summary>
+        private void logout()
+        {
+            const string msg = "注销用户将导致当前未完成的输入内容丢失！\r\n您确定要注销吗？";
+            if (!Messages.showConfirm(msg)) return;
+
+            Setting.tokenHelper.deleteToken();
+            Application.Restart();
+        }
+
+        /// <summary>
+        /// 退出系统前保存当前应用的皮肤
+        /// </summary>
+        /// <param name="args">取消事件参数</param>
+        private void exit(CancelEventArgs args)
+        {
+            const string msg = "退出应用程序将导致当前未完成的输入内容丢失！\r\n您确定要退出吗？";
+            if (!Messages.showConfirm(msg))
+            {
+                args.Cancel = true;
+                return;
+            }
+
+            Setting.saveLookAndFeel(view.MyFeel.LookAndFeel.SkinName);
+            Setting.tokenHelper.deleteToken();
+            Application.Exit();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
@@ -31,13 +32,6 @@ namespace Insight.Utils.BaseViewModels
         protected BaseModel(string title)
         {
             view = new TV {Text = title};
-
-            view.Closing += (sender, args) =>
-            {
-                const string msg = "您确定要放弃所做的变更，并关闭对话框吗？";
-                args.Cancel = view.DialogResult != DialogResult.OK && !Messages.showConfirm(msg);
-            };
-            view.Closed += (sender, args) => view.Dispose();
         }
 
         /// <summary>
@@ -52,12 +46,28 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 按钮点击事件路由
         /// </summary>
-        /// <param name="action">按钮名称</param>
-        protected void buttonClick(string action)
+        /// <param name="methodName">回调方法名称</param>
+        protected void buttonClick(string methodName)
         {
-            var method = GetType().GetMethod(action);
-            if (method == null) Messages.showError("对不起，该功能尚未实现！");
-            else method.Invoke(this, null);
+            var method = GetType().GetMethod(methodName);
+            if (method == null)
+            {
+                Messages.showError("对不起，该功能尚未实现！");
+            }
+            else
+            {
+                method.Invoke(this, null);
+            }
+        }
+
+        /// <summary>
+        /// 对话框关闭确认
+        /// </summary>
+        /// <param name="args">取消事件参数</param>
+        protected void closeConfirm(CancelEventArgs args)
+        {
+            const string msg = "您确定要放弃所做的变更，并关闭对话框吗？";
+            args.Cancel = view.DialogResult != DialogResult.OK && !Messages.showConfirm(msg);
         }
     }
 
@@ -67,7 +77,7 @@ namespace Insight.Utils.BaseViewModels
     public class CallbackEventArgs : EventArgs
     {
         /// <summary>
-        /// PageSize
+        /// 回调方法名称
         /// </summary>
         public string methodName { get; }
 

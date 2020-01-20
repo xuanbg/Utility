@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
@@ -85,29 +86,6 @@ namespace Insight.Utils.MainForm
         }
 
         /// <summary>
-        /// 点击菜单项：注销，弹出询问对话框，确认注销后重启应用程序
-        /// </summary>
-        public void logout()
-        {
-            const string msg = "注销用户将导致当前未完成的输入内容丢失！\r\n您确定要注销吗？";
-            if (!logoutConfirm(msg)) return;
-
-            Application.Restart();
-        }
-
-        /// <summary>
-        /// 退出系统前保存当前应用的皮肤
-        /// </summary>
-        public void exit()
-        {
-            const string msg = "退出应用程序将导致当前未完成的输入内容丢失！\r\n您确定要退出吗？";
-            if (!logoutConfirm(msg)) return;
-
-            mainModel.saveLookAndFeel();
-            Application.Exit();
-        }
-
-        /// <summary>
         /// 点击菜单项：打印机设置，打开打印机设置对话框
         /// </summary>
         public void printSet()
@@ -156,18 +134,6 @@ namespace Insight.Utils.MainForm
             var model = new AboutModel("关于");
 
             model.showDialog();
-        }
-
-        /// <summary>
-        /// 如注销用户失败，弹出询问对话框。
-        /// </summary>
-        /// <param name="msg">消息提示</param>
-        private bool logoutConfirm(string msg)
-        {
-            if (!Messages.showConfirm(msg)) return false;
-
-            Setting.tokenHelper.deleteToken();
-            return true;
         }
     }
 }
