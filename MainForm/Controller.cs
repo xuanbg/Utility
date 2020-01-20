@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms;
-using Insight.Utils.BaseControllers;
+﻿using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
-using Insight.Utils.Common;
 using Insight.Utils.MainForm.Dtos;
 using Insight.Utils.MainForm.ViewModels;
 
@@ -10,6 +7,11 @@ namespace Insight.Utils.MainForm
 {
     public class Controller : BaseController
     {
+        private readonly Model dataModel = new Model();
+
+        /// <summary>
+        /// 主窗体View Model
+        /// </summary>
         public readonly MainModel mainModel;
 
         /// <summary>
@@ -17,52 +19,37 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
-            // 构造主窗体并显示
-            mainModel = new MainModel(Setting.appName);
+            var title = Setting.appName;
+            mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
 
-            login();
+            var model = new LoginModel(title);
+            model.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
+            model.showDialog();
         }
 
         /// <summary>
         /// 登录
         /// </summary>
-        private void login()
+        public void loadMainWindow()
         {
-            // 构造登录Model并订阅登录窗体事件
-            var login = new LoginModel();
-            var view = login.view;
-            view.CloseButton.Click += (sender, args) => Application.Exit();
+            var waiting = new WaitingModel();
+            waiting.view.Show();
+            waiting.view.Refresh();
 
-            view.SetButton.Click += (sender, args) => 
-            {
-                var set = new SetModel("服务器设置");
-                    login.initUserName();
-                    set.save();
-            };
+            mainModel.showMainWindow(dataModel.getNavigators());
+            waiting.view.Close();
 
-            view.LoginButton.Click += (sender, args) =>
-            {
-                if (!login.login()) return;
+            mainModel.autoLoad();
+        }
 
-                // 显示等待界面
-                var waiting = new WaitingModel();
-                waiting.view.Show();
-                waiting.view.Refresh();
-                login.view.Close();
-
-                mainModel.showMainWindow(Model.getNavigators());
-                waiting.view.Close();
-
-                mainModel.autoLoad();
-                if (Setting.needChangePw) changPassword(login.view.PassWordInput.Text);
-            };
-
-            // 显示登录界面
-            view.Show();
-            view.Refresh();
-
-            login.initUserName();
+        /// <summary>
+        /// 设置服务地址
+        /// </summary>
+        public void setServerIp()
+        {
+            var model = new SetModel("服务器设置");
+            model.showDialog();
         }
 
         /// <summary>
@@ -76,7 +63,7 @@ namespace Insight.Utils.MainForm
             model.callbackEvent += (sender, args) =>
             {
                 var data = (PasswordDto)args.param[0];
-                if (!Model.changPassword(data)) return;
+                if (!dataModel.changPassword(data)) return;
 
                 model.close();
             };
@@ -105,26 +92,10 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：检查更新，如有更新，提示是否更新
         /// </summary>
-        public void update(bool confirm = true)
+        public void update()
         {
             var model = new UpdateModel("检查更新");
-                if (!model.restart) return;
-
-                // 运行restart.bat重启应用程序
-                Process.Start(model.createBat());
-                Application.Exit();
-
-            // 检查更新
-            var count = model.checkUpdate();
-            if (count == 0)
-            {
-                if (confirm) Messages.showMessage("当前无可用更新！");
-                return;
-            }
-
-            var msg = $"当前有 {count} 个文件需要更新，是否立即更新？";
-            if (confirm && !Messages.showConfirm(msg)) return;
-
+            model.showDialog();
         }
 
         /// <summary>
@@ -133,7 +104,6 @@ namespace Insight.Utils.MainForm
         public void about()
         {
             var model = new AboutModel("关于");
-
             model.showDialog();
         }
     }

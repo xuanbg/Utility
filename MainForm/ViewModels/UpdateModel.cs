@@ -46,8 +46,8 @@ namespace Insight.Utils.MainForm.ViewModels
             Util.getClientFiles(locals, appId, root, ".exe|.dll|.frl");
 
             // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
-            updates = (from sf in Model.getFiles(appId)
-                let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
+            updates = (from sf in new Dictionary<string, ClientFile>()
+                       let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
                 let cv = new Version(cf?.version ?? "1.0.0")
                 let sv = new Version(sf.Value?.version ?? "1.0.0")
                 where cf == null || cv < sv
@@ -87,10 +87,9 @@ namespace Insight.Utils.MainForm.ViewModels
                 view.Progress.EditValue = $@"正在更新：{file.name}……";
                 view.Refresh();
                 Thread.Sleep(1000);
-                var data = Model.getFile(file.id);
-                if (data == null) continue;
 
-                var buffer = Convert.FromBase64String(data);
+
+                var buffer = Convert.FromBase64String(null);
                 var bytes = Util.decompress(buffer);
                 restart = Util.updateFile(file, root, bytes) || restart;
             }

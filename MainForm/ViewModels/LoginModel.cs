@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
@@ -11,37 +12,38 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class LoginModel
+    public class LoginModel : BaseModel<LoginDialog>
     {
-        public LoginDialog view;
-        private static readonly TokenHelper TokenHelper = Setting.tokenHelper;
-        private string account = Setting.getAccount();
-        private string password;
+        private readonly TokenHelper tokenHelper = Setting.tokenHelper;
         private readonly bool showDept = Convert.ToBoolean(Util.getAppSetting("ShowDept"));
         private List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
+        private string account = Setting.getAccount();
+        public string password;
 
         /// <summary>
-        /// 构造函数，初始化视图
-        /// 通过订阅事件实现双向数据绑定
+        /// 构造方法
         /// </summary>
-        public LoginModel()
+        /// <param name="title">窗体标题</param>
+        public LoginModel(string title) : base(title)
         {
-            view = new LoginDialog
-            {
-                Text = Setting.appName,
-                Icon = new Icon("logo.ico"),
-                BackgroundImage = Util.getImage("bg.png"),
-                BackgroundImageLayout = ImageLayout.Stretch
-            };
+            view.Icon = new Icon("logo.ico");
+            view.BackgroundImage = Util.getImage("bg.png");
+            view.BackgroundImageLayout = ImageLayout.Stretch;
+            view.UserNameInput.EditValue = account;
+
+            view.peeDept.Visible = showDept;
+            view.lueDept.Visible = showDept;
+
+            view.SetButton.Click += (sender, args) => callback("setServerIp");
+            view.LoginButton.Click += (sender, args) => login();
+            view.CloseButton.Click += (sender, args) => Application.Exit();
 
             // 订阅控件事件实现数据双向绑定
             view.UserNameInput.EditValueChanged += (sender, args) => account = view.UserNameInput.Text.Trim();
             view.PassWordInput.EditValueChanged += (sender, args) => password = view.PassWordInput.Text;
-            view.peeDept.Visible = showDept;
-            view.lueDept.Visible = showDept;
             if (showDept)
             {
-                view.UserNameInput.Leave += (sender, args) => getDepts();
+                view.UserNameInput.Leave += (sender, args) => callback("loadDept");
                 view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
                 Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
@@ -51,61 +53,57 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 初始化默认登录用户
         /// </summary>
-        public void initUserName()
+        public void showDialog()
         {
-            if (string.IsNullOrEmpty(account)) return;
-
-            view.UserNameInput.EditValue = account;
-            if (string.IsNullOrEmpty(account)) return;
-
-            view.PassWordInput.Focus();
+            view.Show();
+            if (!string.IsNullOrEmpty(account)) view.PassWordInput.Focus();
         }
 
         /// <summary>
         /// 验证用户输入，通过验证后获取用户AccessToken
         /// </summary>
-        /// <returns>bool 是否登录成功</returns>
-        public bool login()
+        public void login()
         {
             if (string.IsNullOrEmpty(account))
             {
                 Messages.showMessage("请输入用户名！");
                 view.UserNameInput.Focus();
-                return false;
+                return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
                 Messages.showWarning("密码不能为空！");
                 view.PassWordInput.Focus();
-                return false;
+                return;
             }
 
             if (showDept && string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
             {
                 Messages.showWarning("请选择登录的企业/部门！");
                 view.lueDept.Focus();
-                return false;
+                return;
             }
 
-            TokenHelper.account = account;
-            TokenHelper.signature(password);
-            if (!TokenHelper.getTokens()) return false;
+            tokenHelper.account = account;
+            tokenHelper.signature(password);
+            if (!tokenHelper.getTokens()) return;
 
             Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
 
-            return true;
+            callback("loadMainWindow");
         }
 
         /// <summary>
-        /// 获取可登录部门
+        /// 初始化可登录部门
         /// </summary>
-        public void getDepts()
+        /// <param name="list">可登录部门</param>
+        public void initDepts(List<TreeLookUpMember> list)
         {
+            depts = list;
             if (string.IsNullOrEmpty(account)) return;
 
-            depts = Model.getDepts(account);
             if (!depts.Any()) return;
 
             var tree = view.lueDept.Properties.TreeList;
@@ -136,8 +134,8 @@ namespace Insight.Utils.MainForm.ViewModels
             var id = view.lueDept.EditValue?.ToString();
             if (string.IsNullOrEmpty(id))
             {
-                TokenHelper.tenantId = null;
-                TokenHelper.deptId = null;
+                tokenHelper.tenantId = null;
+                tokenHelper.deptId = null;
 
                 return;
             }
@@ -154,13 +152,13 @@ namespace Insight.Utils.MainForm.ViewModels
             var dept = depts.Single(i => i.id == id);
             if (dept.parentId == null)
             {
-                TokenHelper.tenantId = id;
-                TokenHelper.deptId = null;
+                tokenHelper.tenantId = id;
+                tokenHelper.deptId = null;
             }
             else
             {
-                TokenHelper.tenantId = dept.remark;
-                TokenHelper.deptId = id;
+                tokenHelper.tenantId = dept.remark;
+                tokenHelper.deptId = id;
                 Setting.deptCode = dept.code;
             }
 

@@ -15,10 +15,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <param name="title">窗体标题</param>
         public SetModel(string title) : base(title)
         {
-
             view.BaseInupt.EditValue = Setting.gateway;
             view.SaveUserCheckBox.Checked = saveUser;
-
 
             // 订阅控件事件实现数据双向绑定
             view.BaseInupt.EditValueChanged += (sender, args) => Setting.gateway = view.BaseInupt.Text;
@@ -28,12 +26,14 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void save()
+        public void confirm()
         {
             if (!saveUser) Setting.saveUserName(string.Empty);
 
             Setting.saveIsSaveUserInfo(saveUser);
             Setting.saveGateway();
+
+            closeDialog();
         }
     }
 }
