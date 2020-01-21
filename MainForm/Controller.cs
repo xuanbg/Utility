@@ -1,4 +1,5 @@
-﻿using Insight.Utils.BaseControllers;
+﻿using System.Linq;
+using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.ViewModels;
@@ -23,6 +24,20 @@ namespace Insight.Utils.MainForm
             loginModel = new LoginModel(title);
             loginModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
             loginModel.showDialog();
+        }
+
+        /// <summary>
+        /// 加载可选登录部门
+        /// </summary>
+        /// <param name="account">登录账号</param>
+        public void loadDept(string account)
+        {
+            if (string.IsNullOrEmpty(account)) return;
+
+            var list = dataModel.getDepts(account);
+            if (!list.Any()) return;
+
+            loginModel.initDepts(list);
         }
 
         /// <summary>

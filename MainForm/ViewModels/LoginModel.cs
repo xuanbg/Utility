@@ -43,7 +43,7 @@ namespace Insight.Utils.MainForm.ViewModels
             view.PassWordInput.EditValueChanged += (sender, args) => password = view.PassWordInput.Text;
             if (showDept)
             {
-                view.UserNameInput.Leave += (sender, args) => callback("loadDept");
+                view.PassWordInput.Enter += (sender, args) => callback("loadDept", new object[]{account});
                 view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
                 Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
@@ -106,10 +106,6 @@ namespace Insight.Utils.MainForm.ViewModels
         public void initDepts(List<TreeLookUpMember> list)
         {
             depts = list;
-            if (string.IsNullOrEmpty(account)) return;
-
-            if (!depts.Any()) return;
-
             var tree = view.lueDept.Properties.TreeList;
             depts.Clear();
             depts.AddRange(depts);
