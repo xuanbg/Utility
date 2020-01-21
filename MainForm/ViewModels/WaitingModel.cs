@@ -6,7 +6,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class WaitingModel : BaseModel<Waiting>
+    public class WaitingModel : BaseModel<object, Waiting>
     {
         /// <summary>
         /// 构造方法

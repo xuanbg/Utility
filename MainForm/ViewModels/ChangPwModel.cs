@@ -59,7 +59,7 @@ namespace Insight.Utils.MainForm.ViewModels
             }
 
             var data = new PasswordDto {old = Util.hash(view.Password.Text), password = Util.hash(item)};
-            callback(null, new object[]{data});
+            callback("changePassword", new object[]{data});
         }
 
         /// <summary>

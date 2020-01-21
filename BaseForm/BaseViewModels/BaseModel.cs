@@ -6,7 +6,7 @@ using Insight.Utils.Common;
 
 namespace Insight.Utils.BaseViewModels
 {
-    public class BaseModel<TV> where TV : XtraForm, new()
+    public class BaseModel<T, TV> where TV : XtraForm, new()
     {
         /// <summary>
         /// 回调
@@ -24,6 +24,11 @@ namespace Insight.Utils.BaseViewModels
         /// 对话框视图
         /// </summary>
         protected readonly TV view;
+
+        /// <summary>
+        /// 数据实体
+        /// </summary>
+        protected T item;
 
         /// <summary>
         /// 构造方法

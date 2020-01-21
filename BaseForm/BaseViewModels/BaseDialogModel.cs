@@ -5,13 +5,8 @@ using Insight.Utils.Common;
 
 namespace Insight.Utils.BaseViewModels
 {
-    public class BaseDialogModel<T, TV> : BaseModel<TV> where TV : BaseDialog, new()
+    public class BaseDialogModel<T, TV> : BaseModel<T, TV> where TV : BaseDialog, new()
     {
-        /// <summary>
-        /// 对话框数据实体
-        /// </summary>
-        protected T item;
-
         /// <summary>
         /// 构造方法
         /// </summary>

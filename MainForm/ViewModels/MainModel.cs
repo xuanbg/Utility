@@ -18,7 +18,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class MainModel : BaseModel<MainWindow>
+    public class MainModel : BaseModel<object, MainWindow>
     {
         private readonly List<string> opens = new List<string>();
         private List<ModuleDto> navItems;

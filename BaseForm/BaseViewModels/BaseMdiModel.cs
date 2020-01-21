@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
+using DevExpress.XtraBars;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
-using FastReport;
 using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
@@ -13,19 +14,17 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.BaseViewModels
 {
-    public class BaseMdiModel<T, TV> where TV : BaseMdi, new()
+    public class BaseMdiModel<T, TV> : BaseModel<T, TV> where TV : BaseMdi, new()
     {
         private GridHitInfo hitInfo = new GridHitInfo();
+        private List<BarButtonItem> buttons;
+        private int waits;
+        private DateTime wait;
 
         /// <summary>
         /// 模块选项集合
         /// </summary>
         public List<ModuleParam> moduleParams;
-
-        /// <summary>
-        /// MDI视图
-        /// </summary>
-        public TV view;
 
         /// <summary>
         /// 主列表分页控件
@@ -43,28 +42,108 @@ namespace Insight.Utils.BaseViewModels
         public List<T> list;
 
         /// <summary>
-        /// 列表当前选中数据对象
+        /// 构造方法
         /// </summary>
-        public T item;
+        protected BaseMdiModel() : base(null){}
 
         /// <summary>
-        /// 初始化视图
+        /// 初始化MDI窗体
         /// </summary>
         /// <param name="module">模块信息</param>
-        public void initModule(ModuleDto module)
+        public void initMdiView(ModuleDto module)
         {
-            if (module.moduleInfo.hasParams ?? false) moduleParams = BaseModel.getParams();
-
             var icon = Util.getImage(module.moduleInfo.iconUrl);
-            view = new TV
+            view.ControlBox = module.index > 0;
+            view.MdiParent = Application.OpenForms["MainWindow"];
+            view.Icon = Icon.FromHandle(new Bitmap(icon).GetHicon());
+            view.Name = module.moduleInfo.module;
+            view.Text = module.name;
+        }
+
+        /// <summary>
+        /// 初始化工具栏
+        /// </summary>
+        /// <param name="functions"></param>
+        public void initToolBar(IEnumerable<FunctionDto> functions)
+        {
+            buttons = (from a in functions
+                select new BarButtonItem
+                {
+                    AllowDrawArrow = a.funcInfo.beginGroup,
+                    Caption = a.name,
+                    Enabled = a.permit,
+                    Name = a.funcInfo.method,
+                    Tag = a.permit,
+                    Glyph = Util.getImage(a.funcInfo.iconUrl),
+                    PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
+                }).ToList();
+            buttons.ForEach(i => i.ItemClick += (sender, args) => buttonClick(args.Item.Name));
+            buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
+        }
+
+        /// <summary>
+        /// 初始化模块选项集合
+        /// </summary>
+        /// <param name="moduleParams">模块选项集合</param>
+        public void initParams(List<ModuleParam> moduleParams)
+        {
+            this.moduleParams = moduleParams;
+        }
+
+        /// <summary>
+        /// 切换工具栏按钮状态
+        /// </summary>
+        /// <param name="dict"></param>
+        protected void switchItemStatus(Dictionary<string, bool> dict)
+        {
+            var keys = new[] { "enable", "disable" };
+            foreach (var obj in dict)
             {
-                ControlBox = module.index > 0,
-                MdiParent = Application.OpenForms["MainWindow"],
-                Icon = Icon.FromHandle(new Bitmap(icon).GetHicon()),
-                Name = module.moduleInfo.module,
-                Text = module.name
-            };
-            view.Show();
+                var button = buttons.SingleOrDefault(b => b.Name == obj.Key);
+                if (button == null) continue;
+
+                button.Enabled = obj.Value && (bool)button.Tag;
+                if (keys.All(i => !button.Name.Contains(i))) continue;
+
+                button.Visibility = button.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
+            }
+        }
+
+        /// <summary>
+        /// 是否允许双击
+        /// </summary>
+        /// <param name="key">操作名称</param>
+        /// <returns>是否允许双击</returns>
+        public bool allowDoubleClick(string key)
+        {
+            var button = buttons.SingleOrDefault(i => i.Name == key);
+            return button != null && button.Enabled;
+        }
+
+        /// <summary>
+        /// 显示等待提示
+        /// </summary>
+        protected void showWaitForm()
+        {
+            waits++;
+            if (view.Wait.IsSplashFormVisible) return;
+
+            wait = DateTime.Now;
+            view.Wait.ShowWaitForm();
+        }
+
+        /// <summary>
+        /// 关闭等待提示
+        /// </summary>
+        protected void closeWaitForm()
+        {
+            waits--;
+            if (waits > 0) return;
+
+            var time = (int)(DateTime.Now - wait).TotalMilliseconds;
+            if (time < 800) Thread.Sleep(800 - time);
+
+            view.Wait.CloseWaitForm();
         }
 
         /// <summary>
@@ -109,7 +188,7 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         /// <param name="keys">选项代码集</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public List<ModuleParam> getParams(IEnumerable<Dictionary<string, string>> keys)
+        protected List<ModuleParam> getParams(IEnumerable<Dictionary<string, string>> keys)
         {
             var datas = new List<ModuleParam>();
             foreach (var key in keys)
@@ -133,7 +212,7 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="userId">用户ID</param>
         /// <param name="moduleId">模块ID</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public ModuleParam getParam(string key, string deptId = null, string userId = null, string moduleId = null)
+        protected ModuleParam getParam(string key, string deptId = null, string userId = null, string moduleId = null)
         {
             var param = moduleParams.FirstOrDefault(i => i.deptId == deptId && i.userId == userId && i.code == key && (string.IsNullOrEmpty(moduleId) || i.moduleId == moduleId));
             if (param != null) return param;
@@ -149,93 +228,6 @@ namespace Insight.Utils.BaseViewModels
             moduleParams.Add(param);
 
             return param;
-        }
-
-        /// <summary>
-        /// 生成报表
-        /// </summary>
-        /// <typeparam name="TE">类型</typeparam>
-        /// <param name="tid">模板ID</param>
-        /// <param name="name">数据源名称</param>
-        /// <param name="data">数据</param>
-        /// <param name="dict">参数集合</param>
-        /// <returns>Report FastReport报表</returns>
-        public Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
-        {
-            var template = BaseModel.getTemplate(tid);
-            if (template == null) return null;
-
-            var report = new Report();
-            report.LoadFromString(template);
-            report.RegisterData(data, name);
-            foreach (var i in dict ?? new Dictionary<string, object>())
-            {
-                report.SetParameterValue(i.Key, i.Value);
-            }
-
-            return report;
-        }
-
-        /// <summary>
-        /// 生成报表
-        /// </summary>
-        /// <param name="tid">模板ID</param>
-        /// <param name="id">数据ID</param>
-        /// <param name="isCopy">是否副本</param>
-        /// <returns></returns>
-        public Report buildReport(string tid, string id, bool isCopy = true)
-        {
-            ImageData img;
-            if (string.IsNullOrEmpty(tid))
-            {
-                if (string.IsNullOrEmpty(id))
-                {
-                    Messages.showError("尚未选定需要打印的数据！请先选择数据。");
-                    return null;
-                }
-
-                // 获取电子影像
-
-                img = BaseModel.getImage(id);
-                if (img == null)
-                {
-                    Messages.showError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
-                    return null;
-                }
-            }
-            else
-            {
-                // 使用模板生成电子影像
-                isCopy = false;
-                img = BaseModel.newImage(id, tid);
-                if (img == null)
-                {
-                    Messages.showError("生成打印数据错误");
-                    return null;
-                }
-            }
-
-            // 加载电子影像
-            var print = new Report {FileName = img.id};
-            print.LoadPrepared(new MemoryStream(img.image));
-            if (!isCopy) return print;
-
-            // 生成水印
-            var wm = new Watermark
-            {
-                Enabled = true,
-                Text = "副本",
-                Font = new Font("宋体", 72, FontStyle.Bold)
-            };
-
-            for (var i = 0; i < print.PreparedPages.Count; i++)
-            {
-                var pag = print.PreparedPages.GetPage(i);
-                pag.Watermark = wm;
-                print.PreparedPages.ModifyPage(i, pag);
-            }
-
-            return print;
         }
     }
 }

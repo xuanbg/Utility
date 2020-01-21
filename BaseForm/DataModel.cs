@@ -5,13 +5,13 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils
 {
-    internal static class BaseModel
+    internal class DataModel
     {
         /// <summary>
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
-        internal static IEnumerable<FunctionDto> getActions(string moduleId)
+        internal IEnumerable<FunctionDto> getActions(string moduleId)
         {
             var url = $"/base/auth/v1.0/navigators/{moduleId}/functions";
             var client = new HttpClient<List<FunctionDto>>();
@@ -23,7 +23,7 @@ namespace Insight.Utils
         /// 获取选项数据
         /// </summary>
         /// <returns>选项数据集合</returns>
-        internal static List<ModuleParam> getParams()
+        internal List<ModuleParam> getParams()
         {
             var url = "/common/v1.0/params";
             var client = new HttpClient<List<ModuleParam>>();
@@ -36,7 +36,7 @@ namespace Insight.Utils
         /// </summary>
         /// <param name="moduleParams">选项数据集合</param>
         /// <returns>bool 是否成功</returns>
-        internal static void saveParam(List<ModuleParam> moduleParams)
+        internal void saveParam(List<ModuleParam> moduleParams)
         {
             var url = "/common/v1.0/params";
             var dict = new Dictionary<string, object> { { "list", moduleParams } };
@@ -50,7 +50,7 @@ namespace Insight.Utils
         /// <param name="url">接口URL</param>
         /// <param name="item">分类数据对象</param>
         /// <returns>分类对象实体</returns>
-        public static Catalog<T> add<T>(string url, Catalog<T> item)
+        public Catalog<T> add<T>(string url, Catalog<T> item)
         {
             var msg = "新建分类失败！";
             var dict = new Dictionary<string, object> { { "catalog", item } };
@@ -65,7 +65,7 @@ namespace Insight.Utils
         /// <param name="url">接口URL</param>
         /// <param name="item">分类数据对象</param>
         /// <returns>分类对象实体</returns>
-        public static Catalog<T> edit<T>(string url, Catalog<T> item)
+        public Catalog<T> edit<T>(string url, Catalog<T> item)
         {
             var msg = "编辑分类失败！";
             var dict = new Dictionary<string, object> { { "catalog", item } };
@@ -79,7 +79,7 @@ namespace Insight.Utils
         /// </summary>
         /// <param name="id">模板ID</param>
         /// <returns>string 模板内容</returns>
-        internal static string getTemplate(string id)
+        internal string getTemplate(string id)
         {
             var url = $"/report/v1.0/templates/{id}";
             var client = new HttpClient<object>();
@@ -92,7 +92,7 @@ namespace Insight.Utils
         /// </summary>
         /// <param name="id">电子影像ID</param>
         /// <returns>ImageData 电子影像对象</returns>
-        internal static ImageData getImage(string id)
+        internal ImageData getImage(string id)
         {
             var url = $"/report/v1.0/images/{id}";
             var client = new HttpClient<ImageData>();
@@ -106,7 +106,7 @@ namespace Insight.Utils
         /// <param name="id">数据ID</param>
         /// <param name="tid">模板ID</param>
         /// <returns></returns>
-        internal static ImageData newImage(string id, string tid)
+        internal ImageData newImage(string id, string tid)
         {
             var url = $"/report/v1.0/images/{id}";
             var client = new HttpClient<ImageData>();

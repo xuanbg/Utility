@@ -12,7 +12,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class LoginModel : BaseModel<LoginDialog>
+    public class LoginModel : BaseModel<object, LoginDialog>
     {
         private readonly TokenHelper tokenHelper = Setting.tokenHelper;
         private readonly bool showDept = Convert.ToBoolean(Util.getAppSetting("ShowDept"));
