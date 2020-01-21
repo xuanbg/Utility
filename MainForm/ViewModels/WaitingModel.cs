@@ -18,22 +18,5 @@ namespace Insight.Utils.MainForm.ViewModels
             view.BackgroundImage = Util.getImage("bg.png");
             view.BackgroundImageLayout = ImageLayout.Stretch;
         }
-
-        /// <summary>
-        /// 打开对话框
-        /// </summary>
-        public void showDialog()
-        {
-            view.Show();
-            view.Refresh();
-        }
-
-        /// <summary>
-        /// 关闭对话框
-        /// </summary>
-        public void close()
-        {
-            view.Close();
-        }
     }
 }

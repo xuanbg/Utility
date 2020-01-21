@@ -1,7 +1,7 @@
 ﻿using Insight.Utils.BaseViewModels;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
-using Insight.Utils.MainForm.Dtos;
+using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
@@ -65,7 +65,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 关闭对话框
         /// </summary>
-        public void close()
+        public new void close()
         {
             Setting.tokenHelper.signature(item);
             Messages.showMessage("更换密码成功！请牢记新密码并使用新密码登录系统。");

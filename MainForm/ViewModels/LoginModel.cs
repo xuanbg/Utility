@@ -100,14 +100,6 @@ namespace Insight.Utils.MainForm.ViewModels
         }
 
         /// <summary>
-        /// 关闭登录对话框
-        /// </summary>
-        public void close()
-        {
-            view.Close();
-        }
-
-        /// <summary>
         /// 初始化可登录部门
         /// </summary>
         /// <param name="list">可登录部门</param>

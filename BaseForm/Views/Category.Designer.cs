@@ -52,9 +52,6 @@ namespace Insight.Utils.Views
             this.txtCode = new DevExpress.XtraEditors.TextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trlParent.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.treParent)).BeginInit();
@@ -91,27 +88,6 @@ namespace Insight.Utils.Views
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.confirm.Appearance.Options.UseFont = true;
             this.confirm.Location = new System.Drawing.Point(290, 224);
-            // 
-            // FolderNode
-            // 
-            this.FolderNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("FolderNode.ImageStream")));
-            this.FolderNode.Images.SetKeyName(0, "Item.png");
-            this.FolderNode.Images.SetKeyName(1, "Folder.png");
-            this.FolderNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // CategoryNode
-            // 
-            this.CategoryNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("CategoryNode.ImageStream")));
-            this.CategoryNode.Images.SetKeyName(0, "Doc.png");
-            this.CategoryNode.Images.SetKeyName(1, "Folder.png");
-            this.CategoryNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // OrgTreeNode
-            // 
-            this.OrgTreeNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("OrgTreeNode.ImageStream")));
-            this.OrgTreeNode.Images.SetKeyName(0, "NodeOrg.png");
-            this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
-            this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
             // txtName
             // 
@@ -178,7 +154,6 @@ namespace Insight.Utils.Views
             this.treParent.Location = new System.Drawing.Point(0, 0);
             this.treParent.Name = "treParent";
             this.treParent.OptionsView.ShowIndentAsRowStyle = true;
-            this.treParent.SelectImageList = this.FolderNode;
             this.treParent.Size = new System.Drawing.Size(400, 200);
             this.treParent.TabIndex = 0;
             // 
@@ -275,9 +250,6 @@ namespace Insight.Utils.Views
             this.Name = "Category";
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trlParent.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.treParent)).EndInit();

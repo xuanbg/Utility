@@ -32,19 +32,11 @@ namespace Insight.Utils.BaseForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseDialog));
             this.panel = new DevExpress.XtraEditors.PanelControl();
             this.confirm = new DevExpress.XtraEditors.SimpleButton();
             this.cancel = new DevExpress.XtraEditors.SimpleButton();
-            this.FolderNode = new DevExpress.Utils.ImageCollection(this.components);
-            this.CategoryNode = new DevExpress.Utils.ImageCollection(this.components);
-            this.OrgTreeNode = new DevExpress.Utils.ImageCollection(this.components);
             this.close = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             this.SuspendLayout();
             // 
             // panel
@@ -57,7 +49,7 @@ namespace Insight.Utils.BaseForms
             this.panel.Size = new System.Drawing.Size(370, 150);
             this.panel.TabIndex = 0;
             // 
-            // Confirm
+            // confirm
             // 
             this.confirm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -68,7 +60,7 @@ namespace Insight.Utils.BaseForms
             this.confirm.TabIndex = 101;
             this.confirm.Text = "确  定";
             // 
-            // Cancel
+            // cancel
             // 
             this.cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -80,34 +72,13 @@ namespace Insight.Utils.BaseForms
             this.cancel.TabIndex = 102;
             this.cancel.Text = "取  消";
             // 
-            // FolderNode
-            // 
-            this.FolderNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("FolderNode.ImageStream")));
-            this.FolderNode.Images.SetKeyName(0, "Item.png");
-            this.FolderNode.Images.SetKeyName(1, "Folder.png");
-            this.FolderNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // CategoryNode
-            // 
-            this.CategoryNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("CategoryNode.ImageStream")));
-            this.CategoryNode.Images.SetKeyName(0, "Doc.png");
-            this.CategoryNode.Images.SetKeyName(1, "Folder.png");
-            this.CategoryNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // OrgTreeNode
-            // 
-            this.OrgTreeNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("OrgTreeNode.ImageStream")));
-            this.OrgTreeNode.Images.SetKeyName(0, "NodeOrg.png");
-            this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
-            this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
-            // 
-            // Close
+            // close
             // 
             this.close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.close.Appearance.Options.UseFont = true;
             this.close.Location = new System.Drawing.Point(290, 174);
-            this.close.Name = "Close";
+            this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(80, 23);
             this.close.TabIndex = 103;
             this.close.Text = "关  闭";
@@ -130,9 +101,6 @@ namespace Insight.Utils.BaseForms
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -142,9 +110,6 @@ namespace Insight.Utils.BaseForms
         protected PanelControl panel;
         public SimpleButton cancel;
         public SimpleButton confirm;
-        protected ImageCollection FolderNode;
-        protected ImageCollection CategoryNode;
-        protected ImageCollection OrgTreeNode;
         public SimpleButton close;
     }
 }

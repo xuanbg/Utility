@@ -62,11 +62,19 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
-        /// 关闭对话框
+        /// 显示窗体
         /// </summary>
-        protected void closeDialog()
+        public void show()
         {
-            view.DialogResult = DialogResult.OK;
+            view.Show();
+            view.Refresh();
+        }
+
+        /// <summary>
+        /// 关闭窗体
+        /// </summary>
+        public void close()
+        {
             view.Close();
         }
 

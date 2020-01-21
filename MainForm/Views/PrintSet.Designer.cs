@@ -38,9 +38,6 @@
             this.MergerPrint = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TagPrint.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BilPrint.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DocPrint.Properties)).BeginInit();
@@ -56,27 +53,6 @@
             this.panel.Controls.Add(this.labDocPrint);
             this.panel.Controls.Add(this.labelTagPrint);
             this.panel.Controls.Add(this.labBillPrint);
-            // 
-            // FolderNode
-            // 
-            this.FolderNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("FolderNode.ImageStream")));
-            this.FolderNode.Images.SetKeyName(0, "Item.png");
-            this.FolderNode.Images.SetKeyName(1, "Folder.png");
-            this.FolderNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // CategoryNode
-            // 
-            this.CategoryNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("CategoryNode.ImageStream")));
-            this.CategoryNode.Images.SetKeyName(0, "Doc.png");
-            this.CategoryNode.Images.SetKeyName(1, "Folder.png");
-            this.CategoryNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // OrgTreeNode
-            // 
-            this.OrgTreeNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("OrgTreeNode.ImageStream")));
-            this.OrgTreeNode.Images.SetKeyName(0, "NodeOrg.png");
-            this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
-            this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
             // Cancel
             // 
@@ -173,9 +149,6 @@
             this.Text = "打印机设置";
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TagPrint.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BilPrint.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DocPrint.Properties)).EndInit();

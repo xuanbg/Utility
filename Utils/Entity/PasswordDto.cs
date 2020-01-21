@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Insight.Utils.Common;
+﻿using Insight.Utils.Common;
 
-namespace Insight.Utils.MainForm.Dtos
+namespace Insight.Utils.Entity
 {
     public class PasswordDto
     {

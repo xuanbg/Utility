@@ -38,9 +38,6 @@ namespace Insight.Utils.MainForm.Views
             this.labBase = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BaseInupt.Properties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,27 +56,6 @@ namespace Insight.Utils.MainForm.Views
             // 
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.confirm.Appearance.Options.UseFont = true;
-            // 
-            // FolderNode
-            // 
-            this.FolderNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("FolderNode.ImageStream")));
-            this.FolderNode.Images.SetKeyName(0, "Item.png");
-            this.FolderNode.Images.SetKeyName(1, "Folder.png");
-            this.FolderNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // CategoryNode
-            // 
-            this.CategoryNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("CategoryNode.ImageStream")));
-            this.CategoryNode.Images.SetKeyName(0, "Doc.png");
-            this.CategoryNode.Images.SetKeyName(1, "Folder.png");
-            this.CategoryNode.Images.SetKeyName(2, "FolderOpen.png");
-            // 
-            // OrgTreeNode
-            // 
-            this.OrgTreeNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("OrgTreeNode.ImageStream")));
-            this.OrgTreeNode.Images.SetKeyName(0, "NodeOrg.png");
-            this.OrgTreeNode.Images.SetKeyName(1, "NodeDept.png");
-            this.OrgTreeNode.Images.SetKeyName(2, "NodePost.png");
             // 
             // SaveUserCheckBox
             // 
@@ -121,9 +97,6 @@ namespace Insight.Utils.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
             this.panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CategoryNode)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BaseInupt.Properties)).EndInit();
             this.ResumeLayout(false);
 

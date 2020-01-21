@@ -20,8 +20,8 @@ namespace Insight.Utils.Controls
 {
     public class Format
     {
-        private const string AlignCenters = "类型;状态;创建人;操作员;规格;单位;单价;数量;币种;汇率";
-        private const string Numerics = "汇率;单价;数量";
+        private const string IsAlignCenters = "类型;状态;创建人;操作员;规格;单位;单价;数量;币种;汇率";
+        private const string IsNumerics = "汇率;单价;数量";
 
         /// <summary>
         /// 格式化GridView样式和属性
@@ -54,10 +54,10 @@ namespace Insight.Utils.Controls
             foreach (GridColumn col in view.Columns)
             {
                 var name = col.Caption;
-                var keys = AlignCenters.Split(';');
+                var keys = IsAlignCenters.Split(';');
                 if (keys.Any(k => name.EndsWith(k))) col.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
 
-                if (Numerics.Contains(name))
+                if (IsNumerics.Contains(name))
                 {
                     col.DisplayFormat.FormatType = FormatType.Numeric;
                     col.DisplayFormat.FormatString = "#,##0.######";

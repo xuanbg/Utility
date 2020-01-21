@@ -64,6 +64,7 @@
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\LookUpMember.cs" />
     <Compile Include="Entity\Modules.cs" />
+    <Compile Include="Entity\PasswordDto.cs" />
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\Reports.cs" />
     <Compile Include="Entity\Result.cs" />

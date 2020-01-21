@@ -1,6 +1,6 @@
 ﻿using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
-using Insight.Utils.MainForm.Dtos;
+using Insight.Utils.Entity;
 using Insight.Utils.MainForm.ViewModels;
 
 namespace Insight.Utils.MainForm
@@ -31,7 +31,7 @@ namespace Insight.Utils.MainForm
         public void loadMainWindow()
         {
             var model = new WaitingModel(Setting.appName);
-            model.showDialog();
+            model.show();
             loginModel.close();
 
             mainModel.showMainWindow(dataModel.getNavigators());
@@ -59,7 +59,7 @@ namespace Insight.Utils.MainForm
             var model = new ChangPwModel("修改密码", password);
             model.callbackEvent += (sender, args) =>
             {
-                var data = (PasswordDto)args.param[0];
+                var data = (PasswordDto) args.param[0];
                 if (!dataModel.changPassword(data)) return;
 
                 model.close();

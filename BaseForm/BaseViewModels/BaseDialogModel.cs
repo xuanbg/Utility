@@ -51,6 +51,15 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
+        /// 关闭对话框
+        /// </summary>
+        protected void closeDialog()
+        {
+            view.DialogResult = DialogResult.OK;
+            view.Close();
+        }
+
+        /// <summary>
         /// 检查输入检查对象是否都有值
         /// </summary>
         /// <returns>bool 对象是否都有值</returns>
