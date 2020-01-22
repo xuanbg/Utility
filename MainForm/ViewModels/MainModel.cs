@@ -82,18 +82,18 @@ namespace Insight.Utils.MainForm.ViewModels
             foreach (var g in groups)
             {
                 var expand = false;
-                var items = new List<NavBarItemLink>();
-                foreach (var item in navItems.Where(i => i.parentId == g.id))
+                var barItem = new List<NavBarItemLink>();
+                foreach (var module in navItems.Where(i => i.parentId == g.id))
                 {
-                    if (item.moduleInfo.autoLoad ?? false)
+                    if (module.moduleInfo.autoLoad ?? false)
                     {
                         expand = true;
-                        opens.Add(item.moduleInfo.module);
+                        opens.Add(module.moduleInfo.module);
                     }
 
-                    var icon = Util.getImage(item.moduleInfo.iconUrl);
-                    var navBarItem = new NavBarItem(item.name) { Tag = item.moduleInfo.module, SmallImage = icon };
-                    items.Add(new NavBarItemLink(navBarItem));
+                    var icon = Util.getImage(module.moduleInfo.iconUrl);
+                    var navBarItem = new NavBarItem(module.name) { Tag = module.moduleInfo.module, SmallImage = icon };
+                    barItem.Add(new NavBarItemLink(navBarItem));
                 }
 
                 var group = new NavBarGroup
@@ -102,12 +102,12 @@ namespace Insight.Utils.MainForm.ViewModels
                     Name = g.name,
                     SmallImage = Util.getImage(g.moduleInfo.iconUrl)
                 };
-                var count = links.Count + items.Count;
+                var count = links.Count + barItem.Count;
                 group.Expanded = groups.Count * 55 + count * 32 < height || expand;
-                group.ItemLinks.AddRange(items.ToArray());
+                group.ItemLinks.AddRange(barItem.ToArray());
 
                 view.NavMain.Groups.Add(group);
-                links.AddRange(items);
+                links.AddRange(barItem);
             }
 
             links.ForEach(i => i.Item.LinkClicked += (sender, args) => addPageMdi(args.Link.Item.Tag.ToString()));

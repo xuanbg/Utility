@@ -41,7 +41,7 @@ namespace Insight.Utils.MainForm
         internal bool changPassword(PasswordDto dto)
         {
             const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
-            var url = "/base/user/v1.0/users/password";
+            const string url = "/base/user/v1.0/users/password";
             var client = new HttpClient<object>();
 
             return client.put(url, dto, msg);
@@ -54,10 +54,10 @@ namespace Insight.Utils.MainForm
         /// <returns>文件版本信息</returns>
         internal Dictionary<string, ClientFile> getFiles(string id)
         {
-            var url = $"/commonapi/v1.0/apps/{id}/files";
+            var url = $"/base/common/v1.0/apps/{id}/files";
             var client = new HttpClient<Dictionary<string, ClientFile>>();
 
-            return client.get(url) ? client.data : new Dictionary<string, ClientFile>();
+            return client.getData(url);
         }
 
         /// <summary>
@@ -67,10 +67,10 @@ namespace Insight.Utils.MainForm
         /// <returns>Result</returns>
         internal string getFile(string id)
         {
-            var url = $"/commonapi/v1.0/apps/files/{id}";
+            var url = $"/base/common/v1.0/apps/files/{id}";
             var client = new HttpClient<object>();
 
-            return client.get(url) ? client.data.ToString() : null;
+            return client.getData(url)?.ToString();
         }
     }
 }

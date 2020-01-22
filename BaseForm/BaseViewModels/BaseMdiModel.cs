@@ -214,7 +214,7 @@ namespace Insight.Utils.BaseViewModels
         /// <returns>ModuleParam 选项数据</returns>
         protected ModuleParam getParam(string key, string deptId = null, string userId = null, string moduleId = null)
         {
-            var param = moduleParams.FirstOrDefault(i => i.deptId == deptId && i.userId == userId && i.code == key && (string.IsNullOrEmpty(moduleId) || i.moduleId == moduleId));
+            var param = moduleParams.FirstOrDefault(i => i.deptId == deptId && i.creatorId == userId && i.code == key && (string.IsNullOrEmpty(moduleId) || i.moduleId == moduleId));
             if (param != null) return param;
 
             param = new ModuleParam
@@ -223,7 +223,7 @@ namespace Insight.Utils.BaseViewModels
                 moduleId = moduleId,
                 code = key,
                 deptId = deptId,
-                userId = userId
+                creatorId = userId
             };
             moduleParams.Add(param);
 

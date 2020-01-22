@@ -14,7 +14,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class UpdateModel : BaseDialogModel<object, Update>
+    public class UpdateModel : BaseDialogModel<ClientFile, Update>
     {
         public bool restart;
 
@@ -25,19 +25,28 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 构造函数
         /// </summary>
         /// <param name="title">窗体标题</param>
-        public UpdateModel(string title) : base(title)
+        public UpdateModel(string title) : base(title, null, true)
         {
             view.Shown += (sender, args) => update();
         }
 
         /// <summary>
-        /// 检查客户端文件更新
+        /// 完成更新
         /// </summary>
+        public void confirm()
+        {
+            callback("complete", new object[]{restart});
+        }
+
+        /// <summary>
+        /// 检查客户端文件是否有更新
+        /// </summary>
+        /// <param name="files">远端文件信息</param>
         /// <returns>int 更新文件数</returns>
-        public int checkUpdate()
+        public int checkUpdate(Dictionary<string, ClientFile> files)
         {
             // 读取本地客户端文件信息
-            var appId = Setting.tokenHelper.appId;
+            var appId = Setting.appId;
             var locals = new Dictionary<string, ClientFile>();
             Util.getClientFiles(locals, appId, root, ".bak");
             locals.ForEach(f => Util.deleteFile(f.Value.fullPath));
@@ -46,13 +55,24 @@ namespace Insight.Utils.MainForm.ViewModels
             Util.getClientFiles(locals, appId, root, ".exe|.dll|.frl");
 
             // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
-            updates = (from sf in new Dictionary<string, ClientFile>()
-                       let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
+            updates = (from sf in files
+                let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
                 let cv = new Version(cf?.version ?? "1.0.0")
                 let sv = new Version(sf.Value?.version ?? "1.0.0")
                 where cf == null || cv < sv
                 select sf.Value).ToList();
             return updates.Count;
+        }
+
+        /// <summary>
+        /// 更新本地文件
+        /// </summary>
+        /// <param name="data">文件数据</param>
+        public void updateFile(string data)
+        {
+            var buffer = Convert.FromBase64String(data);
+            var bytes = Util.decompress(buffer);
+            restart = Util.updateFile(item, root, bytes) || restart;
         }
 
         /// <summary>
@@ -84,14 +104,12 @@ namespace Insight.Utils.MainForm.ViewModels
             view.confirm.Enabled = false;
             foreach (var file in updates)
             {
-                view.Progress.EditValue = $@"正在更新：{file.name}……";
+                item = file;
+                view.Progress.EditValue = $@"正在更新：{item.name}……";
                 view.Refresh();
                 Thread.Sleep(1000);
 
-
-                var buffer = Convert.FromBase64String(null);
-                var bytes = Util.decompress(buffer);
-                restart = Util.updateFile(file, root, bytes) || restart;
+                callback("getFile", new object[]{item});
             }
 
             view.confirm.Enabled = true;
@@ -99,6 +117,5 @@ namespace Insight.Utils.MainForm.ViewModels
             view.confirm.Text = restart ? "重  启" : "关  闭";
             view.Refresh();
         }
-
     }
 }

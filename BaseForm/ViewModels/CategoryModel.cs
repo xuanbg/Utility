@@ -9,7 +9,6 @@ namespace Insight.Utils.ViewModels
 {
     public class CategoryModel<T> : BaseDialogModel<Catalog<T>, Category>
     {
-        private readonly string baseUrl;
         private readonly List<TreeLookUpMember> list;
         private readonly string parentId;
         private readonly int index;
@@ -20,20 +19,14 @@ namespace Insight.Utils.ViewModels
         /// <param name="title">窗体标题</param>
         /// <param name="cat">当前分类</param>
         /// <param name="cats">分类集合</param>
-        /// <param name="url">接口地址</param>
-        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats, string url):base(title, cat)
+        public CategoryModel(string title, Catalog<T> cat, List<Catalog<T>> cats):base(title, cat)
         {
-            list = getTreeList(cats);
-            baseUrl = url;
-            parentId = cat.parentId;
-            index = cat.index;
-
-            view.trlParent.EditValue = cat.parentId;
-            view.txtName.EditValue = cat.name;
-            view.spiIndex.Value = cat.index;
-            view.txtAlias.EditValue = cat.alias;
-            view.txtCode.EditValue = cat.code;
-            view.memRemark.EditValue = cat.remark;
+            view.trlParent.EditValue = item.parentId;
+            view.txtName.EditValue = item.name;
+            view.spiIndex.Value = item.index;
+            view.txtAlias.EditValue = item.alias;
+            view.txtCode.EditValue = item.code;
+            view.memRemark.EditValue = item.remark;
 
             // 订阅控件事件实现数据双向绑定
             view.trlParent.EditValueChanged += (sender, args) =>
@@ -52,8 +45,22 @@ namespace Insight.Utils.ViewModels
                 item.remark = string.IsNullOrEmpty(text) ? null : text;
             };
 
+            parentId = cat.parentId;
+            index = cat.index;
+
+            list = getTreeList(cats);
             Format.initTreeListLookUpEdit(view.trlParent, list, NodeIconType.CATEGORY);
             setIndexValue();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void confirm()
+        {
+            if (!inputExamine()) return;
+
+            callback(string.IsNullOrEmpty(item.id) ? "newCategory" : "editCategory", new object[] {item});
         }
 
         /// <summary>
@@ -72,7 +79,7 @@ namespace Insight.Utils.ViewModels
         /// </summary>
         /// <param name="cats">分类集合</param>
         /// <returns>分类树节点集合</returns>
-        private List<TreeLookUpMember> getTreeList(List<Catalog<T>> cats)
+        private List<TreeLookUpMember> getTreeList(IEnumerable<Catalog<T>> cats)
         {
             var catalogs = cats.Where(i => item.id == null || i.id != item.id).Select(i => new TreeLookUpMember
                 {

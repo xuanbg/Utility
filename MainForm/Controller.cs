@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.ViewModels;
 
@@ -107,6 +110,39 @@ namespace Insight.Utils.MainForm
         public void update()
         {
             var model = new UpdateModel("检查更新");
+            model.callbackEvent += (sender, args) =>
+            {
+                if (args.methodName == "getFile")
+                {
+                    var info = (ClientFile) args.param[0];
+                    model.updateFile(dataModel.getFile(info.id));
+                    return;
+                }
+
+                if (args.methodName == "complete")
+                {
+                    if ((bool) args.param[0])
+                    {
+                        Process.Start(model.createBat());
+                        Application.Exit();
+                    }
+                    else
+                    {
+                        model.close();
+                    }
+                }
+            };
+
+            var count = model.checkUpdate(dataModel.getFiles(Setting.appId));
+            if (count == 0)
+            {
+                Messages.showMessage("当前无可用更新！");
+                return;
+            }
+
+            var msg = $"当前有 {count} 个文件需要更新，是否立即更新？";
+            if (!Messages.showConfirm(msg)) return;
+
             model.showDialog();
         }
 

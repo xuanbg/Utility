@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Insight.Utils.Common;
 
 namespace Insight.Utils.Entity
 {
@@ -7,7 +8,7 @@ namespace Insight.Utils.Entity
     /// 分类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Catalog<T> : CatalogBses
+    public class Catalog<T> : CatalogBase
     {
         /// <summary>
         /// 描述
@@ -42,7 +43,12 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 创建部门ID
         /// </summary>
-        public string creatorDeptId { get; set; }
+        public string deptId { get; set; }
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string creator { get; set; }
 
         /// <summary>
         /// 创建人ID
@@ -52,13 +58,13 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime createTime { get; set; }
+        public DateTime createdTime { get; set; }
     }
 
     /// <summary>
     /// 分类基类
     /// </summary>
-    public class CatalogBses
+    public class CatalogBase
     {
         /// <summary>
         /// 唯一ID
@@ -88,6 +94,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 名称
         /// </summary>
+        [InputCheck(true, "分类名称不能为空！请输入正确的名称。")]
         public string name { get; set; }
 
         /// <summary>

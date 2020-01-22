@@ -175,14 +175,14 @@ namespace Insight.Utils.Entity
         public string value { get; set; }
 
         /// <summary>
-        /// 生效机构ID
+        /// 创建部门ID
         /// </summary>
         public string deptId { get; set; }
 
         /// <summary>
-        /// 所属用户
+        /// 创建人
         /// </summary>
-        public string userId { get; set; }
+        public string creator { get; set; }
 
         /// <summary>
         /// 创建人ID
@@ -192,6 +192,6 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime createTime { get; set; }
+        public DateTime createdTime { get; set; }
     }
 }
