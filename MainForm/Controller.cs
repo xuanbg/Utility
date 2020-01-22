@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
-using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.ViewModels;
 
@@ -133,17 +132,10 @@ namespace Insight.Utils.MainForm
                 }
             };
 
-            var count = model.checkUpdate(dataModel.getFiles(Setting.appId));
-            if (count == 0)
-            {
-                Messages.showMessage("当前无可用更新！");
-                return;
-            }
+            var files = dataModel.getFiles(Setting.appId);
+            if (files == null || !files.Any()) return;
 
-            var msg = $"当前有 {count} 个文件需要更新，是否立即更新？";
-            if (!Messages.showConfirm(msg)) return;
-
-            model.showDialog();
+            if (model.checkUpdate(files)) model.showDialog();
         }
 
         /// <summary>

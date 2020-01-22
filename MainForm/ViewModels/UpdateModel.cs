@@ -42,8 +42,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 检查客户端文件是否有更新
         /// </summary>
         /// <param name="files">远端文件信息</param>
-        /// <returns>int 更新文件数</returns>
-        public int checkUpdate(Dictionary<string, ClientFile> files)
+        /// <returns>bool 文件是否有更新</returns>
+        public bool checkUpdate(Dictionary<string, ClientFile> files)
         {
             // 读取本地客户端文件信息
             var appId = Setting.appId;
@@ -61,7 +61,15 @@ namespace Insight.Utils.MainForm.ViewModels
                 let sv = new Version(sf.Value?.version ?? "1.0.0")
                 where cf == null || cv < sv
                 select sf.Value).ToList();
-            return updates.Count;
+            if (updates.Count == 0)
+            {
+                Messages.showMessage("当前无可用更新！");
+                return false;
+            }
+
+            var msg = $"当前有 {updates.Count} 个文件需要更新，是否立即更新？";
+
+            return Messages.showConfirm(msg);
         }
 
         /// <summary>
