@@ -61,7 +61,7 @@ namespace Insight.Utils.Client
             var body = new LoginDto {appId = appId, tenantId = tenantId, deptId = deptId, account = account, signature = key};
             var url = "/base/auth/v1.0/tokens";
             var client = new HttpClient<TokenPackage>();
-            var data = client.request(url, RequestMethod.POST, body);
+            var data = client.request(url, body, RequestMethod.POST);
             if (!client.success) return false;
 
             accessToken = data.accessToken;
@@ -109,7 +109,7 @@ namespace Insight.Utils.Client
         {
             var url = "/base/auth/v1.0/tokens";
             var client = new HttpClient<object>();
-            client.getData(url, RequestMethod.DELETE);
+            client.commit(url, null, RequestMethod.DELETE);
 
             accessToken = null;
             refreshToken = null;
@@ -123,9 +123,9 @@ namespace Insight.Utils.Client
         {
             var url = "/base/auth/v1.0/tokens/codes";
             var dict = new Dictionary<string, object>{{"account", account}};
-            var client = new HttpClient<object>();
+            var client = new HttpClient<string>();
 
-            return client.getData(url, RequestMethod.GET, dict)?.ToString();
+            return client.getData(url, dict);
         }
     }
 }

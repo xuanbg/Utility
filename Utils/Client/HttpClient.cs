@@ -4,7 +4,7 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.Client
 {
-    public class HttpClient<T> where T : new()
+    public class HttpClient<T>
     {
         private Result<T> result = new Result<T>();
 
@@ -32,18 +32,41 @@ namespace Insight.Utils.Client
         /// 返回的可选项
         /// </summary>
         public object option => result.option;
+        
+        /// <summary>
+        /// 获取请求数据
+        /// </summary>
+        /// <param name="url">接口URL</param>
+        /// <param name="body">请求参数/Body中的数据</param>
+        /// <returns>T</returns>
+        public T getData(string url, object body = null)
+        {
+            return commit(url, body, RequestMethod.GET);
+        }
 
         /// <summary>
         /// 获取请求数据
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="method">请求方法</param>
         /// <param name="body">请求参数/Body中的数据</param>
-        /// <param name="msg">错误消息，默认NULL</param>
+        /// <param name="method">请求方法</param>
         /// <returns>T</returns>
-        public T getData(string url, RequestMethod method = RequestMethod.GET, object body = null, string msg = null)
+        public T commit(string url, object body, RequestMethod method)
         {
-            request(url, method, body, msg);
+            return commit(url, body, null, method);
+        }
+
+        /// <summary>
+        /// 获取请求数据
+        /// </summary>
+        /// <param name="url">接口URL</param>
+        /// <param name="body">请求参数/Body中的数据</param>
+        /// <param name="msg">错误消息</param>
+        /// <param name="method">请求方法</param>
+        /// <returns>T</returns>
+        public T commit(string url, object body, string msg, RequestMethod method)
+        {
+            request(url, body, msg, method);
 
             return data;
         }
@@ -52,12 +75,12 @@ namespace Insight.Utils.Client
         /// 获取请求结果
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="method">请求方法</param>
         /// <param name="body">请求参数/Body中的数据</param>
+        /// <param name="method">请求方法</param>
         /// <returns>T</returns>
-        public Result<T> getResult(string url, RequestMethod method = RequestMethod.GET, object body = null)
+        public Result<T> getResult(string url, object body = null, RequestMethod method = RequestMethod.GET)
         {
-            request(url, method, body, null, false);
+            request(url, body, null, method, false);
 
             return result;
         }
@@ -71,7 +94,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool get(string url, Dictionary<string, object> dict = null, string msg = null)
         {
-            return request(url, RequestMethod.GET, dict, msg);
+            return request(url, dict, msg, RequestMethod.GET);
         }
 
         /// <summary>
@@ -83,7 +106,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool post(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.POST, body, msg);
+            return request(url, body, msg, RequestMethod.POST);
         }
 
         /// <summary>
@@ -95,7 +118,7 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool put(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.PUT, body, msg);
+            return request(url, body, msg, RequestMethod.PUT);
         }
 
         /// <summary>
@@ -107,17 +130,17 @@ namespace Insight.Utils.Client
         /// <returns>bool 是否成功</returns>
         public bool delete(string url, object body = null, string msg = null)
         {
-            return request(url, RequestMethod.DELETE, body, msg);
+            return request(url, body, msg, RequestMethod.DELETE);
         }
 
         /// <summary>
         /// 请求数据
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="method">请求方法</param>
         /// <param name="body">请求参数/Body中的数据</param>
+        /// <param name="method">请求方法</param>
         /// <returns>T</returns>
-        public T request(string url, RequestMethod method = RequestMethod.GET, object body = null)
+        public T request(string url, object body = null, RequestMethod method = RequestMethod.GET)
         {
             var request = new HttpRequest();
             if (request.send(Setting.gateway + url, method, body))
@@ -130,7 +153,7 @@ namespace Insight.Utils.Client
                 result.badRequest(request.message);
             }
 
-            result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
+            result.data = default(T);
             Messages.showError(result.message);
 
             return data;
@@ -140,12 +163,12 @@ namespace Insight.Utils.Client
         /// 请求数据
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="method">请求方法</param>
         /// <param name="body">请求参数/Body中的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
+        /// <param name="method">请求方法</param>
         /// <param name="log">是否输出错误消息</param>
         /// <returns>bool 是否成功</returns>
-        private bool request(string url, RequestMethod method, object body, string msg, bool log = true)
+        private bool request(string url, object body, string msg, RequestMethod method, bool log = true)
         {
             while (true)
             {
@@ -179,7 +202,7 @@ namespace Insight.Utils.Client
                     result.badRequest(request.message);
                 }
 
-                result.data = typeof(T).Name.Contains("List") ? new T() : default(T);
+                result.data = default(T);
                 if (!log) return false;
 
                 var newline = string.IsNullOrEmpty(msg) ? "" : "\r\n";

@@ -7,13 +7,15 @@ namespace Insight.Utils
 {
     internal class DataModel
     {
+        private const string authService = "/base/auth";
+
         /// <summary>
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
         internal IEnumerable<FunctionDto> getActions(string moduleId)
         {
-            var url = $"/base/auth/v1.0/navigators/{moduleId}/functions";
+            var url = $"{authService}/v1.0/navigators/{moduleId}/functions";
             var client = new HttpClient<List<FunctionDto>>();
 
             return client.getData(url);
@@ -82,9 +84,9 @@ namespace Insight.Utils
         internal string getTemplate(string id)
         {
             var url = $"/report/v1.0/templates/{id}";
-            var client = new HttpClient<object>();
+            var client = new HttpClient<string>();
 
-            return client.getData(url)?.ToString();
+            return client.getData(url);
         }
 
         /// <summary>
@@ -116,7 +118,7 @@ namespace Insight.Utils
                 {"deptName", Setting.deptName}
             };
 
-            return client.getData(url, RequestMethod.POST, dict);
+            return client.commit(url, dict, RequestMethod.POST);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="result"></param>
         /// <param name="message">错误详细信息（可选）</param>
-        public static Result<T> badRequest<T>(this Result<T> result, string message = null) where T : new()
+        public static Result<T> badRequest<T>(this Result<T> result, string message = null)
         {
             result.success = false;
             result.code = "400";

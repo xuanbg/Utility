@@ -10,7 +10,7 @@ namespace Insight.Utils.MainForm
 {
     public class Controller : BaseController
     {
-        private readonly Model dataModel = new Model();
+        private readonly DataModel dataModel = new DataModel();
         private readonly MainModel mainModel;
         private readonly LoginModel loginModel;
 
