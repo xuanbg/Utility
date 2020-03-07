@@ -77,7 +77,7 @@ namespace Insight.Utils.BaseViewModels
                     Glyph = Util.getImage(a.funcInfo.iconUrl),
                     PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();
-            buttons.ForEach(i => i.ItemClick += (sender, args) => buttonClick(args.Item.Name));
+            buttons.ForEach(i => i.ItemClick += (sender, args) => callback(args.Item.Name));
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
         }
 
