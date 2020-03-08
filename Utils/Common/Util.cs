@@ -387,25 +387,22 @@ namespace Insight.Utils.Common
         /// <param name="path">文件路径</param>
         /// <param name="warning">是否显示删除信息</param>
         /// <returns>bool 是否删除成功</returns>
-        public static bool deleteFile(string path, bool warning = false)
+        public static void deleteFile(string path, bool warning = false)
         {
             if (!File.Exists(path))
             {
                 Messages.showWarning("未找到指定的文件！");
-                return true;
+                return;
             }
 
             try
             {
                 File.Delete(path);
                 if (warning) Messages.showMessage("指定的文件已删除！");
-
-                return true;
             }
             catch
             {
                 Messages.showWarning("未能删除指定的文件！");
-                return false;
             }
         }
 
@@ -510,7 +507,7 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="id">电子影像ID</param>
         /// <returns>ImageData 电子影像对象实体</returns>
-        public static void openAttach(Guid id)
+        public static void openAttach(string id)
         {
             var img = new ImageData();
             var fn = img.name + img.id.Substring(23) + img.expand;
@@ -590,8 +587,8 @@ namespace Insight.Utils.Common
         {
             if (img == null) return null;
 
-            var callb = new Image.GetThumbnailImageAbort(callback);
-            return img.GetThumbnailImage(120, 150, callb, IntPtr.Zero);
+            var call = new Image.GetThumbnailImageAbort(callback);
+            return img.GetThumbnailImage(120, 150, call, IntPtr.Zero);
         }
 
         private static bool callback()
@@ -611,7 +608,7 @@ namespace Insight.Utils.Common
         {
             var myCpu = new ManagementClass("win32_Processor").GetInstances();
             var data = from ManagementObject cpu in myCpu
-                       select cpu.Properties["Processorid"].Value;
+                       select cpu.Properties["ProcessorId"].Value;
             return data.Aggregate("", (current, val) => current + (val?.ToString() ?? ""));
         }
 
@@ -650,6 +647,8 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string serialize(object obj)
         {
+            if (obj == null) return null;
+
             try
             {
                 return JsonConvert.SerializeObject(obj);
@@ -668,9 +667,11 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T deserialize<T>(string json)
         {
+            if (string.IsNullOrEmpty(json)) return default(T);
+
             try
             {
-                return JsonConvert.DeserializeObject<T>(json ?? "");
+                return JsonConvert.DeserializeObject<T>(json);
             }
             catch (Exception)
             {

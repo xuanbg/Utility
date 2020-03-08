@@ -107,7 +107,11 @@ namespace Insight.Utils.BaseViewModels
 
             tab.currentPageChanged += (sender, args) => call("loadData", new object[] {0});
             tab.pageSizeChanged += (sender, args) => call("loadData", new object[] {tab.focusedRowHandle});
-            tab.totalRowsChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
+            tab.totalRowsChanged += (sender, args) =>
+            {
+                grid.FocusedRowHandle = args.rowHandle;
+                grid.RefreshData();
+            };
         }
 
         /// <summary>

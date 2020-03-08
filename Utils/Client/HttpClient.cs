@@ -163,7 +163,7 @@ namespace Insight.Utils.Client
         /// 请求数据
         /// </summary>
         /// <param name="url">接口URL</param>
-        /// <param name="body">请求参数/Body中的数据</param>
+        /// <param name="body">请求参数Body中的数据</param>
         /// <param name="msg">错误消息，默认NULL</param>
         /// <param name="method">请求方法</param>
         /// <param name="log">是否输出错误消息</param>
