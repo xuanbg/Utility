@@ -8,6 +8,7 @@ using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraTreeList;
 using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
 using Insight.Utils.Controls;
@@ -67,23 +68,8 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="search">搜索按钮控件</param>
         protected void init(GridView grid, string method, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
         {
-            if (grid != null)
-            {
-                grid.FocusedRowObjectChanged += (sender, args) => call("itemChanged", new object[] {args.FocusedRowHandle});
-                grid.FocusedRowChanged += (sender, args) => call("itemChanged", new object[] {args.FocusedRowHandle});
-                grid.DoubleClick += (sender, args) => callback(method);
-
-                Format.gridFormat(grid);
-            }
-
-            if (grid != null && tab != null)
-            {
-                this.tab = tab;
-                this.tab.currentPageChanged += (sender, args) => call("loadData", new object[] {0});
-                this.tab.pageSizeChanged += (sender, args) => call("loadData", new object[] {this.tab.focusedRowHandle});
-                this.tab.totalRowsChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
-            }
-
+            this.tab = tab;
+            initGrid(grid, method, "itemChanged", this.tab);
             if (input == null || search == null) return;
 
             search.Click += (sender, args) => call("loadData", new object[] {0});
@@ -96,7 +82,48 @@ namespace Insight.Utils.BaseViewModels
                 call("loadData", new object[] {0});
             };
         }
-        
+
+        /// <summary>
+        /// 初始化列表控件
+        /// </summary>
+        /// <param name="grid">列表控件</param>
+        /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
+        /// <param name="callMethod">列表数据改变事件调用方法名称</param>
+        /// <param name="tab">列表分页控件</param>
+        protected void initGrid(GridView grid, string callbackMethod, string callMethod, PageControl tab = null)
+        {
+            grid.FocusedRowObjectChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
+            grid.FocusedRowChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
+            grid.DoubleClick += (sender, args) =>
+            {
+                var button = buttons.SingleOrDefault(i => i.Name == callbackMethod);
+                if (button == null || !button.Enabled) return;
+
+                callback(callbackMethod);
+            };
+
+            Format.gridFormat(grid);
+            if (tab == null) return;
+
+            tab.currentPageChanged += (sender, args) => call("loadData", new object[] {0});
+            tab.pageSizeChanged += (sender, args) => call("loadData", new object[] {tab.focusedRowHandle});
+            tab.totalRowsChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
+        }
+
+        /// <summary>
+        /// 初始化树控件
+        /// </summary>
+        /// <param name="tree">树控件</param>
+        /// <param name="callbackMethod">树控件双击事件回调方法名称</param>
+        /// <param name="callMethod">树数据改变事件调用方法名称</param>
+        protected void initTree(TreeList tree, string callbackMethod, string callMethod)
+        {
+            tree.DoubleClick += (sender, args) => callback(callbackMethod);
+            tree.FocusedNodeChanged += (sender, args) => call(callMethod, new object[] {args.Node});
+
+            Format.treeFormat(tree);
+        }
+
         /// <summary>
         /// 初始化MDI窗体
         /// </summary>
@@ -159,18 +186,7 @@ namespace Insight.Utils.BaseViewModels
                 button.Visibility = button.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
             }
         }
-
-        /// <summary>
-        /// 是否允许双击
-        /// </summary>
-        /// <param name="key">操作名称</param>
-        /// <returns>是否允许双击</returns>
-        public bool allowDoubleClick(string key)
-        {
-            var button = buttons.SingleOrDefault(i => i.Name == key);
-            return button != null && button.Enabled;
-        }
-
+        
         /// <summary>
         /// 显示等待提示
         /// </summary>

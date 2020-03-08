@@ -21,14 +21,14 @@ namespace Insight.Utils.BaseViewModels
         public delegate void CallbackHandle(object sender, CallbackEventArgs e);
 
         /// <summary>
+        /// 数据实体
+        /// </summary>
+        public T item;
+
+        /// <summary>
         /// 对话框视图
         /// </summary>
         protected readonly TV view;
-
-        /// <summary>
-        /// 数据实体
-        /// </summary>
-        protected T item;
 
         /// <summary>
         /// 构造方法
