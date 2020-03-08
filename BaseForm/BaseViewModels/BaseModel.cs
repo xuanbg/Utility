@@ -23,7 +23,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 对话框视图
         /// </summary>
-        protected TV view;
+        protected readonly TV view;
 
         /// <summary>
         /// 数据实体
