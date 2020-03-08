@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using Insight.Utils.BaseForms;
@@ -37,6 +38,11 @@ namespace Insight.Utils.BaseViewModels
         public PageControl tab;
 
         /// <summary>
+        /// 搜索关键词
+        /// </summary>
+        public string keyWord;
+
+        /// <summary>
         /// 当前列表handle
         /// </summary>
         public int handle = 0;
@@ -51,6 +57,46 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         protected BaseMdiModel() : base(null){}
 
+        /// <summary>
+        /// 初始化控件
+        /// </summary>
+        /// <param name="grid">主列表控件</param>
+        /// <param name="method">主列表控件双击事件回调方法名称</param>
+        /// <param name="tab">主列表分页控件</param>
+        /// <param name="input">搜索框控件</param>
+        /// <param name="search">搜索按钮控件</param>
+        protected void init(GridView grid = null, string method = null, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
+        {
+            if (grid != null)
+            {
+                grid.FocusedRowObjectChanged += (sender, args) => call("itemChanged", new object[] {args.FocusedRowHandle});
+                grid.FocusedRowChanged += (sender, args) => call("itemChanged", new object[] {args.FocusedRowHandle});
+                grid.DoubleClick += (sender, args) => callback(method);
+
+                Format.gridFormat(grid);
+            }
+
+            if (grid != null && tab != null)
+            {
+                this.tab = tab;
+                this.tab.currentPageChanged += (sender, args) => call("loadData", new object[] { 0 });
+                this.tab.pageSizeChanged += (sender, args) => call("loadData", new object[] { this.tab.focusedRowHandle });
+                this.tab.totalRowsChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
+            }
+
+            if (input == null || search == null) return;
+
+            search.Click += (sender, args) => call("loadData", new object[] { 0 });
+            input.Properties.Click += (sender, args) => input.EditValue = null;
+            input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
+            input.KeyPress += (sender, args) =>
+            {
+                if (args.KeyChar != 13) return;
+
+                call("loadData", new object[] { 0 });
+            };
+        }
+        
         /// <summary>
         /// 初始化MDI窗体
         /// </summary>

@@ -23,7 +23,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 对话框视图
         /// </summary>
-        protected readonly TV view;
+        protected static TV view;
 
         /// <summary>
         /// 数据实体
@@ -33,7 +33,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="title">View标题</param>
+        /// <param name="title">窗体标题</param>
         protected BaseModel(string title)
         {
             view = new TV {Text = title};
@@ -42,7 +42,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 回调方法
         /// </summary>
-        /// <param name="methodName">方法名称</param>
+        /// <param name="methodName">回调方法名称</param>
         /// <param name="param">回调参数</param>
         protected void callback(string methodName, object[] param = null)
         {
@@ -50,10 +50,11 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
-        /// 按钮点击事件路由
+        /// 方法调用
         /// </summary>
         /// <param name="methodName">回调方法名称</param>
-        protected void buttonClick(string methodName)
+        /// <param name="param">回调参数</param>
+        protected void call(string methodName, object[] param = null)
         {
             var method = GetType().GetMethod(methodName);
             if (method == null)
@@ -62,7 +63,7 @@ namespace Insight.Utils.BaseViewModels
             }
             else
             {
-                method.Invoke(this, null);
+                method.Invoke(this, param);
             }
         }
 

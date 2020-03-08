@@ -31,11 +31,12 @@ namespace Insight.Utils.MainForm.ViewModels
         {
             // 初始化界面
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
+
             view.Icon = new Icon("logo.ico");
+            view.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
             view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             view.StbServer.Caption = Setting.gateway;
-            view.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
 
             // 订阅主窗体菜单事件
             view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[1]);

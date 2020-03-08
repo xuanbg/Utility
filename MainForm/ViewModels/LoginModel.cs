@@ -30,7 +30,6 @@ namespace Insight.Utils.MainForm.ViewModels
             view.BackgroundImage = Util.getImage("bg.png");
             view.BackgroundImageLayout = ImageLayout.Stretch;
             view.UserNameInput.EditValue = account;
-
             view.peeDept.Visible = showDept;
             view.lueDept.Visible = showDept;
 
