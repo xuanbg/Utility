@@ -10,9 +10,14 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.BaseControllers
 {
-    public class MdiController<T, TV, TM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV>, new()
+    public class MdiController<T, TV, TM, DM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV, DM>, new() where DM : new()
     {
-        private readonly DataModel dataModel = new DataModel();
+        private readonly DataModel dm = new DataModel();
+
+        /// <summary>
+        /// Data Model
+        /// </summary>
+        protected readonly DM dataModel = new DM();
 
         /// <summary>
         /// MDI Model
@@ -25,13 +30,13 @@ namespace Insight.Utils.BaseControllers
         /// <param name="module">模块信息</param>
         protected MdiController(ModuleDto module)
         {
-            mdiModel = new TM();
+            mdiModel = new TM {dataModel = dataModel};
             mdiModel.initMdiView(module);
             mdiModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
             mdiModel.show();
 
-            mdiModel.initToolBar(dataModel.getActions(module.id));
-            if (module.moduleInfo.hasParams ?? false) mdiModel.initParams(dataModel.getParams());
+            mdiModel.initToolBar(dm.getActions(module.id));
+            if (module.moduleInfo.hasParams ?? false) mdiModel.initParams(dm.getParams());
         }
 
         /// <summary>
@@ -200,7 +205,7 @@ namespace Insight.Utils.BaseControllers
         /// <returns>Report FastReport报表</returns>
         private Report buildReport<TE>(string tid, string name, List<TE> data, Dictionary<string, object> dict)
         {
-            var template = dataModel.getTemplate(tid);
+            var template = dm.getTemplate(tid);
             if (template == null) return null;
 
             var report = new Report();
@@ -234,7 +239,7 @@ namespace Insight.Utils.BaseControllers
 
                 // 获取电子影像
 
-                img = dataModel.getImage(id);
+                img = dm.getImage(id);
                 if (img == null)
                 {
                     Messages.showError("尚未设置打印模板！请先在设置对话框中设置正确的模板。");
@@ -245,7 +250,7 @@ namespace Insight.Utils.BaseControllers
             {
                 // 使用模板生成电子影像
                 isCopy = false;
-                img = dataModel.newImage(id, tid);
+                img = dm.newImage(id, tid);
                 if (img == null)
                 {
                     Messages.showError("生成打印数据错误");

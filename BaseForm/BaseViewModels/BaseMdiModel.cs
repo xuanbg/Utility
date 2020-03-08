@@ -14,12 +14,17 @@ using Insight.Utils.Entity;
 
 namespace Insight.Utils.BaseViewModels
 {
-    public class BaseMdiModel<T, TV> : BaseModel<T, TV> where TV : BaseMdi, new()
+    public class BaseMdiModel<T, TV, DM> : BaseModel<T, TV> where TV : BaseMdi, new()
     {
         private GridHitInfo hitInfo = new GridHitInfo();
         private List<BarButtonItem> buttons;
         private int waits;
         private DateTime wait;
+
+        /// <summary>
+        /// MDI Model
+        /// </summary>
+        public DM dataModel;
 
         /// <summary>
         /// 模块选项集合
