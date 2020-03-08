@@ -58,14 +58,14 @@ namespace Insight.Utils.BaseViewModels
         protected BaseMdiModel() : base(null){}
 
         /// <summary>
-        /// 初始化控件
+        /// 初始化控件，子类必须有“loadData”和“itemChanged”方法
         /// </summary>
         /// <param name="grid">主列表控件</param>
         /// <param name="method">主列表控件双击事件回调方法名称</param>
         /// <param name="tab">主列表分页控件</param>
         /// <param name="input">搜索框控件</param>
         /// <param name="search">搜索按钮控件</param>
-        protected void init(GridView grid = null, string method = null, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
+        protected void init(GridView grid, string method, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
         {
             if (grid != null)
             {
@@ -79,21 +79,21 @@ namespace Insight.Utils.BaseViewModels
             if (grid != null && tab != null)
             {
                 this.tab = tab;
-                this.tab.currentPageChanged += (sender, args) => call("loadData", new object[] { 0 });
-                this.tab.pageSizeChanged += (sender, args) => call("loadData", new object[] { this.tab.focusedRowHandle });
+                this.tab.currentPageChanged += (sender, args) => call("loadData", new object[] {0});
+                this.tab.pageSizeChanged += (sender, args) => call("loadData", new object[] {this.tab.focusedRowHandle});
                 this.tab.totalRowsChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
             }
 
             if (input == null || search == null) return;
 
-            search.Click += (sender, args) => call("loadData", new object[] { 0 });
+            search.Click += (sender, args) => call("loadData", new object[] {0});
             input.Properties.Click += (sender, args) => input.EditValue = null;
             input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
 
-                call("loadData", new object[] { 0 });
+                call("loadData", new object[] {0});
             };
         }
         
