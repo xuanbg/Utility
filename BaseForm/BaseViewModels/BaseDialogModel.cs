@@ -31,11 +31,7 @@ namespace Insight.Utils.BaseViewModels
             }
             else
             {
-                view.confirm.Click += (sender, args) =>
-                {
-                    view.DialogResult = DialogResult.OK;
-                    call("confirm");
-                };
+                view.confirm.Click += (sender, args) =>call("confirm");
                 view.cancel.Click += (sender, args) => view.Close();
                 view.Closing += (sender, args) => closeConfirm(args);
             }
@@ -47,6 +43,15 @@ namespace Insight.Utils.BaseViewModels
         public void showDialog()
         {
             view.ShowDialog();
+        }
+
+        /// <summary>
+        /// 确认操作
+        /// </summary>
+        public void confirm()
+        {
+            view.DialogResult = DialogResult.OK;
+            callback("confirm", new object[] {item});
         }
 
         /// <summary>
