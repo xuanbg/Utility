@@ -96,6 +96,8 @@ namespace Insight.Utils.BaseViewModels
             grid.FocusedRowChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
             grid.DoubleClick += (sender, args) =>
             {
+                if (callbackMethod == null) return;
+
                 var button = buttons.SingleOrDefault(i => i.Name == callbackMethod);
                 if (button == null || !button.Enabled) return;
 
