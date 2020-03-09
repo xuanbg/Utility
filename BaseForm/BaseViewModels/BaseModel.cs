@@ -46,6 +46,8 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="param">回调参数</param>
         protected void callback(string methodName, object[] param = null)
         {
+            if (string.IsNullOrEmpty(methodName)) return;
+
             callbackEvent?.Invoke(this, new CallbackEventArgs(methodName, param));
         }
 
@@ -56,6 +58,8 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="param">回调参数</param>
         protected void call(string methodName, object[] param = null)
         {
+            if (string.IsNullOrEmpty(methodName)) return;
+
             var method = GetType().GetMethod(methodName);
             if (method == null)
             {
