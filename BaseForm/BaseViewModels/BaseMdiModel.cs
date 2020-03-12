@@ -129,7 +129,6 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="tree">树控件</param>
         /// <param name="callMethod">树数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">树控件双击事件回调方法名称</param>
-        /// <param name="type"></param>
         protected void initTree(TreeList tree, string callMethod = null, string callbackMethod = null)
         {
             tree.DoubleClick += (sender, args) => callback(callbackMethod);
