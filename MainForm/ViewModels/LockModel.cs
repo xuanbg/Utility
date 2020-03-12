@@ -25,7 +25,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// 解锁
         /// </summary>
         /// <returns>bool 是否解锁成功</returns>
-        public void confirm()
+        public new void confirm()
         {
             var sign = Util.hash(Setting.tokenHelper.account + Util.hash(item));
             if (sign == Setting.tokenHelper.sign)

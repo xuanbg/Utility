@@ -41,10 +41,10 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 生成签名
         /// </summary>
-        /// <param name="secret">用户密钥</param>
+        /// <param name="secret">用户密钥(MD5)</param>
         public void signature(string secret)
         {
-            sign = Util.hash(account + Util.hash(secret));
+            sign = Util.hash(account + secret);
         }
 
         /// <summary>

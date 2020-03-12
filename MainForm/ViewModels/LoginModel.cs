@@ -51,7 +51,7 @@ namespace Insight.Utils.MainForm.ViewModels
                 view.txtPassWord.Enter += (sender, args) => callback("loadDept", new object[]{account});
                 view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
-                Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
+                Format.initTreeListLookUpEdit(view.lueDept, depts);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Insight.Utils.MainForm.ViewModels
             }
 
             tokenHelper.account = account;
-            tokenHelper.signature(password);
+            tokenHelper.signature(Util.hash(password));
             if (!tokenHelper.getTokens())
             {
                 view.txtPassWord.EditValue = null;

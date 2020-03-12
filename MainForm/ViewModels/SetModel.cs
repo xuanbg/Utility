@@ -26,7 +26,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void confirm()
+        public new void confirm()
         {
             if (!saveUser) Setting.saveUserName(string.Empty);
 

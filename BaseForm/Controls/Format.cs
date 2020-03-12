@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -105,10 +104,9 @@ namespace Insight.Utils.Controls
         /// 格式化TreeList样式和属性
         /// </summary>
         /// <param name="tree">TreeList</param>
-        /// <param name="type"></param>
         /// <param name="showColumns">显示列头</param>
         /// <param name="showIndicator">显示指示列</param>
-        public static void treeFormat(TreeList tree, NodeIconType type = NodeIconType.GENERAL, bool showColumns = false, bool showIndicator = false)
+        public static void treeFormat(TreeList tree, bool showColumns = false, bool showIndicator = false)
         {
             // 使列标题文字居中显示
             foreach (TreeListColumn column in tree.Columns)
@@ -131,7 +129,7 @@ namespace Insight.Utils.Controls
             tree.RowHeight = 23;
             tree.VertScrollVisibility = DevExpress.XtraTreeList.ScrollVisibility.Always;
 
-            customDrawNodeImages(tree, type);
+            customDrawNodeImages(tree);
         }
 
 
@@ -242,8 +240,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="control">TreeListLookUpEdit</param>
         /// <param name="list">MemberSelect集合</param>
-        /// <param name="type">图标类型</param>
-        public static void initTreeListLookUpEdit(TreeListLookUpEdit control, List<TreeLookUpMember> list, NodeIconType type = NodeIconType.GENERAL)
+        public static void initTreeListLookUpEdit(TreeListLookUpEdit control, List<TreeLookUpMember> list)
         {
             control.Properties.DataSource = list;
             control.Properties.DisplayMember = "name";
@@ -251,42 +248,40 @@ namespace Insight.Utils.Controls
             control.Properties.PopupFormMinSize = new Size(60, 0);
             control.Properties.TreeList.ParentFieldName = "parentId";
 
-            treeFormat(control.Properties.TreeList, type);
+            treeFormat(control.Properties.TreeList);
         }
 
         /// <summary>
         /// 注册TreeList控件重绘节点图标事件
         /// </summary>
         /// <param name="tree">TreeList</param>
-        /// <param name="type">图标类型</param>
-        private static void customDrawNodeImages(TreeList tree, NodeIconType type)
+        private static void customDrawNodeImages(TreeList tree)
         {
             tree.CustomDrawNodeImages += (sender, args) =>
             {
-                switch (type)
+                switch (tree.Tag?.ToString())
                 {
-                    case NodeIconType.GENERAL:
-                        var node = args.Node;
-                        args.SelectImageIndex = node.Level == 0 || node.HasChildren ? (node.Expanded ? 2 : 1) : 0;
-                        break;
-                    case NodeIconType.CATEGORY:
+                    case "CATEGORY":
                         args.SelectImageIndex = args.Node.Expanded ? 2 : 1;
                         break;
-                    case NodeIconType.NODE_TYPE:
-                        args.SelectImageIndex = (int)args.Node.GetValue("nodeType");
+                    case "NODE_TYPE":
+                        args.SelectImageIndex = (int)args.Node.GetValue("type");
                         break;
-                    case NodeIconType.ORGANIZATION:
-                        args.SelectImageIndex = (int) args.Node.GetValue("nodeType") - 1;
+                    case "ORGANIZATION":
+                        args.SelectImageIndex = (int) args.Node.GetValue("type") - 1;
                         break;
-                    case NodeIconType.ONLY_LEVEL0:
+                    case "ONLY_LEVEL0":
                         if (args.Node.Level > 0) return;
 
-                        args.SelectImageIndex = (int) args.Node.GetValue("nodeType");
+                        args.SelectImageIndex = (int) args.Node.GetValue("type");
                         break;
-                    case NodeIconType.CUSTOM:
+                    case "CUSTOM":
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                        var node = args.Node;
+                        args.SelectImageIndex = node.Level == 0 || node.HasChildren ? node.Expanded ? 2 : 1 : 0;
+
+                        break;
                 }
             };
         }

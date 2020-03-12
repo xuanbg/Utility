@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.ViewModels;
 
@@ -64,11 +65,13 @@ namespace Insight.Utils.MainForm
         /// <param name="password">原密码</param>
         public void changPassword(string password)
         {
-            var model = new ChangPwModel("修改密码", password);
+            var model = new ChangPwModel(password, "修改密码");
             model.callbackEvent += (sender, args) =>
             {
-                var data = (PasswordDto) args.param[0];
-                if (!dataModel.changPassword(data)) return;
+                if (!dataModel.changPassword(model.item)) return;
+
+                Setting.tokenHelper.signature(model.item.password);
+                Messages.showMessage("更换密码成功！请牢记新密码并使用新密码登录系统。");
 
                 model.close();
             };

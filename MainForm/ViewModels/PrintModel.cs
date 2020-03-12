@@ -45,7 +45,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 保存设置
         /// </summary>
-        public void confirm()
+        public new void confirm()
         {
             Setting.savePrinter("docPrint", Setting.docPrint);
             Setting.savePrinter("tagPrint", Setting.tagPrint);

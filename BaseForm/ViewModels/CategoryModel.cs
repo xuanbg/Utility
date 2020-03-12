@@ -49,14 +49,14 @@ namespace Insight.Utils.ViewModels
             index = cat.index;
 
             list = getTreeList(cats);
-            Format.initTreeListLookUpEdit(view.trlParent, list, NodeIconType.CATEGORY);
+            Format.initTreeListLookUpEdit(view.trlParent, list);
             setIndexValue();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void confirm()
+        public new void confirm()
         {
             if (!inputExamine()) return;
 

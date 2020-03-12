@@ -33,7 +33,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 完成更新
         /// </summary>
-        public void confirm()
+        public new void confirm()
         {
             callback("complete", new object[]{restart});
         }
