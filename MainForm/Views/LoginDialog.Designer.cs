@@ -41,11 +41,11 @@ namespace Insight.Utils.MainForm.Views
             this.lueDept = new DevExpress.XtraEditors.TreeListLookUpEdit();
             this.treeListLookUpEdit2TreeList = new DevExpress.XtraTreeList.TreeList();
             this.colName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
-            this.LoginButton = new DevExpress.XtraEditors.SimpleButton();
-            this.SetButton = new DevExpress.XtraEditors.SimpleButton();
-            this.CloseButton = new DevExpress.XtraEditors.SimpleButton();
-            this.PassWordInput = new DevExpress.XtraEditors.TextEdit();
-            this.UserNameInput = new DevExpress.XtraEditors.TextEdit();
+            this.loginButton = new DevExpress.XtraEditors.SimpleButton();
+            this.setButton = new DevExpress.XtraEditors.SimpleButton();
+            this.closeButton = new DevExpress.XtraEditors.SimpleButton();
+            this.passWord = new DevExpress.XtraEditors.TextEdit();
+            this.account = new DevExpress.XtraEditors.TextEdit();
             this.labLoading = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panMain)).BeginInit();
@@ -55,8 +55,8 @@ namespace Insight.Utils.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.passWord.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.account.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // OrgTreeNode
@@ -75,11 +75,11 @@ namespace Insight.Utils.MainForm.Views
             this.panMain.Controls.Add(this.pictureEdit2);
             this.panMain.Controls.Add(this.pictureEdit1);
             this.panMain.Controls.Add(this.lueDept);
-            this.panMain.Controls.Add(this.LoginButton);
-            this.panMain.Controls.Add(this.SetButton);
-            this.panMain.Controls.Add(this.CloseButton);
-            this.panMain.Controls.Add(this.PassWordInput);
-            this.panMain.Controls.Add(this.UserNameInput);
+            this.panMain.Controls.Add(this.loginButton);
+            this.panMain.Controls.Add(this.setButton);
+            this.panMain.Controls.Add(this.closeButton);
+            this.panMain.Controls.Add(this.passWord);
+            this.panMain.Controls.Add(this.account);
             this.panMain.Location = new System.Drawing.Point(130, 128);
             this.panMain.Name = "panMain";
             this.panMain.Size = new System.Drawing.Size(260, 140);
@@ -131,7 +131,6 @@ namespace Insight.Utils.MainForm.Views
             // 
             // lueDept
             // 
-            this.lueDept.EnterMoveNextControl = true;
             this.lueDept.Location = new System.Drawing.Point(60, 72);
             this.lueDept.Name = "lueDept";
             this.lueDept.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
@@ -141,7 +140,7 @@ namespace Insight.Utils.MainForm.Views
             this.lueDept.Properties.PopupFormSize = new System.Drawing.Size(320, 200);
             this.lueDept.Properties.TreeList = this.treeListLookUpEdit2TreeList;
             this.lueDept.Size = new System.Drawing.Size(160, 20);
-            this.lueDept.TabIndex = 3;
+            this.lueDept.TabIndex = 0;
             this.lueDept.Visible = false;
             // 
             // treeListLookUpEdit2TreeList
@@ -163,57 +162,56 @@ namespace Insight.Utils.MainForm.Views
             this.colName.Visible = true;
             this.colName.VisibleIndex = 0;
             // 
-            // LoginButton
+            // loginButton
             // 
-            this.LoginButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.LoginButton.Appearance.Options.UseFont = true;
-            this.LoginButton.Location = new System.Drawing.Point(180, 117);
-            this.LoginButton.Name = "LoginButton";
-            this.LoginButton.Size = new System.Drawing.Size(80, 23);
-            this.LoginButton.TabIndex = 4;
-            this.LoginButton.Text = "登  录";
+            this.loginButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.loginButton.Appearance.Options.UseFont = true;
+            this.loginButton.Location = new System.Drawing.Point(180, 117);
+            this.loginButton.Name = "loginButton";
+            this.loginButton.Size = new System.Drawing.Size(80, 23);
+            this.loginButton.TabIndex = 0;
+            this.loginButton.Text = "登  录";
             // 
-            // SetButton
+            // setButton
             // 
-            this.SetButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.SetButton.Appearance.Options.UseFont = true;
-            this.SetButton.Location = new System.Drawing.Point(90, 117);
-            this.SetButton.Name = "SetButton";
-            this.SetButton.Size = new System.Drawing.Size(80, 23);
-            this.SetButton.TabIndex = 5;
-            this.SetButton.Text = "设  置";
+            this.setButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.setButton.Appearance.Options.UseFont = true;
+            this.setButton.Location = new System.Drawing.Point(90, 117);
+            this.setButton.Name = "setButton";
+            this.setButton.Size = new System.Drawing.Size(80, 23);
+            this.setButton.TabIndex = 0;
+            this.setButton.Text = "设  置";
             // 
-            // CloseButton
+            // closeButton
             // 
-            this.CloseButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.CloseButton.Appearance.Options.UseFont = true;
-            this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(0, 117);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(80, 23);
-            this.CloseButton.TabIndex = 6;
-            this.CloseButton.Text = "取  消";
+            this.closeButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.closeButton.Appearance.Options.UseFont = true;
+            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.closeButton.Location = new System.Drawing.Point(0, 117);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(80, 23);
+            this.closeButton.TabIndex = 0;
+            this.closeButton.Text = "取  消";
             // 
-            // PassWordInput
+            // passWord
             // 
-            this.PassWordInput.EditValue = "";
-            this.PassWordInput.EnterMoveNextControl = true;
-            this.PassWordInput.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.PassWordInput.Location = new System.Drawing.Point(60, 37);
-            this.PassWordInput.Name = "PassWordInput";
-            this.PassWordInput.Properties.AutoHeight = false;
-            this.PassWordInput.Properties.PasswordChar = '○';
-            this.PassWordInput.Size = new System.Drawing.Size(160, 21);
-            this.PassWordInput.TabIndex = 2;
+            this.passWord.EditValue = "";
+            this.passWord.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.passWord.Location = new System.Drawing.Point(60, 37);
+            this.passWord.Name = "passWord";
+            this.passWord.Properties.AutoHeight = false;
+            this.passWord.Properties.PasswordChar = '○';
+            this.passWord.Size = new System.Drawing.Size(160, 21);
+            this.passWord.TabIndex = 2;
             // 
-            // UserNameInput
+            // account
             // 
-            this.UserNameInput.EnterMoveNextControl = true;
-            this.UserNameInput.Location = new System.Drawing.Point(60, 2);
-            this.UserNameInput.Name = "UserNameInput";
-            this.UserNameInput.Properties.AutoHeight = false;
-            this.UserNameInput.Size = new System.Drawing.Size(160, 21);
-            this.UserNameInput.TabIndex = 1;
+            this.account.EnterMoveNextControl = true;
+            this.account.Location = new System.Drawing.Point(60, 2);
+            this.account.Name = "account";
+            this.account.Properties.AutoHeight = false;
+            this.account.Size = new System.Drawing.Size(160, 21);
+            this.account.TabIndex = 1;
             // 
             // labLoading
             // 
@@ -244,8 +242,8 @@ namespace Insight.Utils.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PassWordInput.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.UserNameInput.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.passWord.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.account.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -257,14 +255,14 @@ namespace Insight.Utils.MainForm.Views
         public PictureEdit peeDept;
         private PictureEdit pictureEdit2;
         private PictureEdit pictureEdit1;
-        internal TreeListLookUpEdit lueDept;
         private DevExpress.XtraTreeList.TreeList treeListLookUpEdit2TreeList;
         private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
-        internal SimpleButton LoginButton;
-        internal SimpleButton SetButton;
-        internal SimpleButton CloseButton;
-        internal TextEdit PassWordInput;
-        internal TextEdit UserNameInput;
         public PanelControl panMain;
+        public TreeListLookUpEdit lueDept;
+        public SimpleButton loginButton;
+        public SimpleButton setButton;
+        public SimpleButton closeButton;
+        public TextEdit passWord;
+        public TextEdit account;
     }
 }
