@@ -43,7 +43,9 @@ namespace Insight.Utils.MainForm
                         break;
                     case "loadMainWindow":
                         model.hide();
-                        mainModel.showMainWindow(dataModel.getNavigators());
+
+                        var navigators = dataModel.getNavigators();
+                        mainModel.showMainWindow(navigators);
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");
 
