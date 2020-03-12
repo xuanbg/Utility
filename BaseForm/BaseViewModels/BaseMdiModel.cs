@@ -76,7 +76,7 @@ namespace Insight.Utils.BaseViewModels
         protected void init(GridView grid, string method, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
         {
             this.tab = tab;
-            initGrid(grid, method, "itemChanged", this.tab);
+            initGrid(grid, "itemChanged", method, this.tab);
             if (input == null || search == null) return;
 
             search.Click += (sender, args) => call("loadData", new object[] {0});
@@ -94,10 +94,10 @@ namespace Insight.Utils.BaseViewModels
         /// 初始化列表控件
         /// </summary>
         /// <param name="grid">列表控件</param>
-        /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
+        /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="tab">列表分页控件</param>
-        protected void initGrid(GridView grid, string callbackMethod, string callMethod, PageControl tab = null)
+        protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl tab = null)
         {
             grid.FocusedRowObjectChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
             grid.FocusedRowChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
@@ -127,9 +127,9 @@ namespace Insight.Utils.BaseViewModels
         /// 初始化树控件
         /// </summary>
         /// <param name="tree">树控件</param>
-        /// <param name="callbackMethod">树控件双击事件回调方法名称</param>
         /// <param name="callMethod">树数据改变事件调用方法名称</param>
-        protected void initTree(TreeList tree, string callbackMethod, string callMethod)
+        /// <param name="callbackMethod">树控件双击事件回调方法名称</param>
+        protected void initTree(TreeList tree, string callMethod = null, string callbackMethod = null)
         {
             tree.DoubleClick += (sender, args) => callback(callbackMethod);
             tree.FocusedNodeChanged += (sender, args) => call(callMethod, new object[] {args.Node});
