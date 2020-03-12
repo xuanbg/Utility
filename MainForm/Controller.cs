@@ -11,7 +11,6 @@ namespace Insight.Utils.MainForm
     public class Controller : BaseController
     {
         private readonly DataModel dataModel = new DataModel();
-        private readonly MainModel mainModel;
 
         /// <summary>
         /// 构造函数
@@ -19,56 +18,41 @@ namespace Insight.Utils.MainForm
         public Controller()
         {
             var title = Setting.appName;
-            mainModel = new MainModel(title);
+            var mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
 
-            login(title);
-        }
-
-        /// <summary>
-        /// 登录系统
-        /// </summary>
-        /// <param name="title">应用名称</param>
-        private void login(string title)
-        {
             var model = new LoginModel(title);
             model.callbackEvent += (sender, args) =>
             {
                 switch (args.methodName)
                 {
                     case "loadDept":
-                        var account = (string) args.param[0];
+                        var account = (string)args.param[0];
                         if (string.IsNullOrEmpty(account)) return;
 
                         var list = dataModel.getDepts(account);
                         if (!list.Any()) return;
 
                         model.initDepts(list);
+
                         break;
                     case "setServerIp":
-                        setServerIp();
+                        var setModel = new SetModel("服务器设置");
+                        setModel.showDialog();
+
                         break;
                     case "loadMainWindow":
                         model.hide();
                         mainModel.showMainWindow(dataModel.getNavigators());
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");
+
                         break;
                     default:
-                        model.close();
                         Application.Exit();
                         break;
                 }
             };
-            model.showDialog();
-        }
-    
-        /// <summary>
-        /// 设置服务地址
-        /// </summary>
-        public void setServerIp()
-        {
-            var model = new SetModel("服务器设置");
             model.showDialog();
         }
 
