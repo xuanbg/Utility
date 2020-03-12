@@ -29,20 +29,26 @@ namespace Insight.Utils.MainForm.ViewModels
             view.Icon = new Icon("logo.ico");
             view.BackgroundImage = Util.getImage("bg.png");
             view.BackgroundImageLayout = ImageLayout.Stretch;
-            view.account.EditValue = account;
+            view.txtAccount.EditValue = account;
             view.peeDept.Visible = showDept;
             view.lueDept.Visible = showDept;
 
-            view.setButton.Click += (sender, args) => callback("setServerIp");
-            view.closeButton.Click += (sender, args) => callback("exit");
-            view.loginButton.Click += (sender, args) => login();
+            view.sbeSet.Click += (sender, args) => callback("setServerIp");
+            view.sbeCacel.Click += (sender, args) => callback("exit");
+            view.sbeLogin.Click += (sender, args) => login();
 
             // 订阅控件事件实现数据双向绑定
-            view.account.EditValueChanged += (sender, args) => account = view.account.Text.Trim();
-            view.passWord.EditValueChanged += (sender, args) => password = view.passWord.Text;
+            view.txtAccount.EditValueChanged += (sender, args) => account = view.txtAccount.Text.Trim();
+            view.txtPassWord.EditValueChanged += (sender, args) => password = view.txtPassWord.Text;
+            view.txtPassWord.KeyPress += (sender, args) =>
+            {
+                if (args.KeyChar != 13) return;
+
+                login();
+            };
             if (showDept)
             {
-                view.passWord.Enter += (sender, args) => callback("loadDept", new object[]{account});
+                view.txtPassWord.Enter += (sender, args) => callback("loadDept", new object[]{account});
                 view.lueDept.EditValueChanged += (sender, args) => deptChanged();
 
                 Format.initTreeListLookUpEdit(view.lueDept, depts, NodeIconType.ORGANIZATION);
@@ -57,7 +63,7 @@ namespace Insight.Utils.MainForm.ViewModels
             view.Show();
             view.panMain.Visible = true;
             view.Refresh();
-            if (!string.IsNullOrEmpty(account)) view.passWord.Focus();
+            if (!string.IsNullOrEmpty(account)) view.txtPassWord.Focus();
         }
 
         /// <summary>
@@ -68,14 +74,14 @@ namespace Insight.Utils.MainForm.ViewModels
             if (string.IsNullOrEmpty(account))
             {
                 Messages.showMessage("请输入用户名！");
-                view.account.Focus();
+                view.txtAccount.Focus();
                 return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
                 Messages.showWarning("密码不能为空！");
-                view.passWord.Focus();
+                view.txtPassWord.Focus();
                 return;
             }
 
@@ -90,7 +96,7 @@ namespace Insight.Utils.MainForm.ViewModels
             tokenHelper.signature(password);
             if (!tokenHelper.getTokens())
             {
-                view.passWord.EditValue = null;
+                view.txtPassWord.EditValue = null;
                 return;
             }
 

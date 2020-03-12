@@ -39,13 +39,13 @@ namespace Insight.Utils.MainForm.Views
             this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
             this.lueDept = new DevExpress.XtraEditors.TreeListLookUpEdit();
-            this.treeListLookUpEdit2TreeList = new DevExpress.XtraTreeList.TreeList();
+            this.tleDept = new DevExpress.XtraTreeList.TreeList();
             this.colName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
-            this.loginButton = new DevExpress.XtraEditors.SimpleButton();
-            this.setButton = new DevExpress.XtraEditors.SimpleButton();
-            this.closeButton = new DevExpress.XtraEditors.SimpleButton();
-            this.passWord = new DevExpress.XtraEditors.TextEdit();
-            this.account = new DevExpress.XtraEditors.TextEdit();
+            this.sbeLogin = new DevExpress.XtraEditors.SimpleButton();
+            this.sbeSet = new DevExpress.XtraEditors.SimpleButton();
+            this.sbeCacel = new DevExpress.XtraEditors.SimpleButton();
+            this.txtPassWord = new DevExpress.XtraEditors.TextEdit();
+            this.txtAccount = new DevExpress.XtraEditors.TextEdit();
             this.labLoading = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panMain)).BeginInit();
@@ -54,9 +54,9 @@ namespace Insight.Utils.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.passWord.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.account.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tleDept)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // OrgTreeNode
@@ -75,11 +75,11 @@ namespace Insight.Utils.MainForm.Views
             this.panMain.Controls.Add(this.pictureEdit2);
             this.panMain.Controls.Add(this.pictureEdit1);
             this.panMain.Controls.Add(this.lueDept);
-            this.panMain.Controls.Add(this.loginButton);
-            this.panMain.Controls.Add(this.setButton);
-            this.panMain.Controls.Add(this.closeButton);
-            this.panMain.Controls.Add(this.passWord);
-            this.panMain.Controls.Add(this.account);
+            this.panMain.Controls.Add(this.sbeLogin);
+            this.panMain.Controls.Add(this.sbeSet);
+            this.panMain.Controls.Add(this.sbeCacel);
+            this.panMain.Controls.Add(this.txtPassWord);
+            this.panMain.Controls.Add(this.txtAccount);
             this.panMain.Location = new System.Drawing.Point(130, 128);
             this.panMain.Name = "panMain";
             this.panMain.Size = new System.Drawing.Size(260, 140);
@@ -138,21 +138,21 @@ namespace Insight.Utils.MainForm.Views
             this.lueDept.Properties.NullText = "请选择……";
             this.lueDept.Properties.PopupFormMinSize = new System.Drawing.Size(160, 80);
             this.lueDept.Properties.PopupFormSize = new System.Drawing.Size(320, 200);
-            this.lueDept.Properties.TreeList = this.treeListLookUpEdit2TreeList;
+            this.lueDept.Properties.TreeList = this.tleDept;
             this.lueDept.Size = new System.Drawing.Size(160, 20);
             this.lueDept.TabIndex = 0;
             this.lueDept.Visible = false;
             // 
             // treeListLookUpEdit2TreeList
             // 
-            this.treeListLookUpEdit2TreeList.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
+            this.tleDept.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
             this.colName});
-            this.treeListLookUpEdit2TreeList.Location = new System.Drawing.Point(-70, -64);
-            this.treeListLookUpEdit2TreeList.Name = "treeListLookUpEdit2TreeList";
-            this.treeListLookUpEdit2TreeList.OptionsView.ShowIndentAsRowStyle = true;
-            this.treeListLookUpEdit2TreeList.SelectImageList = this.OrgTreeNode;
-            this.treeListLookUpEdit2TreeList.Size = new System.Drawing.Size(400, 200);
-            this.treeListLookUpEdit2TreeList.TabIndex = 0;
+            this.tleDept.Location = new System.Drawing.Point(-70, -64);
+            this.tleDept.Name = "treeListLookUpEdit2TreeList";
+            this.tleDept.OptionsView.ShowIndentAsRowStyle = true;
+            this.tleDept.SelectImageList = this.OrgTreeNode;
+            this.tleDept.Size = new System.Drawing.Size(400, 200);
+            this.tleDept.TabIndex = 0;
             // 
             // colName
             // 
@@ -164,54 +164,54 @@ namespace Insight.Utils.MainForm.Views
             // 
             // loginButton
             // 
-            this.loginButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.loginButton.Appearance.Options.UseFont = true;
-            this.loginButton.Location = new System.Drawing.Point(180, 117);
-            this.loginButton.Name = "loginButton";
-            this.loginButton.Size = new System.Drawing.Size(80, 23);
-            this.loginButton.TabIndex = 0;
-            this.loginButton.Text = "登  录";
+            this.sbeLogin.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.sbeLogin.Appearance.Options.UseFont = true;
+            this.sbeLogin.Location = new System.Drawing.Point(180, 117);
+            this.sbeLogin.Name = "loginButton";
+            this.sbeLogin.Size = new System.Drawing.Size(80, 23);
+            this.sbeLogin.TabIndex = 0;
+            this.sbeLogin.Text = "登  录";
             // 
             // setButton
             // 
-            this.setButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.setButton.Appearance.Options.UseFont = true;
-            this.setButton.Location = new System.Drawing.Point(90, 117);
-            this.setButton.Name = "setButton";
-            this.setButton.Size = new System.Drawing.Size(80, 23);
-            this.setButton.TabIndex = 0;
-            this.setButton.Text = "设  置";
+            this.sbeSet.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.sbeSet.Appearance.Options.UseFont = true;
+            this.sbeSet.Location = new System.Drawing.Point(90, 117);
+            this.sbeSet.Name = "setButton";
+            this.sbeSet.Size = new System.Drawing.Size(80, 23);
+            this.sbeSet.TabIndex = 0;
+            this.sbeSet.Text = "设  置";
             // 
             // closeButton
             // 
-            this.closeButton.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.closeButton.Appearance.Options.UseFont = true;
-            this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(0, 117);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(80, 23);
-            this.closeButton.TabIndex = 0;
-            this.closeButton.Text = "取  消";
+            this.sbeCacel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.sbeCacel.Appearance.Options.UseFont = true;
+            this.sbeCacel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.sbeCacel.Location = new System.Drawing.Point(0, 117);
+            this.sbeCacel.Name = "sbeCacel";
+            this.sbeCacel.Size = new System.Drawing.Size(80, 23);
+            this.sbeCacel.TabIndex = 0;
+            this.sbeCacel.Text = "取  消";
             // 
             // passWord
             // 
-            this.passWord.EditValue = "";
-            this.passWord.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.passWord.Location = new System.Drawing.Point(60, 37);
-            this.passWord.Name = "passWord";
-            this.passWord.Properties.AutoHeight = false;
-            this.passWord.Properties.PasswordChar = '○';
-            this.passWord.Size = new System.Drawing.Size(160, 21);
-            this.passWord.TabIndex = 2;
+            this.txtPassWord.EditValue = "";
+            this.txtPassWord.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.txtPassWord.Location = new System.Drawing.Point(60, 37);
+            this.txtPassWord.Name = "txtPassWord";
+            this.txtPassWord.Properties.AutoHeight = false;
+            this.txtPassWord.Properties.PasswordChar = '○';
+            this.txtPassWord.Size = new System.Drawing.Size(160, 21);
+            this.txtPassWord.TabIndex = 2;
             // 
             // account
             // 
-            this.account.EnterMoveNextControl = true;
-            this.account.Location = new System.Drawing.Point(60, 2);
-            this.account.Name = "account";
-            this.account.Properties.AutoHeight = false;
-            this.account.Size = new System.Drawing.Size(160, 21);
-            this.account.TabIndex = 1;
+            this.txtAccount.EnterMoveNextControl = true;
+            this.txtAccount.Location = new System.Drawing.Point(60, 2);
+            this.txtAccount.Name = "txtAccount";
+            this.txtAccount.Properties.AutoHeight = false;
+            this.txtAccount.Size = new System.Drawing.Size(160, 21);
+            this.txtAccount.TabIndex = 1;
             // 
             // labLoading
             // 
@@ -241,9 +241,9 @@ namespace Insight.Utils.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.treeListLookUpEdit2TreeList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.passWord.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.account.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tleDept)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -255,14 +255,14 @@ namespace Insight.Utils.MainForm.Views
         public PictureEdit peeDept;
         private PictureEdit pictureEdit2;
         private PictureEdit pictureEdit1;
-        private DevExpress.XtraTreeList.TreeList treeListLookUpEdit2TreeList;
+        private DevExpress.XtraTreeList.TreeList tleDept;
         private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
         public PanelControl panMain;
         public TreeListLookUpEdit lueDept;
-        public SimpleButton loginButton;
-        public SimpleButton setButton;
-        public SimpleButton closeButton;
-        public TextEdit passWord;
-        public TextEdit account;
+        public SimpleButton sbeLogin;
+        public SimpleButton sbeSet;
+        public SimpleButton sbeCacel;
+        public TextEdit txtPassWord;
+        public TextEdit txtAccount;
     }
 }
