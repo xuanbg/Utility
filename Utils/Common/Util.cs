@@ -13,6 +13,7 @@ using System.Management;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
@@ -651,7 +652,10 @@ namespace Insight.Utils.Common
 
             try
             {
-                return JsonConvert.SerializeObject(obj);
+                var json = JsonConvert.SerializeObject(obj);
+                if (Regex.IsMatch(json, "^[\\[|\\{].*[\\}|\\]]$")) return json;
+
+                return obj.ToString();
             }
             catch (Exception)
             {

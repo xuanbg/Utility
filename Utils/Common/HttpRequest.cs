@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.Common
@@ -65,8 +64,6 @@ namespace Insight.Utils.Common
             if (method != RequestMethod.GET)
             {
                 var json = Util.serialize(body);
-                if (json != null && !Regex.IsMatch(json, "^\\{")) json = body.ToString();
-
                 return send(url, method, json);
             }
 

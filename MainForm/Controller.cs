@@ -12,7 +12,6 @@ namespace Insight.Utils.MainForm
     {
         private readonly DataModel dataModel = new DataModel();
         private readonly MainModel mainModel;
-        private readonly LoginModel loginModel;
 
         /// <summary>
         /// 构造函数
@@ -23,41 +22,47 @@ namespace Insight.Utils.MainForm
             mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
 
-            loginModel = new LoginModel(title);
-            loginModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
-            loginModel.showDialog();
+            login(title);
         }
 
         /// <summary>
-        /// 加载可选登录部门
+        /// 登录系统
         /// </summary>
-        /// <param name="account">登录账号</param>
-        public void loadDept(string account)
+        /// <param name="title">应用名称</param>
+        private void login(string title)
         {
-            if (string.IsNullOrEmpty(account)) return;
+            var model = new LoginModel(title);
+            model.callbackEvent += (sender, args) =>
+            {
+                switch (args.methodName)
+                {
+                    case "loadDept":
+                        var account = (string) args.param[0];
+                        if (string.IsNullOrEmpty(account)) return;
 
-            var list = dataModel.getDepts(account);
-            if (!list.Any()) return;
+                        var list = dataModel.getDepts(account);
+                        if (!list.Any()) return;
 
-            loginModel.initDepts(list);
+                        model.initDepts(list);
+                        break;
+                    case "setServerIp":
+                        setServerIp();
+                        break;
+                    case "loadMainWindow":
+                        model.hide();
+                        mainModel.showMainWindow(dataModel.getNavigators());
+                        model.close();
+                        if (Setting.needChangePw) changPassword("123456");
+                        break;
+                    default:
+                        model.close();
+                        Application.Exit();
+                        break;
+                }
+            };
+            model.showDialog();
         }
-
-        /// <summary>
-        /// 加载主窗体
-        /// </summary>
-        public void loadMainWindow()
-        {
-            var model = new WaitingModel(Setting.appName);
-            model.show();
-            loginModel.close();
-
-            mainModel.showMainWindow(dataModel.getNavigators());
-            model.close();
-
-            mainModel.autoLoad();
-            if (Setting.needChangePw) changPassword("123456");
-        }
-
+    
         /// <summary>
         /// 设置服务地址
         /// </summary>

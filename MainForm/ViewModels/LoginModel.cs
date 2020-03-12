@@ -34,8 +34,8 @@ namespace Insight.Utils.MainForm.ViewModels
             view.lueDept.Visible = showDept;
 
             view.SetButton.Click += (sender, args) => callback("setServerIp");
+            view.CloseButton.Click += (sender, args) => callback("exit");
             view.LoginButton.Click += (sender, args) => login();
-            view.CloseButton.Click += (sender, args) => Application.Exit();
 
             // 订阅控件事件实现数据双向绑定
             view.UserNameInput.EditValueChanged += (sender, args) => account = view.UserNameInput.Text.Trim();
@@ -55,6 +55,8 @@ namespace Insight.Utils.MainForm.ViewModels
         public void showDialog()
         {
             view.Show();
+            view.panMain.Visible = true;
+            view.Refresh();
             if (!string.IsNullOrEmpty(account)) view.PassWordInput.Focus();
         }
 
@@ -96,6 +98,16 @@ namespace Insight.Utils.MainForm.ViewModels
             Setting.saveUserName(account);
 
             callback("loadMainWindow");
+        }
+
+        /// <summary>
+        /// 隐藏登录界面
+        /// </summary>
+        public void hide()
+        {
+            view.labLoading.Visible = true;
+            view.panMain.Visible = false;
+            view.Refresh();
         }
 
         /// <summary>

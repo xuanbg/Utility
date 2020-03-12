@@ -61,13 +61,8 @@ namespace Insight.Utils.MainForm.ViewModels
 
             initNavBar(navigators);
             view.Show();
-        }
+            view.Refresh();
 
-        /// <summary>
-        /// 自动加载模块
-        /// </summary>
-        public void autoLoad()
-        {
             opens.ForEach(addPageMdi);
         }
 

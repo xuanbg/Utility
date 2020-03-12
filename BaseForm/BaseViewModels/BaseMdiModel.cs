@@ -56,7 +56,14 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 构造方法
         /// </summary>
-        protected BaseMdiModel() : base(null){}
+        protected BaseMdiModel() : base(null)
+        {
+            view.Shown += (sender, args) =>
+            {
+                view.Refresh();
+                call("loadData", new object[] {0});
+            };
+        }
 
         /// <summary>
         /// 初始化控件，子类必须有“loadData”和“itemChanged”方法
