@@ -40,7 +40,7 @@
         /// <summary>
         /// 节点类型
         /// </summary>
-        public int nodeType { get; set; }
+        public int type { get; set; }
 
         /// <summary>
         /// 排序索引

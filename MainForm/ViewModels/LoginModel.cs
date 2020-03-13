@@ -135,9 +135,9 @@ namespace Insight.Utils.MainForm.ViewModels
                 return;
             }
 
-            if (depts.Count(i => i.nodeType == 1) > 1) return;
+            if (depts.Count(i => i.type == 1) > 1) return;
 
-            var id = depts.Single(i => i.nodeType == 1).id;
+            var id = depts.Single(i => i.type == 1).id;
             var node = tree.FindNodeByKeyID(id);
             view.lueDept.Properties.TreeList.FocusedNode = node;
             view.lueDept.EditValue = id;

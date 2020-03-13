@@ -84,6 +84,7 @@
     <Compile Include="BaseForms\BaseWizard.Designer.cs">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseViewModels\BaseWizardModel.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
     <Compile Include="Views\Waiting.cs">
