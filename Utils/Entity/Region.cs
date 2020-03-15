@@ -18,7 +18,7 @@
         /// <summary>
         /// 编码
         /// </summary>
-        public int code { get; set; }
+        public string code { get; set; }
 
         /// <summary>
         /// 名称
