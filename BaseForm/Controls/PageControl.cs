@@ -9,7 +9,7 @@ namespace Insight.Utils.Controls
     {
         private int handle;
         private int rows;
-        private int totalPages = 1;
+        private int totalPages;
         private int current;
         private Collection<string> pageSizes = new Collection<string> {"20", "40", "60", "80", "100"};
 
@@ -60,7 +60,7 @@ namespace Insight.Utils.Controls
             set
             {
                 rows = value;
-                totalPages = (int) Math.Ceiling((decimal) rows/size);
+
                 refresh();
             }
         }
@@ -96,7 +96,7 @@ namespace Insight.Utils.Controls
             btnFirst.Click += (sender, args) => changePage(0);
             btnPrev.Click += (sender, args) => changePage(current - 1);
             btnNext.Click += (sender, args) => changePage(current + 1);
-            btnLast.Click += (sender, args) => changePage(totalPages - 1);
+            btnLast.Click += (sender, args) => changePage(totalPages);
             btnJump.Click += (sender, args) =>  jumpClick();
             txtPage.KeyPress += (sender, args) => pageInputKeyPress(args);
             txtPage.Leave += (sender, args) => pageInputLeave();
@@ -108,21 +108,10 @@ namespace Insight.Utils.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
-            var currentPage = current;
             rows += count;
             handle = rows - 1;
 
             refresh();
-            if (current == currentPage)
-            {
-                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
-                focusedRowChanged?.Invoke(this, eventArgs);
-            }
-            else
-            {
-                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
-                currentPageChanged?.Invoke(this, eventArgs);
-            }
         }
 
         /// <summary>
@@ -131,21 +120,10 @@ namespace Insight.Utils.Controls
         /// <param name="count">减少数量，默认1个</param>
         public void removeItems(int count = 1)
         {
-            var currentPage = current;
             rows -= count;
             handle = rows - 1;
 
             refresh();
-            if (current == currentPage)
-            {
-                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
-                focusedRowChanged?.Invoke(this, eventArgs);
-            }
-            else
-            {
-                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
-                currentPageChanged?.Invoke(this, eventArgs);
-            }
         }
 
         /// <summary>
@@ -154,10 +132,8 @@ namespace Insight.Utils.Controls
         private void pageRowsChanged()
         {
             size = int.Parse(cbeRows.Text);
-            refresh();
 
-            var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
-            currentPageChanged?.Invoke(this, eventArgs);
+            refresh(true);
         }
 
         /// <summary>
@@ -167,21 +143,21 @@ namespace Insight.Utils.Controls
         private void changePage(int page)
         {
             handle = size * page;
-            refresh();
 
-            var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
-            currentPageChanged?.Invoke(this, eventArgs);
+            refresh();
         }
 
         /// <summary>
         /// 刷新控件
         /// </summary>
-        private void refresh()
+        /// <param name="reload">是否强制重新加载</param>
+        private void refresh(bool reload = false)
         {
+            var currentPage = current;
             if (handle > rows) handle = 0;
 
-            var total = totalPages == 0 ? 1 : totalPages;
-            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {total} 页";
+            totalPages = rows / size;
+            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {totalPages +1} 页";
             labRows.Refresh();
 
             current = handle / size;
@@ -195,6 +171,17 @@ namespace Insight.Utils.Controls
             btnJump.Width = width;
             btnJump.Text = page.ToString();
             labRows.Focus();
+
+            if (!reload && current == currentPage)
+            {
+                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
+                focusedRowChanged?.Invoke(this, eventArgs);
+            }
+            else
+            {
+                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
+                currentPageChanged?.Invoke(this, eventArgs);
+            }
         }
 
         /// <summary>
@@ -232,15 +219,15 @@ namespace Insight.Utils.Controls
 
             if (string.IsNullOrEmpty(txtPage.Text)) return;
 
-            var currentPage = int.Parse(txtPage.Text);
-            if (currentPage < 1 || currentPage > totalPages || currentPage == current + 1)
+            var val = int.Parse(txtPage.Text);
+            if (val < 1 || val > totalPages || val == page)
             {
                 txtPage.EditValue = null;
                 return;
             }
 
             txtPage.Visible = false;
-            changePage(currentPage - 1);
+            changePage(val - 1);
         }
     }
 
