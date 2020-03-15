@@ -186,8 +186,10 @@ namespace Insight.Utils.Controls
             control.Properties.DataSource = list;
             control.Properties.DisplayMember = "name";
             control.Properties.ValueMember = "id";
-            control.Properties.Columns.Add(new LookUpColumnInfo(control.Properties.DisplayMember));
             control.Properties.PopupFormMinSize = new Size(60, 0);
+            if (control.Properties.Columns.Count > 0) return;
+
+            control.Properties.Columns.Add(new LookUpColumnInfo(control.Properties.DisplayMember));
         }
 
         /// <summary>
@@ -202,8 +204,10 @@ namespace Insight.Utils.Controls
             control.DataSource = list;
             control.DisplayMember = "name";
             control.ValueMember = "id";
-            control.Columns.Add(new LookUpColumnInfo(control.DisplayMember));
             control.PopupFormMinSize = new Size(60, 0);
+            if (control.Columns.Count > 0) return;
+
+            control.Columns.Add(new LookUpColumnInfo(control.DisplayMember));
         }
 
         /// <summary>

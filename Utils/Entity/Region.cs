@@ -16,8 +16,18 @@
         public string parentId { get; set; }
 
         /// <summary>
+        /// 编码
+        /// </summary>
+        public int code { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// 简称
+        /// </summary>
+        public string alias { get; set; }
     }
 }
