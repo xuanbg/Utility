@@ -162,9 +162,9 @@ namespace Insight.Utils.BaseViewModels
                 {
                     AllowDrawArrow = a.funcInfo.beginGroup,
                     Caption = a.name,
-                    Enabled = a.permit,
+                    Enabled = a.permit ?? false,
                     Name = a.funcInfo.method,
-                    Tag = a.permit,
+                    Tag = a.permit ?? false,
                     Glyph = Util.getImage(a.funcInfo.iconUrl),
                     PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();

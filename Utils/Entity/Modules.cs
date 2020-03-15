@@ -115,7 +115,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 是否授权
         /// </summary>
-        public bool permit { get; set; }
+        public bool? permit { get; set; }
     }
 
     /// <summary>
