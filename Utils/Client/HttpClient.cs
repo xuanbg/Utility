@@ -80,7 +80,7 @@ namespace Insight.Utils.Client
         /// <returns>T</returns>
         public Result<T> getResult(string url, object body = null, RequestMethod method = RequestMethod.GET)
         {
-            request(url, body, null, method, false);
+            request(url, body, null, method);
 
             return result;
         }

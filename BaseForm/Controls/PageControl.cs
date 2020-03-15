@@ -14,41 +14,29 @@ namespace Insight.Utils.Controls
         private Collection<string> pageSizes = new Collection<string> {"20", "40", "60", "80", "100"};
 
         /// <summary>  
-        /// 每页显示行数发生改变，通知修改每页显示行数
+        /// 当前焦点行发生改变，通知修改焦点行
         /// </summary>  
-        public event PageSizeHandle pageSizeChanged;
-
-        /// <summary>  
-        /// 当前页发生改变，通知重新加载列表数据
-        /// </summary>  
-        public event PageReloadHandle currentPageChanged;
-
-        /// <summary>  
-        /// 列表总行数发生改变，通知修改FocusedRowHandle
-        /// </summary>  
-        public event TotalRowsHandle totalRowsChanged;
+        public event FocusedRowChangedHandle focusedRowChanged;
 
         /// <summary>
-        /// 表示将处理每页显示行数改变事件的方法
+        /// 表示将处理当前焦点行发生改变事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void PageSizeHandle(object sender, PageSizeEventArgs e);
+        public delegate void FocusedRowChangedHandle(object sender, RowHandleEventArgs e);
 
+        /// <summary>  
+        /// 当前页需要重新加载，通知重新加载列表数据
+        /// </summary>  
+        public event PageReloadHandle currentPageChanged;
+        
         /// <summary>
         /// 表示将处理列表数据需重新加载事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void PageReloadHandle(object sender, PageControlEventArgs e);
-
-        /// <summary>
-        /// 表示将处理列表总行数改变事件的方法
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public delegate void TotalRowsHandle(object sender, PageControlEventArgs e);
-
+        public delegate void PageReloadHandle(object sender, PageReloadEventArgs e);
+        
         /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
@@ -120,21 +108,20 @@ namespace Insight.Utils.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
+            var currentPage = current;
             rows += count;
             handle = rows - 1;
 
-            var currentPage = current;
             refresh();
-
-            var eventArgs = new PageControlEventArgs(focusedRowHandle, current + 1);
-            if (current > currentPage)
+            if (current == currentPage)
             {
-                // 切换了页码需要重新加载数据
-                currentPageChanged?.Invoke(this, eventArgs);
+                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
+                focusedRowChanged?.Invoke(this, eventArgs);
             }
             else
             {
-                totalRowsChanged?.Invoke(this, eventArgs);
+                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
+                currentPageChanged?.Invoke(this, eventArgs);
             }
         }
 
@@ -144,21 +131,20 @@ namespace Insight.Utils.Controls
         /// <param name="count">减少数量，默认1个</param>
         public void removeItems(int count = 1)
         {
-            rows -= count;
-            if (handle >= rows) handle = rows - 1;
-
             var currentPage = current;
-            refresh();
+            rows -= count;
+            handle = rows - 1;
 
-            var eventArgs = new PageControlEventArgs(focusedRowHandle, current + 1);
-            if ((rows > 0 && handle < size*(totalPages - 1)) || current < currentPage)
+            refresh();
+            if (current == currentPage)
             {
-                // 不是末页或切换了页码需要重新加载数据
-                currentPageChanged?.Invoke(this, eventArgs);
+                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
+                focusedRowChanged?.Invoke(this, eventArgs);
             }
             else
             {
-                totalRowsChanged?.Invoke(this, eventArgs);
+                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
+                currentPageChanged?.Invoke(this, eventArgs);
             }
         }
 
@@ -167,19 +153,11 @@ namespace Insight.Utils.Controls
         /// </summary>
         private void pageRowsChanged()
         {
-            var handel = focusedRowHandle;
-            var change = size < rows - size*current;
             size = int.Parse(cbeRows.Text);
-            pageSizeChanged?.Invoke(this, new PageSizeEventArgs(size));
-
-            var currentPage = current;
             refresh();
 
-            change = change || size < rows - size*current;
-            if (!change && current == currentPage && focusedRowHandle == handel) return;
-
-            // 切换了页码或当前页显示行数变化后需要重新加载数据
-            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current + 1));
+            var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
+            currentPageChanged?.Invoke(this, eventArgs);
         }
 
         /// <summary>
@@ -188,11 +166,11 @@ namespace Insight.Utils.Controls
         /// <param name="page">页码</param>
         private void changePage(int page)
         {
-            handle = size*page;
-
+            handle = size * page;
             refresh();
 
-            currentPageChanged?.Invoke(this, new PageControlEventArgs(focusedRowHandle, current + 1));
+            var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
+            currentPageChanged?.Invoke(this, eventArgs);
         }
 
         /// <summary>
@@ -206,8 +184,7 @@ namespace Insight.Utils.Controls
             labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {total} 页";
             labRows.Refresh();
 
-            var val = (int) Math.Floor((decimal) handle/size);
-            current = val < 0 ? 0 : val;
+            current = handle / size;
             btnFirst.Enabled = current > 0;
             btnPrev.Enabled = current > 0;
             btnNext.Enabled = current < totalPages - 1;
@@ -267,44 +244,57 @@ namespace Insight.Utils.Controls
         }
     }
 
-    public class PageSizeEventArgs : EventArgs
+    /// <summary>
+    /// 焦点行改变事件参数
+    /// </summary>
+    public class RowHandleEventArgs : EventArgs
     {
         /// <summary>
-        /// PageSize
-        /// </summary>
-        public int pageSize { get; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="rows">RowsPerPage</param>
-        public PageSizeEventArgs(int rows)
-        {
-            pageSize = rows;
-        }
-    }
-
-    public class PageControlEventArgs : EventArgs
-    {
-        /// <summary>
-        /// RowHandle
+        /// Row handle
         /// </summary>
         public int rowHandle { get; }
 
         /// <summary>
-        /// currentPage
+        /// 构造函数
         /// </summary>
-        public int currentPage { get; }
+        /// <param name="handel">RowsPerPage</param>
+        public RowHandleEventArgs(int handel)
+        {
+            rowHandle = handel;
+        }
+    }
+
+    /// <summary>
+    /// 页面重载事件参数
+    /// </summary>
+    public class PageReloadEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Row handle
+        /// </summary>
+        public int handle { get; }
+
+        /// <summary>
+        /// Current page
+        /// </summary>
+        public int page { get; }
+
+        /// <summary>
+        /// Page size
+        /// </summary>
+        public int size { get; }
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="handel">RowHandle</param>
-        /// <param name="current">currentPage</param>
-        public PageControlEventArgs(int handel, int current)
+        /// <param name="handle">Row handle</param>
+        /// <param name="page">Current page</param>
+        /// <param name="size">Page size</param>
+        public PageReloadEventArgs(int handle, int page, int size)
         {
-            rowHandle = handel;
-            currentPage = current;
+            this.handle = handle;
+            this.page = page;
+            this.size = size;
         }
     }
 }

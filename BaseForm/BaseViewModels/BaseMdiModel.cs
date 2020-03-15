@@ -99,8 +99,18 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="tab">列表分页控件</param>
         protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl tab = null)
         {
-            grid.FocusedRowObjectChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
-            grid.FocusedRowChanged += (sender, args) => call(callMethod, new object[] {args.FocusedRowHandle});
+            grid.FocusedRowObjectChanged += (sender, args) =>
+            {
+                if (tab != null) tab.focusedRowHandle = args.FocusedRowHandle;
+
+                call(callMethod, new object[] {args.FocusedRowHandle});
+            };
+            grid.FocusedRowChanged += (sender, args) =>
+            {
+                if (tab != null) tab.focusedRowHandle = args.FocusedRowHandle;
+
+                call(callMethod, new object[] {args.FocusedRowHandle});
+            };
             grid.DoubleClick += (sender, args) =>
             {
                 if (callbackMethod == null) return;
@@ -114,9 +124,8 @@ namespace Insight.Utils.BaseViewModels
             Format.gridFormat(grid);
             if (tab == null) return;
 
-            tab.currentPageChanged += (sender, args) => call("loadData", new object[] {0});
-            tab.pageSizeChanged += (sender, args) => call("loadData", new object[] {tab.focusedRowHandle});
-            tab.totalRowsChanged += (sender, args) =>
+            tab.currentPageChanged += (sender, args) => call("loadData", new object[] {args.handle});
+            tab.focusedRowChanged += (sender, args) =>
             {
                 grid.FocusedRowHandle = args.rowHandle;
                 grid.RefreshData();
