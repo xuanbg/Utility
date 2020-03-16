@@ -66,17 +66,17 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         /// <param name="input">搜索框控件</param>
         /// <param name="search">搜索按钮控件</param>
-        /// <param name="method">回调方法名称</param>
-        protected void initSearch(ButtonEdit input, SimpleButton search, string method = "loadData")
+        /// <param name="getDataMethod">列表获取数据方法名称</param>
+        protected void initSearch(ButtonEdit input, SimpleButton search, string getDataMethod = "loadData")
         {
-            search.Click += (sender, args) => call(method, new object[] { 0 });
+            search.Click += (sender, args) => call(getDataMethod, new object[] { 0 });
             input.Properties.Click += (sender, args) => input.EditValue = null;
             input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
 
-                call(method, new object[] { 0 });
+                call(getDataMethod, new object[] {0});
             };
         }
 
@@ -102,18 +102,19 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="grid">列表View控件</param>
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
-        /// <param name="tab">列表分页控件</param>
-        protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl tab = null)
+        /// <param name="pageControl">列表分页控件</param>
+        /// <param name="getDataMethod">列表获取数据方法名称</param>
+        protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
         {
             grid.FocusedRowObjectChanged += (sender, args) =>
             {
-                if (tab != null) tab.focusedRowHandle = args.FocusedRowHandle;
+                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
 
                 call(callMethod, new object[] {args.FocusedRowHandle});
             };
             grid.FocusedRowChanged += (sender, args) =>
             {
-                if (tab != null) tab.focusedRowHandle = args.FocusedRowHandle;
+                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
 
                 call(callMethod, new object[] {args.FocusedRowHandle});
             };
@@ -128,10 +129,11 @@ namespace Insight.Utils.BaseViewModels
             };
 
             Format.gridFormat(grid);
-            if (tab == null) return;
+            if (pageControl == null) return;
 
-            tab.currentPageChanged += (sender, args) => call("loadData", new object[] {args.handle});
-            tab.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
+            pageControl.currentPageChanged += (sender, args) => call(getDataMethod, new object[] {args.handle});
+            pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
+            pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
         }
 
         /// <summary>

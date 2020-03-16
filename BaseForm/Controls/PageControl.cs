@@ -16,6 +16,18 @@ namespace Insight.Utils.Controls
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
         /// </summary>  
+        public event SelectDataChangedHandle selectDataChanged;
+
+        /// <summary>
+        /// 表示将处理当前焦点行发生改变事件的方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void SelectDataChangedHandle(object sender, EventArgs e);
+
+        /// <summary>  
+        /// 当前焦点行发生改变，通知修改焦点行
+        /// </summary>  
         public event FocusedRowChangedHandle focusedRowChanged;
 
         /// <summary>
@@ -61,7 +73,7 @@ namespace Insight.Utils.Controls
             {
                 rows = value;
 
-                refresh();
+                refresh(handle);
             }
         }
 
@@ -111,7 +123,7 @@ namespace Insight.Utils.Controls
             rows += count;
             handle = rows - 1;
 
-            refresh();
+            refresh(handle);
         }
 
         /// <summary>
@@ -122,7 +134,7 @@ namespace Insight.Utils.Controls
         {
             rows -= count;
 
-            refresh();
+            refresh(handle);
         }
 
         /// <summary>
@@ -132,7 +144,7 @@ namespace Insight.Utils.Controls
         {
             size = int.Parse(cbeRows.Text);
 
-            refresh(true);
+            refresh(handle, true);
         }
 
         /// <summary>
@@ -144,14 +156,15 @@ namespace Insight.Utils.Controls
             var zeroHandle = page * size;
             handle = zeroHandle;
 
-            refresh();
+            refresh(handle);
         }
 
         /// <summary>
         /// 刷新控件
         /// </summary>
+        /// <param name="focused">当前焦点行</param>
         /// <param name="reload">是否强制重新加载</param>
-        private void refresh(bool reload = false)
+        private void refresh(int focused, bool reload = false)
         {
             var currentPage = current;
             if (handle >= rows) handle = rows - 1;
@@ -161,6 +174,8 @@ namespace Insight.Utils.Controls
             labRows.Refresh();
 
             current = handle / size;
+            if (current < 0) current = 0;
+
             btnFirst.Enabled = current > 0;
             btnPrev.Enabled = current > 0;
             btnNext.Enabled = current < totalPages - 1;
@@ -172,15 +187,19 @@ namespace Insight.Utils.Controls
             btnJump.Text = page.ToString();
             labRows.Focus();
 
-            if (!reload && current == currentPage)
+            if (reload || current != currentPage)
             {
-                var eventArgs = new RowHandleEventArgs(focusedRowHandle);
-                focusedRowChanged?.Invoke(this, eventArgs);
+                currentPageChanged?.Invoke(this, new PageReloadEventArgs(focusedRowHandle, page, size));
+                return;
+            }
+
+            if (focused == handle)
+            {
+                selectDataChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                var eventArgs = new PageReloadEventArgs(focusedRowHandle, page, size);
-                currentPageChanged?.Invoke(this, eventArgs);
+                focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
             }
         }
 

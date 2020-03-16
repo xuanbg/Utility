@@ -1,4 +1,6 @@
-﻿namespace Insight.Utils.Entity
+﻿using System;
+
+namespace Insight.Utils.Entity
 {
     /// <summary>
     /// Json接口返回值
@@ -29,6 +31,11 @@
         /// 数据
         /// </summary>
         public T data { get; set; }
+
+        /// <summary>
+        /// 总行数
+        /// </summary>
+        public int total => Convert.ToInt32(option);
 
         /// <summary>
         /// 初始化为未知错误（500）
