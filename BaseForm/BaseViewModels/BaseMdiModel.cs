@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraTreeList;
@@ -46,7 +47,7 @@ namespace Insight.Utils.BaseViewModels
         /// <summary>
         /// 列表数据
         /// </summary>
-        public List<T> list;
+        public readonly List<T> list = new List<T>();
 
         /// <summary>
         /// 构造方法
@@ -61,34 +62,44 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
-        /// 初始化控件，子类必须有“loadData”和“itemChanged”方法
+        /// 初始化搜索控件
         /// </summary>
-        /// <param name="grid">主列表控件</param>
-        /// <param name="method">主列表控件双击事件回调方法名称</param>
-        /// <param name="tab">主列表分页控件</param>
         /// <param name="input">搜索框控件</param>
         /// <param name="search">搜索按钮控件</param>
-        protected void init(GridView grid, string method, PageControl tab = null, ButtonEdit input = null, SimpleButton search = null)
+        /// <param name="method">回调方法名称</param>
+        protected void initSearch(ButtonEdit input, SimpleButton search, string method = "loadData")
         {
-            this.tab = tab;
-            initGrid(grid, "itemChanged", method, this.tab);
-            if (input == null || search == null) return;
-
-            search.Click += (sender, args) => call("loadData", new object[] {0});
+            search.Click += (sender, args) => call(method, new object[] { 0 });
             input.Properties.Click += (sender, args) => input.EditValue = null;
             input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
 
-                call("loadData", new object[] {0});
+                call(method, new object[] { 0 });
             };
+        }
+
+        /// <summary>
+        /// 初始化控件，子类必须有“itemChanged”方法
+        /// </summary>
+        /// <param name="grid">主列表控件</param>
+        /// <param name="gridView">主列表View控件</param>
+        /// <param name="tab">主列表分页控件</param>
+        /// <param name="callbackMethod">主列表控件双击事件回调方法名称</param>
+        /// <param name="callMethod">主列表数据改变事件调用方法名称</param>
+        protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string callbackMethod = "editItem", string callMethod = "itemChanged")
+        {
+            this.tab = tab;
+            grid.DataSource = list;
+
+            initGrid(gridView, callMethod, callbackMethod, this.tab);
         }
 
         /// <summary>
         /// 初始化列表控件
         /// </summary>
-        /// <param name="grid">列表控件</param>
+        /// <param name="grid">列表View控件</param>
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="tab">列表分页控件</param>

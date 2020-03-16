@@ -121,7 +121,6 @@ namespace Insight.Utils.Controls
         public void removeItems(int count = 1)
         {
             rows -= count;
-            handle = rows - 1;
 
             refresh();
         }
@@ -142,7 +141,8 @@ namespace Insight.Utils.Controls
         /// <param name="page">页码</param>
         private void changePage(int page)
         {
-            handle = size * page;
+            var zeroHandle = page * size;
+            handle = zeroHandle;
 
             refresh();
         }
@@ -154,7 +154,7 @@ namespace Insight.Utils.Controls
         private void refresh(bool reload = false)
         {
             var currentPage = current;
-            if (handle > rows) handle = 0;
+            if (handle >= rows) handle = rows - 1;
 
             totalPages = rows / size;
             labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {totalPages +1} 页";
