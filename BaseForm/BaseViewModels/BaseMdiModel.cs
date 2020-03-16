@@ -44,11 +44,6 @@ namespace Insight.Utils.BaseViewModels
         public string keyWord;
 
         /// <summary>
-        /// 当前列表handle
-        /// </summary>
-        public int handle = 0;
-
-        /// <summary>
         /// 列表数据
         /// </summary>
         public List<T> list;
