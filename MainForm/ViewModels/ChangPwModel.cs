@@ -32,8 +32,6 @@ namespace Insight.Utils.MainForm.ViewModels
         /// </summary>
         public new void confirm()
         {
-            if (!inputExamine()) return;
-
             sing = Util.hash(Setting.tokenHelper.account + item.old);
             if (sing != Setting.tokenHelper.sign)
             {

@@ -58,9 +58,7 @@ namespace Insight.Utils.ViewModels
         /// </summary>
         public new void confirm()
         {
-            if (!inputExamine()) return;
-
-            callback(string.IsNullOrEmpty(item.id) ? "newCategory" : "editCategory", new object[] {item});
+            base.confirm();
         }
 
         /// <summary>

@@ -50,24 +50,6 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         public void confirm()
         {
-            callback("confirm", new object[] {item});
-        }
-
-        /// <summary>
-        /// 关闭对话框
-        /// </summary>
-        public void closeDialog()
-        {
-            view.DialogResult = DialogResult.OK;
-            view.Close();
-        }
-
-        /// <summary>
-        /// 检查输入检查对象是否都有值
-        /// </summary>
-        /// <returns>bool 对象是否都有值</returns>
-        protected bool inputExamine()
-        {
             var propertys = typeof(T).GetProperties();
             foreach (var property in propertys)
             {
@@ -85,10 +67,19 @@ namespace Insight.Utils.BaseViewModels
                 }
 
                 Messages.showError(att.message);
-                return false;
+                return;
             }
 
-            return true;
+            callback("confirm", new object[] {item});
+        }
+
+        /// <summary>
+        /// 关闭对话框
+        /// </summary>
+        public void closeDialog()
+        {
+            view.DialogResult = DialogResult.OK;
+            view.Close();
         }
     }
 }
