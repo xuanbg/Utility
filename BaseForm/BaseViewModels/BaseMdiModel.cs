@@ -112,12 +112,6 @@ namespace Insight.Utils.BaseViewModels
 
                 call(callMethod, new object[] {args.FocusedRowHandle});
             };
-            grid.FocusedRowChanged += (sender, args) =>
-            {
-                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
-
-                call(callMethod, new object[] {args.FocusedRowHandle});
-            };
             grid.DoubleClick += (sender, args) =>
             {
                 if (callbackMethod == null) return;
