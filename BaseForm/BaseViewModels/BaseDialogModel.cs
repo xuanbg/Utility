@@ -50,14 +50,13 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         public void confirm()
         {
-            view.DialogResult = DialogResult.OK;
             callback("confirm", new object[] {item});
         }
 
         /// <summary>
         /// 关闭对话框
         /// </summary>
-        protected void closeDialog()
+        public void closeDialog()
         {
             view.DialogResult = DialogResult.OK;
             view.Close();

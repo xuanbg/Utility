@@ -47,6 +47,7 @@ namespace Insight.Utils.MainForm
 
                         var navigators = dataModel.getNavigators();
                         mainModel.showMainWindow(navigators);
+
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");
 
@@ -73,7 +74,7 @@ namespace Insight.Utils.MainForm
                 Setting.tokenHelper.signature(model.item.password);
                 Messages.showMessage("更换密码成功！请牢记新密码并使用新密码登录系统。");
 
-                model.close();
+                model.closeDialog();
             };
 
             model.showDialog();
@@ -121,7 +122,7 @@ namespace Insight.Utils.MainForm
                     }
                     else
                     {
-                        model.close();
+                        model.closeDialog();
                     }
                 }
             };
