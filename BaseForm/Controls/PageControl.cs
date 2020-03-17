@@ -200,14 +200,14 @@ namespace Insight.Utils.Controls
             btnJump.Width = (int) Math.Log10(page) * 7 + 18;
             btnJump.Text = page.ToString();
 
-            var cp = currentPage;
+            // 对当前选中行的异常值进行修正
             if (currentRow >= rows) currentRow = rows - 1;
 
-            // 根据当前选中行定位当前页
+            // 根据当前选中行定位当前页并刷新导航按钮可用状态
+            var cp = currentPage;
             currentPage = currentRow / size;
             if (currentPage < 0) currentPage = 0;
 
-            // 根据当前页刷新导航按钮可用状态
             btnFirst.Enabled = currentPage > 0;
             btnPrev.Enabled = currentPage > 0;
             btnNext.Enabled = currentPage < pages;
