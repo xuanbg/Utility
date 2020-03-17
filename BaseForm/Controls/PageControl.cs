@@ -82,7 +82,18 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 当前页
         /// </summary>
-        public int page => currentPage + 1;
+        public int page
+        {
+            get => currentPage + 1;
+            set
+            {
+                var handle = focusedRowHandle;
+                currentPage = value - 1;
+                currentRow = currentPage * size + handle;
+
+                refresh(currentRow, false, true);
+            } 
+        }
 
         /// <summary>
         /// 当前每页行数
