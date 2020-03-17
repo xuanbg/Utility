@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
 namespace Insight.Utils.Controls
 {
     public partial class PageControl : XtraUserControl
     {
-        private int handle;
-        private int rows;
-        private int totalPages;
-        private int current;
         private Collection<string> pageSizes = new Collection<string> {"20", "40", "60", "80", "100"};
+        private int currentRow;
+        private int currentPage;
+        private int rows;
+
+        /// <summary>
+        /// 总页数
+        /// </summary>
+        private int pages => rows / size;
 
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
@@ -40,7 +43,7 @@ namespace Insight.Utils.Controls
         /// <summary>  
         /// 当前页需要重新加载，通知重新加载列表数据
         /// </summary>  
-        public event PageReloadHandle currentPageChanged;
+        public event PageReloadHandle pageReload;
         
         /// <summary>
         /// 表示将处理列表数据需重新加载事件的方法
@@ -72,15 +75,14 @@ namespace Insight.Utils.Controls
             set
             {
                 rows = value;
-
-                refresh(handle);
+                refresh(currentRow);
             }
         }
 
         /// <summary>
         /// 当前页
         /// </summary>
-        public int page => current + 1;
+        public int page => currentPage + 1;
 
         /// <summary>
         /// 当前每页行数
@@ -92,8 +94,8 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int focusedRowHandle
         {
-            get => handle - size * current;
-            set => handle = size * current + value;
+            get => currentRow - size * currentPage;
+            set => currentRow = size * currentPage + value;
         }
 
         /// <summary>
@@ -103,15 +105,53 @@ namespace Insight.Utils.Controls
         {
             InitializeComponent();
 
-            // 订阅控件按钮事件
-            cbeRows.EditValueChanged += (sender, args) => pageRowsChanged();
+            // 每页行数改变事件
+            cbeRows.EditValueChanged += (sender, args) =>
+            {
+                size = int.Parse(cbeRows.Text);
+                refresh(currentRow, true);
+            };
+
+            // 导航按钮点击事件
             btnFirst.Click += (sender, args) => changePage(0);
-            btnPrev.Click += (sender, args) => changePage(current - 1);
-            btnNext.Click += (sender, args) => changePage(current + 1);
-            btnLast.Click += (sender, args) => changePage(totalPages);
-            btnJump.Click += (sender, args) =>  jumpClick();
-            txtPage.KeyPress += (sender, args) => pageInputKeyPress(args);
-            txtPage.Leave += (sender, args) => pageInputLeave();
+            btnPrev.Click += (sender, args) => changePage(currentPage - 1);
+            btnNext.Click += (sender, args) => changePage(currentPage + 1);
+            btnLast.Click += (sender, args) => changePage(pages);
+            btnJump.Click += (sender, args) =>
+            {
+                txtPage.Visible = true;
+                txtPage.Focus();
+            };
+
+            // 页跳转输入事件
+            txtPage.Leave += (sender, args) =>
+            {
+                txtPage.EditValue = null;
+                txtPage.Visible = false;
+            };
+            txtPage.KeyPress += (sender, args) =>
+            {
+                if (args.KeyChar == 27)
+                {
+                    txtPage.EditValue = null;
+                    txtPage.Visible = false;
+                    return;
+                }
+
+                if (args.KeyChar != 13) return;
+
+                if (string.IsNullOrEmpty(txtPage.Text)) return;
+
+                var val = int.Parse(txtPage.Text);
+                if (val < 1 || val > pages + 1 || val == page)
+                {
+                    txtPage.EditValue = null;
+                    return;
+                }
+
+                txtPage.Visible = false;
+                changePage(val - 1);
+            };
         }
 
         /// <summary>
@@ -121,9 +161,8 @@ namespace Insight.Utils.Controls
         public void addItems(int count = 1)
         {
             rows += count;
-            handle = rows - 1;
-
-            refresh(handle);
+            currentRow = rows - 1;
+            refresh(currentRow);
         }
 
         /// <summary>
@@ -133,18 +172,7 @@ namespace Insight.Utils.Controls
         public void removeItems(int count = 1)
         {
             rows -= count;
-
-            refresh(handle);
-        }
-
-        /// <summary>
-        /// 切换每页行数
-        /// </summary>
-        private void pageRowsChanged()
-        {
-            size = int.Parse(cbeRows.Text);
-
-            refresh(handle, true);
+            refresh(currentRow);
         }
 
         /// <summary>
@@ -154,46 +182,47 @@ namespace Insight.Utils.Controls
         private void changePage(int page)
         {
             var zeroHandle = page * size;
-            handle = zeroHandle;
-
-            refresh(handle);
+            currentRow = zeroHandle;
+            refresh(currentRow);
         }
 
         /// <summary>
         /// 刷新控件
         /// </summary>
-        /// <param name="focused">当前焦点行</param>
+        /// <param name="focusedRow">当前焦点行</param>
         /// <param name="reload">是否强制重新加载</param>
-        private void refresh(int focused, bool reload = false)
+        private void refresh(int focusedRow, bool reload = false)
         {
-            var currentPage = current;
-            if (handle >= rows) handle = rows - 1;
-
-            totalPages = rows / size;
-            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {totalPages +1} 页";
+            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {pages +1} 页";
             labRows.Refresh();
-
-            current = handle / size;
-            if (current < 0) current = 0;
-
-            btnFirst.Enabled = current > 0;
-            btnPrev.Enabled = current > 0;
-            btnNext.Enabled = current < totalPages - 1;
-            btnLast.Enabled = current < totalPages - 1;
-            btnJump.Enabled = totalPages > 1;
-
-            var width = (int) Math.Log10(current + 1)*7 + 18;
-            btnJump.Width = width;
-            btnJump.Text = page.ToString();
             labRows.Focus();
 
-            if (reload || current != currentPage)
+            btnJump.Width = (int) Math.Log10(page) * 7 + 18;
+            btnJump.Text = page.ToString();
+
+            var cp = currentPage;
+            if (currentRow >= rows) currentRow = rows - 1;
+
+            // 根据当前选中行定位当前页
+            currentPage = currentRow / size;
+            if (currentPage < 0) currentPage = 0;
+
+            // 根据当前页刷新导航按钮可用状态
+            btnFirst.Enabled = currentPage > 0;
+            btnPrev.Enabled = currentPage > 0;
+            btnNext.Enabled = currentPage < pages;
+            btnLast.Enabled = currentPage < pages;
+            btnJump.Enabled = pages > 2;
+
+            // 根据当前页是否改变或页内容是否需要重新加载触发重新加载事件
+            if (reload || currentPage != cp)
             {
-                currentPageChanged?.Invoke(this, new PageReloadEventArgs(focusedRowHandle, page, size));
+                pageReload?.Invoke(this, new PageReloadEventArgs(focusedRowHandle, page, size));
                 return;
             }
 
-            if (focused == handle)
+            // 根据焦点行是否改变触发焦点行改变或刷新列表事件
+            if (focusedRow == currentRow)
             {
                 selectDataChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -202,56 +231,10 @@ namespace Insight.Utils.Controls
                 focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
             }
         }
-
-        /// <summary>
-        /// 跳转到指定页
-        /// </summary>
-        private void jumpClick()
-        {
-            txtPage.Visible = true;
-            txtPage.Focus();
-        }
-
-        /// <summary>
-        /// 焦点离开输入框
-        /// </summary>
-        private void pageInputLeave()
-        {
-            txtPage.EditValue = null;
-            txtPage.Visible = false;
-        }
-
-        /// <summary>
-        /// 输入页码
-        /// </summary>
-        /// <param name="e"></param>
-        private void pageInputKeyPress(KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 27)
-            {
-                txtPage.EditValue = null;
-                txtPage.Visible = false;
-                return;
-            }
-
-            if (e.KeyChar != 13) return;
-
-            if (string.IsNullOrEmpty(txtPage.Text)) return;
-
-            var val = int.Parse(txtPage.Text);
-            if (val < 1 || val > totalPages || val == page)
-            {
-                txtPage.EditValue = null;
-                return;
-            }
-
-            txtPage.Visible = false;
-            changePage(val - 1);
-        }
     }
 
     /// <summary>
-    /// 焦点行改变事件参数
+    /// 焦点行改变事件参数类
     /// </summary>
     public class RowHandleEventArgs : EventArgs
     {
@@ -271,7 +254,7 @@ namespace Insight.Utils.Controls
     }
 
     /// <summary>
-    /// 页面重载事件参数
+    /// 页面重载事件参数类
     /// </summary>
     public class PageReloadEventArgs : EventArgs
     {

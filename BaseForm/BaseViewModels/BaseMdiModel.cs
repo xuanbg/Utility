@@ -131,7 +131,7 @@ namespace Insight.Utils.BaseViewModels
             Format.gridFormat(grid);
             if (pageControl == null) return;
 
-            pageControl.currentPageChanged += (sender, args) => call(getDataMethod, new object[] {args.handle});
+            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] {args.handle});
             pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
             pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
         }
