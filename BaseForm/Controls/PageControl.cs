@@ -174,7 +174,9 @@ namespace Insight.Utils.Controls
             var focusedRow = currentRow;
             rows += count;
             currentRow = rows - 1;
+
             refresh(focusedRow);
+            selectDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -185,7 +187,9 @@ namespace Insight.Utils.Controls
         {
             var focusedRow = currentRow;
             rows -= count;
+
             refresh(focusedRow);
+            selectDataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
