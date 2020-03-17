@@ -75,7 +75,7 @@ namespace Insight.Utils.Controls
             set
             {
                 rows = value;
-                refresh(currentRow);
+                refresh(0, false, true);
             }
         }
 
@@ -160,9 +160,10 @@ namespace Insight.Utils.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
+            var focusedRow = currentRow;
             rows += count;
             currentRow = rows - 1;
-            refresh(currentRow);
+            refresh(focusedRow);
         }
 
         /// <summary>
@@ -171,8 +172,9 @@ namespace Insight.Utils.Controls
         /// <param name="count">减少数量，默认1个</param>
         public void removeItems(int count = 1)
         {
+            var focusedRow = currentRow;
             rows -= count;
-            refresh(currentRow);
+            refresh(focusedRow);
         }
 
         /// <summary>
@@ -181,9 +183,9 @@ namespace Insight.Utils.Controls
         /// <param name="page">页码</param>
         private void changePage(int page)
         {
-            var zeroHandle = page * size;
-            currentRow = zeroHandle;
-            refresh(currentRow);
+            currentRow = page * size;
+            currentPage = page;
+            pageReload?.Invoke(this, new PageReloadEventArgs(this.page, size, focusedRowHandle));
         }
 
         /// <summary>
@@ -191,14 +193,12 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="focusedRow">当前焦点行</param>
         /// <param name="reload">是否强制重新加载</param>
-        private void refresh(int focusedRow, bool reload = false)
+        /// <param name="first">是否首次加载</param>
+        private void refresh(int focusedRow, bool reload = false, bool first = false)
         {
-            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {pages +1} 页";
+            labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {pages + 1} 页";
             labRows.Refresh();
             labRows.Focus();
-
-            btnJump.Width = (int) Math.Log10(page) * 7 + 18;
-            btnJump.Text = page.ToString();
 
             // 对当前选中行的异常值进行修正
             if (currentRow >= rows) currentRow = rows - 1;
@@ -213,16 +213,18 @@ namespace Insight.Utils.Controls
             btnNext.Enabled = currentPage < pages;
             btnLast.Enabled = currentPage < pages;
             btnJump.Enabled = pages > 2;
+            btnJump.Width = (int) Math.Log10(page) * 7 + 18;
+            btnJump.Text = page.ToString();
 
             // 根据当前页是否改变或页内容是否需要重新加载触发重新加载事件
-            if (reload || currentPage != cp)
+            if (!first && (reload || currentPage != cp))
             {
-                pageReload?.Invoke(this, new PageReloadEventArgs(focusedRowHandle, page, size));
+                pageReload?.Invoke(this, new PageReloadEventArgs(page, size, focusedRowHandle));
                 return;
             }
 
             // 根据焦点行是否改变触发焦点行改变或刷新列表事件
-            if (focusedRow == currentRow)
+            if (first || focusedRow == currentRow)
             {
                 selectDataChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -259,11 +261,6 @@ namespace Insight.Utils.Controls
     public class PageReloadEventArgs : EventArgs
     {
         /// <summary>
-        /// Row handle
-        /// </summary>
-        public int handle { get; }
-
-        /// <summary>
         /// Current page
         /// </summary>
         public int page { get; }
@@ -273,17 +270,22 @@ namespace Insight.Utils.Controls
         /// </summary>
         public int size { get; }
 
-        /// <summary>
-        /// 构造函数
+         /// <summary>
+        /// Row handle
         /// </summary>
-        /// <param name="handle">Row handle</param>
-        /// <param name="page">Current page</param>
-        /// <param name="size">Page size</param>
-        public PageReloadEventArgs(int handle, int page, int size)
+        public int handle { get; }
+
+         /// <summary>
+         /// 构造函数
+         /// </summary>
+         /// <param name="page">Current page</param>
+         /// <param name="size">Page size</param>
+         /// <param name="handle">Row handle</param>
+         public PageReloadEventArgs(int page, int size, int handle)
         {
-            this.handle = handle;
             this.page = page;
             this.size = size;
+            this.handle = handle;
         }
     }
 }

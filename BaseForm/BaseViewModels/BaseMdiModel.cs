@@ -57,7 +57,7 @@ namespace Insight.Utils.BaseViewModels
             view.Shown += (sender, args) =>
             {
                 view.Refresh();
-                call("loadData", new object[] {0});
+                call("loadData", new object[] {1, 0});
             };
         }
 
@@ -69,14 +69,14 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="getDataMethod">列表获取数据方法名称</param>
         protected void initSearch(ButtonEdit input, SimpleButton search, string getDataMethod = "loadData")
         {
-            search.Click += (sender, args) => call(getDataMethod, new object[] { 0 });
+            search.Click += (sender, args) => call(getDataMethod, new object[] {1, 0});
             input.Properties.Click += (sender, args) => input.EditValue = null;
             input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
 
-                call(getDataMethod, new object[] {0});
+                call(getDataMethod, new object[] {1, 0});
             };
         }
 
@@ -125,7 +125,7 @@ namespace Insight.Utils.BaseViewModels
             Format.gridFormat(grid);
             if (pageControl == null) return;
 
-            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] {args.handle});
+            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] {args.page, args.handle});
             pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
             pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
         }
