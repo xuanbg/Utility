@@ -194,19 +194,31 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="dict"></param>
         protected void switchItemStatus(Dictionary<string, bool> dict)
         {
-            var keys = new[] { "enable", "disable" };
             foreach (var obj in dict)
             {
                 var button = buttons.SingleOrDefault(b => b.Name == obj.Key);
                 if (button == null) continue;
 
-                button.Enabled = obj.Value && (bool)button.Tag;
-                if (keys.All(i => !button.Name.Contains(i))) continue;
+                button.Enabled = (bool) button.Tag && obj.Value;
+            }
 
-                button.Visibility = button.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
+            var buttonList = buttons.Where(i => i.Name == "enable" || i.Name == "disable").ToList();
+            if (buttonList.Count < 2) return;
+
+            var enable = buttonList.First(i => i.Name == "enable");
+            var disable = buttonList.First(i => i.Name == "disable");
+            if (enable.Enabled || disable.Enabled)
+            {
+                enable.Visibility = enable.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
+                disable.Visibility = disable.Enabled ? BarItemVisibility.Always : BarItemVisibility.Never;
+            }
+            else
+            {
+                enable.Visibility = BarItemVisibility.Never;
+                disable.Visibility = BarItemVisibility.Always;
             }
         }
-        
+
         /// <summary>
         /// 显示等待提示
         /// </summary>
