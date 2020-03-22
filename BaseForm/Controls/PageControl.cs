@@ -220,7 +220,7 @@ namespace Insight.Utils.Controls
 
             // 根据当前选中行定位当前页并刷新导航按钮可用状态
             var cp = currentPage;
-            currentPage = currentRow / size;
+            currentPage = size == 0 ? 0 : currentRow / size;
             if (currentPage < 0) currentPage = 0;
 
             btnFirst.Enabled = currentPage > 0;
