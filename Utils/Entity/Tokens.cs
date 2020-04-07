@@ -1,4 +1,6 @@
-﻿namespace Insight.Utils.Entity
+﻿using Insight.Utils.Common;
+
+namespace Insight.Utils.Entity
 {
     public class TokenPackage
     {
@@ -15,17 +17,20 @@
         /// <summary>
         /// Secret过期时间
         /// </summary>
-        public int expire { get; set; }
+        public string userId => Util.deserialize<AccessToken>(Util.base64Decode(accessToken)).userId;
+    }
+
+    public class AccessToken
+    {
+        /// <summary>
+        /// 令牌ID
+        /// </summary>
+        public string id { get; set; }
 
         /// <summary>
-        /// Secret失效时间
+        /// 用户ID
         /// </summary>
-        public int failure { get; set; }
-
-        /// <summary>
-        /// 登录用户信息
-        /// </summary>
-        public UserInfo userInfo { get; set; }
+        public string userId { get; set; }
     }
 
     public class UserInfo
@@ -39,11 +44,6 @@
         /// 租户ID
         /// </summary>
         public string tenantId { get; set; }
-
-        /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public string deptId { get; set; }
 
         /// <summary>
         /// 用户编码

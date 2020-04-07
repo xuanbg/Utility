@@ -11,7 +11,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回是否成功
         /// </summary>
-        public bool success => result.success;
+        public bool success => result.successful;
 
         /// <summary>
         /// 返回的错误代码
@@ -143,10 +143,10 @@ namespace Insight.Utils.Client
         public T request(string url, object body = null, RequestMethod method = RequestMethod.GET)
         {
             var request = new HttpRequest();
-            if (request.send(Setting.gateway + url, method, body))
+            if (request.send(url, method, body))
             {
                 result = Util.deserialize<Result<T>>(request.data);
-                if (result.success) return result.data;
+                if (result.successful) return result.data;
             }
             else
             {
@@ -174,7 +174,7 @@ namespace Insight.Utils.Client
             {
                 var helper = Setting.tokenHelper;
                 var request = new HttpRequest(helper.accessToken);
-                if (request.send(Setting.gateway + url, method, body))
+                if (request.send(url, method, body))
                 {
                     result = Util.deserialize<Result<T>>(request.data);
                     if (result == null)
@@ -183,7 +183,7 @@ namespace Insight.Utils.Client
                         return false;
                     }
 
-                    if (result.success) return true;
+                    if (result.successful) return true;
 
                     switch (code)
                     {

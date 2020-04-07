@@ -10,7 +10,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 结果
         /// </summary>
-        public bool success { get; set; }
+        public bool successful { get; set; }
 
         /// <summary>
         /// 错误代码

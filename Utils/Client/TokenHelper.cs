@@ -34,11 +34,6 @@ namespace Insight.Utils.Client
         public string account { get; set; }
 
         /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public string deptId { get; set; }
-
-        /// <summary>
         /// 生成签名
         /// </summary>
         /// <param name="secret">用户密钥(MD5)</param>
@@ -58,19 +53,15 @@ namespace Insight.Utils.Client
             if (code == null) return false;
 
             var key = Util.hash(sign + code);
-            var body = new LoginDto {appId = appId, tenantId = tenantId, deptId = deptId, account = account, signature = key};
-            var url = "/base/auth/v1.0/tokens";
+            var body = new LoginDto {appId = appId, account = account, signature = key};
+            var url = $"{Setting.authServer}/authapi/v1.0/tokens";
             var client = new HttpClient<TokenPackage>();
-            var data = client.request(url, body, RequestMethod.POST);
+            var data = client.request(url, body);
             if (!client.success) return false;
 
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
-
-            Setting.userId = data.userInfo.id;
-            Setting.userName = data.userInfo.name;
-            Setting.tenantId = data.userInfo.tenantId;
-            Setting.deptId = data.userInfo.deptId;
+            Setting.userId = data.userId;
 
             return true;
         }
@@ -81,7 +72,7 @@ namespace Insight.Utils.Client
         public bool refresTokens()
         {
             accessToken = null;
-            var url = $"{Setting.gateway}/base/auth/v1.0/tokens";
+            var url = $"{Setting.authServer}/authapi/v1.0/tokens";
             var request = new HttpRequest(refreshToken);
             if (!request.send(url, RequestMethod.PUT))
             {
@@ -90,7 +81,7 @@ namespace Insight.Utils.Client
             }
 
             var result = Util.deserialize<Result<TokenPackage>>(request.data);
-            if (!result.success)
+            if (!result.successful)
             {
                 Messages.showError(result.message);
                 return false;
@@ -107,7 +98,7 @@ namespace Insight.Utils.Client
         /// </summary>
         public void deleteToken()
         {
-            var url = "/base/auth/v1.0/tokens";
+            var url = $"{Setting.authServer}/authapi/v1.0/tokens";
             var client = new HttpClient<object>();
             client.commit(url, null, RequestMethod.DELETE);
 
@@ -121,7 +112,7 @@ namespace Insight.Utils.Client
         /// <returns>string Code</returns>
         private string getCode()
         {
-            var url = "/base/auth/v1.0/tokens/codes";
+            var url = $"{Setting.authServer}/authapi/v1.0/tokens/codes";
             var dict = new Dictionary<string, object>{{"account", account}};
             var client = new HttpClient<string>();
 

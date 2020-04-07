@@ -115,7 +115,6 @@ namespace Insight.Utils
             var dict = new Dictionary<string, object>
             {
                 {"templateId", tid},
-                {"deptName", Setting.deptName}
             };
 
             return client.commit(url, dict, RequestMethod.POST);

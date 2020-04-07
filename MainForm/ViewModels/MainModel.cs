@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using DevExpress.XtraBars;
 using DevExpress.XtraNavBar;
 using FastReport.Utils;
 using Insight.Utils.BaseViewModels;
@@ -55,8 +54,6 @@ namespace Insight.Utils.MainForm.ViewModels
         /// </summary>
         public void showMainWindow(List<ModuleDto> navigators)
         {
-            view.StbDept.Caption = Setting.deptName;
-            view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
 
             initNavBar(navigators);

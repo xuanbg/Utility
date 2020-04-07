@@ -15,6 +15,11 @@ namespace Insight.Utils.Client
         public static string gateway = Util.getAppSetting("Gateway");
 
         /// <summary>
+        /// 基础服务地址
+        /// </summary>
+        public static readonly string authServer = Util.getAppSetting("AuthServer");
+
+        /// <summary>
         /// 界面主题样式
         /// </summary>
         public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
@@ -53,21 +58,6 @@ namespace Insight.Utils.Client
         /// 租户ID
         /// </summary>
         public static string tenantId;
-
-        /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public static string deptId;
-
-        /// <summary>
-        /// 登录部门编码
-        /// </summary>
-        public static string deptCode;
-
-        /// <summary>
-        /// 登录部门名称
-        /// </summary>
-        public static string deptName;
 
         /// <summary>
         /// 用户ID

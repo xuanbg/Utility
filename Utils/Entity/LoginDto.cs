@@ -13,11 +13,6 @@
         public string tenantId { get; set; }
 
         /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public string deptId { get; set; }
-
-        /// <summary>
         /// 登录账号
         /// </summary>
         public string account { get; set; }

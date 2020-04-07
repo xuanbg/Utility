@@ -49,7 +49,7 @@ namespace Insight.Utils.MainForm.ViewModels
             if (showDept)
             {
                 view.txtPassWord.Enter += (sender, args) => callback("loadDept", new object[]{account});
-                view.lueDept.EditValueChanged += (sender, args) => deptChanged();
+                view.lueDept.EditValueChanged += (sender, args) => tokenHelper.tenantId = view.lueDept.EditValue?.ToString();
 
                 Format.initTreeListLookUpEdit(view.lueDept, depts);
             }
@@ -141,45 +141,6 @@ namespace Insight.Utils.MainForm.ViewModels
             var node = tree.FindNodeByKeyID(id);
             view.lueDept.Properties.TreeList.FocusedNode = node;
             view.lueDept.EditValue = id;
-        }
-
-        /// <summary>
-        /// 登录部门变化后更新相关信息
-        /// </summary>
-        private void deptChanged()
-        {
-            var id = view.lueDept.EditValue?.ToString();
-            if (string.IsNullOrEmpty(id))
-            {
-                tokenHelper.tenantId = null;
-                tokenHelper.deptId = null;
-
-                return;
-            }
-
-            var node = view.lueDept.Properties.TreeList.FocusedNode;
-            if (node?.HasChildren ?? false)
-            {
-                Messages.showMessage("请选择部门");
-                view.lueDept.EditValue = null;
-
-                return;
-            }
-
-            var dept = depts.Single(i => i.id == id);
-            if (dept.parentId == null)
-            {
-                tokenHelper.tenantId = id;
-                tokenHelper.deptId = null;
-            }
-            else
-            {
-                tokenHelper.tenantId = dept.remark;
-                tokenHelper.deptId = id;
-                Setting.deptCode = dept.code;
-            }
-
-            Setting.deptName = dept.name;
         }
     }
 }

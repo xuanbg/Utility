@@ -45,6 +45,9 @@ namespace Insight.Utils.MainForm
                     case "loadMainWindow":
                         model.hide();
 
+                        var userInfo = dataModel.getUserInfo();
+                        Setting.userName = userInfo.name;
+
                         var navigators = dataModel.getNavigators();
                         mainModel.showMainWindow(navigators);
 

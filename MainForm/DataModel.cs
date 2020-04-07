@@ -6,8 +6,6 @@ namespace Insight.Utils.MainForm
 {
     internal class DataModel
     {
-        private const string authService = "/base/auth";
-        private const string userService = "/base/user";
 
         /// <summary>
         /// 获取导航数据
@@ -15,8 +13,73 @@ namespace Insight.Utils.MainForm
         /// <returns>导航数据集合</returns>
         internal List<ModuleDto> getNavigators()
         {
-            var url = $"{authService}/v1.0/navigators";
-            var client = new HttpClient<List<ModuleDto>>();
+            var list = new List<ModuleDto>
+            {
+                new ModuleDto
+                {
+                    id = "6ceada3d78aa11ea9bf40242ac110005",
+                    type = 1,
+                    index = 1,
+                    name = "客服系统",
+                    moduleInfo = new ModuleInfo {iconUrl = "icons/service.png"}
+                },
+                new ModuleDto
+                {
+                    id = "04dcfb5978ab11ea9bf40242ac110005",
+                    parentId = "6ceada3d78aa11ea9bf40242ac110005",
+                    type = 2,
+                    index = 1,
+                    name = "客服工作台",
+                    moduleInfo = new ModuleInfo{module = "Service", file = "Service.dll", iconUrl = "icons/workbench.png", autoLoad = true}
+                },
+                new ModuleDto
+                {
+                    id = "82e9906a78a911ea9bf40242ac110005",
+                    type = 1,
+                    index = 2,
+                    name = "售后工单",
+                    moduleInfo = new ModuleInfo {iconUrl = "icons/order.png"}
+                },
+                new ModuleDto
+                {
+                    id = "04dcfb1478ab11ea9bf40242ac110005",
+                    parentId = "82e9906a78a911ea9bf40242ac110005",
+                    type = 2,
+                    index = 1,
+                    name = "工单管理",
+                    moduleInfo = new ModuleInfo{module = "Orders", file = "Order.dll", iconUrl = "icons/orders.png", autoLoad = false}
+                },
+                new ModuleDto
+                {
+                    id = "04dcfa3478ab11ea9bf40242ac110005",
+                    parentId = "82e9906a78a911ea9bf40242ac110005",
+                    type = 2,
+                    index = 2,
+                    name = "待处理工单",
+                    moduleInfo = new ModuleInfo{module = "Pends", file = "Order.dll", iconUrl = "icons/pending.png", autoLoad = false}
+                },
+                new ModuleDto
+                {
+                    id = "04dcfacd78ab11ea9bf40242ac110005",
+                    parentId = "82e9906a78a911ea9bf40242ac110005",
+                    type = 2,
+                    index = 3,
+                    name = "处理中工单",
+                    moduleInfo = new ModuleInfo{module = "Process", file = "Order.dll", iconUrl = "icons/processing.png", autoLoad = false}
+                }
+            };
+
+            return list;
+        }
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <returns>用户信息</returns>
+        public UserInfo getUserInfo()
+        {
+            var url = $"{Setting.authServer}/userapi/v1.0/users/myself";
+            var client = new HttpClient<UserInfo>();
 
             return client.getData(url);
         }
@@ -28,7 +91,7 @@ namespace Insight.Utils.MainForm
         /// <returns>可登录部门列表</returns>
         internal List<TreeLookUpMember> getDepts(string account)
         {
-            var url = $"{authService}/v1.0/departments";
+            var url = $"{Setting.authServer}/userapi/v1.0/users/{account}/depts";
             var dict = new Dictionary<string, object> {{"account", account}};
             var client = new HttpClient<List<TreeLookUpMember>>();
 
@@ -39,11 +102,11 @@ namespace Insight.Utils.MainForm
         /// 修改密码
         /// </summary>
         /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <returns>是否成功</returns>
         internal bool changPassword(PasswordDto dto)
         {
             const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
-            var url = $"{userService}/v1.0/users/password";
+            var url = $"{Setting.authServer}/userapi/v1.0/users/{Setting.userId}/signature";
             var client = new HttpClient<object>();
 
             return client.put(url, dto, msg);
