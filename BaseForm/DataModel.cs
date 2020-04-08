@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
@@ -7,18 +8,118 @@ namespace Insight.Utils
 {
     internal class DataModel
     {
-        private const string authService = "/base/auth";
 
         /// <summary>
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
-        internal IEnumerable<FunctionDto> getActions(string moduleId)
+        internal List<FunctionDto> getActions(string moduleId)
         {
-            var url = $"{authService}/v1.0/navigators/{moduleId}/functions";
-            var client = new HttpClient<List<FunctionDto>>();
+            var list = new List<FunctionDto>
+            {
+                new FunctionDto
+                {
+                    id = "a2079226793b11ea9bf40242ac110005",
+                    navId = "04dcfb5978ab11ea9bf40242ac110005",
+                    type = 0,
+                    index = 1,
+                    name = "刷新",
+                    funcInfo = new FuncInfo{method = "refresh", iconUrl = "icons/refresh.png", beginGroup = true, hideText = true},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a2079314793b11ea9bf40242ac110005",
+                    navId = "04dcfb5978ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 2,
+                    name = "对话",
+                    funcInfo = new FuncInfo{method = "dialogue", iconUrl = "icons/dialogue.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a2079369793b11ea9bf40242ac110005",
+                    navId = "04dcfb1478ab11ea9bf40242ac110005",
+                    type = 0,
+                    index = 1,
+                    name = "刷新",
+                    funcInfo = new FuncInfo{method = "refresh", iconUrl = "icons/refresh.png", beginGroup = true, hideText = true},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a20793bf793b11ea9bf40242ac110005",
+                    navId = "04dcfb1478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 2,
+                    name = "查看详情",
+                    funcInfo = new FuncInfo{method = "detail", iconUrl = "icons/detail.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a2079415793b11ea9bf40242ac110005",
+                    navId = "04dcfb1478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 3,
+                    name = "联系客户",
+                    funcInfo = new FuncInfo{method = "contact", iconUrl = "icons/dialogue.png", beginGroup = false, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a2079465793b11ea9bf40242ac110005",
+                    navId = "04dcfb1478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 4,
+                    name = "更新运单号",
+                    funcInfo = new FuncInfo{method = "update", iconUrl = "icons/update.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a20794c0793b11ea9bf40242ac110005",
+                    navId = "04dcfb1478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 5,
+                    name = "确认收货",
+                    funcInfo = new FuncInfo{method = "confirm", iconUrl = "icons/audit.png", beginGroup = false, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a207950f793b11ea9bf40242ac110005",
+                    navId = "04dcfa3478ab11ea9bf40242ac110005",
+                    type = 0,
+                    index = 1,
+                    name = "刷新",
+                    funcInfo = new FuncInfo{method = "refresh", iconUrl = "icons/refresh.png", beginGroup = true, hideText = true},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a207955e793b11ea9bf40242ac110005",
+                    navId = "04dcfa3478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 2,
+                    name = "查看详情",
+                    funcInfo = new FuncInfo{method = "detail", iconUrl = "icons/detail.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
+                    id = "a207959b793b11ea9bf40242ac110005",
+                    navId = "04dcfa3478ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 3,
+                    name = "联系客户",
+                    funcInfo = new FuncInfo{method = "contact", iconUrl = "icons/dialogue.png", beginGroup = false, hideText = false},
+                    permit = true
+                }
+            };
 
-            return client.getData(url);
+            return list.Where(i => i.navId == moduleId).ToList();
         }
 
         /// <summary>

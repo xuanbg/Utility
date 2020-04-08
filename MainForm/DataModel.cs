@@ -30,7 +30,7 @@ namespace Insight.Utils.MainForm
                     type = 2,
                     index = 1,
                     name = "客服工作台",
-                    moduleInfo = new ModuleInfo{module = "Service", file = "Service.dll", iconUrl = "icons/workbench.png", autoLoad = true}
+                    moduleInfo = new ModuleInfo{module = "Workbench", file = "Service.dll", iconUrl = "icons/workbench.png", autoLoad = true}
                 },
                 new ModuleDto
                 {
@@ -47,7 +47,7 @@ namespace Insight.Utils.MainForm
                     type = 2,
                     index = 1,
                     name = "工单管理",
-                    moduleInfo = new ModuleInfo{module = "Orders", file = "Order.dll", iconUrl = "icons/orders.png", autoLoad = false}
+                    moduleInfo = new ModuleInfo{module = "Orders", file = "AfterSale.dll", iconUrl = "icons/orders.png", autoLoad = false}
                 },
                 new ModuleDto
                 {
@@ -56,16 +56,7 @@ namespace Insight.Utils.MainForm
                     type = 2,
                     index = 2,
                     name = "待处理工单",
-                    moduleInfo = new ModuleInfo{module = "Pends", file = "Order.dll", iconUrl = "icons/pending.png", autoLoad = false}
-                },
-                new ModuleDto
-                {
-                    id = "04dcfacd78ab11ea9bf40242ac110005",
-                    parentId = "82e9906a78a911ea9bf40242ac110005",
-                    type = 2,
-                    index = 3,
-                    name = "处理中工单",
-                    moduleInfo = new ModuleInfo{module = "Process", file = "Order.dll", iconUrl = "icons/processing.png", autoLoad = false}
+                    moduleInfo = new ModuleInfo{module = "Pends", file = "AfterSale.dll", iconUrl = "icons/pending.png", autoLoad = false}
                 }
             };
 

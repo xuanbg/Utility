@@ -71,6 +71,12 @@
     <Compile Include="BaseForms\BaseDialog.Designer.cs">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseForms\BaseMdiDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseForms\BaseMdiDialog.Designer.cs">
+      <DependentUpon>BaseMdiDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="BaseForms\BaseMdi.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +89,7 @@
     <Compile Include="BaseForms\BaseWizard.Designer.cs">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
@@ -115,6 +122,9 @@
   <ItemGroup>
     <EmbeddedResource Include="BaseForms\BaseDialog.resx">
       <DependentUpon>BaseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BaseForms\BaseMdiDialog.resx">
+      <DependentUpon>BaseMdiDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BaseForms\BaseMdi.resx">
       <DependentUpon>BaseMdi.cs</DependentUpon>
