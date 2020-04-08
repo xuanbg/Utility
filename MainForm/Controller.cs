@@ -48,6 +48,9 @@ namespace Insight.Utils.MainForm
                         var userInfo = dataModel.getUserInfo();
                         Setting.userName = userInfo.name;
 
+                        var shopInfo = dataModel.getShopInfo();
+                        Setting.tenantId = shopInfo.supplierId;
+
                         var navigators = dataModel.getNavigators();
                         mainModel.showMainWindow(navigators);
 

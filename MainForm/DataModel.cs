@@ -76,6 +76,18 @@ namespace Insight.Utils.MainForm
         }
 
         /// <summary>
+        /// 获取店铺信息
+        /// </summary>
+        /// <returns>店铺信息</returns>
+        public ShopInfo getShopInfo()
+        {
+            const string url = "http://uwaapi.yindianmall.cn/member_ship/account/findUserInfo";
+            var client = new HttpClient<ShopInfo>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
         /// 获取可登录部门列表
         /// </summary>
         /// <param name="account">登录账号</param>
@@ -128,5 +140,11 @@ namespace Insight.Utils.MainForm
 
             return client.getData(url);
         }
+    }
+
+    public class ShopInfo
+    {
+        public string id { get; set; }
+        public string supplierId { get; set; }
     }
 }
