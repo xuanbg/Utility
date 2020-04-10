@@ -91,6 +91,30 @@
     </Compile>
     <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
+    <Compile Include="Controls\ChatForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ChatForm.Designer.cs">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MessageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MessageControl.Designer.cs">
+      <DependentUpon>MessageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MessageList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\MessageList.Designer.cs">
+      <DependentUpon>MessageList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TimeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TimeControl.Designer.cs">
+      <DependentUpon>TimeControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
     <Compile Include="Views\Waiting.cs">
@@ -131,6 +155,19 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ChatForm.resx">
+      <DependentUpon>ChatForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MessageControl.resx">
+      <DependentUpon>MessageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\MessageList.resx">
+      <DependentUpon>MessageList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TimeControl.resx">
+      <DependentUpon>TimeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Waiting.resx">
       <DependentUpon>Waiting.cs</DependentUpon>

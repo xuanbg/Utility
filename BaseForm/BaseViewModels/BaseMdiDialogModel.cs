@@ -1,10 +1,7 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using DevExpress.XtraGrid.Views.Grid;
 using Insight.Utils.BaseForms;
-using Insight.Utils.Common;
 using Insight.Utils.Controls;
-using Insight.Utils.Entity;
 
 namespace Insight.Utils.BaseViewModels
 {
@@ -15,27 +12,13 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         /// <param name="title">对话框标题</param>
         /// <param name="item">对话框数据对象</param>
-        protected BaseMdiDialogModel(string title, T item) : base(title)
+        public BaseMdiDialogModel(string title, T item) : base(title)
         {
             this.item = item;
             view.MdiParent = Application.OpenForms["MainWindow"];
             view.Name = title;
         }
-
-        /// <summary>
-        /// 初始化MDI窗体
-        /// </summary>
-        /// <param name="module">模块信息</param>
-        public void initMdiView(ModuleDto module)
-        {
-            var icon = Util.getImage(module.moduleInfo.iconUrl);
-            view.ControlBox = module.index > 0;
-            view.MdiParent = Application.OpenForms["MainWindow"];
-            view.Icon = Icon.FromHandle(new Bitmap(icon).GetHicon());
-            view.Name = module.moduleInfo.module;
-            view.Text = module.name;
-        }
-
+        
         /// <summary>
         /// 初始化列表控件
         /// </summary>
@@ -44,7 +27,7 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="pageControl">列表分页控件</param>
         /// <param name="getDataMethod">列表获取数据方法名称</param>
-        protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
+        public void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
         {
             grid.FocusedRowObjectChanged += (sender, args) =>
             {
