@@ -169,6 +169,7 @@
             this.mmeInput.Name = "mmeInput";
             this.mmeInput.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mmeInput.Properties.Appearance.Options.UseFont = true;
+            this.mmeInput.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.mmeInput.Size = new System.Drawing.Size(917, 99);
             this.mmeInput.TabIndex = 1;
             // 
