@@ -7,8 +7,6 @@ namespace Insight.Utils.Controls
 {
     public partial class ChatForm : XtraUserControl
     {
-        private NimUser user;
-
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
         /// </summary>  
@@ -22,42 +20,14 @@ namespace Insight.Utils.Controls
         public delegate void MessageSendHandle(object sender, MessageEventArgs e);
 
         /// <summary>
-        /// 用户云信ID
+        /// 发送者云信ID
         /// </summary>
-        public string accid { private get; set; }
+        public string from { private get; set; }
 
         /// <summary>
-        /// 设置对方用户信息
+        /// 接收者云信ID
         /// </summary>
-        public NimUser userInfo
-        {
-            set
-            {
-                user = value;
-                if (!string.IsNullOrEmpty(user.icon))
-                {
-                    picHeadImg.EditValue = user.icon;
-                    mlcMessage.target = picHeadImg.Image;
-                }
-
-                labSign.Text = user.sign;
-                sbeGender.ImageIndex = user.gender;
-                labName.Text = user.name;
-            }
-        }
-
-        /// <summary>
-        /// 设置在线状态
-        /// </summary>
-        public string status
-        {
-            set
-            {
-                var online = value == "在线";
-                sbeGender.Enabled = online;
-                labName.Enabled = online;
-            }
-        }
+        public string to { private get; set; }
 
         /// <summary>
         /// 构造方法
@@ -118,8 +88,8 @@ namespace Insight.Utils.Controls
             var message = new NimMessage
             {
                 id = Util.newId("N"),
-                from = accid,
-                to = user.accid,
+                from = from,
+                to = to,
                 type = 0,
                 direction = 0,
                 body = new TextMessage {msg = msg}

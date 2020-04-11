@@ -33,7 +33,7 @@ namespace Insight.Utils
                     navId = "04dcfb5978ab11ea9bf40242ac110005",
                     type = 1,
                     index = 2,
-                    name = "对话",
+                    name = "打开会话",
                     funcInfo = new FuncInfo{method = "dialogue", iconUrl = "icons/dialogue.png", beginGroup = true, hideText = false},
                     permit = true
                 },

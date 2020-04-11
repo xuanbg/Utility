@@ -92,9 +92,8 @@ namespace Insight.Utils.Controls
             // 发送气泡靠右
             if (_message.direction == 0)
             {
+                x = Width - pceText.Width - 70;
                 pceText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-
-                x = _width - pceText.Width + 110;
             }
 
             pceText.Location = new Point(x, y);
@@ -122,7 +121,7 @@ namespace Insight.Utils.Controls
             // 发送图片靠右
             if (_message.direction == 0)
             {
-                x = _width - w + 110;
+                x = Width - pceText.Width - 70;
                 picImage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             }
 
