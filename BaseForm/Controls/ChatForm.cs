@@ -99,6 +99,21 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
+        /// 发送文本消息
+        /// </summary>
+        /// <param name="msg">文字内容</param>
+        private void sendTextMessage(string msg)
+        {
+            if (string.IsNullOrEmpty(msg)) return;
+
+            mmeInput.EditValue = null;
+            mmeInput.Focus();
+
+            var body = new TextMessage { msg = msg };
+            sendMessage(0, body);
+        }
+
+        /// <summary>
         /// 发送文件
         /// </summary>
         /// <param name="fileName"></param>
@@ -114,7 +129,7 @@ namespace Insight.Utils.Controls
                 url = "",
                 size = 0
             };
-            sendMessage(body);
+            sendMessage(6, body);
         }
 
         /// <summary>
@@ -135,36 +150,22 @@ namespace Insight.Utils.Controls
                 w = 1654,
                 h = 2339
             };
-            sendMessage(body);
-        }
-
-        /// <summary>
-        /// 发送文本消息
-        /// </summary>
-        /// <param name="msg">文字内容</param>
-        private void sendTextMessage(string msg)
-        {
-            if (string.IsNullOrEmpty(msg)) return;
-
-            mmeInput.EditValue = null;
-            mmeInput.Focus();
-
-            var body = new TextMessage {msg = msg};
-            sendMessage(body);
+            sendMessage(1, body);
         }
 
         /// <summary>
         /// 发送消息
         /// </summary>
+        /// <param name="type">消息类型</param>
         /// <param name="body">消息体</param>
-        private void sendMessage(object body)
+        private void sendMessage(int type, object body)
         {
             var message = new NimMessage
             {
                 id = Util.newId("N"),
                 from = from,
                 to = to,
-                type = 0,
+                type = type,
                 direction = 0,
                 body = body
             };
