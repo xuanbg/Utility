@@ -16,7 +16,7 @@ namespace Insight.Utils.Client
         /// <summary>
         /// 返回的错误代码
         /// </summary>
-        public string code => result.code;
+        public int code => result.code;
 
         /// <summary>
         /// 返回的错误消息
@@ -187,13 +187,13 @@ namespace Insight.Utils.Client
 
                     switch (code)
                     {
-                        case "422" when !helper.refresTokens():
+                        case 422 when !helper.refresTokens():
                             return false;
-                        case "422":
+                        case 422:
                             continue;
-                        case "421" when !helper.getTokens():
+                        case 421 when !helper.getTokens():
                             return false;
-                        case "421":
+                        case 421:
                             continue;
                     }
                 }

@@ -15,7 +15,7 @@ namespace Insight.Utils.Entity
         /// <summary>
         /// 错误代码
         /// </summary>
-        public string code { get; set; }
+        public int code { get; set; }
 
         /// <summary>
         /// 错误消息
@@ -42,7 +42,7 @@ namespace Insight.Utils.Entity
         /// </summary>
         public Result()
         {
-            code = "500";
+            code = 500;
             message = "未知错误";
         }
     }
