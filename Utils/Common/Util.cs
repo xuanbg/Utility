@@ -25,6 +25,31 @@ namespace Insight.Utils.Common
         #region 常用方法
 
         /// <summary>
+        /// 时间戳转DateTime
+        /// </summary>
+        /// <param name="ts">时间戳</param>
+        /// <returns>DateTime</returns>
+        public static DateTime getDateTime(long ts)
+        {
+            var dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            var toNow = new TimeSpan(ts * 10000000);
+
+            return dtStart.Add(toNow);
+        }
+
+        /// <summary>
+        /// DateTime转时间戳
+        /// </summary>
+        /// <param name="time">DateTime</param>
+        /// <returns>时间戳</returns>
+        public static long getTimeStamp(DateTime time)
+        {
+            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+
+            return Convert.ToInt64((time - startTime).TotalSeconds);
+        }
+
+        /// <summary>
         /// 生成ID
         /// </summary>
         /// <param name="format">输出格式(N:无分隔符;默认D:有分隔符)</param>

@@ -40,17 +40,16 @@
             this.labTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labTime.Location = new System.Drawing.Point(0, 0);
             this.labTime.Name = "labTime";
-            this.labTime.Size = new System.Drawing.Size(400, 25);
+            this.labTime.Size = new System.Drawing.Size(300, 20);
             this.labTime.TabIndex = 0;
-            this.labTime.Text = "2020年04月09日 13：30：32";
             // 
             // TimeControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.labTime);
             this.Name = "TimeControl";
-            this.Size = new System.Drawing.Size(400, 25);
+            this.Size = new System.Drawing.Size(300, 20);
             this.ResumeLayout(false);
 
         }

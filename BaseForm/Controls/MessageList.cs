@@ -30,8 +30,6 @@ namespace Insight.Utils.Controls
         public MessageList()
         {
             InitializeComponent();
-
-            messageTime = DateTime.Now;
         }
 
         /// <summary>
@@ -92,31 +90,57 @@ namespace Insight.Utils.Controls
         /// <param name="message">云信IM点对点消息</param>
         private void addControl(NimMessage message)
         {
-            var ts = DateTime.Now - messageTime;
-            if (ts.Minutes > 10)
+            var time = Util.getDateTime(message.timetag);
+            if (messageTime == DateTime.MinValue)
             {
-                messageTime = DateTime.Now;
+                messageTime = time;
+                addTime(time);
             }
+
+            var ts = time - messageTime;
+            if (ts.TotalMinutes > 10) addTime(time);
 
             var head = message.direction == 0 ? me : target;
             var control = new MessageControl
             {
-                Name = message.id,
-                width = Width - 20,
+                width = pceList.Width,
                 message = message,
                 headImage = head,
+                Name = message.id,
                 Location = new Point(0, height),
                 Padding = new Padding(0),
-                MinimumSize = new Size(Width - 20, 70),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
             pceList.Controls.Add(control);
 
             height = height + control.Size.Height;
             pceList.Height = height;
-            sceMessage.VerticalScroll.Value = height;
+            sceMessage.ScrollControlIntoView(control);
 
             Refresh();
+        }
+
+        /// <summary>
+        /// 构造并添加时间控件到消息窗口
+        /// </summary>
+        /// <param name="time"></param>
+        private void addTime(DateTime time)
+        {
+            var timeControl = new TimeControl
+            {
+                time = time,
+                Name = Util.newId("N"),
+                Size = new Size(pceList.Width, 20),
+                Location = new Point(0, height),
+                Padding = new Padding(0),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
+            pceList.Controls.Add(timeControl);
+
+            height = height + timeControl.Size.Height;
+            pceList.Height = height;
+            messageTime = time;
         }
     }
 }

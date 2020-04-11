@@ -14,7 +14,7 @@ namespace Insight.Utils.Controls
         {
             set
             {
-                _width = value - 140;
+                _width = (value > 1000 ? 1000 : value) - 180;
                 Width = value;
             }
         }
@@ -94,7 +94,7 @@ namespace Insight.Utils.Controls
             {
                 pceText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
-                x = _width - pceText.Width + 70;
+                x = _width - pceText.Width + 110;
             }
 
             pceText.Location = new Point(x, y);
@@ -107,6 +107,7 @@ namespace Insight.Utils.Controls
         private void showImage()
         {
             var msg = Util.convertTo<ImageMessage>(_message.body);
+            var x = 70;
 
             // 计算图片宽高
             var w = msg.w < _width ? msg.w : _width;
@@ -121,11 +122,11 @@ namespace Insight.Utils.Controls
             // 发送图片靠右
             if (_message.direction == 0)
             {
-                var x = _width - w + 70;
-                picImage.Location = new Point(x, 0);
+                x = _width - w + 110;
                 picImage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             }
 
+            picImage.Location = new Point(x, 5);
             picImage.Visible = true;
         }
     }
