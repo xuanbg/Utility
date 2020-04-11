@@ -39,6 +39,16 @@ namespace Insight.Utils
                 },
                 new FunctionDto
                 {
+                    id = "a2079324793b11ea9bf40242ac110005",
+                    navId = "04dcfb5978ab11ea9bf40242ac110005",
+                    type = 1,
+                    index = 3,
+                    name = "快速回复设置",
+                    funcInfo = new FuncInfo{method = "setting", iconUrl = "icons/set.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
                     id = "a2079369793b11ea9bf40242ac110005",
                     navId = "04dcfb1478ab11ea9bf40242ac110005",
                     type = 0,

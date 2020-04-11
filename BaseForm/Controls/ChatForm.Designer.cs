@@ -44,6 +44,8 @@
             this.mlcMessage = new Insight.Utils.Controls.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
+            this.sbeReply = new DevExpress.XtraEditors.SimpleButton();
+            this.opdMessage = new DevExpress.XtraEditors.XtraOpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).BeginInit();
             this.pceInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mmeInput.Properties)).BeginInit();
@@ -83,11 +85,11 @@
             this.labelControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Location = new System.Drawing.Point(716, 13);
+            this.labelControl1.Location = new System.Drawing.Point(728, 13);
             this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(202, 14);
+            this.labelControl1.Size = new System.Drawing.Size(190, 14);
             this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "按 Enter 换行，Ctrl-Enter 发送消息。";
+            this.labelControl1.Text = "按 Enter 换行，Ctrl-Enter 发送消息";
             // 
             // sbeSend
             // 
@@ -104,6 +106,7 @@
             // 
             // pceTools
             // 
+            this.pceTools.Controls.Add(this.sbeReply);
             this.pceTools.Controls.Add(this.labelControl1);
             this.pceTools.Controls.Add(this.sbeEmoji);
             this.pceTools.Controls.Add(this.sbeScreenshot);
@@ -122,8 +125,9 @@
             this.sbeEmoji.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeEmoji.ImageOptions.Image")));
             this.sbeEmoji.Location = new System.Drawing.Point(380, 2);
             this.sbeEmoji.Name = "sbeEmoji";
-            this.sbeEmoji.Size = new System.Drawing.Size(37, 37);
+            this.sbeEmoji.Size = new System.Drawing.Size(90, 37);
             this.sbeEmoji.TabIndex = 0;
+            this.sbeEmoji.Text = "表情符号";
             // 
             // sbeScreenshot
             // 
@@ -237,6 +241,20 @@
             this.pceSpei.Size = new System.Drawing.Size(923, 5);
             this.pceSpei.TabIndex = 0;
             // 
+            // sbeReply
+            // 
+            this.sbeReply.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.sbeReply.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton1.ImageOptions.Image")));
+            this.sbeReply.Location = new System.Drawing.Point(475, 2);
+            this.sbeReply.Name = "sbeReply";
+            this.sbeReply.Size = new System.Drawing.Size(90, 37);
+            this.sbeReply.TabIndex = 0;
+            this.sbeReply.Text = "快速回复";
+            // 
+            // opdMessage
+            // 
+            this.opdMessage.FileName = "xtraOpenFileDialog1";
+            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -277,5 +295,7 @@
         private MessageList mlcMessage;
         private DevExpress.XtraEditors.PanelControl pceBotton;
         private DevExpress.XtraEditors.PanelControl pceSpei;
+        private DevExpress.XtraEditors.SimpleButton sbeReply;
+        private DevExpress.XtraEditors.XtraOpenFileDialog opdMessage;
     }
 }
