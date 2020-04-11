@@ -36,7 +36,8 @@ namespace Insight.Utils.Controls
         {
             InitializeComponent();
 
-            mmeInput.Focus();
+            sbeFile.Click += (sender, args) => openFile(0);
+            sbeImage.Click += (sender, args) => openFile(1);
             sbeSend.Click += (sender, args) => sendTextMessage(mmeInput.Text);
             mmeInput.KeyDown += (sender, args) =>
             {
@@ -50,6 +51,8 @@ namespace Insight.Utils.Controls
 
                 mmeInput.EditValue = null;
             };
+
+            mmeInput.Focus();
         }
 
         /// <summary>
@@ -75,7 +78,68 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 发送消息
+        /// 打开文件
+        /// </summary>
+        /// <param name="type">文件类型</param>
+        private void openFile(int type)
+        {
+            ofdMessage.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            ofdMessage.Filter = type == 1 ? "图片|*.jpg;*.jpeg;*.png" : "All files|*.*";
+            if (ofdMessage.ShowDialog() != DialogResult.OK) return;
+
+            var fileName = ofdMessage.FileName;
+            if (type == 0)
+            {
+                sendFile(fileName);
+            }
+            else
+            {
+                sendPicture(fileName);
+            }
+        }
+
+        /// <summary>
+        /// 发送文件
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void sendFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return;
+
+            var body = new FileMessage
+            {
+                name = fileName,
+                ext = "",
+                md5 = "",
+                url = "",
+                size = 0
+            };
+            sendMessage(body);
+        }
+
+        /// <summary>
+        /// 发送图片
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void sendPicture(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return;
+
+            var body = new FileMessage
+            {
+                name = fileName,
+                ext = "png",
+                md5 = "",
+                url = "https://image.pro.io.yitu8.cn/appstore/baoche.png",
+                size = 16874,
+                w = 1654,
+                h = 2339
+            };
+            sendMessage(body);
+        }
+
+        /// <summary>
+        /// 发送文本消息
         /// </summary>
         /// <param name="msg">文字内容</param>
         private void sendTextMessage(string msg)
@@ -85,6 +149,16 @@ namespace Insight.Utils.Controls
             mmeInput.EditValue = null;
             mmeInput.Focus();
 
+            var body = new TextMessage {msg = msg};
+            sendMessage(body);
+        }
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="body">消息体</param>
+        private void sendMessage(object body)
+        {
             var message = new NimMessage
             {
                 id = Util.newId("N"),
@@ -92,7 +166,7 @@ namespace Insight.Utils.Controls
                 to = to,
                 type = 0,
                 direction = 0,
-                body = new TextMessage {msg = msg}
+                body = body
             };
             mlcMessage.addMessage(message);
 

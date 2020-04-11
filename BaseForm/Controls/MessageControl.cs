@@ -105,7 +105,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         private void showImage()
         {
-            var msg = Util.convertTo<ImageMessage>(_message.body);
+            var msg = Util.convertTo<FileMessage>(_message.body);
             var x = 70;
 
             // 计算图片宽高
@@ -186,12 +186,17 @@ namespace Insight.Utils.Controls
         public string msg { get; set; }
     }
 
-    public class ImageMessage
+    public class FileMessage
     {
         /// <summary>
         /// 图片名称
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// 文件扩展名
+        /// </summary>
+        public string ext { get; set; }
 
         /// <summary>
         /// 文件MD5值
@@ -202,11 +207,6 @@ namespace Insight.Utils.Controls
         /// 图片URL
         /// </summary>
         public string url { get; set; }
-
-        /// <summary>
-        /// 文件扩展名
-        /// </summary>
-        public string ext { get; set; }
 
         /// <summary>
         /// 宽度

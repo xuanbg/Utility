@@ -31,9 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChatForm));
             this.pceInput = new DevExpress.XtraEditors.PanelControl();
             this.mmeInput = new DevExpress.XtraEditors.MemoEdit();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.labPrompt = new DevExpress.XtraEditors.LabelControl();
             this.sbeSend = new DevExpress.XtraEditors.SimpleButton();
             this.pceTools = new DevExpress.XtraEditors.PanelControl();
+            this.sbeReply = new DevExpress.XtraEditors.SimpleButton();
             this.sbeEmoji = new DevExpress.XtraEditors.SimpleButton();
             this.sbeScreenshot = new DevExpress.XtraEditors.SimpleButton();
             this.sbeFile = new DevExpress.XtraEditors.SimpleButton();
@@ -44,8 +45,7 @@
             this.mlcMessage = new Insight.Utils.Controls.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
-            this.sbeReply = new DevExpress.XtraEditors.SimpleButton();
-            this.opdMessage = new DevExpress.XtraEditors.XtraOpenFileDialog();
+            this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).BeginInit();
             this.pceInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mmeInput.Properties)).BeginInit();
@@ -65,6 +65,7 @@
             this.pceInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceInput.Location = new System.Drawing.Point(0, 45);
             this.pceInput.Name = "pceInput";
+            this.pceInput.Padding = new System.Windows.Forms.Padding(2);
             this.pceInput.Size = new System.Drawing.Size(838, 115);
             this.pceInput.TabIndex = 0;
             // 
@@ -72,24 +73,24 @@
             // 
             this.mmeInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mmeInput.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.mmeInput.Location = new System.Drawing.Point(2, 2);
+            this.mmeInput.Location = new System.Drawing.Point(4, 4);
             this.mmeInput.Name = "mmeInput";
             this.mmeInput.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mmeInput.Properties.Appearance.Options.UseFont = true;
             this.mmeInput.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.mmeInput.Size = new System.Drawing.Size(834, 111);
+            this.mmeInput.Size = new System.Drawing.Size(830, 107);
             this.mmeInput.TabIndex = 1;
             // 
-            // labelControl1
+            // labPrompt
             // 
-            this.labelControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Location = new System.Drawing.Point(728, 13);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(190, 14);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "按 Enter 换行，Ctrl-Enter 发送消息";
+            this.labPrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labPrompt.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labPrompt.Appearance.Options.UseFont = true;
+            this.labPrompt.Location = new System.Drawing.Point(744, 13);
+            this.labPrompt.Name = "labPrompt";
+            this.labPrompt.Size = new System.Drawing.Size(174, 14);
+            this.labPrompt.TabIndex = 0;
+            this.labPrompt.Text = "Enter 换行，Ctrl-Enter 发送消息";
             // 
             // sbeSend
             // 
@@ -107,7 +108,7 @@
             // pceTools
             // 
             this.pceTools.Controls.Add(this.sbeReply);
-            this.pceTools.Controls.Add(this.labelControl1);
+            this.pceTools.Controls.Add(this.labPrompt);
             this.pceTools.Controls.Add(this.sbeEmoji);
             this.pceTools.Controls.Add(this.sbeScreenshot);
             this.pceTools.Controls.Add(this.sbeFile);
@@ -118,6 +119,16 @@
             this.pceTools.Name = "pceTools";
             this.pceTools.Size = new System.Drawing.Size(923, 40);
             this.pceTools.TabIndex = 0;
+            // 
+            // sbeReply
+            // 
+            this.sbeReply.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.sbeReply.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeReply.ImageOptions.Image")));
+            this.sbeReply.Location = new System.Drawing.Point(475, 2);
+            this.sbeReply.Name = "sbeReply";
+            this.sbeReply.Size = new System.Drawing.Size(90, 37);
+            this.sbeReply.TabIndex = 0;
+            this.sbeReply.Text = "快速回复";
             // 
             // sbeEmoji
             // 
@@ -241,20 +252,6 @@
             this.pceSpei.Size = new System.Drawing.Size(923, 5);
             this.pceSpei.TabIndex = 0;
             // 
-            // sbeReply
-            // 
-            this.sbeReply.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.sbeReply.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton1.ImageOptions.Image")));
-            this.sbeReply.Location = new System.Drawing.Point(475, 2);
-            this.sbeReply.Name = "sbeReply";
-            this.sbeReply.Size = new System.Drawing.Size(90, 37);
-            this.sbeReply.TabIndex = 0;
-            this.sbeReply.Text = "快速回复";
-            // 
-            // opdMessage
-            // 
-            this.opdMessage.FileName = "xtraOpenFileDialog1";
-            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -282,7 +279,7 @@
         #endregion
         private DevExpress.XtraEditors.PanelControl pceInput;
         private DevExpress.XtraEditors.MemoEdit mmeInput;
-        private DevExpress.XtraEditors.LabelControl labelControl1;
+        private DevExpress.XtraEditors.LabelControl labPrompt;
         private DevExpress.XtraEditors.SimpleButton sbeSend;
         private DevExpress.XtraEditors.PanelControl pceTools;
         private DevExpress.XtraEditors.SimpleButton sbeEmoji;
@@ -296,6 +293,6 @@
         private DevExpress.XtraEditors.PanelControl pceBotton;
         private DevExpress.XtraEditors.PanelControl pceSpei;
         private DevExpress.XtraEditors.SimpleButton sbeReply;
-        private DevExpress.XtraEditors.XtraOpenFileDialog opdMessage;
+        private System.Windows.Forms.OpenFileDialog ofdMessage;
     }
 }
