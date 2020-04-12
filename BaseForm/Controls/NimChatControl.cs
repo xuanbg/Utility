@@ -96,15 +96,21 @@ namespace Insight.Utils.Controls
                         if (!string.IsNullOrEmpty(headUrl))
                         {
                             myHead = NimUtil.getHeadImage(headUrl);
+                            mlcMessage.me = myHead;
+
                             return;
                         }
                     }
 
                     myHead = Util.getImage("icons/head.png");
+                    mlcMessage.me = myHead;
                 });
             }
+            else
+            {
+                mlcMessage.me = myHead;
 
-            mlcMessage.me = myHead;
+            }
         }
 
         /// <summary>
