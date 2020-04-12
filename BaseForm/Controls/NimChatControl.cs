@@ -33,7 +33,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 发送者头像
         /// </summary>
-        public Image myHead { private get; set; } = Util.getImage("icons/head.png");
+        public Image myHead { private get; set; }
 
         /// <summary>
         /// 接收者云信ID
@@ -71,17 +71,40 @@ namespace Insight.Utils.Controls
         /// </summary>
         public void init()
         {
-            mlcMessage.me = myHead;
-            mlcMessage.target = Util.getImage("icons/head.png");
             UserAPI.GetUserNameCard(new List<string> { targetId }, ret =>
             {
-                if (ret == null || !ret.Any()) return;
+                if (ret != null && ret.Any())
+                {
+                    var headUrl = ret[0].IconUrl;
+                    if (!string.IsNullOrEmpty(headUrl))
+                    {
+                        mlcMessage.target = NimUtil.getHeadImage(headUrl);
+                        return;
+                    }
+                }
 
-                var headUrl = ret[0].IconUrl;
-                if (string.IsNullOrEmpty(headUrl)) return;
-
-                mlcMessage.target = NimUtil.getHeadImage(headUrl);
+                mlcMessage.target = Util.getImage("icons/head.png");
             });
+
+            if (myHead == null)
+            {
+                UserAPI.GetUserNameCard(new List<string> { myId }, ret =>
+                {
+                    if (ret != null && ret.Any())
+                    {
+                        var headUrl = ret[0].IconUrl;
+                        if (!string.IsNullOrEmpty(headUrl))
+                        {
+                            myHead = NimUtil.getHeadImage(headUrl);
+                            return;
+                        }
+                    }
+
+                    myHead = Util.getImage("icons/head.png");
+                });
+            }
+
+            mlcMessage.me = myHead;
         }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 发送者头像
         /// </summary>
-        public Image myHead { private get; set; } = Util.getImage("icons/head.png");
+        public Image myHead { get; set; }
 
         /// <summary>
         /// 构造方法
