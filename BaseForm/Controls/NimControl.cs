@@ -54,7 +54,7 @@ namespace Insight.Utils.Controls
         public void initChat(string targetId)
         {
             // 在会话集合查找会话，如存在则激活该会话
-            var control = pceChat.Controls[targetId];
+            var control = sccMain.Panel2.Controls[targetId];
             if (chat != null && control != null)
             {
                 if (chat == control) return;
@@ -77,7 +77,7 @@ namespace Insight.Utils.Controls
                 targetId = targetId,
                 myHead = myHead
             };
-            pceChat.Controls.Add(chat);
+            sccMain.Panel2.Controls.Add(chat);
             chat.init();
         }
 

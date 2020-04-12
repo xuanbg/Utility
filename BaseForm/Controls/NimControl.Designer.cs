@@ -28,57 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pceList = new DevExpress.XtraEditors.PanelControl();
-            this.sceMain = new DevExpress.XtraEditors.SplitterControl();
-            this.pceChat = new DevExpress.XtraEditors.PanelControl();
-            ((System.ComponentModel.ISupportInitialize)(this.pceList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pceChat)).BeginInit();
+            this.sccMain = new DevExpress.XtraEditors.SplitContainerControl();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMain)).BeginInit();
+            this.sccMain.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pceList
+            // sccMain
             // 
-            this.pceList.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pceList.Location = new System.Drawing.Point(0, 0);
-            this.pceList.Name = "pceList";
-            this.pceList.Size = new System.Drawing.Size(300, 640);
-            this.pceList.TabIndex = 0;
-            // 
-            // sceMain
-            // 
-            this.sceMain.Location = new System.Drawing.Point(300, 0);
-            this.sceMain.Name = "sceMain";
-            this.sceMain.Size = new System.Drawing.Size(5, 640);
-            this.sceMain.TabIndex = 0;
-            this.sceMain.TabStop = false;
-            // 
-            // pceChat
-            // 
-            this.pceChat.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pceChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pceChat.Location = new System.Drawing.Point(305, 0);
-            this.pceChat.Name = "pceChat";
-            this.pceChat.Size = new System.Drawing.Size(755, 640);
-            this.pceChat.TabIndex = 0;
+            this.sccMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sccMain.Location = new System.Drawing.Point(0, 0);
+            this.sccMain.Name = "sccMain";
+            this.sccMain.Panel1.MinSize = 300;
+            this.sccMain.Panel2.MinSize = 600;
+            this.sccMain.Size = new System.Drawing.Size(1060, 640);
+            this.sccMain.SplitterPosition = 300;
+            this.sccMain.TabIndex = 0;
+            this.sccMain.Text = "splitContainerControl1";
             // 
             // NimControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pceChat);
-            this.Controls.Add(this.sceMain);
-            this.Controls.Add(this.pceList);
+            this.Controls.Add(this.sccMain);
             this.Name = "NimControl";
             this.Size = new System.Drawing.Size(1060, 640);
-            ((System.ComponentModel.ISupportInitialize)(this.pceList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pceChat)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sccMain)).EndInit();
+            this.sccMain.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private DevExpress.XtraEditors.PanelControl pceList;
-        private DevExpress.XtraEditors.SplitterControl sceMain;
-        private DevExpress.XtraEditors.PanelControl pceChat;
+        private DevExpress.XtraEditors.SplitContainerControl sccMain;
     }
 }
