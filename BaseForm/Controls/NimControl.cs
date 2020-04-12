@@ -45,6 +45,8 @@ namespace Insight.Utils.Controls
             var control = sccMain.Panel2.Controls[targetId];
             if (chat != null && control != null)
             {
+                if (chat == control) return;
+
                 control.Visible = true;
                 chat.Visible = false;
                 chat = (NimChatControl) control;
