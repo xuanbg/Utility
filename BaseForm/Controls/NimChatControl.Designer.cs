@@ -78,8 +78,6 @@ namespace Insight.Utils.Controls
             this.mmeInput.ImeMode = System.Windows.Forms.ImeMode.On;
             this.mmeInput.Location = new System.Drawing.Point(4, 4);
             this.mmeInput.Name = "mmeInput";
-            this.mmeInput.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mmeInput.Properties.Appearance.Options.UseFont = true;
             this.mmeInput.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.mmeInput.Size = new System.Drawing.Size(507, 107);
             this.mmeInput.TabIndex = 1;
@@ -87,8 +85,6 @@ namespace Insight.Utils.Controls
             // labPrompt
             // 
             this.labPrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labPrompt.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labPrompt.Appearance.Options.UseFont = true;
             this.labPrompt.Location = new System.Drawing.Point(421, 13);
             this.labPrompt.Name = "labPrompt";
             this.labPrompt.Size = new System.Drawing.Size(174, 14);
@@ -97,8 +93,6 @@ namespace Insight.Utils.Controls
             // 
             // sbeSend
             // 
-            this.sbeSend.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbeSend.Appearance.Options.UseFont = true;
             this.sbeSend.Dock = System.Windows.Forms.DockStyle.Right;
             this.sbeSend.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeSend.ImageOptions.Image")));
             this.sbeSend.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.TopCenter;
@@ -166,10 +160,6 @@ namespace Insight.Utils.Controls
             // 
             // sbeFile
             // 
-            this.sbeFile.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbeFile.Appearance.Options.UseFont = true;
-            this.sbeFile.Appearance.Options.UseTextOptions = true;
-            this.sbeFile.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
             this.sbeFile.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeFile.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeFile.ImageOptions.Image")));
             this.sbeFile.Location = new System.Drawing.Point(115, 2);
@@ -179,10 +169,6 @@ namespace Insight.Utils.Controls
             // 
             // sbeHistroy
             // 
-            this.sbeHistroy.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbeHistroy.Appearance.Options.UseFont = true;
-            this.sbeHistroy.Appearance.Options.UseTextOptions = true;
-            this.sbeHistroy.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
             this.sbeHistroy.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeHistroy.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeHistroy.ImageOptions.Image")));
             this.sbeHistroy.Location = new System.Drawing.Point(5, 2);
@@ -193,10 +179,6 @@ namespace Insight.Utils.Controls
             // 
             // sbeImage
             // 
-            this.sbeImage.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbeImage.Appearance.Options.UseFont = true;
-            this.sbeImage.Appearance.Options.UseTextOptions = true;
-            this.sbeImage.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
             this.sbeImage.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeImage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeImage.ImageOptions.Image")));
             this.sbeImage.Location = new System.Drawing.Point(160, 2);
@@ -206,8 +188,6 @@ namespace Insight.Utils.Controls
             // 
             // sceMain
             // 
-            this.sceMain.Appearance.BackColor = System.Drawing.SystemColors.Control;
-            this.sceMain.Appearance.Options.UseBackColor = true;
             this.sceMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceMain.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel2;
             this.sceMain.Horizontal = false;
