@@ -3,9 +3,9 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.Controls.Nim
 {
-    public partial class MessageControl : XtraUserControl
+    public partial class MessageBox : XtraUserControl
     {
         private int _width;
         private NimMessage _message;
@@ -58,7 +58,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 构造方法
         /// </summary>
-        public MessageControl()
+        public MessageBox()
         {
             InitializeComponent();
         }

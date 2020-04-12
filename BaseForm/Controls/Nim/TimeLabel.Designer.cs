@@ -1,6 +1,6 @@
-﻿namespace Insight.Utils.Controls
+﻿namespace Insight.Utils.Controls.Nim
 {
-    partial class TimeControl
+    partial class TimeLabel
     {
         /// <summary> 
         /// 必需的设计器变量。

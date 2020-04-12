@@ -5,11 +5,10 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.Controls.Nim
 {
-    public partial class MessageList : XtraUserControl
+    public partial class NimList : XtraUserControl
     {
-        private static readonly Image defaultImage = Util.getImage("icons/head.png");
         private List<NimMessage> messages = new List<NimMessage>();
         private DateTime messageTime;
         private int height;
@@ -17,17 +16,17 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 己方头像
         /// </summary>
-        public Image me { private get; set; } = defaultImage;
+        public Image me { private get; set; }
 
         /// <summary>
         /// 对方头像
         /// </summary>
-        public Image target { private get; set; } = defaultImage;
+        public Image target { private get; set; }
 
         /// <summary>
         /// 构造方法
         /// </summary>
-        public MessageList()
+        public NimList()
         {
             InitializeComponent();
         }
@@ -101,7 +100,7 @@ namespace Insight.Utils.Controls
             if (ts.TotalMinutes > 10) addTime(time);
 
             var head = message.direction == 0 ? me : target;
-            var control = new MessageControl
+            var control = new MessageBox
             {
                 width = pceList.Width,
                 message = message,
@@ -126,7 +125,7 @@ namespace Insight.Utils.Controls
         /// <param name="time"></param>
         private void addTime(DateTime time)
         {
-            var timeControl = new TimeControl
+            var timeControl = new TimeLabel
             {
                 time = time,
                 Name = Util.newId("N"),

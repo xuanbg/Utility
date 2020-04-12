@@ -29,20 +29,30 @@ namespace Insight.Utils
                 },
                 new FunctionDto
                 {
+                    id = "a2079246793b11ea9bf40242ac110005",
+                    navId = "04dcfb5978ab11ea9bf40242ac110005",
+                    type = 2,
+                    index = 2,
+                    name = "登录云信",
+                    funcInfo = new FuncInfo{method = "login", iconUrl = "icons/login.png", beginGroup = true, hideText = false},
+                    permit = true
+                },
+                new FunctionDto
+                {
                     id = "a2079314793b11ea9bf40242ac110005",
                     navId = "04dcfb5978ab11ea9bf40242ac110005",
                     type = 1,
-                    index = 2,
+                    index = 3,
                     name = "打开会话",
-                    funcInfo = new FuncInfo{method = "dialogue", iconUrl = "icons/dialogue.png", beginGroup = true, hideText = false},
+                    funcInfo = new FuncInfo{method = "dialogue", iconUrl = "icons/dialogue.png", beginGroup = false, hideText = false},
                     permit = true
                 },
                 new FunctionDto
                 {
                     id = "a2079324793b11ea9bf40242ac110005",
                     navId = "04dcfb5978ab11ea9bf40242ac110005",
-                    type = 1,
-                    index = 3,
+                    type = 2,
+                    index = 4,
                     name = "设置",
                     funcInfo = new FuncInfo{method = "setting", iconUrl = "icons/set.png", beginGroup = true, hideText = false},
                     permit = true

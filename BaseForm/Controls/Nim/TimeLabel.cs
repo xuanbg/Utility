@@ -1,9 +1,9 @@
 ﻿using System;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.Controls.Nim
 {
-    public partial class TimeControl : XtraUserControl
+    public partial class TimeLabel : XtraUserControl
     {
         /// <summary>
         /// 时间
@@ -35,7 +35,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 构造方法
         /// </summary>
-        public TimeControl()
+        public TimeLabel()
         {
             InitializeComponent();
         }

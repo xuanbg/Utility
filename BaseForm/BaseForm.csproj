@@ -56,6 +56,12 @@
       <HintPath>..\FastReport.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NimCore">
+      <HintPath>..\packages\NIM\NimCore.dll</HintPath>
+    </Reference>
+    <Reference Include="NimUtility">
+      <HintPath>..\packages\NIM\NimUtility.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -91,30 +97,37 @@
     </Compile>
     <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
-    <Compile Include="Controls\ChatForm.cs">
+    <Compile Include="Controls\NimChatControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ChatForm.Designer.cs">
-      <DependentUpon>ChatForm.cs</DependentUpon>
+    <Compile Include="Controls\NimChatControl.Designer.cs">
+      <DependentUpon>NimChatControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MessageControl.cs">
+    <Compile Include="Controls\Nim\MessageBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\MessageControl.Designer.cs">
-      <DependentUpon>MessageControl.cs</DependentUpon>
+    <Compile Include="Controls\Nim\MessageBox.Designer.cs">
+      <DependentUpon>MessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MessageList.cs">
+    <Compile Include="Controls\Nim\MessageList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\MessageList.Designer.cs">
+    <Compile Include="Controls\Nim\MessageList.Designer.cs">
       <DependentUpon>MessageList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TimeControl.cs">
+    <Compile Include="Controls\NimControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\TimeControl.Designer.cs">
-      <DependentUpon>TimeControl.cs</DependentUpon>
+    <Compile Include="Controls\NimControl.Designer.cs">
+      <DependentUpon>NimControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Nim\TimeLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Nim\TimeLabel.Designer.cs">
+      <DependentUpon>TimeLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Nim\NimUtil.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -161,18 +174,21 @@
     <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ChatForm.resx">
-      <DependentUpon>ChatForm.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\NimChatControl.resx">
+      <DependentUpon>NimChatControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MessageControl.resx">
-      <DependentUpon>MessageControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\Nim\MessageBox.resx">
+      <DependentUpon>MessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\MessageList.resx">
+    <EmbeddedResource Include="Controls\Nim\MessageList.resx">
       <DependentUpon>MessageList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\TimeControl.resx">
-      <DependentUpon>TimeControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\NimControl.resx">
+      <DependentUpon>NimControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Nim\TimeLabel.resx">
+      <DependentUpon>TimeLabel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

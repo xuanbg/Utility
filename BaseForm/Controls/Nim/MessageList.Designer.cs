@@ -1,6 +1,6 @@
-﻿namespace Insight.Utils.Controls
+﻿namespace Insight.Utils.Controls.Nim
 {
-    partial class MessageList
+    partial class NimList
     {
         /// <summary> 
         /// 必需的设计器变量。

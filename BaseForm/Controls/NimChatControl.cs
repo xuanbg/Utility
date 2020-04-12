@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
+using Insight.Utils.Controls.Nim;
+using NIM.User;
 
 namespace Insight.Utils.Controls
 {
-    public partial class ChatForm : XtraUserControl
+    public partial class NimChatControl : XtraUserControl
     {
+
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
         /// </summary>  
@@ -22,17 +28,22 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 发送者云信ID
         /// </summary>
-        public string from { private get; set; }
+        public string myId { private get; set; }
+
+        /// <summary>
+        /// 发送者头像
+        /// </summary>
+        public Image myHead { private get; set; } = Util.getImage("icons/head.png");
 
         /// <summary>
         /// 接收者云信ID
         /// </summary>
-        public string to { private get; set; }
+        public string targetId { private get; set; }
 
         /// <summary>
         /// 构造方法
         /// </summary>
-        public ChatForm()
+        public NimChatControl()
         {
             InitializeComponent();
 
@@ -53,6 +64,24 @@ namespace Insight.Utils.Controls
             };
 
             mmeInput.Focus();
+        }
+
+        /// <summary>
+        /// 初始聊天窗口
+        /// </summary>
+        public void init()
+        {
+            mlcMessage.me = myHead;
+            mlcMessage.target = Util.getImage("icons/head.png");
+            UserAPI.GetUserNameCard(new List<string> { targetId }, ret =>
+            {
+                if (ret == null || !ret.Any()) return;
+
+                var headUrl = ret[0].IconUrl;
+                if (string.IsNullOrEmpty(headUrl)) return;
+
+                mlcMessage.target = NimUtil.getHeadImage(headUrl);
+            });
         }
 
         /// <summary>
@@ -163,8 +192,8 @@ namespace Insight.Utils.Controls
             var message = new NimMessage
             {
                 id = Util.newId("N"),
-                from = from,
-                to = to,
+                from = myId,
+                to = targetId,
                 type = type,
                 direction = 0,
                 body = body

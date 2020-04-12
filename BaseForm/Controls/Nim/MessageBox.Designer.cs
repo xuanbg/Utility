@@ -1,6 +1,6 @@
-﻿namespace Insight.Utils.Controls
+﻿namespace Insight.Utils.Controls.Nim
 {
-    partial class MessageControl
+    partial class MessageBox
     {
         /// <summary> 
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageBox));
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
             this.picTarget = new DevExpress.XtraEditors.PictureEdit();
             this.pceText = new DevExpress.XtraEditors.PanelControl();
