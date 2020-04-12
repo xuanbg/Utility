@@ -66,6 +66,7 @@
             this.picTarget.Properties.Appearance.Options.UseBackColor = true;
             this.picTarget.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.picTarget.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.picTarget.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
             this.picTarget.Size = new System.Drawing.Size(60, 60);
             this.picTarget.TabIndex = 0;
             this.picTarget.Visible = false;
@@ -99,6 +100,7 @@
             this.picImage.Properties.Appearance.Options.UseBackColor = true;
             this.picImage.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.picImage.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.picImage.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
             this.picImage.Size = new System.Drawing.Size(60, 60);
             this.picImage.TabIndex = 0;
             this.picImage.Visible = false;
@@ -113,6 +115,7 @@
             this.picMe.Properties.Appearance.Options.UseBackColor = true;
             this.picMe.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.picMe.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.picMe.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
             this.picMe.Size = new System.Drawing.Size(60, 60);
             this.picMe.TabIndex = 0;
             this.picMe.Visible = false;

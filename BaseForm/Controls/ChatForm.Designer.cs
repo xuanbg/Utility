@@ -36,7 +36,6 @@
             this.pceTools = new DevExpress.XtraEditors.PanelControl();
             this.sbeReply = new DevExpress.XtraEditors.SimpleButton();
             this.sbeEmoji = new DevExpress.XtraEditors.SimpleButton();
-            this.sbeScreenshot = new DevExpress.XtraEditors.SimpleButton();
             this.sbeFile = new DevExpress.XtraEditors.SimpleButton();
             this.sbeHistroy = new DevExpress.XtraEditors.SimpleButton();
             this.sbeImage = new DevExpress.XtraEditors.SimpleButton();
@@ -110,7 +109,6 @@
             this.pceTools.Controls.Add(this.sbeReply);
             this.pceTools.Controls.Add(this.labPrompt);
             this.pceTools.Controls.Add(this.sbeEmoji);
-            this.pceTools.Controls.Add(this.sbeScreenshot);
             this.pceTools.Controls.Add(this.sbeFile);
             this.pceTools.Controls.Add(this.sbeHistroy);
             this.pceTools.Controls.Add(this.sbeImage);
@@ -124,7 +122,7 @@
             // 
             this.sbeReply.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeReply.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeReply.ImageOptions.Image")));
-            this.sbeReply.Location = new System.Drawing.Point(475, 2);
+            this.sbeReply.Location = new System.Drawing.Point(380, 2);
             this.sbeReply.Name = "sbeReply";
             this.sbeReply.Size = new System.Drawing.Size(90, 37);
             this.sbeReply.TabIndex = 0;
@@ -134,25 +132,11 @@
             // 
             this.sbeEmoji.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeEmoji.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeEmoji.ImageOptions.Image")));
-            this.sbeEmoji.Location = new System.Drawing.Point(380, 2);
+            this.sbeEmoji.Location = new System.Drawing.Point(310, 2);
             this.sbeEmoji.Name = "sbeEmoji";
-            this.sbeEmoji.Size = new System.Drawing.Size(90, 37);
+            this.sbeEmoji.Size = new System.Drawing.Size(65, 37);
             this.sbeEmoji.TabIndex = 0;
-            this.sbeEmoji.Text = "表情符号";
-            // 
-            // sbeScreenshot
-            // 
-            this.sbeScreenshot.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.sbeScreenshot.Appearance.Options.UseFont = true;
-            this.sbeScreenshot.Appearance.Options.UseTextOptions = true;
-            this.sbeScreenshot.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
-            this.sbeScreenshot.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.sbeScreenshot.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeScreenshot.ImageOptions.Image")));
-            this.sbeScreenshot.Location = new System.Drawing.Point(300, 2);
-            this.sbeScreenshot.Name = "sbeScreenshot";
-            this.sbeScreenshot.Size = new System.Drawing.Size(75, 37);
-            this.sbeScreenshot.TabIndex = 0;
-            this.sbeScreenshot.Text = "截屏  |";
+            this.sbeEmoji.Text = "表情";
             // 
             // sbeFile
             // 
@@ -192,9 +176,9 @@
             this.sbeImage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeImage.ImageOptions.Image")));
             this.sbeImage.Location = new System.Drawing.Point(205, 2);
             this.sbeImage.Name = "sbeImage";
-            this.sbeImage.Size = new System.Drawing.Size(90, 37);
+            this.sbeImage.Size = new System.Drawing.Size(100, 37);
             this.sbeImage.TabIndex = 0;
-            this.sbeImage.Text = "发送图片";
+            this.sbeImage.Text = "发送图片  |";
             // 
             // sceMain
             // 
@@ -283,7 +267,6 @@
         private DevExpress.XtraEditors.SimpleButton sbeSend;
         private DevExpress.XtraEditors.PanelControl pceTools;
         private DevExpress.XtraEditors.SimpleButton sbeEmoji;
-        private DevExpress.XtraEditors.SimpleButton sbeScreenshot;
         private DevExpress.XtraEditors.SimpleButton sbeFile;
         private DevExpress.XtraEditors.SimpleButton sbeHistroy;
         private DevExpress.XtraEditors.SimpleButton sbeImage;
