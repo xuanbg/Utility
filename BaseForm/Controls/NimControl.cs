@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Controls.Nim;
 using NIM;
@@ -14,8 +14,22 @@ namespace Insight.Utils.Controls
     public partial class NimControl : XtraUserControl
     {
         private ClientAPI.LoginResultDelegate handleResult;
-        private readonly string myId = Setting.userId.Replace("-", "");
-        private string targetId = "12";
+        private NimChatControl chat;
+
+        /// <summary>
+        /// 云信AppKey
+        /// </summary>
+        public string appKey;
+
+        /// <summary>
+        /// 发送者云信ID
+        /// </summary>
+        public string myId;
+
+        /// <summary>
+        /// 发送者头像
+        /// </summary>
+        public Image myHead { private get; set; } = Util.getImage("icons/head.png");
 
         /// <summary>
         /// 构造方法
@@ -25,10 +39,32 @@ namespace Insight.Utils.Controls
             InitializeComponent();
         }
 
-        public void initChat()
+        public void initChat(string targetId)
         {
-            nccChat.myId = myId;
-            nccChat.targetId = targetId;
+            // 在会话集合查找会话，如存在则激活该会话
+            var control = sccMain.Panel2.Controls[targetId];
+            if (chat != null && control != null)
+            {
+                control.Visible = true;
+                chat.Visible = false;
+                chat = (NimChatControl) control;
+
+                return;
+            }
+
+            // 打开新会话
+            chat = new NimChatControl
+            {
+                Name = targetId,
+                TabIndex = 0,
+                Location = new Point(0, 0),
+                Dock = DockStyle.Fill,
+                myId = myId,
+                targetId = targetId,
+                myHead = myHead
+            };
+            sccMain.Panel2.Controls.Add(chat);
+            chat.init();
         }
 
         /// <summary>
@@ -36,7 +72,6 @@ namespace Insight.Utils.Controls
         /// </summary>
         public void login()
         {
-            var appKey = Setting.appId.Replace("-", "");
             var password = Util.hash(myId);
             handleResult = handleLoginResult;
 
@@ -70,8 +105,7 @@ namespace Insight.Utils.Controls
                             var headUrl = ret[0].IconUrl;
                             if (string.IsNullOrEmpty(headUrl)) return;
 
-                            nccChat.myHead = NimUtil.getHeadImage(headUrl);
-                            nccChat.init();
+                            myHead = NimUtil.getHeadImage(headUrl);
                         });
                     }
                     else

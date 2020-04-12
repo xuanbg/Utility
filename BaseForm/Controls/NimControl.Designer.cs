@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.sccMain = new DevExpress.XtraEditors.SplitContainerControl();
-            this.nccChat = new Insight.Utils.Controls.NimChatControl();
             ((System.ComponentModel.ISupportInitialize)(this.sccMain)).BeginInit();
             this.sccMain.SuspendLayout();
             this.SuspendLayout();
@@ -40,20 +39,10 @@
             this.sccMain.Location = new System.Drawing.Point(0, 0);
             this.sccMain.Name = "sccMain";
             this.sccMain.Panel1.MinSize = 300;
-            this.sccMain.Panel2.Controls.Add(this.nccChat);
             this.sccMain.Size = new System.Drawing.Size(1060, 640);
             this.sccMain.SplitterPosition = 300;
             this.sccMain.TabIndex = 0;
             this.sccMain.Text = "splitContainerControl1";
-            // 
-            // nccChat
-            // 
-            this.nccChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nccChat.Location = new System.Drawing.Point(0, 0);
-            this.nccChat.Name = "nccChat";
-            this.nccChat.Padding = new System.Windows.Forms.Padding(5);
-            this.nccChat.Size = new System.Drawing.Size(755, 640);
-            this.nccChat.TabIndex = 0;
             // 
             // NimControl
             // 
@@ -71,6 +60,5 @@
         #endregion
 
         private DevExpress.XtraEditors.SplitContainerControl sccMain;
-        private NimChatControl nccChat;
     }
 }
