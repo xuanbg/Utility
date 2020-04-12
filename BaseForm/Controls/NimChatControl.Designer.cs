@@ -36,6 +36,8 @@ namespace Insight.Utils.Controls
             this.labPrompt = new DevExpress.XtraEditors.LabelControl();
             this.sbeSend = new DevExpress.XtraEditors.SimpleButton();
             this.pceTools = new DevExpress.XtraEditors.PanelControl();
+            this.labSp2 = new DevExpress.XtraEditors.LabelControl();
+            this.labSp1 = new DevExpress.XtraEditors.LabelControl();
             this.sbeReply = new DevExpress.XtraEditors.SimpleButton();
             this.sbeEmoji = new DevExpress.XtraEditors.SimpleButton();
             this.sbeFile = new DevExpress.XtraEditors.SimpleButton();
@@ -47,8 +49,6 @@ namespace Insight.Utils.Controls
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
             this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
-            this.labSp1 = new DevExpress.XtraEditors.LabelControl();
-            this.labSp2 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).BeginInit();
             this.pceInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mmeInput.Properties)).BeginInit();
@@ -69,7 +69,7 @@ namespace Insight.Utils.Controls
             this.pceInput.Location = new System.Drawing.Point(0, 45);
             this.pceInput.Name = "pceInput";
             this.pceInput.Padding = new System.Windows.Forms.Padding(2);
-            this.pceInput.Size = new System.Drawing.Size(505, 115);
+            this.pceInput.Size = new System.Drawing.Size(515, 115);
             this.pceInput.TabIndex = 0;
             // 
             // mmeInput
@@ -81,7 +81,7 @@ namespace Insight.Utils.Controls
             this.mmeInput.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mmeInput.Properties.Appearance.Options.UseFont = true;
             this.mmeInput.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.mmeInput.Size = new System.Drawing.Size(497, 107);
+            this.mmeInput.Size = new System.Drawing.Size(507, 107);
             this.mmeInput.TabIndex = 1;
             // 
             // labPrompt
@@ -89,7 +89,7 @@ namespace Insight.Utils.Controls
             this.labPrompt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labPrompt.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labPrompt.Appearance.Options.UseFont = true;
-            this.labPrompt.Location = new System.Drawing.Point(411, 13);
+            this.labPrompt.Location = new System.Drawing.Point(421, 13);
             this.labPrompt.Name = "labPrompt";
             this.labPrompt.Size = new System.Drawing.Size(174, 14);
             this.labPrompt.TabIndex = 0;
@@ -102,7 +102,7 @@ namespace Insight.Utils.Controls
             this.sbeSend.Dock = System.Windows.Forms.DockStyle.Right;
             this.sbeSend.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeSend.ImageOptions.Image")));
             this.sbeSend.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.TopCenter;
-            this.sbeSend.Location = new System.Drawing.Point(510, 45);
+            this.sbeSend.Location = new System.Drawing.Point(520, 45);
             this.sbeSend.Name = "sbeSend";
             this.sbeSend.Size = new System.Drawing.Size(80, 115);
             this.sbeSend.TabIndex = 2;
@@ -121,8 +121,28 @@ namespace Insight.Utils.Controls
             this.pceTools.Dock = System.Windows.Forms.DockStyle.Top;
             this.pceTools.Location = new System.Drawing.Point(0, 0);
             this.pceTools.Name = "pceTools";
-            this.pceTools.Size = new System.Drawing.Size(590, 40);
+            this.pceTools.Size = new System.Drawing.Size(600, 40);
             this.pceTools.TabIndex = 0;
+            // 
+            // labSp2
+            // 
+            this.labSp2.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.labSp2.Appearance.Options.UseFont = true;
+            this.labSp2.Location = new System.Drawing.Point(270, 9);
+            this.labSp2.Name = "labSp2";
+            this.labSp2.Size = new System.Drawing.Size(7, 21);
+            this.labSp2.TabIndex = 0;
+            this.labSp2.Text = "|";
+            // 
+            // labSp1
+            // 
+            this.labSp1.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.labSp1.Appearance.Options.UseFont = true;
+            this.labSp1.Location = new System.Drawing.Point(100, 9);
+            this.labSp1.Name = "labSp1";
+            this.labSp1.Size = new System.Drawing.Size(7, 21);
+            this.labSp1.TabIndex = 1;
+            this.labSp1.Text = "|";
             // 
             // sbeReply
             // 
@@ -186,10 +206,12 @@ namespace Insight.Utils.Controls
             // 
             // sceMain
             // 
+            this.sceMain.Appearance.BackColor = System.Drawing.SystemColors.Control;
+            this.sceMain.Appearance.Options.UseBackColor = true;
             this.sceMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceMain.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel2;
             this.sceMain.Horizontal = false;
-            this.sceMain.Location = new System.Drawing.Point(5, 5);
+            this.sceMain.Location = new System.Drawing.Point(0, 0);
             this.sceMain.Name = "sceMain";
             this.sceMain.Panel1.Controls.Add(this.pceMessage);
             this.sceMain.Panel1.MinSize = 400;
@@ -201,7 +223,7 @@ namespace Insight.Utils.Controls
             this.sceMain.Panel2.Controls.Add(this.pceTools);
             this.sceMain.Panel2.MinSize = 160;
             this.sceMain.Panel2.Text = "Panel2";
-            this.sceMain.Size = new System.Drawing.Size(590, 530);
+            this.sceMain.Size = new System.Drawing.Size(600, 540);
             this.sceMain.SplitterPosition = 160;
             this.sceMain.TabIndex = 0;
             // 
@@ -211,7 +233,7 @@ namespace Insight.Utils.Controls
             this.pceMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMessage.Location = new System.Drawing.Point(0, 0);
             this.pceMessage.Name = "pceMessage";
-            this.pceMessage.Size = new System.Drawing.Size(590, 365);
+            this.pceMessage.Size = new System.Drawing.Size(600, 375);
             this.pceMessage.TabIndex = 0;
             // 
             // mlcMessage
@@ -219,14 +241,14 @@ namespace Insight.Utils.Controls
             this.mlcMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mlcMessage.Location = new System.Drawing.Point(2, 2);
             this.mlcMessage.Name = "mlcMessage";
-            this.mlcMessage.Size = new System.Drawing.Size(586, 361);
+            this.mlcMessage.Size = new System.Drawing.Size(596, 371);
             this.mlcMessage.TabIndex = 0;
             // 
             // pceBotton
             // 
             this.pceBotton.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pceBotton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pceBotton.Location = new System.Drawing.Point(505, 45);
+            this.pceBotton.Location = new System.Drawing.Point(515, 45);
             this.pceBotton.Name = "pceBotton";
             this.pceBotton.Size = new System.Drawing.Size(5, 115);
             this.pceBotton.TabIndex = 0;
@@ -237,37 +259,18 @@ namespace Insight.Utils.Controls
             this.pceSpei.Dock = System.Windows.Forms.DockStyle.Top;
             this.pceSpei.Location = new System.Drawing.Point(0, 40);
             this.pceSpei.Name = "pceSpei";
-            this.pceSpei.Size = new System.Drawing.Size(590, 5);
+            this.pceSpei.Size = new System.Drawing.Size(600, 5);
             this.pceSpei.TabIndex = 0;
-            // 
-            // labSp1
-            // 
-            this.labSp1.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.labSp1.Appearance.Options.UseFont = true;
-            this.labSp1.Location = new System.Drawing.Point(100, 9);
-            this.labSp1.Name = "labSp1";
-            this.labSp1.Size = new System.Drawing.Size(7, 21);
-            this.labSp1.TabIndex = 1;
-            this.labSp1.Text = "|";
-            // 
-            // labSp2
-            // 
-            this.labSp2.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.labSp2.Appearance.Options.UseFont = true;
-            this.labSp2.Location = new System.Drawing.Point(270, 9);
-            this.labSp2.Name = "labSp2";
-            this.labSp2.Size = new System.Drawing.Size(7, 21);
-            this.labSp2.TabIndex = 0;
-            this.labSp2.Text = "|";
             // 
             // NimChatControl
             // 
+            this.Appearance.BackColor = System.Drawing.SystemColors.Control;
+            this.Appearance.Options.UseBackColor = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.sceMain);
             this.MinimumSize = new System.Drawing.Size(600, 540);
             this.Name = "NimChatControl";
-            this.Padding = new System.Windows.Forms.Padding(5);
             this.Size = new System.Drawing.Size(600, 540);
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).EndInit();
             this.pceInput.ResumeLayout(false);

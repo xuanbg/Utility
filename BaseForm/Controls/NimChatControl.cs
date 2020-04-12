@@ -14,12 +14,12 @@ namespace Insight.Utils.Controls
     {
 
         /// <summary>  
-        /// 当前焦点行发生改变，通知修改焦点行
+        /// 当消息发送后，通知处理消息
         /// </summary>  
         public event MessageSendHandle messageSend;
 
         /// <summary>
-        /// 表示将处理当前焦点行发生改变事件的方法
+        /// 表示将处理当前消息事件的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -205,12 +205,12 @@ namespace Insight.Utils.Controls
     }
 
     /// <summary>
-    /// 焦点行改变事件参数类
+    /// 消息事件参数类
     /// </summary>
     public class MessageEventArgs : EventArgs
     {
         /// <summary>
-        /// Row handle
+        /// 云信IM点对点消息
         /// </summary>
         public NimMessage message { get; }
 

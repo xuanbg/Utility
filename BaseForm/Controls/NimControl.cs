@@ -16,6 +16,18 @@ namespace Insight.Utils.Controls
         private ClientAPI.LoginResultDelegate handleResult;
         private NimChatControl chat;
 
+        /// <summary>  
+        /// 登录成功后，通知更新登录状态
+        /// </summary>  
+        public event LoginHandle loginHandle;
+
+        /// <summary>
+        /// 表示将处理当前登录事件的方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void LoginHandle(object sender, LoginEventArgs e);
+
         /// <summary>
         /// 云信AppKey
         /// </summary>
@@ -42,7 +54,7 @@ namespace Insight.Utils.Controls
         public void initChat(string targetId)
         {
             // 在会话集合查找会话，如存在则激活该会话
-            var control = sccMain.Panel2.Controls[targetId];
+            var control = pceChat.Controls[targetId];
             if (chat != null && control != null)
             {
                 if (chat == control) return;
@@ -65,7 +77,7 @@ namespace Insight.Utils.Controls
                 targetId = targetId,
                 myHead = myHead
             };
-            sccMain.Panel2.Controls.Add(chat);
+            pceChat.Controls.Add(chat);
             chat.init();
         }
 
@@ -98,8 +110,9 @@ namespace Insight.Utils.Controls
                 {
                     if (result.Code == ResponseCode.kNIMResSuccess)
                     {
-                        Messages.showMessage("云信客户端登录成功！");
+                        loginHandle?.Invoke(this, new LoginEventArgs(true));
 
+                        Messages.showMessage("云信客户端登录成功！");
                         UserAPI.GetUserNameCard(new List<string> { myId }, ret =>
                         {
                             if (ret == null || !ret.Any()) return;
@@ -129,4 +142,25 @@ namespace Insight.Utils.Controls
             Messages.showError($"云信客户端登录失败：{result.Code}");
         }
     }
+
+    /// <summary>
+    /// 登录事件参数类
+    /// </summary>
+    public class LoginEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 登录状态
+        /// </summary>
+        public bool status { get; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="status">登录状态</param>
+        public LoginEventArgs(bool status)
+        {
+            this.status = status;
+        }
+    }
+
 }
