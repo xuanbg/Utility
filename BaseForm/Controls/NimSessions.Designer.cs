@@ -45,10 +45,10 @@
             // 
             // pceMain
             // 
-            this.pceMain.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pceMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain.Location = new System.Drawing.Point(0, 0);
             this.pceMain.Name = "pceMain";
-            this.pceMain.Size = new System.Drawing.Size(320, 70);
+            this.pceMain.Size = new System.Drawing.Size(320, 540);
             this.pceMain.TabIndex = 0;
             // 
             // NimSessions
