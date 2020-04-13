@@ -6,7 +6,7 @@ namespace Insight.Utils.Controls.Nim
     public partial class TimeLabel : XtraUserControl
     {
         /// <summary>
-        /// 时间
+        /// 显示消息时间
         /// </summary>
         public DateTime time
         {
@@ -21,7 +21,7 @@ namespace Insight.Utils.Controls.Nim
                 {
                     labTime.Text = value.ToString("MM-dd hh:mm:ss");
                 }
-                else if (ts.TotalDays > 1)
+                else if (ts.TotalHours > 12)
                 {
                     labTime.Text = value.ToString("dd hh:mm:ss");
                 }

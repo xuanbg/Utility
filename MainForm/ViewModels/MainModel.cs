@@ -38,7 +38,7 @@ namespace Insight.Utils.MainForm.ViewModels
             view.StbServer.Caption = Setting.gateway;
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[1]);
+            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
             view.MubLock.ItemClick += (sender, args) => callback("lockWindow");
             view.MubLogout.ItemClick += (sender, args) => logout();
             view.MubExit.ItemClick += (sender, args) => view.Close();

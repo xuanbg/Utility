@@ -97,11 +97,11 @@
     </Compile>
     <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
-    <Compile Include="Controls\NimChatControl.cs">
+    <Compile Include="Controls\NimChat.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\NimChatControl.Designer.cs">
-      <DependentUpon>NimChatControl.cs</DependentUpon>
+    <Compile Include="Controls\NimChat.Designer.cs">
+      <DependentUpon>NimChat.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Nim\MessageBox.cs">
       <SubType>UserControl</SubType>
@@ -115,11 +115,17 @@
     <Compile Include="Controls\Nim\MessageList.Designer.cs">
       <DependentUpon>MessageList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NimControl.cs">
+    <Compile Include="Controls\Nim\SessionBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\NimControl.Designer.cs">
-      <DependentUpon>NimControl.cs</DependentUpon>
+    <Compile Include="Controls\Nim\SessionBox.Designer.cs">
+      <DependentUpon>SessionBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NimSessions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\NimSessions.Designer.cs">
+      <DependentUpon>NimSessions.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Nim\TimeLabel.cs">
       <SubType>UserControl</SubType>
@@ -174,8 +180,8 @@
     <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NimChatControl.resx">
-      <DependentUpon>NimChatControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\NimChat.resx">
+      <DependentUpon>NimChat.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Nim\MessageBox.resx">
@@ -184,12 +190,16 @@
     <EmbeddedResource Include="Controls\Nim\MessageList.resx">
       <DependentUpon>MessageList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NimControl.resx">
-      <DependentUpon>NimControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\Nim\SessionBox.resx">
+      <DependentUpon>SessionBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\NimSessions.resx">
+      <DependentUpon>NimSessions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Nim\TimeLabel.resx">
       <DependentUpon>TimeLabel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

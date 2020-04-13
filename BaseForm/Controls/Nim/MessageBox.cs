@@ -10,6 +10,9 @@ namespace Insight.Utils.Controls.Nim
         private int _width;
         private NimMessage _message;
 
+        /// <summary>
+        /// 设置宽度
+        /// </summary>
         public int width
         {
             set
@@ -19,6 +22,9 @@ namespace Insight.Utils.Controls.Nim
             }
         }
 
+        /// <summary>
+        /// 显示消息
+        /// </summary>
         public NimMessage message
         {
             set
@@ -41,17 +47,20 @@ namespace Insight.Utils.Controls.Nim
             }
         }
 
+        /// <summary>
+        /// 显示头像
+        /// </summary>
         public Image headImage
         {
             set
             {
                 var isSend = _message.direction == 0;
-                if (isSend) picMe.Image = value;
-                else picTarget.Image = value;
-
                 picTarget.Visible = !isSend;
                 picMe.Visible = isSend;
+                if (value == null) return;
 
+                if (isSend) picMe.Image = value;
+                else picTarget.Image = value;
             }
         }
 

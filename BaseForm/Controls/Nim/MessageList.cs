@@ -7,7 +7,7 @@ using Insight.Utils.Common;
 
 namespace Insight.Utils.Controls.Nim
 {
-    public partial class NimList : XtraUserControl
+    public partial class MessageList : XtraUserControl
     {
         private List<NimMessage> messages = new List<NimMessage>();
         private DateTime messageTime;
@@ -26,7 +26,7 @@ namespace Insight.Utils.Controls.Nim
         /// <summary>
         /// 构造方法
         /// </summary>
-        public NimList()
+        public MessageList()
         {
             InitializeComponent();
         }

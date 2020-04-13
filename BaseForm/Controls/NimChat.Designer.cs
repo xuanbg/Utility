@@ -2,7 +2,7 @@
 
 namespace Insight.Utils.Controls
 {
-    partial class NimChatControl
+    partial class NimChat
     {
         /// <summary> 
         /// 必需的设计器变量。
@@ -30,7 +30,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NimChatControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NimChat));
             this.pceInput = new DevExpress.XtraEditors.PanelControl();
             this.mmeInput = new DevExpress.XtraEditors.MemoEdit();
             this.labPrompt = new DevExpress.XtraEditors.LabelControl();
@@ -45,7 +45,7 @@ namespace Insight.Utils.Controls
             this.sbeImage = new DevExpress.XtraEditors.SimpleButton();
             this.sceMain = new DevExpress.XtraEditors.SplitContainerControl();
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
-            this.mlcMessage = new Insight.Utils.Controls.Nim.NimList();
+            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
             this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
@@ -278,7 +278,7 @@ namespace Insight.Utils.Controls
         private DevExpress.XtraEditors.SimpleButton sbeImage;
         private DevExpress.XtraEditors.SplitContainerControl sceMain;
         private DevExpress.XtraEditors.PanelControl pceMessage;
-        private NimList mlcMessage;
+        private MessageList mlcMessage;
         private DevExpress.XtraEditors.PanelControl pceBotton;
         private DevExpress.XtraEditors.PanelControl pceSpei;
         private DevExpress.XtraEditors.SimpleButton sbeReply;

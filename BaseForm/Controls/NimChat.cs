@@ -10,7 +10,7 @@ using NIM.User;
 
 namespace Insight.Utils.Controls
 {
-    public partial class NimChatControl : XtraUserControl
+    public partial class NimChat : XtraUserControl
     {
 
         /// <summary>  
@@ -43,7 +43,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 构造方法
         /// </summary>
-        public NimChatControl()
+        public NimChat()
         {
             InitializeComponent();
 
@@ -73,42 +73,31 @@ namespace Insight.Utils.Controls
         {
             UserAPI.GetUserNameCard(new List<string> { targetId }, ret =>
             {
-                if (ret != null && ret.Any())
-                {
-                    var headUrl = ret[0].IconUrl;
-                    if (!string.IsNullOrEmpty(headUrl))
-                    {
-                        mlcMessage.target = NimUtil.getHeadImage(headUrl);
-                        return;
-                    }
-                }
+                if (ret == null || !ret.Any()) return;
 
-                mlcMessage.target = Util.getImage("icons/head.png");
+                var headUrl = ret[0].IconUrl;
+                if (!string.IsNullOrEmpty(headUrl))
+                {
+                    mlcMessage.target = NimUtil.getHeadImage(headUrl);
+                }
             });
 
             if (myHead == null)
             {
                 UserAPI.GetUserNameCard(new List<string> { myId }, ret =>
                 {
-                    if (ret != null && ret.Any())
-                    {
-                        var headUrl = ret[0].IconUrl;if (!string.IsNullOrEmpty(headUrl))
-                        {
-                            myHead = NimUtil.getHeadImage(headUrl);
-                            mlcMessage.me = myHead;
+                    if (ret == null || !ret.Any()) return;
 
-                            return;
-                        }
-                    }
+                    var headUrl = ret[0].IconUrl;
+                    if (string.IsNullOrEmpty(headUrl)) return;
 
-                    myHead = Util.getImage("icons/head.png");
+                    myHead = NimUtil.getHeadImage(headUrl);
                     mlcMessage.me = myHead;
                 });
             }
             else
             {
                 mlcMessage.me = myHead;
-
             }
         }
 

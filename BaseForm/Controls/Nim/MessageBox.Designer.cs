@@ -89,7 +89,6 @@
             this.labMessage.Name = "labMessage";
             this.labMessage.Size = new System.Drawing.Size(80, 14);
             this.labMessage.TabIndex = 0;
-            this.labMessage.Text = "你好啦";
             // 
             // picImage
             // 
@@ -120,12 +119,12 @@
             this.picMe.TabIndex = 0;
             this.picMe.Visible = false;
             // 
-            // MessageControl
+            // MessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.pceMessage);
-            this.Name = "MessageControl";
+            this.Name = "MessageBox";
             this.Size = new System.Drawing.Size(300, 70);
             ((System.ComponentModel.ISupportInitialize)(this.pceMessage)).EndInit();
             this.pceMessage.ResumeLayout(false);
