@@ -104,8 +104,6 @@ namespace Insight.Utils.Controls.Nim
             if (click == null) return;
 
             click.Invoke(sender, args);
-            peeUnread.Visible = false;
-
             Refresh();
         }
     }

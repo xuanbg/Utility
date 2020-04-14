@@ -66,11 +66,12 @@ namespace Insight.Utils.Controls
                 }
 
                 Task.WaitAll(tasks);
-                refresh();
-
                 info = sessions.OrderBy(i => i.time).Last();
                 info.unRead = false;
                 resetUnread(info.id);
+
+                refresh();
+
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
                 Invoke((Action)action);
@@ -167,6 +168,7 @@ namespace Insight.Utils.Controls
                     {
                         info = i;
                         info.unRead = false;
+                        control.unRead = false;
                         resetUnread(info.id);
                         sessionClick?.Invoke(sender, args);
                     };
