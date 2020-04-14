@@ -17,9 +17,21 @@ namespace Insight.Utils.Controls.Nim
         public new delegate void Click(object sender, EventArgs args);
 
         /// <summary>
+        /// 控件双击事件的委托
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public new delegate void DoubleClick(object sender, EventArgs args);
+
+        /// <summary>
         /// 控件点击事件
         /// </summary>
         public event Click click;
+
+        /// <summary>
+        /// 控件双击事件
+        /// </summary>
+        public event DoubleClick doubleClick;
 
         /// <summary>
         /// 显示头像
@@ -29,7 +41,7 @@ namespace Insight.Utils.Controls.Nim
             set
             {
                 if (value == null) return;
-
+                
                 picTarget.Image = value;
             }
         }
@@ -77,12 +89,21 @@ namespace Insight.Utils.Controls.Nim
         {
             InitializeComponent();
 
+            // 控件点击
             pceSession.Click += clicked;
             picTarget.Click += clicked;
             labName.Click += clicked;
             labTime.Click += clicked;
             labMessage.Click += clicked;
             peeUnread.Click += clicked;
+
+            // 控件双击
+            pceSession.DoubleClick += doubleClicked;
+            picTarget.DoubleClick += doubleClicked;
+            labName.DoubleClick += doubleClicked;
+            labTime.DoubleClick += doubleClicked;
+            labMessage.DoubleClick += doubleClicked;
+            peeUnread.DoubleClick += doubleClicked;
         }
 
         /// <summary>
@@ -104,6 +125,19 @@ namespace Insight.Utils.Controls.Nim
             if (click == null) return;
 
             click.Invoke(sender, args);
+            Refresh();
+        }
+
+        /// <summary>
+        /// 双击击控件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void doubleClicked(object sender, EventArgs args)
+        {
+            if (doubleClick == null) return;
+
+            doubleClick.Invoke(sender, args);
             Refresh();
         }
     }

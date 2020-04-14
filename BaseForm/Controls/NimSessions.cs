@@ -17,17 +17,29 @@ namespace Insight.Utils.Controls
         private readonly List<NimSessionInfo> sessions = new List<NimSessionInfo>();
         private int height;
 
-        /// <summary>  
-        /// 当消息发送后，通知处理消息
-        /// </summary>  
-        public event SessionClickHandle sessionClick;
-
         /// <summary>
-        /// 表示将处理当前消息事件的方法
+        /// 表示将处理当前点击会话的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public delegate void SessionClickHandle(object sender, EventArgs e);
+
+        /// <summary>
+        /// 表示将处理当前点击会话的方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void SessionDoubleClickHandle(object sender, EventArgs e);
+
+        /// <summary>  
+        /// 当点击会话后，通知处理
+        /// </summary>  
+        public event SessionClickHandle sessionClick;
+
+        /// <summary>  
+        /// 当点击会话后，通知处理
+        /// </summary>  
+        public event SessionDoubleClickHandle sessionDoubleClick;
 
         /// <summary>
         /// 当前会话
@@ -174,6 +186,14 @@ namespace Insight.Utils.Controls
                         control.unRead = false;
                         resetUnread(info.id);
                         sessionClick?.Invoke(sender, args);
+                    };
+                    control.doubleClick += (sender, args) =>
+                    {
+                        info = i;
+                        info.unRead = false;
+                        control.unRead = false;
+                        resetUnread(info.id);
+                        sessionDoubleClick?.Invoke(sender, args);
                     };
                     height = height + control.Size.Height;
 
