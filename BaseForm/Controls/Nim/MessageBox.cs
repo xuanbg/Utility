@@ -44,7 +44,6 @@ namespace Insight.Utils.Controls.Nim
                         showText();
                         break;
                 }
-
             }
         }
 

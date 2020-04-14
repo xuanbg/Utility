@@ -90,20 +90,20 @@ namespace Insight.Utils.Controls.Nim
             InitializeComponent();
 
             // 控件点击
-            pceSession.Click += clicked;
-            picTarget.Click += clicked;
-            labName.Click += clicked;
-            labTime.Click += clicked;
-            labMessage.Click += clicked;
-            peeUnread.Click += clicked;
+            pceSession.Click += (sender, args) =>  click?.Invoke(sender, args);
+            picTarget.Click += (sender, args) => click?.Invoke(sender, args);
+            labName.Click += (sender, args) => click?.Invoke(sender, args);
+            labTime.Click += (sender, args) => click?.Invoke(sender, args);
+            labMessage.Click += (sender, args) => click?.Invoke(sender, args);
+            peeUnread.Click += (sender, args) => click?.Invoke(sender, args);
 
             // 控件双击
-            pceSession.DoubleClick += doubleClicked;
-            picTarget.DoubleClick += doubleClicked;
-            labName.DoubleClick += doubleClicked;
-            labTime.DoubleClick += doubleClicked;
-            labMessage.DoubleClick += doubleClicked;
-            peeUnread.DoubleClick += doubleClicked;
+            pceSession.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            picTarget.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            labName.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            labTime.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            labMessage.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            peeUnread.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
         }
 
         /// <summary>
@@ -113,32 +113,6 @@ namespace Insight.Utils.Controls.Nim
         {
             var ts = DateTime.Now - _time;
             labTime.Text = _time.ToString(ts.TotalHours > 12 ? "yy-MM-dd" : "hh:mm:ss");
-        }
-
-        /// <summary>
-        /// 点击控件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void clicked(object sender, EventArgs args)
-        {
-            if (click == null) return;
-
-            click.Invoke(sender, args);
-            Refresh();
-        }
-
-        /// <summary>
-        /// 双击击控件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void doubleClicked(object sender, EventArgs args)
-        {
-            if (doubleClick == null) return;
-
-            doubleClick.Invoke(sender, args);
-            Refresh();
         }
     }
 }

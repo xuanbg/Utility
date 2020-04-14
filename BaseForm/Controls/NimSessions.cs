@@ -202,7 +202,6 @@ namespace Insight.Utils.Controls
                 hide.Height = height;
                 hide.Visible = true;
                 show.Visible = false;
-                Refresh();
 
                 show.SendToBack();
                 show.Controls.Clear();
