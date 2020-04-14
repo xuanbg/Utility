@@ -69,6 +69,8 @@ namespace Insight.Utils.Controls
                 refresh();
 
                 info = sessions.OrderBy(i => i.time).Last();
+                info.unRead = false;
+                resetUnread(info.id);
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
                 Invoke((Action)action);
