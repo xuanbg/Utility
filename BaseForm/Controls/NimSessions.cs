@@ -55,6 +55,7 @@ namespace Insight.Utils.Controls
         {
             height = 0;
             sessions.Clear();
+
             SessionAPI.QueryAllRecentSession((count, data) =>
             {
                 if (data?.SessionList == null) return;
