@@ -104,7 +104,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 新增会话记录
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="info">会话信息</param>
         private void addSession(SessionInfo info)
         {
             var user = NimUtil.getUser(info.Id);
@@ -123,7 +123,7 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 更新会话记录
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="info">会话信息</param>
         private void updateSession(SessionInfo info)
         {
             var session = sessions.Find(i => i.id == info.Id);
@@ -133,9 +133,9 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 更新会话记录
+        /// 删除会话记录
         /// </summary>
-        /// <param name="info"></param>
+        /// <param name="info">会话信息</param>
         private void removeSession(SessionInfo info)
         {
             var session = sessions.Find(i => i.id == info.Id);
@@ -189,8 +189,8 @@ namespace Insight.Utils.Controls
         /// <summary>
         /// 读取消息内容
         /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
+        /// <param name="info">会话信息</param>
+        /// <returns>消息内容</returns>
         private string readMsg(SessionInfo info)
         {
             switch (info.MsgType)
