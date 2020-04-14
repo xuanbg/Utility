@@ -68,11 +68,8 @@ namespace Insight.Utils.Controls
                 Task.WaitAll(tasks);
                 refresh();
 
-                void action()
-                {
-                    info = sessions.OrderBy(i => i.time).Last();
-                    sessionClick?.Invoke(this, EventArgs.Empty);
-                }
+                info = sessions.OrderBy(i => i.time).Last();
+                void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
                 Invoke((Action)action);
             });
