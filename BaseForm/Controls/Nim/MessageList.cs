@@ -43,7 +43,7 @@ namespace Insight.Utils.Controls.Nim
             }
 
             var ts = time - messageTime;
-            if (ts.TotalMinutes > 10) addTime(time);
+            if (ts.TotalMinutes > 15) addTime(time);
 
             var head = message.direction == 0 ? me : target;
             var control = new MessageBox
