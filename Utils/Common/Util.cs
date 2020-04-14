@@ -91,6 +91,8 @@ namespace Insight.Utils.Common
         /// <returns>String Hash值</returns>
         public static string hash(string str)
         {
+            if (string.IsNullOrEmpty(str)) return null;
+
             var md5 = MD5.Create();
             var s = md5.ComputeHash(Encoding.UTF8.GetBytes(str.Trim()));
             return s.Aggregate("", (current, c) => current + c.ToString("x2"));
