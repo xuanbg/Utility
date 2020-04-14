@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Controls.Nim;
-using NIM;
 using NIM.Messagelog;
 using NIM.Session;
 
@@ -128,7 +127,7 @@ namespace Insight.Utils.Controls
                 id = info.Id,
                 name = user.name,
                 head = NimUtil.getHeadImage(user.icon),
-                message = readMsg(info),
+                message = NimUtil.readMsg(info),
                 time = info.Timetag / 1000,
                 unRead = info.UnreadCount > 0
             };
@@ -142,7 +141,7 @@ namespace Insight.Utils.Controls
         private void updateSession(SessionInfo info)
         {
             var session = sessions.Find(i => i.id == info.Id);
-            session.message = readMsg(info);
+            session.message = NimUtil.readMsg(info);
             session.time = info.Timetag / 1000;
             session.unRead = true;
         }
@@ -210,26 +209,6 @@ namespace Insight.Utils.Controls
             }
 
             Invoke((Action)action);
-        }
-
-        /// <summary>
-        /// 读取消息内容
-        /// </summary>
-        /// <param name="info">会话信息</param>
-        /// <returns>消息内容</returns>
-        private string readMsg(SessionInfo info)
-        {
-            switch (info.MsgType)
-            {
-                case NIMMessageType.kNIMMessageTypeText:
-                    return info.Content;
-                case NIMMessageType.kNIMMessageTypeImage:
-                    return "[图片]";
-                case NIMMessageType.kNIMMessageTypeFile:
-                    return "[文件]";
-                default:
-                    return "[未知]";
-            }
         }
 
         /// <summary>

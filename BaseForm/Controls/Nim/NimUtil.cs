@@ -2,6 +2,9 @@
 using System.Drawing;
 using System.Net;
 using Insight.Utils.Client;
+using Insight.Utils.Common;
+using NIM;
+using NIM.Session;
 
 namespace Insight.Utils.Controls.Nim
 {
@@ -50,6 +53,46 @@ namespace Insight.Utils.Controls.Nim
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 读取会话中消息内容
+        /// </summary>
+        /// <param name="info">会话信息</param>
+        /// <returns>消息内容</returns>
+        public static string readMsg(SessionInfo info)
+        {
+            switch (info.MsgType)
+            {
+                case NIMMessageType.kNIMMessageTypeText:
+                    return info.Content;
+                case NIMMessageType.kNIMMessageTypeImage:
+                    return "[图片]";
+                case NIMMessageType.kNIMMessageTypeFile:
+                    return "[文件]";
+                default:
+                    return "[未知]";
+            }
+        }
+
+        /// <summary>
+        /// 读取消息内容
+        /// </summary>
+        /// <param name="message">消息</param>
+        /// <returns>消息内容</returns>
+        public static object getMsg(NIMIMMessage message)
+        {
+            var str = message.Serialize();
+            switch (message.MessageType)
+            {
+                case NIMMessageType.kNIMMessageTypeText:
+                    return Util.deserialize<TextMessage>(str);
+                case NIMMessageType.kNIMMessageTypeImage:
+                case NIMMessageType.kNIMMessageTypeFile:
+                    return Util.convertTo<FileMessage>(str);
+                default:
+                    return null;
+            }
         }
     }
 

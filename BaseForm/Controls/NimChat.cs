@@ -6,24 +6,16 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
 using Insight.Utils.Controls.Nim;
+using NIM;
+using NIM.Messagelog;
+using NIM.Session;
 using NIM.User;
 
 namespace Insight.Utils.Controls
 {
     public partial class NimChat : XtraUserControl
     {
-
-        /// <summary>  
-        /// 当消息发送后，通知处理消息的事件
-        /// </summary>  
-        public event MessageSendHandle messageSend;
-
-        /// <summary>
-        /// 表示将处理当前消息事件的方法
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public delegate void MessageSendHandle(object sender, MessageEventArgs e);
+        private NimMessage sendingMessage;
 
         /// <summary>
         /// 发送者云信ID
@@ -63,6 +55,9 @@ namespace Insight.Utils.Controls
                 mmeInput.EditValue = null;
             };
 
+            TalkAPI.OnSendMessageCompleted += sendMessageResultHandler;
+            TalkAPI.OnReceiveMessageHandler += receiveMessage;
+
             mmeInput.Focus();
         }
 
@@ -99,28 +94,82 @@ namespace Insight.Utils.Controls
             {
                 mlcMessage.me = myHead;
             }
+
+            getHistory();
+        }
+
+        /// <summary>
+        /// 获取历史消息
+        /// </summary>
+        private void getHistory()
+        {
+            MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
+            {
+                foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
+                {
+                    addMessage(msg);
+                }
+            });
+        }
+
+        /// <summary>
+        /// 检查消息发送结果
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
+        {
+            void action()
+            {
+                if (args.ArcInfo.Response == ResponseCode.kNIMResSuccess)
+                {
+                    mlcMessage.addMessage(sendingMessage);
+                    mmeInput.EditValue = null;
+                    mmeInput.Focus();
+
+                    return;
+                }
+
+                Messages.showError("发送失败");
+            }
+
+            Invoke((Action) action);
+        }
+
+        /// <summary>
+        /// 接收消息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void receiveMessage(object sender, NIMReceiveMessageEventArgs args)
+        {
+            var type = args.Message.MessageContent.SessionType;
+            if (type == NIMSessionType.kNIMSessionTypeP2P && args.Message.MessageContent.SenderID != targetId) return;
+
+            addMessage(args.Message.MessageContent);
         }
 
         /// <summary>
         /// 将接收到的消息添加到消息列表
         /// </summary>
-        /// <param name="message"></param>
-        public void addMessage(NimMessage message)
+        /// <param name="msg"></param>
+        public void addMessage(NIMIMMessage msg)
         {
-            message.direction = 1;
+            var message = new NimMessage
+            {
+                id = msg.TalkID,
+                msgid = msg.ServerMsgId,
+                from = msg.SenderID,
+                to = msg.ReceiverID,
+                type = msg.MessageType.GetHashCode(),
+                body = NimUtil.getMsg(msg),
+                direction = msg.SenderID == myId ? 0 : 1,
+                timetag = msg.TimeStamp / 1000
+            };
 
-            mlcMessage.addMessage(message);
-        }
+            void action() => mlcMessage.addMessage(message);
 
-        /// <summary>
-        /// 消息发送成功后更新数据
-        /// </summary>
-        /// <param name="id">消息ID</param>
-        /// <param name="msgId">云信消息ID</param>
-        /// <param name="timeTag">消息发送时间戳</param>
-        public void messageSent(string id, long msgId, long timeTag)
-        {
-            mlcMessage.addMessage(id, msgId, timeTag);
+            Invoke((Action)action);
         }
 
         /// <summary>
@@ -151,9 +200,6 @@ namespace Insight.Utils.Controls
         private void sendTextMessage(string msg)
         {
             if (string.IsNullOrEmpty(msg)) return;
-
-            mmeInput.EditValue = null;
-            mmeInput.Focus();
 
             var body = new TextMessage { msg = msg };
             sendMessage(0, body);
@@ -206,7 +252,7 @@ namespace Insight.Utils.Controls
         /// <param name="body">消息体</param>
         private void sendMessage(int type, object body)
         {
-            var message = new NimMessage
+            sendingMessage = new NimMessage
             {
                 id = Util.newId("N"),
                 from = myId,
@@ -215,29 +261,12 @@ namespace Insight.Utils.Controls
                 direction = 0,
                 body = body
             };
-            mlcMessage.addMessage(message);
 
-            messageSend?.Invoke(this, new MessageEventArgs(message));
         }
-    }
 
-    /// <summary>
-    /// 消息事件参数类
-    /// </summary>
-    public class MessageEventArgs : EventArgs
-    {
-        /// <summary>
-        /// 云信IM点对点消息
-        /// </summary>
-        public NimMessage message { get; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="message">云信IM点对点消息</param>
-        public MessageEventArgs(NimMessage message)
+        static void sendMessage(NIMIMMessage message, ReportUploadProgressDelegate action = null)
         {
-            this.message = message;
+
         }
     }
 }

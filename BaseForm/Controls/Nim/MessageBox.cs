@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
+using Newtonsoft.Json;
 
 namespace Insight.Utils.Controls.Nim
 {
@@ -192,6 +193,7 @@ namespace Insight.Utils.Controls.Nim
         /// <summary>
         /// 消息内容
         /// </summary>
+        [JsonProperty("msg_body")]
         public string msg { get; set; }
     }
 

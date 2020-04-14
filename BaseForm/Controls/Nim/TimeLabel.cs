@@ -21,13 +21,9 @@ namespace Insight.Utils.Controls.Nim
                 {
                     labTime.Text = value.ToString("MM-dd hh:mm:ss");
                 }
-                else if (ts.TotalHours > 12)
-                {
-                    labTime.Text = value.ToString("dd hh:mm:ss");
-                }
                 else
                 {
-                    labTime.Text = value.ToString("hh:mm:ss");
+                    labTime.Text = value.ToString("dd hh:mm:ss");
                 }
             }
         }
