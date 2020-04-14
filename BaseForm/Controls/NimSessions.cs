@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Controls.Nim;
@@ -10,6 +11,7 @@ namespace Insight.Utils.Controls
 {
     public partial class NimSessions : XtraUserControl
     {
+        private static object taskLock = new object();
         private int height;
 
         /// <summary>  
@@ -54,10 +56,8 @@ namespace Insight.Utils.Controls
 
                 foreach (var info in data.SessionList)
                 {
-                    addSession(info);
+                    Task.Run(() => addSession(info));
                 }
-
-                Refresh();
             });
         }
 
@@ -72,7 +72,6 @@ namespace Insight.Utils.Controls
             {
                 case NIMSessionCommand.kNIMSessionCommandAdd:
                     addSession(e.Info);
-                    Refresh();
 
                     break;
                 case NIMSessionCommand.kNIMSessionCommandUpdate:
@@ -135,25 +134,29 @@ namespace Insight.Utils.Controls
         {
             void action()
             {
-                var control = new SessionBox
+                lock (taskLock)
                 {
-                    headImage = session.target,
-                    name = session.targetName,
-                    message = session.message,
-                    time = session.time,
-                    unRead = session.unRead,
-                    Name = session.id,
-                    Location = new Point(0, height),
-                    Dock = DockStyle.Top,
-                };
-                control.click += (sender, args) => sessionClick?.Invoke(this, new SessionEventArgs(session.targetId));
-                pceMain.Controls.Add(control);
+                    var control = new SessionBox
+                    {
+                        headImage = session.target,
+                        name = session.targetName,
+                        message = session.message,
+                        time = session.time,
+                        unRead = session.unRead,
+                        Name = session.id,
+                        Location = new Point(0, height),
+                        Dock = DockStyle.Top,
+                    };
+                    control.click += (sender, args) =>
+                        sessionClick?.Invoke(this, new SessionEventArgs(session.targetId));
+                    pceMain.Controls.Add(control);
 
-                height = height + control.Size.Height;
-                if (height > Height) pceMain.Dock = DockStyle.Top;
+                    height = height + control.Size.Height;
+                    if (height > Height) pceMain.Dock = DockStyle.Top;
 
-                pceMain.Height = height;
-                sceMain.ScrollControlIntoView(control);
+                    pceMain.Height = height;
+                    sceMain.ScrollControlIntoView(control);
+                }
             }
 
             Invoke((Action)action);
