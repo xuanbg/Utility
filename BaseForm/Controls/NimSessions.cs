@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Controls.Nim;
 using NIM;
+using NIM.Messagelog;
 using NIM.Session;
 
 namespace Insight.Utils.Controls
 {
     public partial class NimSessions : XtraUserControl
     {
-        private static readonly object taskLock = new object();
+        private readonly List<NimSessionInfo> sessions = new List<NimSessionInfo>();
         private int height;
 
         /// <summary>  
@@ -24,17 +27,12 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void SessionClickHandle(object sender, SessionEventArgs e);
+        public delegate void SessionClickHandle(object sender, EventArgs e);
 
         /// <summary>
         /// 当前会话
         /// </summary>
-        public NimSessionInfo session;
-
-        /// <summary>
-        /// 用户云信ID
-        /// </summary>
-        public string myId { private get; set; }
+        public NimSessionInfo info;
 
         /// <summary>
         /// 构造方法
@@ -59,28 +57,25 @@ namespace Insight.Utils.Controls
             {
                 if (data?.SessionList == null) return;
 
-                void action() => controlChanged(session);
-                foreach (var info in data.SessionList)
+                var index = 0;
+                var tasks = new Task[data.Count];
+                foreach (var session in data.SessionList)
                 {
-                    var task = Task.Run(() => addSession(info));
-                    task.Wait();
-                    if (!task.IsCompleted) continue;
-
-                    Invoke((Action) action);
+                    tasks[index] = Task.Run(() => addSession(session));
+                    index++;
                 }
+
+                Task.WaitAll(tasks);
+                sessions.OrderBy(i => i.time).ToList().ForEach(i =>
+                {
+                    info = i;
+                    addBox(i);
+                });
+
+                void action() => sessionClick?.Invoke(this, EventArgs.Empty);
+
+                Invoke((Action)action);
             });
-        }
-
-        /// <summary>
-        /// 处理控件点击事件
-        /// </summary>
-        /// <param name="info"></param>
-        private void controlChanged(NimSessionInfo info)
-        {
-            session = info;
-
-            var args = new SessionEventArgs(info.targetId, info.targetName);
-            sessionClick?.Invoke(this, args);
         }
 
         /// <summary>
@@ -93,151 +88,143 @@ namespace Insight.Utils.Controls
             switch (e.Info.Command)
             {
                 case NIMSessionCommand.kNIMSessionCommandAdd:
-                    addSession(e.Info);
+                    addBox(addSession(e.Info));
 
                     break;
                 case NIMSessionCommand.kNIMSessionCommandUpdate:
-                    updateControl(e.Info);
+                    var session = updateSession(e.Info);
+                    removeBox(session.id);
+                    addBox(session);
 
                     break;
                 case NIMSessionCommand.kNIMSessionCommandRemove:
-                    removeControl(e.Info.Id);
+                    removeBox(e.Info.Id);
 
                     break;
             }
         }
 
         /// <summary>
-        /// 构造会话控件并加入列表
+        /// 新增会话记录
         /// </summary>
         /// <param name="info"></param>
-        private void addSession(SessionInfo info)
+        private NimSessionInfo addSession(SessionInfo info)
         {
-            var userId = info.Sender == myId ? info.ExtendString : info.Sender;
-            var user = NimUtil.getUser(userId);
-            var nimSession = new NimSessionInfo
+            var user = NimUtil.getUser(info.Id);
+            var session = new NimSessionInfo
             {
                 id = info.Id,
-                targetId = userId,
-                targetName = user.name,
-                target = NimUtil.getHeadImage(user.icon),
+                name = user.name,
+                head = NimUtil.getHeadImage(user.icon),
+                message = readMsg(info),
                 time = info.Timetag / 1000,
                 unRead = info.UnreadCount > 0
             };
+            sessions.Add(session);
 
-            switch (info.MsgType)
-            {
-                case NIMMessageType.kNIMMessageTypeText:
-                    nimSession.message = info.Content;
-
-                    break;
-                case NIMMessageType.kNIMMessageTypeImage:
-                    nimSession.message = "[图片]";
-
-                    break;
-                case NIMMessageType.kNIMMessageTypeFile:
-                    nimSession.message = "[文件]";
-
-                    break;
-                default:
-                    nimSession.message = "[未知]";
-
-                    break;
-            }
-
-            addControl(nimSession);
-        }
-
-        /// <summary>
-        /// 构造并添加会话控件到会话列表
-        /// </summary>
-        /// <param name="session">云信会话信息</param>
-        private void addControl(NimSessionInfo session)
-        {
-            void action()
-            {
-                lock (taskLock)
-                {
-                    var control = new SessionBox
-                    {
-                        headImage = session.target,
-                        name = session.targetName,
-                        message = session.message,
-                        time = session.time,
-                        unRead = session.unRead,
-                        Name = session.id,
-                        Location = new Point(0, height),
-                        Dock = DockStyle.Top,
-                    };
-
-                    control.click += (sender, args) => controlChanged(session);
-                    pceMain.Controls.Add(control);
-
-                    this.session = session;
-                    height = height + control.Size.Height;
-                    if (height > Height) pceMain.Dock = DockStyle.Top;
-
-                    pceMain.Height = height;
-                    sceMain.ScrollControlIntoView(control);
-                }
-            }
-
-            Invoke((Action)action);
+            return session;
         }
 
         /// <summary>
         /// 更新会话记录
         /// </summary>
         /// <param name="info"></param>
-        private void updateControl(SessionInfo info)
+        private NimSessionInfo updateSession(SessionInfo info)
         {
-            void action()
-            {
-                var control = (SessionBox) pceMain.Controls[info.Id];
-                control.unRead = true;
-                switch (info.MsgType)
-                {
-                    case NIMMessageType.kNIMMessageTypeText:
-                        control.message = info.Content;
+            var session = sessions.Find(i => i.id == info.Id);
+            session.message = readMsg(info);
+            session.time = info.Timetag / 1000;
+            session.unRead = true;
 
-                        break;
-                    case NIMMessageType.kNIMMessageTypeImage:
-                        control.message = "[图片]";
-
-                        break;
-                    case NIMMessageType.kNIMMessageTypeFile:
-                        control.message = "[文件]";
-
-                        break;
-                    default:
-                        control.message = "[未知]";
-
-                        break;
-                }
-
-                control.time = info.Timetag / 1000;
-            }
-
-            Invoke((Action) action);
+            return session;
         }
 
         /// <summary>
-        /// 移除控件
+        /// 添加会话控件
+        /// </summary>
+        private void addBox(NimSessionInfo info)
+        {
+            void action()
+            {
+                var control = new SessionBox
+                {
+                    headImage = info.head,
+                    name = info.name,
+                    message = info.message,
+                    time = info.time,
+                    unRead = info.unRead,
+                    Name = info.id,
+                    Location = new Point(0, height),
+                    Dock = DockStyle.Top,
+                };
+                control.click += (sender, args) =>
+                {
+                    info.unRead = false;
+                    this.info = info;
+                    resetUnread(info.id);
+                    sessionClick?.Invoke(sender, args);
+                };
+                height = height + control.Size.Height;
+
+                pceMain.Controls.Add(control);
+                pceMain.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
+                pceMain.Height = height;
+            }
+
+            Invoke((Action)action);
+        }
+
+        /// <summary>
+        /// 移除会话控件
         /// </summary>
         /// <param name="id"></param>
-        private void removeControl(string id)
+        private void removeBox(string id)
         {
             void action()
             {
                 var control = pceMain.Controls[id];
                 pceMain.Controls.Remove(control);
                 height = height + control.Size.Height;
-                if (height <= Height) pceMain.Dock = DockStyle.Fill;
-
+                pceMain.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
                 pceMain.Height = height;
             }
 
             Invoke((Action) action);
+        }
+
+        /// <summary>
+        /// 读取消息内容
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        private string readMsg(SessionInfo info)
+        {
+            switch (info.MsgType)
+            {
+                case NIMMessageType.kNIMMessageTypeText:
+                    return info.Content;
+                case NIMMessageType.kNIMMessageTypeImage:
+                    return "[图片]";
+                case NIMMessageType.kNIMMessageTypeFile:
+                    return "[文件]";
+                default:
+                    return "[未知]";
+            }
+        }
+
+        /// <summary>
+        /// 会话未读数清零
+        /// </summary>
+        /// <param name="id">会话ID</param>
+        private void resetUnread(string id)
+        {
+            SessionAPI.SetUnreadCountZero(NIMSessionType.kNIMSessionTypeP2P, id, (a, b, c) =>
+            {
+            });
+
+            MessagelogAPI.MarkMessagesStatusRead(id, NIMSessionType.kNIMSessionTypeP2P, (a, b, c) =>
+            {
+            });
         }
 
         /// <summary>
@@ -252,33 +239,6 @@ namespace Insight.Utils.Controls
         }
     }
 
-    /// <summary>
-    /// 消息事件参数类
-    /// </summary>
-    public class SessionEventArgs : EventArgs
-    {
-        /// <summary>
-        /// 云信用户ID
-        /// </summary>
-        public string targetId { get; }
-
-        /// <summary>
-        /// 云信用户昵称
-        /// </summary>
-        public string name { get; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="targetId">云信用户ID</param>
-        /// <param name="name">云信用户昵称</param>
-        public SessionEventArgs(string targetId, string name)
-        {
-            this.targetId = targetId;
-            this.name = name;
-        }
-    }
-
     public class NimSessionInfo
     {
         /// <summary>
@@ -287,19 +247,14 @@ namespace Insight.Utils.Controls
         public string id { get; set; }
 
         /// <summary>
-        /// 对方云信ID
-        /// </summary>
-        public string targetId { get; set; }
-
-        /// <summary>
         /// 对方昵称
         /// </summary>
-        public string targetName { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         /// 对方头像
         /// </summary>
-        public Image target { get; set; }
+        public Image head { get; set; }
 
         /// <summary>
         /// 最后一条消息
