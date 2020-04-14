@@ -45,10 +45,10 @@ namespace Insight.Utils.Controls
             this.sbeImage = new DevExpress.XtraEditors.SimpleButton();
             this.sceMain = new DevExpress.XtraEditors.SplitContainerControl();
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
-            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
             this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
+            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).BeginInit();
             this.pceInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mmeInput.Properties)).BeginInit();
@@ -216,14 +216,6 @@ namespace Insight.Utils.Controls
             this.pceMessage.Size = new System.Drawing.Size(600, 375);
             this.pceMessage.TabIndex = 0;
             // 
-            // mlcMessage
-            // 
-            this.mlcMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mlcMessage.Location = new System.Drawing.Point(2, 2);
-            this.mlcMessage.Name = "mlcMessage";
-            this.mlcMessage.Size = new System.Drawing.Size(596, 371);
-            this.mlcMessage.TabIndex = 0;
-            // 
             // pceBotton
             // 
             this.pceBotton.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -242,13 +234,21 @@ namespace Insight.Utils.Controls
             this.pceSpei.Size = new System.Drawing.Size(600, 5);
             this.pceSpei.TabIndex = 0;
             // 
-            // NimChatControl
+            // mlcMessage
+            // 
+            this.mlcMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mlcMessage.Location = new System.Drawing.Point(2, 2);
+            this.mlcMessage.Name = "mlcMessage";
+            this.mlcMessage.Size = new System.Drawing.Size(596, 371);
+            this.mlcMessage.TabIndex = 0;
+            // 
+            // NimChat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.sceMain);
             this.MinimumSize = new System.Drawing.Size(600, 540);
-            this.Name = "NimChatControl";
+            this.Name = "NimChat";
             this.Size = new System.Drawing.Size(600, 540);
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).EndInit();
             this.pceInput.ResumeLayout(false);
@@ -278,12 +278,12 @@ namespace Insight.Utils.Controls
         private DevExpress.XtraEditors.SimpleButton sbeImage;
         private DevExpress.XtraEditors.SplitContainerControl sceMain;
         private DevExpress.XtraEditors.PanelControl pceMessage;
-        private MessageList mlcMessage;
         private DevExpress.XtraEditors.PanelControl pceBotton;
         private DevExpress.XtraEditors.PanelControl pceSpei;
         private DevExpress.XtraEditors.SimpleButton sbeReply;
         private System.Windows.Forms.OpenFileDialog ofdMessage;
         private DevExpress.XtraEditors.LabelControl labSp2;
         private DevExpress.XtraEditors.LabelControl labSp1;
+        private MessageList mlcMessage;
     }
 }
