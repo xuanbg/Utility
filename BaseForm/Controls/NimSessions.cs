@@ -66,13 +66,13 @@ namespace Insight.Utils.Controls
                 }
 
                 Task.WaitAll(tasks);
-                sessions.OrderBy(i => i.time).ToList().ForEach(i =>
-                {
-                    info = i;
-                    addBox(i);
-                });
+                refresh();
 
-                void action() => sessionClick?.Invoke(this, EventArgs.Empty);
+                void action()
+                {
+                    info = sessions.OrderBy(i => i.time).Last();
+                    sessionClick?.Invoke(this, EventArgs.Empty);
+                }
 
                 Invoke((Action)action);
             });
@@ -88,27 +88,24 @@ namespace Insight.Utils.Controls
             switch (e.Info.Command)
             {
                 case NIMSessionCommand.kNIMSessionCommandAdd:
-                    addBox(addSession(e.Info));
-
+                    addSession(e.Info);
                     break;
                 case NIMSessionCommand.kNIMSessionCommandUpdate:
-                    var session = updateSession(e.Info);
-                    removeBox(session.id);
-                    addBox(session);
-
+                    updateSession(e.Info);
                     break;
                 case NIMSessionCommand.kNIMSessionCommandRemove:
-                    removeBox(e.Info.Id);
-
+                    removeSession(e.Info);
                     break;
             }
+
+            refresh();
         }
 
         /// <summary>
         /// 新增会话记录
         /// </summary>
         /// <param name="info"></param>
-        private NimSessionInfo addSession(SessionInfo info)
+        private void addSession(SessionInfo info)
         {
             var user = NimUtil.getUser(info.Id);
             var session = new NimSessionInfo
@@ -121,75 +118,72 @@ namespace Insight.Utils.Controls
                 unRead = info.UnreadCount > 0
             };
             sessions.Add(session);
-
-            return session;
         }
 
         /// <summary>
         /// 更新会话记录
         /// </summary>
         /// <param name="info"></param>
-        private NimSessionInfo updateSession(SessionInfo info)
+        private void updateSession(SessionInfo info)
         {
             var session = sessions.Find(i => i.id == info.Id);
             session.message = readMsg(info);
             session.time = info.Timetag / 1000;
             session.unRead = true;
-
-            return session;
         }
 
         /// <summary>
-        /// 添加会话控件
+        /// 更新会话记录
         /// </summary>
-        private void addBox(NimSessionInfo info)
+        /// <param name="info"></param>
+        private void removeSession(SessionInfo info)
+        {
+            var session = sessions.Find(i => i.id == info.Id);
+            sessions.Remove(session);
+        }
+
+        /// <summary>
+        /// 刷新会话列表
+        /// </summary>
+        private void refresh()
         {
             void action()
             {
-                var control = new SessionBox
+                var hide = sceMain.Controls[0];
+                var show = sceMain.Controls[1];
+                sessions.OrderBy(i => i.time).ToList().ForEach(i =>
                 {
-                    headImage = info.head,
-                    name = info.name,
-                    message = info.message,
-                    time = info.time,
-                    unRead = info.unRead,
-                    Name = info.id,
-                    Location = new Point(0, height),
-                    Dock = DockStyle.Top,
-                };
-                control.click += (sender, args) =>
-                {
-                    info.unRead = false;
-                    this.info = info;
-                    resetUnread(info.id);
-                    sessionClick?.Invoke(sender, args);
-                };
-                height = height + control.Size.Height;
+                    var control = new SessionBox
+                    {
+                        headImage = i.head,
+                        name = i.name,
+                        message = i.message,
+                        time = i.time,
+                        unRead = i.unRead,
+                        Name = i.id,
+                        Location = new Point(0, height),
+                        Dock = DockStyle.Top,
+                    };
+                    control.click += (sender, args) =>
+                    {
+                        info = i;
+                        info.unRead = false;
+                        resetUnread(info.id);
+                        sessionClick?.Invoke(sender, args);
+                    };
+                    height = height + control.Size.Height;
 
-                pceMain.Controls.Add(control);
-                pceMain.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
-                pceMain.Height = height;
+                    hide.Controls.Add(control);
+                    hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
+                    hide.Height = height;
+                });
+                hide.Visible = true;
+                show.Visible = false;
+                Refresh();
+                show.SendToBack();
             }
 
             Invoke((Action)action);
-        }
-
-        /// <summary>
-        /// 移除会话控件
-        /// </summary>
-        /// <param name="id"></param>
-        private void removeBox(string id)
-        {
-            void action()
-            {
-                var control = pceMain.Controls[id];
-                pceMain.Controls.Remove(control);
-                height = height + control.Size.Height;
-                pceMain.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
-                pceMain.Height = height;
-            }
-
-            Invoke((Action) action);
         }
 
         /// <summary>
@@ -232,7 +226,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         private void refreshTime(object sender, System.Timers.ElapsedEventArgs e)
         {
-            foreach (SessionBox control in pceMain.Controls)
+            foreach (SessionBox control in pceMain0.Controls)
             {
                 control.refreshTime();
             }
