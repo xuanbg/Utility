@@ -11,7 +11,7 @@ namespace Insight.Utils.Controls
 {
     public partial class NimSessions : XtraUserControl
     {
-        private static object taskLock = new object();
+        private static readonly object taskLock = new object();
         private int height;
 
         /// <summary>  
@@ -25,6 +25,11 @@ namespace Insight.Utils.Controls
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public delegate void SessionClickHandle(object sender, SessionEventArgs e);
+
+        /// <summary>
+        /// 当前会话
+        /// </summary>
+        public NimSessionInfo session;
 
         /// <summary>
         /// 用户云信ID
@@ -54,11 +59,28 @@ namespace Insight.Utils.Controls
             {
                 if (data?.SessionList == null) return;
 
+                void action() => controlChanged(session);
                 foreach (var info in data.SessionList)
                 {
-                    Task.Run(() => addSession(info));
+                    var task = Task.Run(() => addSession(info));
+                    task.Wait();
+                    if (!task.IsCompleted) continue;
+
+                    Invoke((Action) action);
                 }
             });
+        }
+
+        /// <summary>
+        /// 处理控件点击事件
+        /// </summary>
+        /// <param name="info"></param>
+        private void controlChanged(NimSessionInfo info)
+        {
+            session = info;
+
+            var args = new SessionEventArgs(info.targetId, info.targetName);
+            sessionClick?.Invoke(this, args);
         }
 
         /// <summary>
@@ -93,7 +115,7 @@ namespace Insight.Utils.Controls
         {
             var userId = info.Sender == myId ? info.ExtendString : info.Sender;
             var user = NimUtil.getUser(userId);
-            var session = new NimSessionInfo
+            var nimSession = new NimSessionInfo
             {
                 id = info.Id,
                 targetId = userId,
@@ -106,24 +128,24 @@ namespace Insight.Utils.Controls
             switch (info.MsgType)
             {
                 case NIMMessageType.kNIMMessageTypeText:
-                    session.message = info.Content;
+                    nimSession.message = info.Content;
 
                     break;
                 case NIMMessageType.kNIMMessageTypeImage:
-                    session.message = "[图片]";
+                    nimSession.message = "[图片]";
 
                     break;
                 case NIMMessageType.kNIMMessageTypeFile:
-                    session.message = "[文件]";
+                    nimSession.message = "[文件]";
 
                     break;
                 default:
-                    session.message = "[未知]";
+                    nimSession.message = "[未知]";
 
                     break;
             }
 
-            addControl(session);
+            addControl(nimSession);
         }
 
         /// <summary>
@@ -147,10 +169,11 @@ namespace Insight.Utils.Controls
                         Location = new Point(0, height),
                         Dock = DockStyle.Top,
                     };
-                    control.click += (sender, args) =>
-                        sessionClick?.Invoke(this, new SessionEventArgs(session.targetId));
+
+                    control.click += (sender, args) => controlChanged(session);
                     pceMain.Controls.Add(control);
 
+                    this.session = session;
                     height = height + control.Size.Height;
                     if (height > Height) pceMain.Dock = DockStyle.Top;
 
@@ -240,12 +263,19 @@ namespace Insight.Utils.Controls
         public string targetId { get; }
 
         /// <summary>
+        /// 云信用户昵称
+        /// </summary>
+        public string name { get; }
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="targetId">云信用户ID</param>
-        public SessionEventArgs(string targetId)
+        /// <param name="name">云信用户昵称</param>
+        public SessionEventArgs(string targetId, string name)
         {
             this.targetId = targetId;
+            this.name = name;
         }
     }
 
