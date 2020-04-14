@@ -57,7 +57,7 @@ namespace Insight.Utils.BaseViewModels
             view.Shown += (sender, args) =>
             {
                 view.Refresh();
-                call("loadData", new object[] {1, 0});
+                callback("refresh");
             };
         }
 
