@@ -14,7 +14,7 @@ namespace Insight.Utils.Controls
     {
 
         /// <summary>  
-        /// 当消息发送后，通知处理消息
+        /// 当消息发送后，通知处理消息的事件
         /// </summary>  
         public event MessageSendHandle messageSend;
 

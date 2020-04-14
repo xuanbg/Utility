@@ -9,8 +9,16 @@ namespace Insight.Utils.Controls.Nim
     {
         private DateTime _time;
 
+        /// <summary>
+        /// 控件点击事件的委托
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         public new delegate void Click(object sender, EventArgs args);
 
+        /// <summary>
+        /// 控件点击事件
+        /// </summary>
         public event Click click;
 
         /// <summary>
@@ -68,12 +76,13 @@ namespace Insight.Utils.Controls.Nim
         public SessionBox()
         {
             InitializeComponent();
-            pceSession.Click += (sender, args) => click?.Invoke(sender, args);
-            picTarget.Click += (sender, args) => click?.Invoke(sender, args);
-            labName.Click += (sender, args) => click?.Invoke(sender, args);
-            labTime.Click += (sender, args) => click?.Invoke(sender, args);
-            labMessage.Click += (sender, args) => click?.Invoke(sender, args);
-            peeUnread.Click += (sender, args) => click?.Invoke(sender, args);
+
+            pceSession.Click += clicked;
+            picTarget.Click += clicked;
+            labName.Click += clicked;
+            labTime.Click += clicked;
+            labMessage.Click += clicked;
+            peeUnread.Click += clicked;
         }
 
         /// <summary>
@@ -83,6 +92,21 @@ namespace Insight.Utils.Controls.Nim
         {
             var ts = DateTime.Now - _time;
             labTime.Text = _time.ToString(ts.TotalHours > 12 ? "yy-MM-dd" : "hh:mm:ss");
+        }
+
+        /// <summary>
+        /// 点击控件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void clicked(object sender, EventArgs args)
+        {
+            if (click == null) return;
+
+            click.Invoke(sender, args);
+            peeUnread.Visible = false;
+
+            Refresh();
         }
     }
 }

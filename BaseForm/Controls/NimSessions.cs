@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using Insight.Utils.Common;
 using Insight.Utils.Controls.Nim;
 using NIM;
 using NIM.Session;
@@ -36,6 +35,12 @@ namespace Insight.Utils.Controls
         public NimSessions()
         {
             InitializeComponent();
+
+            var timer = new System.Timers.Timer {Enabled = true, Interval = 1000 * 60 * 5};
+            timer.Start();
+
+            timer.Elapsed += refreshTime;
+            SessionAPI.RecentSessionChangedHandler += sessionChanged;
         }
 
         /// <summary>
@@ -49,43 +54,84 @@ namespace Insight.Utils.Controls
 
                 foreach (var info in data.SessionList)
                 {
-                    var id = info.Sender == myId ? info.ExtendString : info.Sender;
-                    var user = NimUtil.getUser(id);
-                    var session = new NimSessionInfo
-                    {
-                        id = Util.newId("N"),
-                        targetId = id,
-                        targetName = user.name,
-                        target = NimUtil.getHeadImage(user.icon),
-                        time = info.Timetag / 1000,
-                        unRead = info.UnreadCount > 0
-                    };
-
-                    switch (info.MsgType)
-                    {
-                        case NIMMessageType.kNIMMessageTypeText:
-                            session.message = info.Content;
-                            break;
-                        case NIMMessageType.kNIMMessageTypeImage:
-                            session.message = "[图片]";
-                            break;
-                        case NIMMessageType.kNIMMessageTypeFile:
-                            session.message = "[文件]";
-                            break;
-                        default:
-                            session.message = "[未知]";
-                            break;
-                    }
-                    addSession(session);
+                    addSession(info);
                 }
+
+                Refresh();
             });
+        }
+
+        /// <summary>
+        /// 处理会话更新事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void sessionChanged(object sender, SessionChangedEventArgs e)
+        {
+            switch (e.Info.Command)
+            {
+                case NIMSessionCommand.kNIMSessionCommandAdd:
+                    addSession(e.Info);
+                    Refresh();
+
+                    break;
+                case NIMSessionCommand.kNIMSessionCommandUpdate:
+                    updateControl(e.Info);
+
+                    break;
+                case NIMSessionCommand.kNIMSessionCommandRemove:
+                    removeControl(e.Info.Id);
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 构造会话控件并加入列表
+        /// </summary>
+        /// <param name="info"></param>
+        private void addSession(SessionInfo info)
+        {
+            var userId = info.Sender == myId ? info.ExtendString : info.Sender;
+            var user = NimUtil.getUser(userId);
+            var session = new NimSessionInfo
+            {
+                id = info.Id,
+                targetId = userId,
+                targetName = user.name,
+                target = NimUtil.getHeadImage(user.icon),
+                time = info.Timetag / 1000,
+                unRead = info.UnreadCount > 0
+            };
+
+            switch (info.MsgType)
+            {
+                case NIMMessageType.kNIMMessageTypeText:
+                    session.message = info.Content;
+
+                    break;
+                case NIMMessageType.kNIMMessageTypeImage:
+                    session.message = "[图片]";
+
+                    break;
+                case NIMMessageType.kNIMMessageTypeFile:
+                    session.message = "[文件]";
+
+                    break;
+                default:
+                    session.message = "[未知]";
+
+                    break;
+            }
+
+            addControl(session);
         }
 
         /// <summary>
         /// 构造并添加会话控件到会话列表
         /// </summary>
         /// <param name="session">云信会话信息</param>
-        private void addSession(NimSessionInfo session)
+        private void addControl(NimSessionInfo session)
         {
             void action()
             {
@@ -108,10 +154,75 @@ namespace Insight.Utils.Controls
 
                 pceMain.Height = height;
                 sceMain.ScrollControlIntoView(control);
-
-                Refresh();
             }
+
             Invoke((Action)action);
+        }
+
+        /// <summary>
+        /// 更新会话记录
+        /// </summary>
+        /// <param name="info"></param>
+        private void updateControl(SessionInfo info)
+        {
+            void action()
+            {
+                var control = (SessionBox) pceMain.Controls[info.Id];
+                control.unRead = true;
+                switch (info.MsgType)
+                {
+                    case NIMMessageType.kNIMMessageTypeText:
+                        control.message = info.Content;
+
+                        break;
+                    case NIMMessageType.kNIMMessageTypeImage:
+                        control.message = "[图片]";
+
+                        break;
+                    case NIMMessageType.kNIMMessageTypeFile:
+                        control.message = "[文件]";
+
+                        break;
+                    default:
+                        control.message = "[未知]";
+
+                        break;
+                }
+
+                control.time = info.Timetag / 1000;
+            }
+
+            Invoke((Action) action);
+        }
+
+        /// <summary>
+        /// 移除控件
+        /// </summary>
+        /// <param name="id"></param>
+        private void removeControl(string id)
+        {
+            void action()
+            {
+                var control = pceMain.Controls[id];
+                pceMain.Controls.Remove(control);
+                height = height + control.Size.Height;
+                if (height <= Height) pceMain.Dock = DockStyle.Fill;
+
+                pceMain.Height = height;
+            }
+
+            Invoke((Action) action);
+        }
+
+        /// <summary>
+        /// 刷新会话时间
+        /// </summary>
+        private void refreshTime(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            foreach (SessionBox control in pceMain.Controls)
+            {
+                control.refreshTime();
+            }
         }
     }
 
