@@ -53,6 +53,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public void getSessions()
         {
+            sessions.Clear();
             SessionAPI.QueryAllRecentSession((count, data) =>
             {
                 if (data?.SessionList == null) return;
@@ -68,9 +69,9 @@ namespace Insight.Utils.Controls
                 Task.WaitAll(tasks);
                 info = sessions.OrderBy(i => i.time).Last();
                 info.unRead = false;
-                resetUnread(info.id);
-
                 refresh();
+
+                resetUnread(info.id);
 
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
@@ -149,8 +150,8 @@ namespace Insight.Utils.Controls
         {
             void action()
             {
-                var hide = sceMain.Controls[0];
-                var show = sceMain.Controls[1];
+                var show = sceMain.Controls[0];
+                var hide = sceMain.Controls[1];
                 sessions.OrderBy(i => i.time).ToList().ForEach(i =>
                 {
                     var control = new SessionBox
@@ -181,7 +182,9 @@ namespace Insight.Utils.Controls
                 hide.Visible = true;
                 show.Visible = false;
                 Refresh();
+
                 show.SendToBack();
+                show.Controls.Clear();
             }
 
             Invoke((Action)action);
