@@ -240,33 +240,4 @@ namespace Insight.Utils.Controls
             this.message = message;
         }
     }
-
-    public class NimUser
-    {
-        /// <summary>
-        /// 云信用户ID
-        /// </summary>
-        public string accid { get; set; }
-
-        /// <summary>
-        /// 昵称
-        /// </summary>
-        public string name { get; set; }
-
-        /// <summary>
-        /// 头像
-        /// </summary>
-        public string icon { get; set; }
-
-        /// <summary>
-        /// 签名
-        /// </summary>
-        public string sign { get; set; }
-
-        /// <summary>
-        /// 性别
-        /// </summary>
-        public int gender { get; set; }
-    }
-
 }

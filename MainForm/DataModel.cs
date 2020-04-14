@@ -28,7 +28,7 @@ namespace Insight.Utils.MainForm
                     id = "04dcfb5978ab11ea9bf40242ac110005",
                     parentId = "6ceada3d78aa11ea9bf40242ac110005",
                     type = 2,
-                    index = 1,
+                    index = 0,
                     name = "客服工作台",
                     moduleInfo = new ModuleInfo{module = "Workbench", file = "Service.dll", iconUrl = "icons/workbench.png", autoLoad = true}
                 },

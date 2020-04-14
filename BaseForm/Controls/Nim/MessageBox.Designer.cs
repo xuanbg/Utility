@@ -62,6 +62,7 @@
             this.picTarget.EditValue = ((object)(resources.GetObject("picTarget.EditValue")));
             this.picTarget.Location = new System.Drawing.Point(5, 5);
             this.picTarget.Name = "picTarget";
+            this.picTarget.Properties.AllowFocused = false;
             this.picTarget.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.picTarget.Properties.Appearance.Options.UseBackColor = true;
             this.picTarget.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -87,7 +88,7 @@
             this.labMessage.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
             this.labMessage.Location = new System.Drawing.Point(5, 5);
             this.labMessage.Name = "labMessage";
-            this.labMessage.Size = new System.Drawing.Size(80, 14);
+            this.labMessage.Size = new System.Drawing.Size(80, 0);
             this.labMessage.TabIndex = 0;
             // 
             // picImage
@@ -95,6 +96,7 @@
             this.picImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.picImage.Location = new System.Drawing.Point(80, 5);
             this.picImage.Name = "picImage";
+            this.picImage.Properties.AllowFocused = false;
             this.picImage.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.picImage.Properties.Appearance.Options.UseBackColor = true;
             this.picImage.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -110,6 +112,7 @@
             this.picMe.EditValue = ((object)(resources.GetObject("picMe.EditValue")));
             this.picMe.Location = new System.Drawing.Point(235, 5);
             this.picMe.Name = "picMe";
+            this.picMe.Properties.AllowFocused = false;
             this.picMe.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.picMe.Properties.Appearance.Options.UseBackColor = true;
             this.picMe.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;

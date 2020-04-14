@@ -9,6 +9,10 @@ namespace Insight.Utils.Controls.Nim
     {
         private DateTime _time;
 
+        public new delegate void Click(object sender, EventArgs args);
+
+        public event Click click;
+
         /// <summary>
         /// 显示头像
         /// </summary>
@@ -31,39 +35,22 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 显示消息时间
+        /// 显示消息内容
         /// </summary>
-        public DateTime time
+        public string message
         {
-            set
-            {
-                _time = value;
-                refreshTime();
-            }
+            set => labMessage.Text = value;
         }
 
         /// <summary>
-        /// 显示消息内容
+        /// 显示最后消息发送时间
         /// </summary>
-        public NimMessage message
+        public long time
         {
             set
             {
-                switch (value.type)
-                {
-                    case 0:
-                        labMessage.Text = Util.convertTo<TextMessage>(value.body).msg;
-                        break;
-                    case 1:
-                        labMessage.Text = "[图片]";
-                        break;
-                    case 6:
-                        labMessage.Text = "[文件]";
-                        break;
-                    default:
-                        labMessage.Text = "[未知]";
-                        break;
-                }
+                _time = Util.getDateTime(value);
+                refreshTime();
             }
         }
 
@@ -81,6 +68,12 @@ namespace Insight.Utils.Controls.Nim
         public SessionBox()
         {
             InitializeComponent();
+            pceSession.Click += (sender, args) => click?.Invoke(sender, args);
+            picTarget.Click += (sender, args) => click?.Invoke(sender, args);
+            labName.Click += (sender, args) => click?.Invoke(sender, args);
+            labTime.Click += (sender, args) => click?.Invoke(sender, args);
+            labMessage.Click += (sender, args) => click?.Invoke(sender, args);
+            peeUnread.Click += (sender, args) => click?.Invoke(sender, args);
         }
 
         /// <summary>

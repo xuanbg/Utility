@@ -60,6 +60,7 @@
             this.peeUnread.EditValue = ((object)(resources.GetObject("peeUnread.EditValue")));
             this.peeUnread.Location = new System.Drawing.Point(275, 39);
             this.peeUnread.Name = "peeUnread";
+            this.peeUnread.Properties.AllowFocused = false;
             this.peeUnread.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.peeUnread.Properties.Appearance.Options.UseBackColor = true;
             this.peeUnread.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -98,6 +99,7 @@
             this.picTarget.EditValue = ((object)(resources.GetObject("picTarget.EditValue")));
             this.picTarget.Location = new System.Drawing.Point(10, 10);
             this.picTarget.Name = "picTarget";
+            this.picTarget.Properties.AllowFocused = false;
             this.picTarget.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.picTarget.Properties.Appearance.Options.UseBackColor = true;
             this.picTarget.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -124,12 +126,11 @@
         }
 
         #endregion
-
-        private DevExpress.XtraEditors.PanelControl pceSession;
         private DevExpress.XtraEditors.PictureEdit picTarget;
         private DevExpress.XtraEditors.PictureEdit peeUnread;
         private DevExpress.XtraEditors.LabelControl labTime;
         private DevExpress.XtraEditors.LabelControl labMessage;
         private DevExpress.XtraEditors.LabelControl labName;
+        public DevExpress.XtraEditors.PanelControl pceSession;
     }
 }
