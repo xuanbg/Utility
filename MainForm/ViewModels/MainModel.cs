@@ -52,8 +52,9 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 主窗体初始化
         /// </summary>
-        public void showMainWindow(List<ModuleDto> navigators)
+        public void showMainWindow(List<ModuleDto> navigators, string tenantName)
         {
+            view.StbDept.Caption = tenantName;
             view.StbUser.Caption = Setting.userName;
 
             initNavBar(navigators);

@@ -52,7 +52,7 @@ namespace Insight.Utils.MainForm
                         Setting.tenantId = shopInfo.supplierId;
 
                         var navigators = dataModel.getNavigators();
-                        mainModel.showMainWindow(navigators);
+                        mainModel.showMainWindow(navigators, shopInfo.realname);
 
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");

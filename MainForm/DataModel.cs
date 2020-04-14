@@ -144,7 +144,19 @@ namespace Insight.Utils.MainForm
 
     public class ShopInfo
     {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
         public string id { get; set; }
+
+        /// <summary>
+        /// 店铺名称
+        /// </summary>
+        public string realname { get; set; }
+
+        /// <summary>
+        /// 供应商ID
+        /// </summary>
         public string supplierId { get; set; }
     }
 }
