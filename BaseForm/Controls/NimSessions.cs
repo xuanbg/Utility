@@ -53,6 +53,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public void getSessions()
         {
+            height = 0;
             sessions.Clear();
             SessionAPI.QueryAllRecentSession((count, data) =>
             {
