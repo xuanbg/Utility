@@ -196,11 +196,11 @@ namespace Insight.Utils.Controls
                         sessionDoubleClick?.Invoke(sender, args);
                     };
                     height = height + control.Size.Height;
-
                     hide.Controls.Add(control);
-                    hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
-                    hide.Height = height;
                 });
+
+                hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
+                hide.Height = height;
                 hide.Visible = true;
                 show.Visible = false;
                 Refresh();
