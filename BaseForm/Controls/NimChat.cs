@@ -238,7 +238,7 @@ namespace Insight.Utils.Controls
             var id = sendMessage(6, body);
             TalkAPI.SendMessage(message, (uploaded, total, obj) =>
             {
-                void action() => mlcMessage.setPosition(id, (int) (uploaded / total));
+                void action() => mlcMessage.setPosition(id, (int) (100 * uploaded / total));
 
                 if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 

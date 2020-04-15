@@ -71,7 +71,7 @@ namespace Insight.Utils.Controls.Nim
         /// </summary>
         public int position
         {
-            set => pbcSend.Position = value * 100;
+            set => pbcSend.Position = value;
         }
 
         /// <summary>
