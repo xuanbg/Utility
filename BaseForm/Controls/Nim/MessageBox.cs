@@ -122,7 +122,7 @@ namespace Insight.Utils.Controls.Nim
             var h = msg.w < _width ? msg.h : msg.h * w / msg.w;
             picImage.Width = w;
             picImage.Height = h;
-            picImage.EditValue = msg.url;
+            picImage.Image = msg.image;
 
             // 计算控件宽高
             Height = h + 10;
@@ -214,9 +214,9 @@ namespace Insight.Utils.Controls.Nim
         public string md5 { get; set; }
 
         /// <summary>
-        /// 图片URL
+        /// 图片
         /// </summary>
-        public string url { get; set; }
+        public Image image { get; set; }
 
         /// <summary>
         /// 宽度

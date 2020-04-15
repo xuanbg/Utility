@@ -14,7 +14,6 @@ namespace Insight.Utils.Controls
     public partial class NimSessions : XtraUserControl
     {
         private readonly List<NimSessionInfo> sessions = new List<NimSessionInfo>();
-        private int height;
 
         /// <summary>
         /// 表示将处理当前点击会话的方法
@@ -64,9 +63,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         public void getSessions()
         {
-            height = 0;
             sessions.Clear();
-
             SessionAPI.QueryAllRecentSession((count, data) =>
             {
                 if (data?.SessionList == null) return;
@@ -165,6 +162,7 @@ namespace Insight.Utils.Controls
             {
                 var show = sceMain.Controls[0];
                 var hide = sceMain.Controls[1];
+                var height = 0;
                 sessions.OrderBy(i => i.time).ToList().ForEach(i =>
                 {
                     var control = new SessionBox

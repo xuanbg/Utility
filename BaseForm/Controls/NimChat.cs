@@ -15,7 +15,7 @@ namespace Insight.Utils.Controls
 {
     public partial class NimChat : XtraUserControl
     {
-        private NimMessage sendingMessage;
+        private string messageId;
 
         /// <summary>
         /// 发送者云信ID
@@ -119,18 +119,18 @@ namespace Insight.Utils.Controls
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
+            if (args.ArcInfo.TalkId != targetId) return;
+
             void action()
             {
-                if (args.ArcInfo.Response == ResponseCode.kNIMResSuccess)
+                if (args.ArcInfo.Response != ResponseCode.kNIMResSuccess)
                 {
-                    mlcMessage.addMessage(sendingMessage);
-                    mmeInput.EditValue = null;
-                    mmeInput.Focus();
-
+                    Messages.showError("发送失败");
                     return;
                 }
 
-                Messages.showError("发送失败");
+                mmeInput.EditValue = null;
+                mmeInput.Focus();
             }
 
             Invoke((Action) action);
@@ -161,8 +161,7 @@ namespace Insight.Utils.Controls
                 msgid = msg.ServerMsgId,
                 from = msg.SenderID,
                 to = msg.ReceiverID,
-                type = msg.MessageType.GetHashCode(),
-                body = NimUtil.getMsg(msg),
+                type = msg.MessageType.GetHashCode(),body = NimUtil.getMsg(msg),
                 direction = msg.SenderID == myId ? 0 : 1,
                 timetag = msg.TimeStamp / 1000
             };
@@ -203,6 +202,14 @@ namespace Insight.Utils.Controls
 
             var body = new TextMessage { msg = msg };
             sendMessage(0, body);
+
+            var message = new NIMTextMessage
+            {
+                SessionType = NIMSessionType.kNIMSessionTypeP2P,
+                ReceiverID = targetId,
+                TextContent = msg,
+            };
+            TalkAPI.SendMessage(message);
         }
 
         /// <summary>
@@ -213,15 +220,20 @@ namespace Insight.Utils.Controls
         {
             if (string.IsNullOrEmpty(fileName)) return;
 
-            var body = new FileMessage
+            var message = new NIMFileMessage
             {
-                name = fileName,
-                ext = "",
-                md5 = "",
-                url = "",
-                size = 0
+                SessionType = NIMSessionType.kNIMSessionTypeP2P,
+                ReceiverID = targetId,
+                LocalFilePath = fileName,
+                FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ""},
             };
+
+            var body = new FileMessage();
             sendMessage(6, body);
+            TalkAPI.SendMessage(message, (uploaded, total, obj) =>
+            {
+                //ofdMessage.Instance.SetOutput(string.Format("upload file:{0} {1}/{2}", path, uploaded, total));
+            });
         }
 
         /// <summary>
@@ -232,17 +244,25 @@ namespace Insight.Utils.Controls
         {
             if (string.IsNullOrEmpty(fileName)) return;
 
-            var body = new FileMessage
+            var message = new NIMImageMessage
             {
-                name = fileName,
-                ext = "png",
-                md5 = "",
-                url = "https://image.pro.io.yitu8.cn/appstore/baoche.png",
-                size = 16874,
-                w = 1654,
-                h = 2339
+                SessionType = NIMSessionType.kNIMSessionTypeP2P,
+                ReceiverID = targetId,
+                ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = "" },
+                LocalFilePath = fileName,
             };
+            var body = new FileMessage();
+            using (var image = Image.FromFile(fileName))
+            {
+                message.ImageAttachment.Height = image.Height;
+                message.ImageAttachment.Width = image.Width;
+                body.image = image;
+                body.w = image.Width;
+                body.h = image.Width;
+            }
+
             sendMessage(1, body);
+            TalkAPI.SendMessage(message);
         }
 
         /// <summary>
@@ -252,21 +272,19 @@ namespace Insight.Utils.Controls
         /// <param name="body">消息体</param>
         private void sendMessage(int type, object body)
         {
-            sendingMessage = new NimMessage
+            messageId = Util.newId("N");
+            var message = new NimMessage
             {
-                id = Util.newId("N"),
+                id = messageId,
                 from = myId,
                 to = targetId,
                 type = type,
                 direction = 0,
-                body = body
+                body = body,
+                timetag = Util.getTimeStamp(DateTime.Now)
             };
 
-        }
-
-        static void sendMessage(NIMIMMessage message, ReportUploadProgressDelegate action = null)
-        {
-
+            mlcMessage.addMessage(message);
         }
     }
 }
