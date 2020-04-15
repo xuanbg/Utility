@@ -112,7 +112,7 @@ namespace Insight.Utils.Controls.Nim
         public void refreshTime()
         {
             var ts = DateTime.Now - _time;
-            labTime.Text = _time.ToString(ts.TotalHours > 12 ? "yy-MM-dd" : "hh:mm:ss");
+            labTime.Text = _time.ToString(ts.TotalHours > 12 ? "yy-MM-dd" : "HH:mm:ss");
         }
     }
 }
