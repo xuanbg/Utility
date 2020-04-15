@@ -73,7 +73,7 @@ namespace Insight.Utils.Controls
                 var headUrl = ret[0].IconUrl;
                 if (!string.IsNullOrEmpty(headUrl))
                 {
-                    mlcMessage.target = NimUtil.getHeadImage(headUrl);
+                    mlcMessage.target = NimUtil.getImage(headUrl);
                 }
             });
 
@@ -86,7 +86,7 @@ namespace Insight.Utils.Controls
                     var headUrl = ret[0].IconUrl;
                     if (string.IsNullOrEmpty(headUrl)) return;
 
-                    myHead = NimUtil.getHeadImage(headUrl);
+                    myHead = NimUtil.getImage(headUrl);
                     mlcMessage.me = myHead;
                 });
             }
@@ -133,6 +133,8 @@ namespace Insight.Utils.Controls
                 mmeInput.Focus();
             }
 
+            if (IsDisposed || !Parent.IsHandleCreated) return;
+
             Invoke((Action) action);
         }
 
@@ -161,12 +163,15 @@ namespace Insight.Utils.Controls
                 msgid = msg.ServerMsgId,
                 from = msg.SenderID,
                 to = msg.ReceiverID,
-                type = msg.MessageType.GetHashCode(),body = NimUtil.getMsg(msg),
+                type = msg.MessageType.GetHashCode(),
+                body = NimUtil.getMsg(msg),
                 direction = msg.SenderID == myId ? 0 : 1,
                 timetag = msg.TimeStamp / 1000
             };
 
             void action() => mlcMessage.addMessage(message);
+
+            if (IsDisposed || !Parent.IsHandleCreated) return;
 
             Invoke((Action)action);
         }
@@ -220,12 +225,13 @@ namespace Insight.Utils.Controls
         {
             if (string.IsNullOrEmpty(fileName)) return;
 
+            var ext = fileName.Substring(fileName.LastIndexOf('.') + 1);
             var message = new NIMFileMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
                 ReceiverID = targetId,
                 LocalFilePath = fileName,
-                FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ""},
+                FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ext}
             };
 
             var body = new FileMessage();
@@ -244,22 +250,17 @@ namespace Insight.Utils.Controls
         {
             if (string.IsNullOrEmpty(fileName)) return;
 
+            var ext = fileName.Substring(fileName.LastIndexOf('.') + 1);
             var message = new NIMImageMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
                 ReceiverID = targetId,
-                ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = "" },
+                ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = ext },
                 LocalFilePath = fileName,
             };
-            var body = new FileMessage();
-            using (var image = Image.FromFile(fileName))
-            {
-                message.ImageAttachment.Height = image.Height;
-                message.ImageAttachment.Width = image.Width;
-                body.image = image;
-                body.w = image.Width;
-                body.h = image.Width;
-            }
+            var body = new FileMessage{image = Util.getImage(fileName)};
+            message.ImageAttachment.Height = body.image.Height;
+            message.ImageAttachment.Width = body.image.Width;
 
             sendMessage(1, body);
             TalkAPI.SendMessage(message);

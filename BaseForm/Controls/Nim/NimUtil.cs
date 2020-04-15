@@ -26,11 +26,11 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 获取头像
+        /// 获取网络图片
         /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public static Image getHeadImage(string url)
+        /// <param name="url">图片URL</param>
+        /// <returns>Image</returns>
+        public static Image getImage(string url)
         {
             if (string.IsNullOrEmpty(url)) return null;
 
@@ -53,6 +53,21 @@ namespace Insight.Utils.Controls.Nim
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// 获取消息中的图片
+        /// </summary>
+        /// <param name="message">图片消息</param>
+        /// <returns>Image</returns>
+        public static Image getImage(FileMessage message)
+        {
+            var image = Util.getImage(message.localPath);
+            if (image != null) return image;
+
+            var attach = message.getAttach;
+
+            return getImage(attach.url);
         }
 
         /// <summary>
@@ -88,8 +103,9 @@ namespace Insight.Utils.Controls.Nim
                 case NIMMessageType.kNIMMessageTypeText:
                     return Util.deserialize<TextMessage>(str);
                 case NIMMessageType.kNIMMessageTypeImage:
+                    return Util.deserialize<FileMessage>(str);
                 case NIMMessageType.kNIMMessageTypeFile:
-                    return Util.convertTo<FileMessage>(str);
+                    return Util.deserialize<FileMessage>(str);
                 default:
                     return null;
             }

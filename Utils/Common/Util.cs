@@ -549,7 +549,7 @@ namespace Insight.Utils.Common
         /// <returns>图片对象</returns>
         public static Image getImage(string path)
         {
-            if (!File.Exists(path)) return null;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
 
             try
             {

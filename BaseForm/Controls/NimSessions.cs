@@ -85,6 +85,8 @@ namespace Insight.Utils.Controls
 
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
+                if (IsDisposed || !Parent.IsHandleCreated) return;
+
                 Invoke((Action)action);
             });
         }
@@ -123,7 +125,7 @@ namespace Insight.Utils.Controls
             {
                 id = info.Id,
                 name = user.name,
-                head = NimUtil.getHeadImage(user.icon),
+                head = NimUtil.getImage(user.icon),
                 message = NimUtil.readMsg(info),
                 time = info.Timetag / 1000,
                 unRead = info.UnreadCount > 0
@@ -204,6 +206,8 @@ namespace Insight.Utils.Controls
                 show.SendToBack();
                 show.Controls.Clear();
             }
+
+            if (IsDisposed || !Parent.IsHandleCreated) return;
 
             Invoke((Action)action);
         }

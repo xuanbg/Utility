@@ -35,6 +35,7 @@
             this.labMessage = new DevExpress.XtraEditors.LabelControl();
             this.picImage = new DevExpress.XtraEditors.PictureEdit();
             this.picMe = new DevExpress.XtraEditors.PictureEdit();
+            this.pbcSend = new DevExpress.XtraEditors.ProgressBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.pceMessage)).BeginInit();
             this.pceMessage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTarget.Properties)).BeginInit();
@@ -42,11 +43,13 @@
             this.pceText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMe.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // pceMessage
             // 
             this.pceMessage.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pceMessage.Controls.Add(this.pbcSend);
             this.pceMessage.Controls.Add(this.picTarget);
             this.pceMessage.Controls.Add(this.pceText);
             this.pceMessage.Controls.Add(this.picImage);
@@ -75,7 +78,7 @@
             // pceText
             // 
             this.pceText.Controls.Add(this.labMessage);
-            this.pceText.Location = new System.Drawing.Point(80, 5);
+            this.pceText.Location = new System.Drawing.Point(70, 5);
             this.pceText.Name = "pceText";
             this.pceText.Size = new System.Drawing.Size(100, 24);
             this.pceText.TabIndex = 0;
@@ -94,7 +97,7 @@
             // picImage
             // 
             this.picImage.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.picImage.Location = new System.Drawing.Point(80, 5);
+            this.picImage.Location = new System.Drawing.Point(70, 5);
             this.picImage.Name = "picImage";
             this.picImage.Properties.AllowFocused = false;
             this.picImage.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
@@ -122,6 +125,14 @@
             this.picMe.TabIndex = 0;
             this.picMe.Visible = false;
             // 
+            // pbcSend
+            // 
+            this.pbcSend.Location = new System.Drawing.Point(70, 35);
+            this.pbcSend.Name = "pbcSend";
+            this.pbcSend.Size = new System.Drawing.Size(100, 5);
+            this.pbcSend.TabIndex = 0;
+            this.pbcSend.Visible = false;
+            // 
             // MessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -136,6 +147,7 @@
             this.pceText.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picImage.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMe.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -148,5 +160,6 @@
         private DevExpress.XtraEditors.PictureEdit picTarget;
         private DevExpress.XtraEditors.PanelControl pceText;
         private DevExpress.XtraEditors.LabelControl labMessage;
+        private DevExpress.XtraEditors.ProgressBarControl pbcSend;
     }
 }

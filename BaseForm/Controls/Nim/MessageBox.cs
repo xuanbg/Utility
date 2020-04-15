@@ -77,15 +77,15 @@ namespace Insight.Utils.Controls.Nim
         /// </summary>
         private void showText()
         {
-            var msg = Util.convertTo<TextMessage>(_message.body).msg;
+            var body = (TextMessage)_message.body;
             var x = 70;
             var y = 5;
 
             // 计算字符宽度
-            var rw = TextRenderer.MeasureText(msg, Font).Width;
+            var rw = TextRenderer.MeasureText(body.msg, Font).Width;
             var tw = rw < _width - 10 ? rw : _width - 10;
             labMessage.Width = tw;
-            labMessage.Text = msg;
+            labMessage.Text = body.msg;
 
             // 计算气泡宽高
             var th = labMessage.Height;
@@ -114,15 +114,17 @@ namespace Insight.Utils.Controls.Nim
         /// </summary>
         private void showImage()
         {
-            var msg = Util.convertTo<FileMessage>(_message.body);
-            var x = 70;
+            var body = (FileMessage) _message.body;
+            var image = body.image ?? NimUtil.getImage(body);
+            if (image == null) return;
 
             // 计算图片宽高
-            var w = msg.w < _width ? msg.w : _width;
-            var h = msg.w < _width ? msg.h : msg.h * w / msg.w;
+            var x = 70;
+            var w = image.Width < _width ? image.Width : _width;
+            var h = image.Width < _width ? image.Height : image.Height * w / image.Width;
             picImage.Width = w;
             picImage.Height = h;
-            picImage.Image = msg.image;
+            picImage.Image = image;
 
             // 计算控件宽高
             Height = h + 10;
@@ -130,7 +132,7 @@ namespace Insight.Utils.Controls.Nim
             // 发送图片靠右
             if (_message.direction == 0)
             {
-                x = Width - pceText.Width - 70;
+                x = Width - w - 70;
                 picImage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             }
 
@@ -199,6 +201,28 @@ namespace Insight.Utils.Controls.Nim
     public class FileMessage
     {
         /// <summary>
+        /// 图片
+        /// </summary>
+        public Image image { get; set; }
+
+        /// <summary>
+        /// 附件
+        /// </summary>
+        [JsonProperty("msg_attach")]
+        public string attach { get; set; }
+
+        /// <summary>
+        /// 本地路径
+        /// </summary>
+        [JsonProperty("local_res_path")]
+        public string localPath { get; set; }
+
+        public Attach getAttach => Util.deserialize<Attach>(attach);
+    }
+
+    public class Attach
+    {
+        /// <summary>
         /// 图片名称
         /// </summary>
         public string name { get; set; }
@@ -214,23 +238,23 @@ namespace Insight.Utils.Controls.Nim
         public string md5 { get; set; }
 
         /// <summary>
-        /// 图片
+        /// 字节数
         /// </summary>
-        public Image image { get; set; }
+        public int size { get; set; }
 
         /// <summary>
-        /// 宽度
+        /// 图片宽度
         /// </summary>
         public int w { get; set; }
 
         /// <summary>
-        /// 高度
+        /// 图片高度
         /// </summary>
         public int h { get; set; }
 
         /// <summary>
-        /// 字节数
+        /// 文件URL
         /// </summary>
-        public int size { get; set; }
+        public string url { get; set; }
     }
 }
