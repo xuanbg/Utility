@@ -65,6 +65,17 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
+        /// 显示进度
+        /// </summary>
+        /// <param name="id">消息ID</param>
+        /// <param name="position">进度</param>
+        public void setPosition(string id, int position)
+        {
+            var control = (MessageBox) pceList.Controls[id];
+            control.position = position;
+        }
+
+        /// <summary>
         /// 构造并添加时间控件到消息窗口
         /// </summary>
         /// <param name="time"></param>

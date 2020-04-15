@@ -8,8 +8,8 @@ namespace Insight.Utils.Controls.Nim
 {
     public partial class MessageBox : XtraUserControl
     {
-        private int _width;
-        private NimMessage _message;
+        private int maxWidth;
+        private bool isSend;
 
         /// <summary>
         /// 设置宽度
@@ -18,7 +18,7 @@ namespace Insight.Utils.Controls.Nim
         {
             set
             {
-                _width = (value > 1000 ? 1000 : value) - 180;
+                maxWidth = (value > 1000 ? 1000 : value) - 180;
                 Width = value;
             }
         }
@@ -30,18 +30,21 @@ namespace Insight.Utils.Controls.Nim
         {
             set
             {
-                _message = value;
-                switch (_message.type)
+                isSend = value.direction == 0;
+                switch (value.type)
                 {
                     case 0:
-                        showText();
+                        showTextMessage(value);
                         break;
                     case 1:
-                        showImage();
+                        showImageMessage(value);
+                        break;
+                    case 6:
+                        showFileMessage(value);
                         break;
                     default:
-                        _message.body = new TextMessage{msg = "此版本不支持该消息类型" };
-                        showText();
+                        value.body = new TextMessage{msg = "此版本不支持该消息类型" };
+                        showTextMessage(value);
                         break;
                 }
             }
@@ -54,7 +57,6 @@ namespace Insight.Utils.Controls.Nim
         {
             set
             {
-                var isSend = _message.direction == 0;
                 picTarget.Visible = !isSend;
                 picMe.Visible = isSend;
                 if (value == null) return;
@@ -62,6 +64,14 @@ namespace Insight.Utils.Controls.Nim
                 if (isSend) picMe.Image = value;
                 else picTarget.Image = value;
             }
+        }
+
+        /// <summary>
+        /// 进度
+        /// </summary>
+        public int position
+        {
+            set => pbcSend.Position = value * 100;
         }
 
         /// <summary>
@@ -73,17 +83,17 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 显示文本
+        /// 显示文本消息
         /// </summary>
-        private void showText()
+        private void showTextMessage(NimMessage message)
         {
-            var body = (TextMessage)_message.body;
+            var body = (TextMessage) message.body;
             var x = 70;
             var y = 5;
 
             // 计算字符宽度
             var rw = TextRenderer.MeasureText(body.msg, Font).Width;
-            var tw = rw < _width - 10 ? rw : _width - 10;
+            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
             labMessage.Width = tw;
             labMessage.Text = body.msg;
 
@@ -99,7 +109,7 @@ namespace Insight.Utils.Controls.Nim
             Height = h + 10;
 
             // 发送气泡靠右
-            if (_message.direction == 0)
+            if (isSend)
             {
                 x = Width - pceText.Width - 70;
                 pceText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -110,18 +120,18 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 显示图片
+        /// 显示图片消息
         /// </summary>
-        private void showImage()
+        private void showImageMessage(NimMessage message)
         {
-            var body = (FileMessage) _message.body;
+            var body = (FileMessage) message.body;
             var image = body.image ?? NimUtil.getImage(body);
             if (image == null) return;
 
             // 计算图片宽高
             var x = 70;
-            var w = image.Width < _width ? image.Width : _width;
-            var h = image.Width < _width ? image.Height : image.Height * w / image.Width;
+            var w = image.Width < maxWidth ? image.Width : maxWidth;
+            var h = image.Width < maxWidth ? image.Height : image.Height * w / image.Width;
             picImage.Width = w;
             picImage.Height = h;
             picImage.Image = image;
@@ -130,7 +140,7 @@ namespace Insight.Utils.Controls.Nim
             Height = h + 10;
 
             // 发送图片靠右
-            if (_message.direction == 0)
+            if (isSend)
             {
                 x = Width - w - 70;
                 picImage.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -138,6 +148,49 @@ namespace Insight.Utils.Controls.Nim
 
             picImage.Location = new Point(x, 5);
             picImage.Visible = true;
+        }
+
+        /// <summary>
+        /// 显示文件消息
+        /// </summary>
+        private void showFileMessage(NimMessage message)
+        {
+            var body = (FileMessage) message.body;
+            var x = 70;
+            var y = 5;
+
+            // 计算字符宽度
+            var fileName = body.getAttach.name;
+            var name = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+            var rw = TextRenderer.MeasureText(name, Font).Width;
+            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
+            labMessage.Width = tw;
+            labMessage.Text = name;
+
+            // 计算气泡宽高
+            var th = labMessage.Height;
+            if (th < 50) y = (50 - th) / 2;
+
+            pceText.Width = tw + 10;
+            pceText.Height = th + 10;
+            pbcSend.Width = tw + 10;
+            pbcSend.Visible = true;
+
+            // 计算控件宽高
+            var h = pceText.Height < 60 ? 60 : pceText.Height;
+            Height = h + 10;
+
+            // 发送气泡靠右
+            if (isSend)
+            {
+                x = Width - pceText.Width - 70;
+                pceText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                pbcSend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            }
+
+            pceText.Location = new Point(x, y);
+            pbcSend.Location = new Point(x, 32);
+            pceText.Visible = true;
         }
     }
 

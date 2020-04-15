@@ -133,7 +133,7 @@ namespace Insight.Utils.Controls
                 mmeInput.Focus();
             }
 
-            if (IsDisposed || !Parent.IsHandleCreated) return;
+            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
             Invoke((Action) action);
         }
@@ -171,7 +171,7 @@ namespace Insight.Utils.Controls
 
             void action() => mlcMessage.addMessage(message);
 
-            if (IsDisposed || !Parent.IsHandleCreated) return;
+            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
             Invoke((Action)action);
         }
@@ -234,11 +234,15 @@ namespace Insight.Utils.Controls
                 FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ext}
             };
 
-            var body = new FileMessage();
-            sendMessage(6, body);
+            var body = new FileMessage {attach = Util.serialize(new Attach {name = fileName})};
+            var id = sendMessage(6, body);
             TalkAPI.SendMessage(message, (uploaded, total, obj) =>
             {
-                //ofdMessage.Instance.SetOutput(string.Format("upload file:{0} {1}/{2}", path, uploaded, total));
+                void action() => mlcMessage.setPosition(id, (int) (uploaded / total));
+
+                if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
+
+                Invoke((Action)action);
             });
         }
 
@@ -271,7 +275,7 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="type">消息类型</param>
         /// <param name="body">消息体</param>
-        private void sendMessage(int type, object body)
+        private string sendMessage(int type, object body)
         {
             messageId = Util.newId("N");
             var message = new NimMessage
@@ -286,6 +290,7 @@ namespace Insight.Utils.Controls
             };
 
             mlcMessage.addMessage(message);
+            return messageId;
         }
     }
 }

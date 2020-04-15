@@ -85,7 +85,7 @@ namespace Insight.Utils.Controls
 
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
-                if (IsDisposed || !Parent.IsHandleCreated) return;
+                if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
                 Invoke((Action)action);
             });
@@ -207,7 +207,7 @@ namespace Insight.Utils.Controls
                 show.Controls.Clear();
             }
 
-            if (IsDisposed || !Parent.IsHandleCreated) return;
+            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
             Invoke((Action)action);
         }

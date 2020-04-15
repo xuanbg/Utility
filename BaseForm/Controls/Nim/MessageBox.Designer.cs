@@ -30,20 +30,20 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageBox));
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
+            this.pbcSend = new DevExpress.XtraEditors.ProgressBarControl();
             this.picTarget = new DevExpress.XtraEditors.PictureEdit();
             this.pceText = new DevExpress.XtraEditors.PanelControl();
             this.labMessage = new DevExpress.XtraEditors.LabelControl();
             this.picImage = new DevExpress.XtraEditors.PictureEdit();
             this.picMe = new DevExpress.XtraEditors.PictureEdit();
-            this.pbcSend = new DevExpress.XtraEditors.ProgressBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.pceMessage)).BeginInit();
             this.pceMessage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTarget.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pceText)).BeginInit();
             this.pceText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMe.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // pceMessage
@@ -59,6 +59,16 @@
             this.pceMessage.Name = "pceMessage";
             this.pceMessage.Size = new System.Drawing.Size(300, 70);
             this.pceMessage.TabIndex = 0;
+            // 
+            // pbcSend
+            // 
+            this.pbcSend.EditValue = 100;
+            this.pbcSend.Location = new System.Drawing.Point(70, 32);
+            this.pbcSend.Name = "pbcSend";
+            this.pbcSend.Properties.Step = 1;
+            this.pbcSend.Size = new System.Drawing.Size(100, 5);
+            this.pbcSend.TabIndex = 0;
+            this.pbcSend.Visible = false;
             // 
             // picTarget
             // 
@@ -125,14 +135,6 @@
             this.picMe.TabIndex = 0;
             this.picMe.Visible = false;
             // 
-            // pbcSend
-            // 
-            this.pbcSend.Location = new System.Drawing.Point(70, 35);
-            this.pbcSend.Name = "pbcSend";
-            this.pbcSend.Size = new System.Drawing.Size(100, 5);
-            this.pbcSend.TabIndex = 0;
-            this.pbcSend.Visible = false;
-            // 
             // MessageBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -142,12 +144,12 @@
             this.Size = new System.Drawing.Size(300, 70);
             ((System.ComponentModel.ISupportInitialize)(this.pceMessage)).EndInit();
             this.pceMessage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTarget.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pceText)).EndInit();
             this.pceText.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picImage.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMe.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbcSend.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
