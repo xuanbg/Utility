@@ -54,6 +54,12 @@ namespace Insight.Utils.Controls
 
                 mmeInput.EditValue = null;
             };
+            //VisibleChanged += (sender, args) =>
+            //{
+            //    if (!Visible) return;
+
+            //    mlcMessage.scrollToView();
+            //};
 
             TalkAPI.OnSendMessageCompleted += sendMessageResultHandler;
             TalkAPI.OnReceiveMessageHandler += receiveMessage;
@@ -99,6 +105,14 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
+        /// 显示最新消息
+        /// </summary>
+        public void showNewMessage()
+        {
+            mlcMessage.scrollToView();
+        }
+
+        /// <summary>
         /// 获取历史消息
         /// </summary>
         private void getHistory()
@@ -133,8 +147,6 @@ namespace Insight.Utils.Controls
                 mmeInput.Focus();
             }
 
-            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
-
             Invoke((Action) action);
         }
 
@@ -159,7 +171,7 @@ namespace Insight.Utils.Controls
         {
             var message = new NimMessage
             {
-                id = msg.TalkID,
+                id = msg.ClientMsgID,
                 msgid = msg.ServerMsgId,
                 from = msg.SenderID,
                 to = msg.ReceiverID,
@@ -170,8 +182,6 @@ namespace Insight.Utils.Controls
             };
 
             void action() => mlcMessage.addMessage(message);
-
-            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
             Invoke((Action)action);
         }
@@ -238,9 +248,11 @@ namespace Insight.Utils.Controls
             var id = sendMessage(6, body);
             TalkAPI.SendMessage(message, (uploaded, total, obj) =>
             {
-                void action() => mlcMessage.setPosition(id, (int) (100 * uploaded / total));
-
-                if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
+                void action()
+                {
+                    mlcMessage.setPosition(id, (int) (100 * uploaded / total));
+                    if (uploaded == total) Messages.showMessage("文件上传完成");
+                }
 
                 Invoke((Action)action);
             });

@@ -85,8 +85,6 @@ namespace Insight.Utils.Controls
 
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
 
-                if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
-
                 Invoke((Action)action);
             });
         }
@@ -204,10 +202,14 @@ namespace Insight.Utils.Controls
                 show.Visible = false;
 
                 show.SendToBack();
+                foreach (Control control in show.Controls)
+                {
+                    NimUtil.clearEvent(control, "click");
+                    NimUtil.clearEvent(control, "doubleClick");
+                    control.Dispose();
+                }
                 show.Controls.Clear();
             }
-
-            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
 
             Invoke((Action)action);
         }

@@ -8,6 +8,7 @@ namespace Insight.Utils.Controls.Nim
 {
     public partial class MessageList : XtraUserControl
     {
+        private string messageId;
         private DateTime messageTime;
         private int height;
 
@@ -35,6 +36,8 @@ namespace Insight.Utils.Controls.Nim
         /// <param name="message">云信IM点对点消息</param>
         public void addMessage(NimMessage message)
         {
+            messageId = message.id;
+
             var time = Util.getDateTime(message.timetag);
             if (messageTime == DateTime.MinValue)
             {
@@ -61,6 +64,15 @@ namespace Insight.Utils.Controls.Nim
 
             height = height + control.Size.Height;
             pceList.Height = height;
+            sceMessage.ScrollControlIntoView(control);
+        }
+
+        /// <summary>
+        /// 滚动窗口到最新消息
+        /// </summary>
+        public void scrollToView()
+        {
+            var control = pceList.Controls[messageId];
             sceMessage.ScrollControlIntoView(control);
         }
 

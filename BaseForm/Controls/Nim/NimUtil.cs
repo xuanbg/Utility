@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Net;
+using System.Reflection;
+using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using NIM;
@@ -109,6 +112,33 @@ namespace Insight.Utils.Controls.Nim
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// 删除指定控件的指定事件
+        /// </summary>
+        /// <param name="control">控件</param>
+        /// <param name="eventName">事件名称</param>
+        public static void clearEvent(Control control, string eventName)
+        {
+            if (control == null || string.IsNullOrEmpty(eventName)) return;
+
+            const BindingFlags propertyFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic;
+            const BindingFlags fieldFlags = BindingFlags.Static | BindingFlags.NonPublic;
+
+            var controlType = typeof(Control);
+            var propertyInfo = controlType.GetProperty("Events", propertyFlags);
+            var eventHandlerList = (EventHandlerList)propertyInfo?.GetValue(control, null);
+            var fieldInfo = typeof(Control).GetField("Event" + eventName, fieldFlags);
+            var d = eventHandlerList?[fieldInfo?.GetValue(control)];
+            if (d == null) return;
+
+            var eventInfo = controlType.GetEvent(eventName);
+            foreach (var dx in d.GetInvocationList())
+            {
+                eventInfo.RemoveEventHandler(control, dx);
+            }
+
         }
     }
 

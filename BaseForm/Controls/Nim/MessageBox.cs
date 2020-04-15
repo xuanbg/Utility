@@ -137,7 +137,7 @@ namespace Insight.Utils.Controls.Nim
             picImage.Image = image;
 
             // 计算控件宽高
-            Height = h + 10;
+            Height = h > 65 ? h + 5 : 70;
 
             // 发送图片靠右
             if (isSend)
@@ -189,7 +189,7 @@ namespace Insight.Utils.Controls.Nim
             }
 
             pceText.Location = new Point(x, y);
-            pbcSend.Location = new Point(x, 32);
+            pbcSend.Location = new Point(x, y + th + 12);
             pceText.Visible = true;
         }
     }
