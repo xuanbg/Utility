@@ -131,6 +131,12 @@
     <Compile Include="Controls\NimSessions.Designer.cs">
       <DependentUpon>NimSessions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Nim\ShowImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Nim\ShowImage.Designer.cs">
+      <DependentUpon>ShowImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Nim\TimeLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -200,9 +206,13 @@
     <EmbeddedResource Include="Controls\NimSessions.resx">
       <DependentUpon>NimSessions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Nim\ShowImage.resx">
+      <DependentUpon>ShowImage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Nim\TimeLabel.resx">
       <DependentUpon>TimeLabel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

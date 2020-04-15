@@ -8,6 +8,7 @@ namespace Insight.Utils.Controls.Nim
 {
     public partial class MessageBox : XtraUserControl
     {
+        private Image image;
         private int maxWidth;
         private bool isSend;
 
@@ -80,6 +81,13 @@ namespace Insight.Utils.Controls.Nim
         public MessageBox()
         {
             InitializeComponent();
+
+            picImage.Click += (sender, args) =>
+            {
+                var show = new ShowImage();
+                show.show(image);
+                show.ShowDialog();
+            };
         }
 
         /// <summary>
@@ -125,7 +133,7 @@ namespace Insight.Utils.Controls.Nim
         private void showImageMessage(NimMessage message)
         {
             var body = (FileMessage) message.body;
-            var image = body.image ?? NimUtil.getImage(body);
+            image = body.image ?? NimUtil.getImage(body);
             if (image == null) return;
 
             // 计算图片宽高

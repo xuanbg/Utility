@@ -54,12 +54,6 @@ namespace Insight.Utils.Controls
 
                 mmeInput.EditValue = null;
             };
-            //VisibleChanged += (sender, args) =>
-            //{
-            //    if (!Visible) return;
-
-            //    mlcMessage.scrollToView();
-            //};
 
             TalkAPI.OnSendMessageCompleted += sendMessageResultHandler;
             TalkAPI.OnReceiveMessageHandler += receiveMessage;
@@ -169,6 +163,8 @@ namespace Insight.Utils.Controls
         /// <param name="msg"></param>
         public void addMessage(NIMIMMessage msg)
         {
+            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
+
             var message = new NimMessage
             {
                 id = msg.ClientMsgID,

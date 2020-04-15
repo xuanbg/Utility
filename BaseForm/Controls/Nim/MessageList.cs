@@ -59,7 +59,6 @@ namespace Insight.Utils.Controls.Nim
                 Padding = new Padding(0),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
-
             pceList.Controls.Add(control);
 
             height = height + control.Size.Height;
