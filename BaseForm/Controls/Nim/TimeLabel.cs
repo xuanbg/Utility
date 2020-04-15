@@ -15,15 +15,15 @@ namespace Insight.Utils.Controls.Nim
                 var ts = DateTime.Now - value;
                 if (ts.TotalDays > 365)
                 {
-                    labTime.Text = value.ToString("yyyy-MM-dd hh:mm:ss");
+                    labTime.Text = value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
                 else if (ts.TotalDays > 30)
                 {
-                    labTime.Text = value.ToString("MM-dd hh:mm:ss");
+                    labTime.Text = value.ToString("MM-dd HH:mm:ss");
                 }
                 else
                 {
-                    labTime.Text = value.ToString("dd hh:mm:ss");
+                    labTime.Text = value.ToString("dd HH:mm:ss");
                 }
             }
         }
