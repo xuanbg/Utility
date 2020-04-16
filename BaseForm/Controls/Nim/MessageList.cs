@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,7 +7,6 @@ using Insight.Utils.Common;
 using NIM;
 using NIM.Messagelog;
 using NIM.Session;
-using NIM.User;
 
 namespace Insight.Utils.Controls.Nim
 {
@@ -37,23 +35,11 @@ namespace Insight.Utils.Controls.Nim
         public void init(string id)
         {
             targetId = id;
-            pceList.Controls.Clear();
-
-            // 获取聊天对象头像
-            UserAPI.GetUserNameCard(new List<string> { id }, ret =>
-            {
-                if (ret == null || !ret.Any()) return;
-
-                var headUrl = ret[0].IconUrl;
-                if (!string.IsNullOrEmpty(headUrl))
-                {
-                    targetHead = NimUtil.getImage(headUrl);
-
-                    Refresh();
-                }
-            });
+            var user = NimUtil.getUser(id);
+            targetHead = NimUtil.getImage(user.icon);
 
             // 加载历史消息
+            pceList.Controls.Clear();
             MessagelogAPI.QueryMsglogLocally(id, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
                 foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
