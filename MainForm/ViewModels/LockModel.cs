@@ -5,7 +5,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class LockModel : BaseDialogModel<string, Locked>
+    public class LockModel : BaseDialogModel<string, LockDialog>
     {
         /// <summary>
         /// 构造函数

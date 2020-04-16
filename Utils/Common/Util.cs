@@ -325,32 +325,21 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 获取本地文件列表
         /// </summary>
-        /// <param name="dict">客户端文件信息集合</param>
-        /// <param name="appId">应用ID</param>
-        /// <param name="root">根目录</param>
         /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="path">当前目录</param>
-        public static void getClientFiles(Dictionary<string, ClientFile> dict, string appId, string root, string ext = "*.*", string path = null)
+        public static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
         {
             // 读取目录下文件信息
+            var root = Application.StartupPath;
             var dirInfo = new DirectoryInfo(path ?? root);
             var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
-            foreach (var file in files)
+
+            return files.Select(file => new FileVersion
             {
-                var id = hash(file.Name);
-                var info = new ClientFile
-                {
-                    id = id,
-                    appId = appId,
-                    name = file.Name,
-                    path = file.DirectoryName?.Replace(root, ""),
-                    fullPath = file.FullName,
-                    version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                    updateTime = DateTime.Now
-                };
-                dict[id] = info;
-            }
-            Directory.GetDirectories(path ?? root).ToList().ForEach(p => getClientFiles(dict, appId, root, ext, p));
+                file = file.Name,
+                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
+                localPath = file.DirectoryName?.Replace(root, ""),
+            }).ToList();
         }
 
         /// <summary>
@@ -378,34 +367,33 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 更新文件
         /// </summary>
-        /// <param name="file">文件信息</param>
-        /// <param name="root">根目录</param>
+        /// <param name="version">版本信息</param>
         /// <param name="bytes">文件字节流</param>
         /// <returns>bool 是否重命名</returns>
-        public static bool updateFile(ClientFile file, string root, byte[] bytes)
+        public static bool updateFile(FileVersion version, byte[] bytes)
         {
             var rename = false;
-            var path = root + file.path + "\\";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            var filePath = Application.StartupPath;
+            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
 
-            path += file.name;
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+            var file = filePath + version.file;
             try
             {
-                File.Delete(path);
+                File.Delete(file);
             }
             catch
             {
-                File.Move(path, path + ".bak");
+                File.Move(file, file + ".bak");
                 rename = true;
             }
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(bytes, 0, bytes.Length);
             }
+
             return rename;
         }
 
@@ -426,7 +414,7 @@ namespace Insight.Utils.Common
             try
             {
                 File.Delete(path);
-                if (warning) Messages.showMessage("指定的文件已删除！");
+                if (warning) Messages.showMessage("已删除指定的文件！");
             }
             catch
             {

@@ -1,36 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
 using Insight.Utils.Controls.Nim;
 using NIM;
-using NIM.Messagelog;
 using NIM.Session;
-using NIM.User;
 
 namespace Insight.Utils.Controls
 {
     public partial class NimChat : XtraUserControl
     {
-        private string messageId;
-
-        /// <summary>
-        /// 发送者云信ID
-        /// </summary>
-        public string myId { private get; set; }
-
-        /// <summary>
-        /// 发送者头像
-        /// </summary>
-        public Image myHead { private get; set; }
-
-        /// <summary>
-        /// 接收者云信ID
-        /// </summary>
-        public string targetId { private get; set; }
+        private string myId;
 
         /// <summary>
         /// 构造方法
@@ -38,6 +18,7 @@ namespace Insight.Utils.Controls
         public NimChat()
         {
             InitializeComponent();
+
 
             sbeFile.Click += (sender, args) => openFile(0);
             sbeImage.Click += (sender, args) => openFile(1);
@@ -56,46 +37,18 @@ namespace Insight.Utils.Controls
             };
 
             TalkAPI.OnSendMessageCompleted += sendMessageResultHandler;
-            TalkAPI.OnReceiveMessageHandler += receiveMessage;
-
-            mmeInput.Focus();
         }
 
         /// <summary>
-        /// 初始聊天窗口
+        /// 初始化消息列表
         /// </summary>
-        public void init()
+        /// <param name="myId">己方云信ID</param>
+        public void init(string myId)
         {
-            UserAPI.GetUserNameCard(new List<string> { targetId }, ret =>
-            {
-                if (ret == null || !ret.Any()) return;
+            this.myId = myId;
 
-                var headUrl = ret[0].IconUrl;
-                if (!string.IsNullOrEmpty(headUrl))
-                {
-                    mlcMessage.target = NimUtil.getImage(headUrl);
-                }
-            });
-
-            if (myHead == null)
-            {
-                UserAPI.GetUserNameCard(new List<string> { myId }, ret =>
-                {
-                    if (ret == null || !ret.Any()) return;
-
-                    var headUrl = ret[0].IconUrl;
-                    if (string.IsNullOrEmpty(headUrl)) return;
-
-                    myHead = NimUtil.getImage(headUrl);
-                    mlcMessage.me = myHead;
-                });
-            }
-            else
-            {
-                mlcMessage.me = myHead;
-            }
-
-            getHistory();
+            mlcMessage.init(Name);
+            mmeInput.Focus();
         }
 
         /// <summary>
@@ -107,27 +60,13 @@ namespace Insight.Utils.Controls
         }
 
         /// <summary>
-        /// 获取历史消息
-        /// </summary>
-        private void getHistory()
-        {
-            MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
-            {
-                foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
-                {
-                    addMessage(msg);
-                }
-            });
-        }
-
-        /// <summary>
         /// 检查消息发送结果
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
-            if (args.ArcInfo.TalkId != targetId) return;
+            if (args.ArcInfo.TalkId != Name) return;
 
             void action()
             {
@@ -142,44 +81,6 @@ namespace Insight.Utils.Controls
             }
 
             Invoke((Action) action);
-        }
-
-        /// <summary>
-        /// 接收消息
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void receiveMessage(object sender, NIMReceiveMessageEventArgs args)
-        {
-            var type = args.Message.MessageContent.SessionType;
-            if (type == NIMSessionType.kNIMSessionTypeP2P && args.Message.MessageContent.SenderID != targetId) return;
-
-            addMessage(args.Message.MessageContent);
-        }
-
-        /// <summary>
-        /// 将接收到的消息添加到消息列表
-        /// </summary>
-        /// <param name="msg"></param>
-        public void addMessage(NIMIMMessage msg)
-        {
-            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
-
-            var message = new NimMessage
-            {
-                id = msg.ClientMsgID,
-                msgid = msg.ServerMsgId,
-                from = msg.SenderID,
-                to = msg.ReceiverID,
-                type = msg.MessageType.GetHashCode(),
-                body = NimUtil.getMsg(msg),
-                direction = msg.SenderID == myId ? 0 : 1,
-                timetag = msg.TimeStamp / 1000
-            };
-
-            void action() => mlcMessage.addMessage(message);
-
-            Invoke((Action)action);
         }
 
         /// <summary>
@@ -217,7 +118,7 @@ namespace Insight.Utils.Controls
             var message = new NIMTextMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = Name,
                 TextContent = msg,
             };
             TalkAPI.SendMessage(message);
@@ -235,7 +136,7 @@ namespace Insight.Utils.Controls
             var message = new NIMFileMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = Name,
                 LocalFilePath = fileName,
                 FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ext}
             };
@@ -266,7 +167,7 @@ namespace Insight.Utils.Controls
             var message = new NIMImageMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = Name,
                 ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = ext },
                 LocalFilePath = fileName,
             };
@@ -285,20 +186,20 @@ namespace Insight.Utils.Controls
         /// <param name="body">消息体</param>
         private string sendMessage(int type, object body)
         {
-            messageId = Util.newId("N");
+            var id = Util.newId("N");
             var message = new NimMessage
             {
-                id = messageId,
+                id = id,
                 from = myId,
-                to = targetId,
+                to = Name,
                 type = type,
                 direction = 0,
                 body = body,
                 timetag = Util.getTimeStamp(DateTime.Now)
             };
-
             mlcMessage.addMessage(message);
-            return messageId;
+
+            return id;
         }
     }
 }

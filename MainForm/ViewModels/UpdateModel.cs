@@ -1,86 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using DevExpress.Utils.Extensions;
 using Insight.Utils.BaseViewModels;
-using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class UpdateModel : BaseDialogModel<ClientFile, Update>
+    public class UpdateModel : BaseDialogModel<Update, UpdateDialog>
     {
         public bool restart;
-
-        private List<ClientFile> updates;
-        private readonly string root = Application.StartupPath;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="title">窗体标题</param>
-        public UpdateModel(string title) : base(title, null, true)
+        /// <param name="item">更新信息</param>
+        public UpdateModel(string title, Update item) : base(title)
         {
-            view.Shown += (sender, args) => update();
-        }
-
-        /// <summary>
-        /// 完成更新
-        /// </summary>
-        public new void confirm()
-        {
-            callback("complete", new object[]{restart});
-        }
-
-        /// <summary>
-        /// 检查客户端文件是否有更新
-        /// </summary>
-        /// <param name="files">远端文件信息</param>
-        /// <returns>bool 文件是否有更新</returns>
-        public bool checkUpdate(Dictionary<string, ClientFile> files)
-        {
-            // 读取本地客户端文件信息
-            var appId = Setting.appId;
-            var locals = new Dictionary<string, ClientFile>();
-            Util.getClientFiles(locals, appId, root, ".bak");
-            locals.ForEach(f => Util.deleteFile(f.Value.fullPath));
-
-            locals = new Dictionary<string, ClientFile>();
-            Util.getClientFiles(locals, appId, root, ".exe|.dll|.frl");
-
-            // 根据服务器上文件信息，通过比对版本号得到可更新文件列表
-            updates = (from sf in files
-                let cf = locals.ContainsKey(sf.Key) ? locals[sf.Key] : null
-                let cv = new Version(cf?.version ?? "1.0.0")
-                let sv = new Version(sf.Value?.version ?? "1.0.0")
-                where cf == null || cv < sv
-                select sf.Value).ToList();
-            if (updates.Count == 0)
+            view.confirm.Enabled = false;
+            foreach (var version in item.data)
             {
-                Messages.showMessage("当前无可用更新！");
-                return false;
+                view.Progress.EditValue = $"正在更新：{version.file}……";
+                view.Refresh();
+                Thread.Sleep(1000);
+
+                callback("updateFile", new object[] {version});
             }
 
-            var msg = $"当前有 {updates.Count} 个文件需要更新，是否立即更新？";
-
-            return Messages.showConfirm(msg);
+            view.confirm.Enabled = true;
+            view.Progress.EditValue = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
+            view.confirm.Text = restart ? "重  启" : "关  闭";
+            view.Refresh();
         }
 
         /// <summary>
         /// 更新本地文件
         /// </summary>
+        /// <param name="version"></param>
         /// <param name="data">文件数据</param>
-        public void updateFile(string data)
+        public void updateFile(FileVersion version, string data)
         {
             var buffer = Convert.FromBase64String(data);
             var bytes = Util.decompress(buffer);
-            restart = Util.updateFile(item, root, bytes) || restart;
+            restart = Util.updateFile(version, bytes) || restart;
         }
 
         /// <summary>
@@ -100,30 +66,16 @@ namespace Insight.Utils.MainForm.ViewModels
                 UseShellExecute = true,
                 WorkingDirectory = Environment.CurrentDirectory,
                 FileName = "restart.bat",
-                WindowStyle = ProcessWindowStyle.Hidden,
+                WindowStyle = ProcessWindowStyle.Hidden
             };
         }
 
         /// <summary>
-        /// 更新文件
+        /// 完成更新
         /// </summary>
-        private void update()
+        public new void confirm()
         {
-            view.confirm.Enabled = false;
-            foreach (var file in updates)
-            {
-                item = file;
-                view.Progress.EditValue = $@"正在更新：{item.name}……";
-                view.Refresh();
-                Thread.Sleep(1000);
-
-                callback("getFile", new object[]{item});
-            }
-
-            view.confirm.Enabled = true;
-            view.Progress.EditValue = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
-            view.confirm.Text = restart ? "重  启" : "关  闭";
-            view.Refresh();
+            callback("complete", new object[] { restart });
         }
     }
 }

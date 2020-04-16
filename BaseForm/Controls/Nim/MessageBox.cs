@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Newtonsoft.Json;
 
@@ -32,6 +33,9 @@ namespace Insight.Utils.Controls.Nim
             set
             {
                 isSend = value.direction == 0;
+                picTarget.Visible = !isSend;
+                picMe.Visible = isSend;
+
                 switch (value.type)
                 {
                     case 0:
@@ -52,18 +56,16 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 显示头像
+        /// 对方头像
         /// </summary>
-        public Image headImage
+        public Image targetHead
         {
             set
             {
-                picTarget.Visible = !isSend;
-                picMe.Visible = isSend;
-                if (value == null) return;
-
-                if (isSend) picMe.Image = value;
-                else picTarget.Image = value;
+                if (!isSend && value != null)
+                {
+                    picTarget.Image = value;
+                }
             }
         }
 
@@ -81,6 +83,8 @@ namespace Insight.Utils.Controls.Nim
         public MessageBox()
         {
             InitializeComponent();
+
+            if(Setting.myHead != null) picMe.Image = Setting.myHead;
 
             picImage.Click += (sender, args) =>
             {

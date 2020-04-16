@@ -1,6 +1,6 @@
 ﻿namespace Insight.Utils.MainForm.Views
 {
-    public partial class About
+    public partial class AboutDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
             this.picAbout = new DevExpress.XtraEditors.PictureEdit();
             this.txtDescription = new DevExpress.XtraEditors.MemoEdit();
             this.labVersion = new DevExpress.XtraEditors.LabelControl();

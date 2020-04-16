@@ -1,4 +1,5 @@
-﻿using Insight.Utils.Common;
+﻿using System.Drawing;
+using Insight.Utils.Common;
 
 namespace Insight.Utils.Client
 {
@@ -10,14 +11,19 @@ namespace Insight.Utils.Client
         public static readonly string appName = Util.getAppSetting("AppName");
 
         /// <summary>
-        /// 基础服务地址
+        /// 网关地址
         /// </summary>
         public static string gateway = Util.getAppSetting("Gateway");
 
         /// <summary>
-        /// 基础服务地址
+        /// 验证服务地址
         /// </summary>
         public static readonly string authServer = Util.getAppSetting("AuthServer");
+
+        /// <summary>
+        /// 客户端更新URL
+        /// </summary>
+        public static readonly string updateUrl = Util.getAppSetting("UpdateUrl");
 
         /// <summary>
         /// 界面主题样式
@@ -73,6 +79,11 @@ namespace Insight.Utils.Client
         /// 是否需要修改密码
         /// </summary>
         public static bool needChangePw;
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public static Image myHead;
 
         /// <summary>
         /// 获取是否保存用户名选项设置

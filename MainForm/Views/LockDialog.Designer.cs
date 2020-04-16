@@ -1,6 +1,6 @@
 ﻿namespace Insight.Utils.MainForm.Views
 {
-    public partial class Locked
+    public partial class LockDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Locked));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LockDialog));
             this.Password = new DevExpress.XtraEditors.TextEdit();
             this.labUnlockPw = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();

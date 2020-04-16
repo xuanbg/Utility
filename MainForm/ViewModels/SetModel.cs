@@ -4,7 +4,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class SetModel : BaseDialogModel<object, LoginSet>
+    public class SetModel : BaseDialogModel<object, LoginSetDialog>
     {
         private bool saveUser = Setting.isSaveUserInfo();
 

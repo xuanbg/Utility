@@ -109,34 +109,37 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public void update()
         {
-            var model = new UpdateModel("检查更新");
+            var info = dataModel.checkUpdate();
+            if (info == null || !info.data.Any())
+            {
+                Messages.showMessage("您的系统是最新版本！");
+                return;
+            }
+
+            var msg = $"当前有 {info.data.Count} 个文件需要更新，是否立即更新？";
+            if (!info.update && !Messages.showConfirm(msg)) return;
+
+            var model = new UpdateModel("更新文件", info);
             model.callbackEvent += (sender, args) =>
             {
-                if (args.methodName == "getFile")
+                switch (args.methodName)
                 {
-                    var info = (ClientFile) args.param[0];
-                    model.updateFile(dataModel.getFile(info.id));
-                    return;
-                }
+                    case "updateFile":
+                        var ver = (FileVersion) args.param[0];
+                        var file = dataModel.getFile(ver.file);
+                        model.updateFile(ver, file);
 
-                if (args.methodName == "complete")
-                {
-                    if ((bool) args.param[0])
-                    {
+                        break;
+                    case "complete" when (bool) args.param[0]:
                         Process.Start(model.createBat());
                         Application.Exit();
-                    }
-                    else
-                    {
+
+                        break;
+                    case "complete":
                         model.closeDialog();
-                    }
+                        break;
                 }
             };
-
-            var files = dataModel.getFiles(Setting.appId);
-            if (files == null || !files.Any()) return;
-
-            if (model.checkUpdate(files)) model.showDialog();
         }
 
         /// <summary>

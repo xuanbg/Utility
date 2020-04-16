@@ -5,7 +5,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class AboutModel : BaseDialogModel<object, About>
+    public class AboutModel : BaseDialogModel<object, AboutDialog>
     {
         /// <summary>
         /// 构造函数，初始化视图

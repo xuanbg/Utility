@@ -6,7 +6,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class PrintModel : BaseDialogModel<string, PrintSet>
+    public class PrintModel : BaseDialogModel<string, PrintSetDialog>
     {
         private readonly List<object> prints = new List<object>();
 
