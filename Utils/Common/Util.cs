@@ -338,7 +338,7 @@ namespace Insight.Utils.Common
             {
                 file = file.Name,
                 version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                localPath = file.DirectoryName?.Replace(root, ""),
+                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
             }).ToList();
         }
 

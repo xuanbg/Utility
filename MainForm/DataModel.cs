@@ -149,11 +149,23 @@ namespace Insight.Utils.MainForm
 
             // 比较文件版本
             locals = Util.getClientFiles(".exe|.dll|.frl");
-            var updates = from sf in info.data
-                let cf = locals.FirstOrDefault(i => i.file == sf.file && i.localPath == sf.localPath)
-                where cf == null || new Version(cf.version) < new Version(sf.version)
-                select sf;
-            info.data = updates.ToList();
+            var updates = new List<FileVersion>();
+            foreach (var ver in info.data)
+            {
+                var cf = locals.FirstOrDefault(i => i.file == ver.file && i.localPath == ver.localPath);
+                if (cf == null)
+                {
+                    updates.Add(ver);
+                    continue;
+                }
+
+                var cv = new Version(cf.version);
+                var sv = new Version(ver.version);
+                if (cv.CompareTo(sv) >= 0) continue;
+
+                updates.Add(ver);
+            }
+            info.data = updates;
 
             return info;
         }

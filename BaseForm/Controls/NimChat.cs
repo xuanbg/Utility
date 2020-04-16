@@ -11,6 +11,7 @@ namespace Insight.Utils.Controls
     public partial class NimChat : XtraUserControl
     {
         private string myId;
+        private string targetId;
 
         /// <summary>
         /// 构造方法
@@ -18,7 +19,6 @@ namespace Insight.Utils.Controls
         public NimChat()
         {
             InitializeComponent();
-
 
             sbeFile.Click += (sender, args) => openFile(0);
             sbeImage.Click += (sender, args) => openFile(1);
@@ -43,11 +43,13 @@ namespace Insight.Utils.Controls
         /// 初始化消息列表
         /// </summary>
         /// <param name="myId">己方云信ID</param>
-        public void init(string myId)
+        /// <param name="targetId">对方云信ID</param>
+        public void init(string myId, string targetId = null)
         {
             this.myId = myId;
+            this.targetId = targetId ?? Name;
 
-            mlcMessage.init(Name);
+            mlcMessage.init(this.targetId);
             mmeInput.Focus();
         }
 
@@ -66,7 +68,7 @@ namespace Insight.Utils.Controls
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
-            if (args.ArcInfo.TalkId != Name) return;
+            if (args.ArcInfo.TalkId != targetId) return;
 
             void action()
             {
@@ -118,7 +120,7 @@ namespace Insight.Utils.Controls
             var message = new NIMTextMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = Name,
+                ReceiverID = targetId,
                 TextContent = msg,
             };
             TalkAPI.SendMessage(message);
@@ -136,7 +138,7 @@ namespace Insight.Utils.Controls
             var message = new NIMFileMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = Name,
+                ReceiverID = targetId,
                 LocalFilePath = fileName,
                 FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ext}
             };
@@ -167,7 +169,7 @@ namespace Insight.Utils.Controls
             var message = new NIMImageMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = Name,
+                ReceiverID = targetId,
                 ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = ext },
                 LocalFilePath = fileName,
             };
@@ -191,7 +193,7 @@ namespace Insight.Utils.Controls
             {
                 id = id,
                 from = myId,
-                to = Name,
+                to = targetId,
                 type = type,
                 direction = 0,
                 body = body,

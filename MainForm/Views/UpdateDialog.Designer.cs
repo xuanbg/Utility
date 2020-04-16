@@ -28,52 +28,81 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateDialog));
-            this.Progress = new DevExpress.XtraEditors.MarqueeProgressBarControl();
+            this.sbeUpdate = new DevExpress.XtraEditors.SimpleButton();
+            this.pceUpdate = new DevExpress.XtraEditors.ProgressBarControl();
+            this.LabFile = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             this.panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Progress.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pceUpdate.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // panel
             // 
-            this.panel.Controls.Add(this.Progress);
+            this.panel.Controls.Add(this.LabFile);
+            this.panel.Controls.Add(this.pceUpdate);
             // 
-            // Cancel
+            // cancel
             // 
             this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cancel.Appearance.Options.UseFont = true;
-            this.cancel.Visible = false;
             // 
-            // Confirm
+            // confirm
             // 
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.confirm.Appearance.Options.UseFont = true;
+            this.confirm.Visible = false;
             // 
-            // Progress
+            // close
             // 
-            this.Progress.EditValue = 0;
-            this.Progress.Location = new System.Drawing.Point(25, 65);
-            this.Progress.Name = "Progress";
-            this.Progress.Properties.ShowTitle = true;
-            this.Progress.Size = new System.Drawing.Size(320, 20);
-            this.Progress.TabIndex = 1;
+            this.close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.close.Appearance.Options.UseFont = true;
             // 
-            // Update
+            // sbeUpdate
+            // 
+            this.sbeUpdate.Location = new System.Drawing.Point(290, 174);
+            this.sbeUpdate.Name = "sbeUpdate";
+            this.sbeUpdate.Size = new System.Drawing.Size(80, 23);
+            this.sbeUpdate.TabIndex = 1;
+            this.sbeUpdate.Text = "更  新";
+            // 
+            // pceUpdate
+            // 
+            this.pceUpdate.Location = new System.Drawing.Point(25, 65);
+            this.pceUpdate.Name = "pceUpdate";
+            this.pceUpdate.Properties.ShowTitle = true;
+            this.pceUpdate.Size = new System.Drawing.Size(320, 20);
+            this.pceUpdate.TabIndex = 0;
+            // 
+            // LabFile
+            // 
+            this.LabFile.Location = new System.Drawing.Point(30, 45);
+            this.LabFile.Name = "LabFile";
+            this.LabFile.Size = new System.Drawing.Size(0, 14);
+            this.LabFile.TabIndex = 0;
+            // 
+            // UpdateDialog
             // 
             this.ClientSize = new System.Drawing.Size(384, 212);
             this.ControlBox = false;
-            this.Name = "Update";
+            this.Controls.Add(this.sbeUpdate);
+            this.Name = "UpdateDialog";
             this.Text = "更新客户端程序…";
+            this.Controls.SetChildIndex(this.confirm, 0);
+            this.Controls.SetChildIndex(this.close, 0);
+            this.Controls.SetChildIndex(this.cancel, 0);
+            this.Controls.SetChildIndex(this.panel, 0);
+            this.Controls.SetChildIndex(this.sbeUpdate, 0);
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Progress.Properties)).EndInit();
+            this.panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pceUpdate.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        internal DevExpress.XtraEditors.MarqueeProgressBarControl Progress;
+        public DevExpress.XtraEditors.SimpleButton sbeUpdate;
+        public DevExpress.XtraEditors.ProgressBarControl pceUpdate;
+        public DevExpress.XtraEditors.LabelControl LabFile;
     }
 }

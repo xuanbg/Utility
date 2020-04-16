@@ -140,6 +140,7 @@ namespace Insight.Utils.MainForm
                         break;
                 }
             };
+            model.showDialog();
         }
 
         /// <summary>

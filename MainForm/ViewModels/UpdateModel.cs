@@ -19,22 +19,9 @@ namespace Insight.Utils.MainForm.ViewModels
         /// </summary>
         /// <param name="title">窗体标题</param>
         /// <param name="item">更新信息</param>
-        public UpdateModel(string title, Update item) : base(title)
+        public UpdateModel(string title, Update item) : base(title, item)
         {
-            view.confirm.Enabled = false;
-            foreach (var version in item.data)
-            {
-                view.Progress.EditValue = $"正在更新：{version.file}……";
-                view.Refresh();
-                Thread.Sleep(1000);
-
-                callback("updateFile", new object[] {version});
-            }
-
-            view.confirm.Enabled = true;
-            view.Progress.EditValue = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
-            view.confirm.Text = restart ? "重  启" : "关  闭";
-            view.Refresh();
+            view.sbeUpdate.Click += (sender, args) => startUpdate();
         }
 
         /// <summary>
@@ -44,6 +31,8 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <param name="data">文件数据</param>
         public void updateFile(FileVersion version, string data)
         {
+            if (string.IsNullOrEmpty(data)) return;
+
             var buffer = Convert.FromBase64String(data);
             var bytes = Util.decompress(buffer);
             restart = Util.updateFile(version, bytes) || restart;
@@ -76,6 +65,31 @@ namespace Insight.Utils.MainForm.ViewModels
         public new void confirm()
         {
             callback("complete", new object[] { restart });
+        }
+
+        /// <summary>
+        /// 开始更新
+        /// </summary>
+        private void startUpdate()
+        {
+            var count = 0;
+            view.sbeUpdate.Visible = false;
+            view.cancel.Visible = false;
+            foreach (var version in item.data)
+            {
+                view.LabFile.Text = $"正在更新：{version.file}……";
+                view.pceUpdate.Position = 100 * count / item.data.Count;
+                count++;
+                view.Refresh();
+                Thread.Sleep(1000);
+
+                callback("updateFile", new object[] { version });
+            }
+
+            view.confirm.Enabled = true;
+            view.pceUpdate.EditValue = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
+            view.confirm.Text = restart ? "重  启" : "关  闭";
+            view.Refresh();
         }
     }
 }
