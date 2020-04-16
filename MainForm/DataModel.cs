@@ -1,5 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Windows.Forms;
 using Insight.Utils.Client;
+using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
 namespace Insight.Utils.MainForm
@@ -52,27 +58,80 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 获取服务器上的客户端文件版本信息
         /// </summary>
-        /// <param name="id">应用ID</param>
         /// <returns>文件版本信息</returns>
-        internal Dictionary<string, ClientFile> getFiles(string id)
+        internal Update checkUpdate()
         {
-            var url = $"/base/common/v1.0/apps/{id}/files";
-            var client = new HttpClient<Dictionary<string, ClientFile>>();
+            var url = $"{Setting.updateUrl}/update.json";
+            var client = new HttpRequest();
+            if (!client.send(url))
+            {
+                Messages.showError("无法获取更新信息，请稍后再试……");
+                return null;
+            }
 
-            return client.getData(url);
+            // 获取更新信息
+            var info = Util.deserialize<Update>(client.data);
+            var root = Application.StartupPath;
+
+            // 清除本地备份
+            var locals = Util.getClientFiles(".bak");
+            locals.ForEach(i =>
+            {
+                var filePath = root;
+                if (string.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
+
+                Util.deleteFile(filePath + i.file);
+            });
+
+            // 比较文件版本
+            locals = Util.getClientFiles(".exe|.dll|.frl");
+            var updates = new List<FileVersion>();
+            foreach (var ver in info.data)
+            {
+                var cf = locals.FirstOrDefault(i => i.file == ver.file && i.localPath == ver.localPath);
+                if (cf == null)
+                {
+                    updates.Add(ver);
+                    continue;
+                }
+
+                var cv = new Version(cf.version);
+                var sv = new Version(ver.version);
+                if (cv.CompareTo(sv) >= 0) continue;
+
+                updates.Add(ver);
+            }
+            info.data = updates;
+
+            return info;
         }
 
         /// <summary>
-        /// 根据文件ID获取更新文件
+        /// 根据URL获取更新文件
         /// </summary>
-        /// <param name="id">更新文件ID</param>
+        /// <param name="file">文件</param>
         /// <returns>Result</returns>
-        internal string getFile(string id)
+        internal byte[] getFile(string file)
         {
-            var url = $"/base/common/v1.0/apps/files/{id}";
-            var client = new HttpClient<string>();
+            var url = $"{Setting.updateUrl}/{file}";
+            using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+            {
+                if (stream == null) return null;
 
-            return client.getData(url);
+                var buffer = new byte[1024];
+                using (var ms = new MemoryStream())
+                {
+                    int actual;
+                    while ((actual = stream.Read(buffer, 0, 1024)) > 0)
+                    {
+                        ms.Write(buffer, 0, actual);
+                    }
+
+                    ms.Position = 0;
+
+                    return ms.ToArray();
+                }
+            }
         }
     }
 }

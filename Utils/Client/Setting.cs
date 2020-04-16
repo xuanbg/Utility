@@ -10,9 +10,14 @@ namespace Insight.Utils.Client
         public static readonly string appName = Util.getAppSetting("AppName");
 
         /// <summary>
-        /// 基础服务地址
+        /// 网关地址
         /// </summary>
         public static string gateway = Util.getAppSetting("Gateway");
+
+        /// <summary>
+        /// 客户端更新URL
+        /// </summary>
+        public static readonly string updateUrl = Util.getAppSetting("UpdateUrl");
 
         /// <summary>
         /// 界面主题样式

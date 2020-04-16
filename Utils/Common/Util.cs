@@ -152,7 +152,7 @@ namespace Insight.Utils.Common
         /// <returns>string Base64编码的字符串</returns>
         public static string base64(object obj)
         {
-            return base64Encode(serialize(obj));
+            return obj == null ? null : base64Encode(serialize(obj));
         }
 
         /// <summary>
@@ -162,6 +162,8 @@ namespace Insight.Utils.Common
         /// <returns>string Base64编码的字符串</returns>
         public static string base64Encode(string str)
         {
+            if (string.IsNullOrEmpty(str)) return null;
+
             var buff = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(buff);
         }
@@ -173,6 +175,8 @@ namespace Insight.Utils.Common
         /// <returns>string Base64编码的字符串</returns>
         public static string base64Decode(string str)
         {
+            if (string.IsNullOrEmpty(str)) return null;
+
             try
             {
                 var buff = Convert.FromBase64String(str);
@@ -191,6 +195,8 @@ namespace Insight.Utils.Common
         /// <returns>byte[]</returns>
         public static byte[] hexToByteArray(string str)
         {
+            if (string.IsNullOrEmpty(str)) return null;
+
             var hex = str.Replace("0x", "");
             var bytes = new byte[hex.Length / 2];
             for (var x = 0; x < bytes.Length; x++)
@@ -238,6 +244,8 @@ namespace Insight.Utils.Common
         /// <returns>T 复制的对象</returns>
         public static T clone<T>(T obj)
         {
+            if (obj == null) return default(T);
+
             var str = serialize(obj);
             return deserialize<T>(str);
         }
@@ -250,6 +258,8 @@ namespace Insight.Utils.Common
         /// <returns>T 转换后的类型</returns>
         public static T convertTo<T>(object obj)
         {
+            if (obj == null) return default(T);
+
             var str = serialize(obj);
             return deserialize<T>(str);
         }
@@ -262,6 +272,8 @@ namespace Insight.Utils.Common
         /// <returns></returns>
         public static DataTable convertToDataTable<T>(List<T> list)
         {
+            if (list == null) return null;
+
             var table = new DataTable();
             var propertys = typeof(T).GetProperties().ToList();
             propertys.ForEach(p => table.Columns.Add(getPropertyName(p), p.PropertyType));
@@ -272,6 +284,7 @@ namespace Insight.Utils.Common
                 propertys.ForEach(p => row[getPropertyName(p)] = p.GetValue(item, null));
                 table.Rows.Add(row);
             }
+
             return table;
         }
 
@@ -282,6 +295,8 @@ namespace Insight.Utils.Common
         /// <returns>List</returns>
         public static List<T> convertToList<T>(DataTable table) where T : new()
         {
+            if (table == null) return null;
+
             var list = new List<T>();
             var propertys = typeof(T).GetProperties();
             foreach (DataRow row in table.Rows)
@@ -299,6 +314,7 @@ namespace Insight.Utils.Common
                 }
                 list.Add(obj);
             }
+
             return list;
         }
 
@@ -325,32 +341,21 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 获取本地文件列表
         /// </summary>
-        /// <param name="dict">客户端文件信息集合</param>
-        /// <param name="appId">应用ID</param>
-        /// <param name="root">根目录</param>
         /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="path">当前目录</param>
-        public static void getClientFiles(Dictionary<string, ClientFile> dict, string appId, string root, string ext = "*.*", string path = null)
+        public static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
         {
             // 读取目录下文件信息
+            var root = Application.StartupPath;
             var dirInfo = new DirectoryInfo(path ?? root);
             var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
-            foreach (var file in files)
+
+            return files.Select(file => new FileVersion
             {
-                var id = hash(file.Name);
-                var info = new ClientFile
-                {
-                    id = id,
-                    appId = appId,
-                    name = file.Name,
-                    path = file.DirectoryName?.Replace(root, ""),
-                    fullPath = file.FullName,
-                    version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                    updateTime = DateTime.Now
-                };
-                dict[id] = info;
-            }
-            Directory.GetDirectories(path ?? root).ToList().ForEach(p => getClientFiles(dict, appId, root, ext, p));
+                file = file.Name,
+                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
+                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
+            }).ToList();
         }
 
         /// <summary>
@@ -378,34 +383,33 @@ namespace Insight.Utils.Common
         /// <summary>
         /// 更新文件
         /// </summary>
-        /// <param name="file">文件信息</param>
-        /// <param name="root">根目录</param>
+        /// <param name="version">版本信息</param>
         /// <param name="bytes">文件字节流</param>
         /// <returns>bool 是否重命名</returns>
-        public static bool updateFile(ClientFile file, string root, byte[] bytes)
+        public static bool updateFile(FileVersion version, byte[] bytes)
         {
             var rename = false;
-            var path = root + file.path + "\\";
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            var filePath = Application.StartupPath;
+            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
 
-            path += file.name;
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+            var file = filePath + version.file;
             try
             {
-                File.Delete(path);
+                File.Delete(file);
             }
             catch
             {
-                File.Move(path, path + ".bak");
+                File.Move(file, file + ".bak");
                 rename = true;
             }
 
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(bytes, 0, bytes.Length);
             }
+
             return rename;
         }
 
@@ -417,6 +421,8 @@ namespace Insight.Utils.Common
         /// <returns>bool 是否删除成功</returns>
         public static void deleteFile(string path, bool warning = false)
         {
+            if (string.IsNullOrEmpty(path)) return;
+
             if (!File.Exists(path))
             {
                 Messages.showWarning("未找到指定的文件！");
@@ -445,6 +451,8 @@ namespace Insight.Utils.Common
         /// <returns>ImageData 电子影像数据</returns>
         public static ImageData getImageData(string path)
         {
+            if (string.IsNullOrEmpty(path)) return null;
+
             var image = getImage(path);
 
             return image == null ? null : new ImageData {image = imageToByteArray(image)};
@@ -549,6 +557,8 @@ namespace Insight.Utils.Common
         /// <returns>图片对象</returns>
         public static Image getImage(string path)
         {
+            if (string.IsNullOrEmpty(path)) return null;
+
             if (!File.Exists(path)) return null;
 
             try

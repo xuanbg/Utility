@@ -44,7 +44,7 @@ namespace Insight.Utils.MainForm.ViewModels
             view.MubLogout.ItemClick += (sender, args) => logout();
             view.MubExit.ItemClick += (sender, args) => view.Close();
             view.MubPrintSet.ItemClick += (sender, args) => callback("printSet");
-            view.MubUpdate.ItemClick += (sender, args) => callback("update");
+            view.MubUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
             view.MubAbout.ItemClick += (sender, args) => callback("about");
 
             view.Closing += (sender, args) => exit(args);

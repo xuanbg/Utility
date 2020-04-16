@@ -57,7 +57,7 @@
     <Compile Include="Common\SqlHelper.cs" />
     <Compile Include="Entity\Catalog.cs" />
     <Compile Include="Entity\Enums.cs" />
-    <Compile Include="Entity\ClientFile.cs" />
+    <Compile Include="Entity\Update.cs" />
     <Compile Include="Entity\ImageData.cs" />
     <Compile Include="Entity\LoginDto.cs" />
     <Compile Include="Entity\LogInfo.cs" />

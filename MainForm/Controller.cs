@@ -18,6 +18,8 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
+            update(true);
+
             var title = Setting.appName;
             var mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
@@ -101,36 +103,44 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：检查更新，如有更新，提示是否更新
         /// </summary>
-        public void update()
+        /// <param name="isStart">是否启动</param>
+        public void update(bool isStart)
         {
-            var model = new UpdateModel("检查更新");
+            var info = dataModel.checkUpdate();
+            if (info == null) return;
+
+            if (isStart && !info.update) return;
+
+            if (!info.data.Any())
+            {
+                if (isStart) return;
+
+                Messages.showMessage("您的系统是最新版本！");
+                return;
+            }
+
+            var model = new UpdateModel("更新文件", info);
             model.callbackEvent += (sender, args) =>
             {
-                if (args.methodName == "getFile")
+                switch (args.methodName)
                 {
-                    var info = (ClientFile) args.param[0];
-                    model.updateFile(dataModel.getFile(info.id));
-                    return;
-                }
+                    case "updateFile":
+                        var ver = (FileVersion)args.param[0];
+                        var file = dataModel.getFile(ver.file);
+                        model.updateFile(ver, file);
 
-                if (args.methodName == "complete")
-                {
-                    if ((bool) args.param[0])
-                    {
+                        break;
+                    case "complete" when (bool)args.param[0]:
                         Process.Start(model.createBat());
                         Application.Exit();
-                    }
-                    else
-                    {
+
+                        break;
+                    case "complete":
                         model.closeDialog();
-                    }
+                        break;
                 }
             };
-
-            var files = dataModel.getFiles(Setting.appId);
-            if (files == null || !files.Any()) return;
-
-            if (model.checkUpdate(files)) model.showDialog();
+            model.showDialog();
         }
 
         /// <summary>
