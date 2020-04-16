@@ -1,6 +1,6 @@
 ﻿namespace Insight.Utils.MainForm.Views
 {
-    public partial class ChangePw
+    public partial class PasswordDialog
     {
         /// <summary>
         /// Required designer variable.

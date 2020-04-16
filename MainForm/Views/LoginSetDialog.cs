@@ -2,12 +2,12 @@
 
 namespace Insight.Utils.MainForm.Views
 {
-    public partial class ChangePw : BaseDialog
+    public partial class LoginSetDialog : BaseDialog
     {
         /// <summary>
         /// 构造函数
         /// </summary>
-        public ChangePw()
+        public LoginSetDialog()
         {
             InitializeComponent();
         }

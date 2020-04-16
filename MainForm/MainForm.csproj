@@ -74,23 +74,23 @@
     <Compile Include="ViewModels\SetModel.cs" />
     <Compile Include="ViewModels\UpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\About.cs">
+    <Compile Include="Views\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
+    <Compile Include="Views\AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ChangePw.cs">
+    <Compile Include="Views\PasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ChangePw.Designer.cs">
-      <DependentUpon>ChangePw.cs</DependentUpon>
+    <Compile Include="Views\PasswordDialog.Designer.cs">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Locked.cs">
+    <Compile Include="Views\LockDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Locked.Designer.cs">
-      <DependentUpon>Locked.cs</DependentUpon>
+    <Compile Include="Views\LockDialog.Designer.cs">
+      <DependentUpon>LockDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginDialog.cs">
       <SubType>Form</SubType>
@@ -98,11 +98,11 @@
     <Compile Include="Views\LoginDialog.Designer.cs">
       <DependentUpon>LoginDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\LoginSet.cs">
+    <Compile Include="Views\LoginSetDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\LoginSet.Designer.cs">
-      <DependentUpon>LoginSet.cs</DependentUpon>
+    <Compile Include="Views\LoginSetDialog.Designer.cs">
+      <DependentUpon>LoginSetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.cs">
       <SubType>Form</SubType>
@@ -110,47 +110,47 @@
     <Compile Include="Views\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\PrintSet.cs">
+    <Compile Include="Views\PrintSetDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\PrintSet.Designer.cs">
-      <DependentUpon>PrintSet.cs</DependentUpon>
+    <Compile Include="Views\PrintSetDialog.Designer.cs">
+      <DependentUpon>PrintSetDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Update.cs">
+    <Compile Include="Views\UpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Update.Designer.cs">
-      <DependentUpon>Update.cs</DependentUpon>
+    <Compile Include="Views\UpdateDialog.Designer.cs">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\About.resx">
-      <DependentUpon>About.cs</DependentUpon>
+    <EmbeddedResource Include="Views\AboutDialog.resx">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\ChangePw.resx">
-      <DependentUpon>ChangePw.cs</DependentUpon>
+    <EmbeddedResource Include="Views\PasswordDialog.resx">
+      <DependentUpon>PasswordDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Locked.resx">
-      <DependentUpon>Locked.cs</DependentUpon>
+    <EmbeddedResource Include="Views\LockDialog.resx">
+      <DependentUpon>LockDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\LoginDialog.resx">
       <DependentUpon>LoginDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\LoginSet.resx">
-      <DependentUpon>LoginSet.cs</DependentUpon>
+    <EmbeddedResource Include="Views\LoginSetDialog.resx">
+      <DependentUpon>LoginSetDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\PrintSet.resx">
-      <DependentUpon>PrintSet.cs</DependentUpon>
+    <EmbeddedResource Include="Views\PrintSetDialog.resx">
+      <DependentUpon>PrintSetDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Update.resx">
-      <DependentUpon>Update.cs</DependentUpon>
+    <EmbeddedResource Include="Views\UpdateDialog.resx">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

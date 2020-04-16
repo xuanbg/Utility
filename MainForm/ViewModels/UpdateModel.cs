@@ -14,7 +14,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class UpdateModel : BaseDialogModel<ClientFile, Update>
+    public class UpdateModel : BaseDialogModel<ClientFile, UpdateDialog>
     {
         public bool restart;
 

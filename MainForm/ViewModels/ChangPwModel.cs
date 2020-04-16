@@ -6,7 +6,7 @@ using Insight.Utils.MainForm.Views;
 
 namespace Insight.Utils.MainForm.ViewModels
 {
-    public class ChangPwModel : BaseDialogModel<PasswordDto, ChangePw>
+    public class ChangPwModel : BaseDialogModel<PasswordDto, PasswordDialog>
     {
         private string sing;
 

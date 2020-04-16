@@ -2,12 +2,12 @@
 
 namespace Insight.Utils.MainForm.Views
 {
-    public partial class PrintSet : BaseDialog
+    public partial class AboutDialog : BaseDialog
     {
         /// <summary>
         /// 构造函数
         /// </summary>
-        public PrintSet()
+        public AboutDialog()
         {
             InitializeComponent();
         }

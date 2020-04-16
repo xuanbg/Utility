@@ -1,6 +1,6 @@
 ﻿namespace Insight.Utils.MainForm.Views
 {
-    public partial class PrintSet
+    public partial class PrintSetDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrintSet));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrintSetDialog));
             this.TagPrint = new DevExpress.XtraEditors.ComboBoxEdit();
             this.BilPrint = new DevExpress.XtraEditors.ComboBoxEdit();
             this.DocPrint = new DevExpress.XtraEditors.ComboBoxEdit();

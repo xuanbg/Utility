@@ -3,12 +3,12 @@ using Insight.Utils.BaseForms;
 
 namespace Insight.Utils.MainForm.Views
 {
-    public partial class Locked : BaseDialog
+    public partial class LockDialog : BaseDialog
     {
         /// <summary>
         /// 构造函数
         /// </summary>
-        public Locked()
+        public LockDialog()
         {
             InitializeComponent();
         }

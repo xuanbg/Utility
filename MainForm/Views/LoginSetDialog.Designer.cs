@@ -4,7 +4,7 @@ using DevExpress.XtraEditors;
 
 namespace Insight.Utils.MainForm.Views
 {
-    public partial class LoginSet
+    public partial class LoginSetDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace Insight.Utils.MainForm.Views
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginSet));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginSetDialog));
             this.SaveUserCheckBox = new System.Windows.Forms.CheckBox();
             this.BaseInupt = new DevExpress.XtraEditors.TextEdit();
             this.labBase = new DevExpress.XtraEditors.LabelControl();
