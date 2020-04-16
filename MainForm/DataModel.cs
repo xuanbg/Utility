@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
@@ -175,12 +177,27 @@ namespace Insight.Utils.MainForm
         /// </summary>
         /// <param name="file">文件</param>
         /// <returns>Result</returns>
-        internal string getFile(string file)
+        internal byte[] getFile(string file)
         {
             var url = $"{Setting.updateUrl}/{file}";
-            var client = new HttpRequest();
+            using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+            {
+                if (stream == null) return null;
 
-            return client.send(url) ? client.data : null;
+                var buffer = new byte[1024];
+                using (var ms = new MemoryStream())
+                {
+                    int actual;
+                    while ((actual = stream.Read(buffer, 0, 1024)) > 0)
+                    {
+                        ms.Write(buffer, 0, actual);
+                    }
+
+                    ms.Position = 0;
+
+                    return ms.ToArray();
+                }
+            }
         }
     }
 

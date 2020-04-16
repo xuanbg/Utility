@@ -67,6 +67,7 @@
             // 
             // pceUpdate
             // 
+            this.pceUpdate.EditValue = "0";
             this.pceUpdate.Location = new System.Drawing.Point(25, 65);
             this.pceUpdate.Name = "pceUpdate";
             this.pceUpdate.Properties.ShowTitle = true;
@@ -75,9 +76,12 @@
             // 
             // LabFile
             // 
-            this.LabFile.Location = new System.Drawing.Point(30, 45);
+            this.LabFile.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+            this.LabFile.Appearance.Options.UseFont = true;
+            this.LabFile.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.LabFile.Location = new System.Drawing.Point(25, 45);
             this.LabFile.Name = "LabFile";
-            this.LabFile.Size = new System.Drawing.Size(0, 14);
+            this.LabFile.Size = new System.Drawing.Size(320, 14);
             this.LabFile.TabIndex = 0;
             // 
             // UpdateDialog
@@ -94,7 +98,6 @@
             this.Controls.SetChildIndex(this.sbeUpdate, 0);
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
-            this.panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pceUpdate.Properties)).EndInit();
             this.ResumeLayout(false);
 

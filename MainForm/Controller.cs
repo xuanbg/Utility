@@ -18,6 +18,8 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
+            update();
+
             var title = Setting.appName;
             var mainModel = new MainModel(title);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
@@ -115,9 +117,6 @@ namespace Insight.Utils.MainForm
                 Messages.showMessage("您的系统是最新版本！");
                 return;
             }
-
-            var msg = $"当前有 {info.data.Count} 个文件需要更新，是否立即更新？";
-            if (!info.update && !Messages.showConfirm(msg)) return;
 
             var model = new UpdateModel("更新文件", info);
             model.callbackEvent += (sender, args) =>
