@@ -18,7 +18,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
-            update();
+            update(true);
 
             var title = Setting.appName;
             var mainModel = new MainModel(title);
@@ -109,11 +109,18 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 点击菜单项：检查更新，如有更新，提示是否更新
         /// </summary>
-        public void update()
+        /// <param name="isStart">是否启动</param>
+        public void update(bool isStart)
         {
             var info = dataModel.checkUpdate();
-            if (info == null || !info.data.Any())
+            if (info == null) return;
+
+            if (isStart && !info.update) return;
+
+            if (!info.data.Any())
             {
+                if (isStart) return;
+
                 Messages.showMessage("您的系统是最新版本！");
                 return;
             }
