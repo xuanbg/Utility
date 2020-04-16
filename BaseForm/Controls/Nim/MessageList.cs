@@ -77,10 +77,6 @@ namespace Insight.Utils.Controls.Nim
         public void addMessage(NimMessage message)
         {
             messageId = message.id;
-            while (!(Parent?.IsHandleCreated ?? false))
-            {
-                Thread.Sleep(200);
-            }
 
             var time = Util.getDateTime(message.timetag);
             if (messageTime == DateTime.MinValue)
@@ -141,6 +137,8 @@ namespace Insight.Utils.Controls.Nim
             };
 
             void action() => addMessage(message);
+
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
             Invoke((Action)action);
         }

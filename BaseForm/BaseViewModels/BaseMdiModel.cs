@@ -240,7 +240,7 @@ namespace Insight.Utils.BaseViewModels
             if (waits > 0) return;
 
             var time = (int)(DateTime.Now - wait).TotalMilliseconds;
-            if (time < 800) Thread.Sleep(800 - time);
+            if (time < 500) Thread.Sleep(500 - time);
 
             view.Wait.CloseWaitForm();
         }

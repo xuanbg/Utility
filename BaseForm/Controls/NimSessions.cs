@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
@@ -84,6 +85,8 @@ namespace Insight.Utils.Controls
                 resetUnread(info.id);
 
                 void action() => sessionClick?.Invoke(this, EventArgs.Empty);
+
+                while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
                 Invoke((Action)action);
             });
@@ -210,6 +213,8 @@ namespace Insight.Utils.Controls
                 }
                 show.Controls.Clear();
             }
+
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
             Invoke((Action)action);
         }

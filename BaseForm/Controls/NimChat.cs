@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
@@ -82,6 +83,8 @@ namespace Insight.Utils.Controls
                 mmeInput.Focus();
             }
 
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
             Invoke((Action) action);
         }
 
@@ -152,6 +155,8 @@ namespace Insight.Utils.Controls
                     mlcMessage.setPosition(id, (int) (100 * uploaded / total));
                     if (uploaded == total) Messages.showMessage("文件上传完成");
                 }
+
+                while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
                 Invoke((Action)action);
             });
