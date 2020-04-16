@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
@@ -42,6 +43,11 @@ namespace Insight.Utils.Controls.Nim
             pceList.Controls.Clear();
             MessagelogAPI.QueryMsglogLocally(id, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
+                while (!(Parent?.IsHandleCreated ?? false))
+                {
+                    Thread.Sleep(200);
+                }
+
                 foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
                 {
                     addMessage(msg);
@@ -123,8 +129,6 @@ namespace Insight.Utils.Controls.Nim
         /// <param name="msg"></param>
         private void addMessage(NIMIMMessage msg)
         {
-            if (IsDisposed || !(Parent?.IsHandleCreated ?? false)) return;
-
             var message = new NimMessage
             {
                 id = msg.ClientMsgID,

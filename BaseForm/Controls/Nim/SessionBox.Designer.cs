@@ -30,17 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SessionBox));
             this.pceSession = new DevExpress.XtraEditors.PanelControl();
+            this.peeSep = new DevExpress.XtraEditors.PictureEdit();
             this.peeUnread = new DevExpress.XtraEditors.PictureEdit();
             this.labTime = new DevExpress.XtraEditors.LabelControl();
             this.labMessage = new DevExpress.XtraEditors.LabelControl();
             this.labName = new DevExpress.XtraEditors.LabelControl();
             this.picTarget = new DevExpress.XtraEditors.PictureEdit();
-            this.peeSep = new DevExpress.XtraEditors.PictureEdit();
             ((System.ComponentModel.ISupportInitialize)(this.pceSession)).BeginInit();
             this.pceSession.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.peeSep.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.peeUnread.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTarget.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.peeSep.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // pceSession
@@ -58,8 +58,21 @@
             this.pceSession.Size = new System.Drawing.Size(300, 70);
             this.pceSession.TabIndex = 0;
             // 
+            // peeSep
+            // 
+            this.peeSep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.peeSep.Location = new System.Drawing.Point(10, 69);
+            this.peeSep.Name = "peeSep";
+            this.peeSep.Properties.Appearance.BackColor = System.Drawing.Color.DimGray;
+            this.peeSep.Properties.Appearance.Options.UseBackColor = true;
+            this.peeSep.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.peeSep.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.peeSep.Size = new System.Drawing.Size(280, 1);
+            this.peeSep.TabIndex = 0;
+            // 
             // peeUnread
             // 
+            this.peeUnread.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.peeUnread.EditValue = ((object)(resources.GetObject("peeUnread.EditValue")));
             this.peeUnread.Location = new System.Drawing.Point(275, 39);
             this.peeUnread.Name = "peeUnread";
@@ -75,6 +88,7 @@
             // 
             // labTime
             // 
+            this.labTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labTime.Location = new System.Drawing.Point(240, 15);
             this.labTime.Name = "labTime";
             this.labTime.Size = new System.Drawing.Size(0, 14);
@@ -111,18 +125,6 @@
             this.picTarget.Size = new System.Drawing.Size(50, 50);
             this.picTarget.TabIndex = 0;
             // 
-            // peeSep
-            // 
-            this.peeSep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.peeSep.Location = new System.Drawing.Point(10, 69);
-            this.peeSep.Name = "peeSep";
-            this.peeSep.Properties.Appearance.BackColor = System.Drawing.Color.DimGray;
-            this.peeSep.Properties.Appearance.Options.UseBackColor = true;
-            this.peeSep.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.peeSep.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            this.peeSep.Size = new System.Drawing.Size(280, 1);
-            this.peeSep.TabIndex = 0;
-            // 
             // SessionBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -134,9 +136,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pceSession)).EndInit();
             this.pceSession.ResumeLayout(false);
             this.pceSession.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.peeSep.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.peeUnread.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTarget.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.peeSep.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
