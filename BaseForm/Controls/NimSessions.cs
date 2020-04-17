@@ -21,14 +21,14 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void SessionClickHandle(object sender, EventArgs e);
+        public delegate void SessionClickHandle(object sender, SessionEventArgs e);
 
         /// <summary>
         /// 表示将处理当前点击会话的方法
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void SessionDoubleClickHandle(object sender, EventArgs e);
+        public delegate void SessionDoubleClickHandle(object sender, SessionEventArgs e);
 
         /// <summary>  
         /// 当点击会话后，通知处理
@@ -39,11 +39,6 @@ namespace Insight.Utils.Controls
         /// 当点击会话后，通知处理
         /// </summary>  
         public event SessionDoubleClickHandle sessionDoubleClick;
-
-        /// <summary>
-        /// 当前会话
-        /// </summary>
-        public NimSessionInfo info;
 
         /// <summary>
         /// 构造方法
@@ -78,13 +73,13 @@ namespace Insight.Utils.Controls
                 }
 
                 Task.WaitAll(tasks);
-                info = sessions.OrderBy(i => i.time).Last();
+                var info = sessions.OrderBy(i => i.time).Last();
                 info.unRead = false;
                 refresh();
 
                 resetUnread(info.id);
 
-                void action() => sessionClick?.Invoke(this, EventArgs.Empty);
+                void action() => sessionClick?.Invoke(this, new SessionEventArgs(info.id));
 
                 while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
@@ -181,19 +176,15 @@ namespace Insight.Utils.Controls
                     };
                     control.click += (sender, args) =>
                     {
-                        info = i;
-                        info.unRead = false;
                         control.unRead = false;
-                        resetUnread(info.id);
-                        sessionClick?.Invoke(sender, args);
+                        resetUnread(i.id);
+                        sessionClick?.Invoke(sender, new SessionEventArgs(i.id));
                     };
                     control.doubleClick += (sender, args) =>
                     {
-                        info = i;
-                        info.unRead = false;
                         control.unRead = false;
-                        resetUnread(info.id);
-                        sessionDoubleClick?.Invoke(sender, args);
+                        resetUnread(i.id);
+                        sessionDoubleClick?.Invoke(sender, new SessionEventArgs(i.id));
                     };
                     height = height + control.Size.Height;
                     hide.Controls.Add(control);
@@ -243,6 +234,23 @@ namespace Insight.Utils.Controls
             {
                 control.refreshTime();
             }
+        }
+    }
+
+    public class SessionEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 云信ID
+        /// </summary>
+        public string id;
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="id"></param>
+        public SessionEventArgs(string id)
+        {
+            this.id = id;
         }
     }
 

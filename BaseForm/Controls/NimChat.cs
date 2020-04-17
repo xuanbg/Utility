@@ -45,10 +45,10 @@ namespace Insight.Utils.Controls
         /// </summary>
         /// <param name="myId">己方云信ID</param>
         /// <param name="user">对方云信名片</param>
-        public void init(string myId, NimUser user = null)
+        public void init(string myId, NimUser user)
         {
             this.myId = myId;
-            targetId = user == null ? Name : user.accid;
+            targetId = user.accid;
 
             mlcMessage.init(user);
             mmeInput.Focus();
