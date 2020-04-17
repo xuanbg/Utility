@@ -91,7 +91,11 @@ namespace Insight.Utils.BaseViewModels
         protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string callbackMethod = "editItem", string callMethod = "itemChanged")
         {
             this.tab = tab;
+
+            grid.MouseDown += (sender, args) => mouseDownEvent(gridView, args);
+
             grid.DataSource = list;
+            grid.ContextMenuStrip = createContextMenu(gridView);
 
             initGrid(gridView, callMethod, callbackMethod, this.tab);
         }
@@ -263,7 +267,7 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         /// <param name="gridView">GridView</param>
         /// <returns>ContextMenuStrip</returns>
-        protected ContextMenuStrip createCopyMenu(GridView gridView)
+        protected ContextMenuStrip createContextMenu(GridView gridView)
         {
             var tsmi = new ToolStripMenuItem {Text = @"复制"};
             tsmi.Click += (sender, args) =>
