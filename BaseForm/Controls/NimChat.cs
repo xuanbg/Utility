@@ -44,13 +44,13 @@ namespace Insight.Utils.Controls
         /// 初始化消息列表
         /// </summary>
         /// <param name="myId">己方云信ID</param>
-        /// <param name="targetId">对方云信ID</param>
-        public void init(string myId, string targetId = null)
+        /// <param name="user">对方云信名片</param>
+        public void init(string myId, NimUser user = null)
         {
             this.myId = myId;
-            this.targetId = targetId ?? Name;
+            targetId = user == null ? Name : user.accid;
 
-            mlcMessage.init(this.targetId);
+            mlcMessage.init(user);
             mmeInput.Focus();
         }
 

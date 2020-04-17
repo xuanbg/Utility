@@ -32,16 +32,15 @@ namespace Insight.Utils.Controls.Nim
         /// <summary>
         /// 初始化消息列表
         /// </summary>
-        /// <param name="id">聊天对象ID</param>
-        public void init(string id)
+        /// <param name="user">对方云信名片</param>
+        public void init(NimUser user)
         {
-            targetId = id;
-            var user = NimUtil.getUser(id);
+            targetId = user.accid;
             targetHead = NimUtil.getImage(user.icon);
 
             // 加载历史消息
             pceList.Controls.Clear();
-            MessagelogAPI.QueryMsglogLocally(id, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
+            MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
                 foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
                 {
