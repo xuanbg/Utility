@@ -92,8 +92,9 @@ namespace Insight.Utils.BaseViewModels
         {
             this.tab = tab;
             grid.DataSource = list;
+            grid.ContextMenuStrip = createContextMenu(gridView);
 
-            initGrid(gridView, callMethod, callbackMethod, this.tab);
+            initGrid(gridView, callMethod, callbackMethod, tab);
         }
 
         /// <summary>
@@ -263,7 +264,7 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         /// <param name="gridView">GridView</param>
         /// <returns>ContextMenuStrip</returns>
-        protected ContextMenuStrip createCopyMenu(GridView gridView)
+        protected ContextMenuStrip createContextMenu(GridView gridView)
         {
             var tsmi = new ToolStripMenuItem {Text = @"复制"};
             tsmi.Click += (sender, args) =>
