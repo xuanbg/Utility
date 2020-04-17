@@ -91,6 +91,7 @@ namespace Insight.Utils.BaseViewModels
         protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string callbackMethod = "editItem", string callMethod = "itemChanged")
         {
             this.tab = tab;
+            grid.MouseDown += (sender, args) => mouseDownEvent(gridView, args);
             grid.DataSource = list;
             grid.ContextMenuStrip = createContextMenu(gridView);
 
