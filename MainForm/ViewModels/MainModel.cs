@@ -40,7 +40,6 @@ namespace Insight.Utils.MainForm.ViewModels
             view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             view.StbServer.Caption = Setting.gateway;
-            view.StbUser.Caption = Setting.userName;
 
             // 订阅主窗体菜单事件
             view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
@@ -60,6 +59,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// </summary>
         public void showMainWindow(string tenantName)
         {
+            view.StbUser.Caption = Setting.userName;
             view.StbDept.Caption = tenantName;
             view.Show();
             view.Refresh();
