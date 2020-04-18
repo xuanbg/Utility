@@ -1,5 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Insight.Utils.BaseControllers;
 using Insight.Utils.Client;
@@ -12,6 +15,7 @@ namespace Insight.Utils.MainForm
     public class Controller : BaseController
     {
         private readonly DataModel dataModel = new DataModel();
+        private readonly MainModel mainModel;
 
         /// <summary>
         /// 构造函数
@@ -19,12 +23,19 @@ namespace Insight.Utils.MainForm
         public Controller()
         {
             update(true);
+            login();
 
-            var title = Setting.appName;
-            var mainModel = new MainModel(title);
+            var navigators = dataModel.getNavigators();
+            mainModel = new MainModel(Setting.appName) { navigators = navigators };
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
+        }
 
-            var model = new LoginModel(title);
+        /// <summary>
+        /// 打开登录对话框
+        /// </summary>
+        public void login()
+        {
+            var model = new LoginModel(Setting.appName);
             model.callbackEvent += (sender, args) =>
             {
                 switch (args.methodName)
@@ -46,10 +57,7 @@ namespace Insight.Utils.MainForm
                         break;
                     case "loadMainWindow":
                         model.hide();
-
-                        var navigators = dataModel.getNavigators();
-                        mainModel.showMainWindow(navigators);
-
+                        mainModel.showMainWindow();
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");
 
@@ -59,7 +67,38 @@ namespace Insight.Utils.MainForm
                         break;
                 }
             };
+
             model.showDialog();
+        }
+
+        /// <summary>
+        /// 打开MDI子窗体
+        /// </summary>
+        /// <param name="name">c窗体名称</param>
+        public void openMdiWindow(string name)
+        {
+            if (existForm(name)) return;
+
+            var mod = mainModel.navigators.Single(m => m.moduleInfo.module == name);
+            var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
+            if (!File.Exists(path))
+            {
+                var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
+                Messages.showError(msg);
+                return;
+            }
+
+            var asm = Assembly.LoadFrom(path);
+            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
+            if (type == null || string.IsNullOrEmpty(type.FullName))
+            {
+                var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
+                Messages.showError(msg);
+
+                return;
+            }
+
+            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
         }
 
         /// <summary>
