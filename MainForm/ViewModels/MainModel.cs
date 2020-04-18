@@ -22,14 +22,17 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 模块信息集合
         /// </summary>
-        public List<ModuleDto> navigators;
+        public readonly List<ModuleDto> navigators;
 
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="title">窗体标题</param>
-        public MainModel(string title) : base(title)
+        /// <param name="navigators">模块信息集合</param>
+        public MainModel(string title, List<ModuleDto> navigators) : base(title)
         {
+            this.navigators = navigators;
+
             // 初始化界面
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
 
@@ -40,19 +43,20 @@ namespace Insight.Utils.MainForm.ViewModels
             view.StbServer.Caption = Setting.gateway;
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[1]);
+            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
             view.MubLock.ItemClick += (sender, args) => callback("lockWindow");
             view.MubLogout.ItemClick += (sender, args) => logout();
             view.MubExit.ItemClick += (sender, args) => view.Close();
             view.MubPrintSet.ItemClick += (sender, args) => callback("printSet");
             view.MubUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
             view.MubAbout.ItemClick += (sender, args) => callback("about");
-
             view.Closing += (sender, args) => exit(args);
+
+            initNavBar();
         }
 
         /// <summary>
-        /// 主窗体初始化
+        /// 显示主窗体
         /// </summary>
         public void showMainWindow()
         {
@@ -60,11 +64,11 @@ namespace Insight.Utils.MainForm.ViewModels
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
 
-            initNavBar();
             view.Show();
             view.Refresh();
 
             opens.ForEach(i => callback("openMdiWindow", new object[] { i }));
+            if (Setting.needChangePw) callback("changPassword", new object[] { "123456" });
         }
 
         /// <summary>
@@ -115,7 +119,7 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 点击菜单项：注销，弹出询问对话框，确认注销后重启应用程序
         /// </summary>
-        private void logout()
+        private static void logout()
         {
             const string msg = "注销用户将导致当前未完成的输入内容丢失！\r\n您确定要注销吗？";
             if (!Messages.showConfirm(msg)) return;

@@ -28,7 +28,7 @@ namespace Insight.Utils.BaseControllers
         /// </summary>
         /// <param name="name">窗体名称</param>
         /// <returns>是否已存在</returns>
-        protected bool existForm(string name)
+        protected static bool existForm(string name)
         {
             var form = Application.OpenForms[name];
             if (form == null) return false;

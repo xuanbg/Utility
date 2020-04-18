@@ -26,7 +26,7 @@ namespace Insight.Utils.MainForm
             login();
 
             var navigators = dataModel.getNavigators();
-            mainModel = new MainModel(Setting.appName) { navigators = navigators };
+            mainModel = new MainModel(Setting.appName, navigators);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
         }
 
