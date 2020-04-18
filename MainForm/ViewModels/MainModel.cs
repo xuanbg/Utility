@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using DevExpress.XtraNavBar;
 using FastReport.Utils;
@@ -20,7 +17,11 @@ namespace Insight.Utils.MainForm.ViewModels
     public class MainModel : BaseModel<object, MainWindow>
     {
         private readonly List<string> opens = new List<string>();
-        private List<ModuleDto> navItems;
+
+        /// <summary>
+        /// 模块信息集合
+        /// </summary>
+        public List<ModuleDto> navigators;
 
         /// <summary>
         /// 构造方法
@@ -52,32 +53,31 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 主窗体初始化
         /// </summary>
-        public void showMainWindow(List<ModuleDto> navigators, string tenantName)
+        public void showMainWindow(string tenantName)
         {
             view.StbDept.Caption = tenantName;
             view.StbUser.Caption = Setting.userName;
 
-            initNavBar(navigators);
+            initNavBar();
             view.Show();
             view.Refresh();
 
-            opens.ForEach(addPageMdi);
+            opens.ForEach(i => callback("openMdiWindow", new object[] {i}));
         }
 
         /// <summary>
         /// 初始化导航栏
         /// </summary>
-        private void initNavBar(List<ModuleDto> navigators)
+        private void initNavBar()
         {
-            var links = new List<NavBarItemLink>();
-            navItems = navigators.Where(i => i.parentId != null).ToList();
-            var groups = navigators.Where(i => i.parentId == null).ToList();
             var height = view.NavMain.Height;
+            var links = new List<NavBarItemLink>();
+            var groups = navigators.Where(i => i.parentId == null).ToList();
             foreach (var g in groups)
             {
                 var expand = false;
                 var barItem = new List<NavBarItemLink>();
-                foreach (var module in navItems.Where(i => i.parentId == g.id))
+                foreach (var module in navigators.Where(i => i.parentId == g.id))
                 {
                     if (module.moduleInfo.autoLoad ?? false)
                     {
@@ -104,44 +104,10 @@ namespace Insight.Utils.MainForm.ViewModels
                 links.AddRange(barItem);
             }
 
-            links.ForEach(i => i.Item.LinkClicked += (sender, args) => addPageMdi(args.Link.Item.Tag.ToString()));
-        }
-
-        /// <summary>
-        /// 打开MDI子窗体
-        /// </summary>
-        /// <param name="name"></param>
-        private void addPageMdi(string name)
-        {
-            var form = Application.OpenForms[name];
-            if (form != null)
+            links.ForEach(i => i.Item.LinkClicked += (sender, args) =>
             {
-                form.Activate();
-                return;
-            }
-
-            var mod = navItems.Single(m => m.moduleInfo.module == name);
-            var path = $"{Application.StartupPath}\\{mod.moduleInfo.file}";
-            if (!File.Exists(path))
-            {
-                var msg = $"对不起，{mod.name}模块无法加载！\r\n未能发现{path}文件。";
-                Messages.showError(msg);
-                return;
-            }
-
-            var asm = Assembly.LoadFrom(path);
-            var type = asm.GetTypes().SingleOrDefault(i => i.FullName != null && i.FullName.EndsWith($"{mod.moduleInfo.module}.Controller"));
-            if (type == null || string.IsNullOrEmpty(type.FullName))
-            {
-                var msg = $"对不起，{mod.name}模块无法加载！\r\n您的应用程序中缺少相应组件。";
-                Messages.showError(msg);
-
-                return;
-            }
-
-            view.Loading.ShowWaitForm();
-            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
-            view.Loading.CloseWaitForm();
+                callback("openMdiWindow", new object[] {args.Link.Item.Tag.ToString()});
+            });
         }
 
         /// <summary>

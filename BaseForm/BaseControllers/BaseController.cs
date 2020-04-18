@@ -1,4 +1,5 @@
-﻿using Insight.Utils.Common;
+﻿using System.Windows.Forms;
+using Insight.Utils.Common;
 
 namespace Insight.Utils.BaseControllers
 {
@@ -20,6 +21,20 @@ namespace Insight.Utils.BaseControllers
             {
                 method.Invoke(this, param);
             }
+        }
+
+        /// <summary>
+        /// MDI窗体是否已存在
+        /// </summary>
+        /// <param name="name">窗体名称</param>
+        /// <returns>是否已存在</returns>
+        protected bool existForm(string name)
+        {
+            var form = Application.OpenForms[name];
+            if (form == null) return false;
+
+            form.Activate();
+            return true;
         }
     }
 }
