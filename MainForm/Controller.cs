@@ -26,7 +26,7 @@ namespace Insight.Utils.MainForm
             login();
 
             var navigators = dataModel.getNavigators();
-            mainModel = new MainModel(Setting.appName){navigators = navigators};
+            mainModel = new MainModel(Setting.appName, navigators);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
         }
 
@@ -64,9 +64,7 @@ namespace Insight.Utils.MainForm
                         var shopInfo = dataModel.getShopInfo();
                         Setting.tenantId = shopInfo.supplierId;
                         mainModel.showMainWindow(shopInfo.realname);
-
                         model.close();
-                        if (Setting.needChangePw) changPassword("123456");
 
                         break;
                     default:
