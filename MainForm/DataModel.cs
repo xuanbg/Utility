@@ -53,7 +53,7 @@ namespace Insight.Utils.MainForm
                     type = 2,
                     index = 1,
                     name = "工单管理",
-                    moduleInfo = new ModuleInfo{module = "Orders", file = "AfterSale.dll", iconUrl = "icons/orders.png", autoLoad = true}
+                    moduleInfo = new ModuleInfo{module = "Orders", file = "AfterSale.dll", iconUrl = "icons/orders.png", autoLoad = false}
                 },
                 new ModuleDto
                 {

@@ -22,6 +22,7 @@ namespace Insight.Utils.MainForm
         /// </summary>
         public Controller()
         {
+
             update(true);
             login();
 
@@ -62,8 +63,8 @@ namespace Insight.Utils.MainForm
                         Setting.userName = userInfo.name;
 
                         var shopInfo = dataModel.getShopInfo();
-                        Setting.tenantId = shopInfo.supplierId;
-                        mainModel.showMainWindow(shopInfo.realname);
+                        Setting.tenantId = shopInfo?.supplierId;
+                        mainModel.showMainWindow(shopInfo?.realname);
                         model.close();
 
                         break;

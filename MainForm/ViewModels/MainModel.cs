@@ -61,11 +61,15 @@ namespace Insight.Utils.MainForm.ViewModels
         {
             view.StbUser.Caption = Setting.userName;
             view.StbDept.Caption = tenantName;
+
             view.Show();
             view.Refresh();
 
             opens.ForEach(i => callback("openMdiWindow", new object[] {i}));
-            if (Setting.needChangePw) callback("changPassword", new object[]{ "123456" });
+            if (Setting.needChangePw)
+            {
+                callback("changPassword", new object[] {"123456"});
+            }
         }
 
         /// <summary>
