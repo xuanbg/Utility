@@ -23,6 +23,7 @@ namespace Insight.Utils.BaseViewModels
 
             if (isShow)
             {
+                view.close.Select();
                 view.close.Click += (sender, args) =>
                 {
                     view.DialogResult = DialogResult.OK;

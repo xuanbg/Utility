@@ -20,7 +20,6 @@ namespace Insight.Utils.MainForm.ViewModels
 
             view.txtDescription.Text = "程序设计：宣炳刚\r\n联系电话：13958085903";
             view.txtDescription.Enabled = false;
-            view.close.Focus();
         }
     }
 }
