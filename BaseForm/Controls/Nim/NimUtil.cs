@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
-using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 using Insight.Utils.Client;
@@ -29,48 +27,18 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 获取网络图片
-        /// </summary>
-        /// <param name="url">图片URL</param>
-        /// <returns>Image</returns>
-        public static Image getImage(string url)
-        {
-            if (string.IsNullOrEmpty(url)) return null;
-
-            var iconUrl = Uri.UnescapeDataString(url);
-            if (!Uri.IsWellFormedUriString(iconUrl, UriKind.RelativeOrAbsolute)) return null;
-
-            try
-            {
-                using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
-                {
-                    if (stream != null)
-                    {
-                        return Image.FromStream(stream);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// 获取消息中的图片
         /// </summary>
         /// <param name="message">图片消息</param>
         /// <returns>Image</returns>
         public static Image getImage(FileMessage message)
         {
-            var image = Util.getImage(message.localPath);
+            var image = Util.getImageFromFile(message.localPath);
             if (image != null) return image;
 
             var attach = message.getAttach;
 
-            return getImage(attach.url);
+            return Util.getImageFromUrl(attach.url);
         }
 
         /// <summary>

@@ -178,7 +178,7 @@ namespace Insight.Utils.Controls
                 ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = ext },
                 LocalFilePath = fileName,
             };
-            var body = new FileMessage{image = Util.getImage(fileName)};
+            var body = new FileMessage{image = Util.getImageFromFile(fileName)};
             message.ImageAttachment.Height = body.image.Height;
             message.ImageAttachment.Width = body.image.Width;
 

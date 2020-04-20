@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Insight.Utils.Common;
 using Insight.Utils.Controls.Nim;
 using NIM.Messagelog;
 using NIM.Session;
@@ -121,7 +122,7 @@ namespace Insight.Utils.Controls
             {
                 id = info.Id,
                 name = user.name,
-                head = NimUtil.getImage(user.icon),
+                head = Util.getImageFromUrl(user.icon),
                 message = NimUtil.readMsg(info),
                 time = info.Timetag / 1000,
                 unRead = info.UnreadCount > 0

@@ -36,7 +36,7 @@ namespace Insight.Utils.Controls.Nim
         public void init(NimUser user)
         {
             targetId = user.accid;
-            targetHead = NimUtil.getImage(user.icon);
+            targetHead = Util.getImageFromUrl(user.icon);
 
             // 加载历史消息
             pceList.Controls.Clear();
