@@ -44,7 +44,7 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         public void showDialog()
         {
-            if(isShow) view.close.Focus();
+            if(isShow) view.close.Select();
 
             view.ShowDialog();
         }
