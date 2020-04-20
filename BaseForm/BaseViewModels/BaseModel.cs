@@ -9,6 +9,11 @@ namespace Insight.Utils.BaseViewModels
     public class BaseModel<T, TV> where TV : XtraForm, new()
     {
         /// <summary>
+        /// 对话框视图
+        /// </summary>
+        protected readonly TV view;
+
+        /// <summary>
         /// 回调
         /// </summary>
         public event CallbackHandle callbackEvent;
@@ -24,11 +29,6 @@ namespace Insight.Utils.BaseViewModels
         /// 数据实体
         /// </summary>
         public T item;
-
-        /// <summary>
-        /// 对话框视图
-        /// </summary>
-        protected readonly TV view;
 
         /// <summary>
         /// 构造方法

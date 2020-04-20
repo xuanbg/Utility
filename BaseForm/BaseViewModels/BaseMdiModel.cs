@@ -25,6 +25,11 @@ namespace Insight.Utils.BaseViewModels
         private DateTime wait;
 
         /// <summary>
+        /// 打开窗口数
+        /// </summary>
+        public int openWindows;
+
+        /// <summary>
         /// MDI Model
         /// </summary>
         public DM dataModel;
@@ -54,6 +59,13 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         protected BaseMdiModel() : base(null)
         {
+            view.Closing += (sender, args) =>
+            {
+                if (openWindows <= 0) return;
+
+                Messages.showError("当前有未关闭的窗口，请先关闭通过这个窗口打开的新窗口。");
+                args.Cancel = true;
+            };
             view.Shown += (sender, args) =>
             {
                 view.Refresh();
