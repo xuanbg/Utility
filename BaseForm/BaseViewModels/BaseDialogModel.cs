@@ -7,7 +7,6 @@ namespace Insight.Utils.BaseViewModels
 {
     public class BaseDialogModel<T, TV> : BaseModel<T, TV> where TV : BaseDialog, new()
     {
-        private readonly bool isShow;
         /// <summary>
         /// 构造方法
         /// </summary>
@@ -17,7 +16,6 @@ namespace Insight.Utils.BaseViewModels
         protected BaseDialogModel(string title, T item = default(T), bool isShow = false) : base(title)
         {
             this.item = item;
-            this.isShow = isShow;
             view.confirm.Visible = !isShow;
             view.cancel.Visible = !isShow;
             view.close.Visible = isShow;
@@ -25,6 +23,7 @@ namespace Insight.Utils.BaseViewModels
 
             if (isShow)
             {
+                view.close.Select();
                 view.close.Click += (sender, args) =>
                 {
                     view.DialogResult = DialogResult.OK;
@@ -44,8 +43,6 @@ namespace Insight.Utils.BaseViewModels
         /// </summary>
         public void showDialog()
         {
-            if(isShow) view.close.Select();
-
             view.ShowDialog();
         }
 

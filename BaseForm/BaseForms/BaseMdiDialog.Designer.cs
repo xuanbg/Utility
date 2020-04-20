@@ -122,6 +122,7 @@ namespace Insight.Utils.BaseForms
             this.Controls.Add(this.barDockControlTop);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BaseMdiDialog";
+            this.ShowIcon = false;
             ((System.ComponentModel.ISupportInitialize)(this.BarManager)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
             this.ResumeLayout(false);
