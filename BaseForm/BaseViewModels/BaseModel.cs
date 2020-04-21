@@ -81,6 +81,14 @@ namespace Insight.Utils.BaseViewModels
         }
 
         /// <summary>
+        /// 激活窗体
+        /// </summary>
+        public void activate()
+        {
+            view.Activate();
+        }
+
+        /// <summary>
         /// 关闭窗体
         /// </summary>
         public void close()
