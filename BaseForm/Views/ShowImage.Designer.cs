@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Controls.Nim
+﻿namespace Insight.Utils.Views
 {
     partial class ShowImage
     {

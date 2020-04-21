@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
+using Insight.Utils.Views;
 using Newtonsoft.Json;
 
 namespace Insight.Utils.Controls.Nim

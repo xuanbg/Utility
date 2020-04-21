@@ -131,10 +131,10 @@
     <Compile Include="Controls\NimSessions.Designer.cs">
       <DependentUpon>NimSessions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Nim\ShowImage.cs">
+    <Compile Include="Views\ShowImage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\Nim\ShowImage.Designer.cs">
+    <Compile Include="Views\ShowImage.Designer.cs">
       <DependentUpon>ShowImage.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Nim\TimeLabel.cs">
@@ -206,7 +206,7 @@
     <EmbeddedResource Include="Controls\NimSessions.resx">
       <DependentUpon>NimSessions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\ShowImage.resx">
+    <EmbeddedResource Include="Views\ShowImage.resx">
       <DependentUpon>ShowImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Nim\TimeLabel.resx">
