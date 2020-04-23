@@ -140,7 +140,7 @@
             this.labMessage.AllowHtmlString = true;
             this.labMessage.Appearance.Options.UseFont = true;
             this.labMessage.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
-            this.labMessage.Location = new System.Drawing.Point(5, 5);
+            this.labMessage.Location = new System.Drawing.Point(8, 5);
             this.labMessage.Name = "labMessage";
             this.labMessage.Size = new System.Drawing.Size(80, 0);
             this.labMessage.TabIndex = 0;

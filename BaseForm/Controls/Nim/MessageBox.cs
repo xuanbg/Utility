@@ -128,11 +128,11 @@ namespace Insight.Utils.Controls.Nim
             labMessage.Text = body.msg;
 
             // 计算气泡宽高
-            var th = labMessage.Height;
+            var th = labMessage.Height + 12;
             if (th < 50) y = (50 - th) / 2;
 
             pceText.Width = tw + 10;
-            pceText.Height = th + 10;
+            pceText.Height = th;
 
             // 计算控件宽高
             var h = pceText.Height < 60 ? 60 : pceText.Height;
@@ -200,11 +200,11 @@ namespace Insight.Utils.Controls.Nim
             labMessage.Text = info;
 
             // 计算气泡宽高
-            var th = labMessage.Height;
+            var th = labMessage.Height + 12;
             if (th < 50) y = (50 - th) / 2;
 
             pceText.Width = rw + 30;
-            pceText.Height = th + 10;
+            pceText.Height = th;
             pbcSend.Width = rw + 30;
             pbcSend.Visible = true;
 
@@ -221,10 +221,10 @@ namespace Insight.Utils.Controls.Nim
             }
 
             pceText.Location = new Point(x, y);
-            pbcSend.Location = new Point(x, y + th + 12);
+            pbcSend.Location = new Point(x, y + th + 3);
             pceText.Visible = true;
-            sbePlay.Location = new Point(pceText.Width - 30, 2);
-            sbeStop.Location = new Point(pceText.Width - 30, 2);
+            sbePlay.Location = new Point(pceText.Width - 25, 2);
+            sbeStop.Location = new Point(pceText.Width - 25, 2);
             sbePlay.Visible = true;
         }
 
@@ -248,11 +248,11 @@ namespace Insight.Utils.Controls.Nim
             labMessage.Text = name;
 
             // 计算气泡宽高
-            var th = labMessage.Height;
+            var th = labMessage.Height + 12;
             if (th < 50) y = (50 - th) / 2;
 
             pceText.Width = tw + 30;
-            pceText.Height = th + 10;
+            pceText.Height = th;
             pbcSend.Width = tw + 30;
             pbcSend.Visible = true;
 
@@ -269,9 +269,9 @@ namespace Insight.Utils.Controls.Nim
             }
 
             pceText.Location = new Point(x, y);
-            pbcSend.Location = new Point(x, y + th + 12);
+            pbcSend.Location = new Point(x, y + th + 3);
             pceText.Visible = true;
-            sbeDownload.Location = new Point(pceText.Width - 30, 2);
+            sbeDownload.Location = new Point(pceText.Width - 25, 2);
             sbeDownload.Visible = true;
         }
 
@@ -295,7 +295,7 @@ namespace Insight.Utils.Controls.Nim
 
             // 计算气泡宽高
             pceText.Width = tw + 10;
-            pceText.Height = labMessage.Height + 10;
+            pceText.Height = labMessage.Height + 12;
             pceText.Location = new Point(140, 5);
             pceText.Visible = true;
 
