@@ -51,11 +51,16 @@ namespace Insight.Utils.Controls.Nim
             switch (info.MsgType)
             {
                 case NIMMessageType.kNIMMessageTypeText:
+                case NIMMessageType.kNIMMessageTypeTips:
                     return info.Content;
                 case NIMMessageType.kNIMMessageTypeImage:
                     return "[图片]";
                 case NIMMessageType.kNIMMessageTypeFile:
                     return "[文件]";
+                case NIMMessageType.kNIMMessageTypeAudio:
+                    return "[文件]";
+                case NIMMessageType.kNIMMessageTypeCustom:
+                    return "[产品咨询]";
                 default:
                     return "[未知]";
             }
@@ -72,11 +77,14 @@ namespace Insight.Utils.Controls.Nim
             switch (message.MessageType)
             {
                 case NIMMessageType.kNIMMessageTypeText:
+                case NIMMessageType.kNIMMessageTypeTips:
                     return Util.deserialize<TextMessage>(str);
                 case NIMMessageType.kNIMMessageTypeImage:
-                    return Util.deserialize<FileMessage>(str);
                 case NIMMessageType.kNIMMessageTypeFile:
+                case NIMMessageType.kNIMMessageTypeAudio:
                     return Util.deserialize<FileMessage>(str);
+                case NIMMessageType.kNIMMessageTypeCustom:
+                    return Util.deserialize<CustomMessage>(str);
                 default:
                     return null;
             }

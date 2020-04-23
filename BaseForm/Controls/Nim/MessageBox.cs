@@ -1,10 +1,14 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Client;
 using Insight.Utils.Common;
 using Insight.Utils.Views;
 using Newtonsoft.Json;
+using NIMAudio;
 
 namespace Insight.Utils.Controls.Nim
 {
@@ -13,6 +17,8 @@ namespace Insight.Utils.Controls.Nim
         private Image image;
         private int maxWidth;
         private bool isSend;
+        private string localFilePath;
+        private int dur;
 
         /// <summary>
         /// 设置宽度
@@ -40,13 +46,20 @@ namespace Insight.Utils.Controls.Nim
                 switch (value.type)
                 {
                     case 0:
+                    case 10:
                         showTextMessage(value);
                         break;
                     case 1:
                         showImageMessage(value);
                         break;
+                    case 2:
+                        showAudioMessage(value);
+                        break;
                     case 6:
                         showFileMessage(value);
+                        break;
+                    case 100:
+                        showCustomMessage(value);
                         break;
                     default:
                         value.body = new TextMessage{msg = "此版本不支持该消息类型" };
@@ -93,11 +106,15 @@ namespace Insight.Utils.Controls.Nim
                 show.show(image);
                 show.ShowDialog();
             };
+            sbePlay.Click += (sender, args) => playAudio();
+            sbeStop.Click += (sender, args) => AudioAPI.StopPlayAudio();
+            sbeDownload.Click += (sender, args) => saveFile();
         }
 
         /// <summary>
         /// 显示文本消息
         /// </summary>
+        /// <param name="message">云信消息数据</param>
         private void showTextMessage(NimMessage message)
         {
             var body = (TextMessage) message.body;
@@ -135,6 +152,7 @@ namespace Insight.Utils.Controls.Nim
         /// <summary>
         /// 显示图片消息
         /// </summary>
+        /// <param name="message">云信消息数据</param>
         private void showImageMessage(NimMessage message)
         {
             var body = (FileMessage) message.body;
@@ -164,29 +182,30 @@ namespace Insight.Utils.Controls.Nim
         }
 
         /// <summary>
-        /// 显示文件消息
+        /// 显示音频消息
         /// </summary>
-        private void showFileMessage(NimMessage message)
+        /// <param name="message">云信消息数据</param>
+        private void showAudioMessage(NimMessage message)
         {
-            var body = (FileMessage) message.body;
+            var body = (FileMessage)message.body;
             var x = 70;
             var y = 5;
+            dur = body.getAttach.dur;
+            localFilePath = body.localPath;
 
             // 计算字符宽度
-            var fileName = body.getAttach.name;
-            var name = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-            var rw = TextRenderer.MeasureText(name, Font).Width;
-            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
-            labMessage.Width = tw;
-            labMessage.Text = name;
+            var info = $"语音聊天 - {body.getAttach.dur / 1000} 秒";
+            var rw = TextRenderer.MeasureText(info, Font).Width;
+            labMessage.Width = rw;
+            labMessage.Text = info;
 
             // 计算气泡宽高
             var th = labMessage.Height;
             if (th < 50) y = (50 - th) / 2;
 
-            pceText.Width = tw + 10;
+            pceText.Width = rw + 30;
             pceText.Height = th + 10;
-            pbcSend.Width = tw + 10;
+            pbcSend.Width = rw + 30;
             pbcSend.Visible = true;
 
             // 计算控件宽高
@@ -204,6 +223,129 @@ namespace Insight.Utils.Controls.Nim
             pceText.Location = new Point(x, y);
             pbcSend.Location = new Point(x, y + th + 12);
             pceText.Visible = true;
+            sbePlay.Location = new Point(pceText.Width - 30, 2);
+            sbeStop.Location = new Point(pceText.Width - 30, 2);
+            sbePlay.Visible = true;
+        }
+
+        /// <summary>
+        /// 显示文件消息
+        /// </summary>
+        /// <param name="message">云信消息数据</param>
+        private void showFileMessage(NimMessage message)
+        {
+            var body = (FileMessage) message.body;
+            var x = 70;
+            var y = 5;
+            localFilePath = body.localPath;
+
+            // 计算字符宽度
+            var fileName = body.getAttach.name;
+            var name = fileName.Substring(fileName.LastIndexOf('\\') + 1);
+            var rw = TextRenderer.MeasureText(name, Font).Width;
+            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
+            labMessage.Width = tw;
+            labMessage.Text = name;
+
+            // 计算气泡宽高
+            var th = labMessage.Height;
+            if (th < 50) y = (50 - th) / 2;
+
+            pceText.Width = tw + 30;
+            pceText.Height = th + 10;
+            pbcSend.Width = tw + 30;
+            pbcSend.Visible = true;
+
+            // 计算控件宽高
+            var h = pceText.Height < 60 ? 60 : pceText.Height;
+            Height = h + 10;
+
+            // 发送气泡靠右
+            if (isSend)
+            {
+                x = Width - pceText.Width - 70;
+                pceText.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                pbcSend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            }
+
+            pceText.Location = new Point(x, y);
+            pbcSend.Location = new Point(x, y + th + 12);
+            pceText.Visible = true;
+            sbeDownload.Location = new Point(pceText.Width - 30, 2);
+            sbeDownload.Visible = true;
+        }
+
+        /// <summary>
+        /// 显示自定义消息
+        /// </summary>
+        /// <param name="message">云信消息数据</param>
+        private void showCustomMessage(NimMessage message)
+        {
+            var body = (CustomMessage)message.body;
+            image = Util.getImageFromUrl(body.image);
+            picImage.Image = image;
+            picImage.Visible = true;
+
+            // 计算字符宽度
+            var info = $"编码：{body.code}\r\n名称：{body.name}\r\n规格：{body.spec}\r\n单价：{body.price}";
+            var rw = TextRenderer.MeasureText(info, Font).Width;
+            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
+            labMessage.Width = tw;
+            labMessage.Text = info;
+
+            // 计算气泡宽高
+            pceText.Width = tw + 10;
+            pceText.Height = labMessage.Height + 10;
+            pceText.Location = new Point(140, 5);
+            pceText.Visible = true;
+
+            Height = pceText.Height + 10;
+        }
+
+        /// <summary>
+        /// 播放语音
+        /// </summary>
+        private void playAudio()
+        {
+            if (!AudioAPI.InitModule(Application.StartupPath)) return;
+
+            var start = DateTime.Now;
+            var end = start.AddMilliseconds(dur);
+            var tokenSource = new CancellationTokenSource();
+            sbePlay.Visible = false;
+            sbeStop.Visible = true;
+            Refresh();
+
+            void action()
+            {
+                pbcSend.Position = (int)(100 * (DateTime.Now - start).TotalMilliseconds / dur);
+                pbcSend.Refresh();
+            }
+            AudioAPI.RegStopPlayCb((z, xx, c, v) =>
+            {
+                sbePlay.Visible = true;
+                sbeStop.Visible = false;
+
+                tokenSource.Cancel();
+            });
+            AudioAPI.PlayAudio(localFilePath, "", "", NIMAudioType.kNIMAudioAAC);
+            Task.Run(() =>
+            {
+                while (DateTime.Now.CompareTo(end) < 0)
+                {
+                    if (tokenSource.IsCancellationRequested) break;
+
+                    Invoke((Action) action);
+                    Thread.Sleep(200);
+                }
+            }, tokenSource.Token);
+        }
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        private void saveFile()
+        {
         }
     }
 
@@ -264,6 +406,39 @@ namespace Insight.Utils.Controls.Nim
         public string msg { get; set; }
     }
 
+    public class CustomMessage
+    {
+        /// <summary>
+        /// 商品ID
+        /// </summary>
+        public long id { get; set; }
+
+        /// <summary>
+        /// 商品编码
+        /// </summary>
+        public string code { get; set; }
+
+        /// <summary>
+        /// 规格
+        /// </summary>
+        public string spec { get; set; }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// 图片URL
+        /// </summary>
+        public string image { get; set; }
+
+        /// <summary>
+        /// 单价
+        /// </summary>
+        public decimal price { get; set; }
+    }
+
     public class FileMessage
     {
         /// <summary>
@@ -302,6 +477,11 @@ namespace Insight.Utils.Controls.Nim
         /// 文件MD5值
         /// </summary>
         public string md5 { get; set; }
+
+        /// <summary>
+        /// 播放时长
+        /// </summary>
+        public int dur { get; set; }
 
         /// <summary>
         /// 字节数

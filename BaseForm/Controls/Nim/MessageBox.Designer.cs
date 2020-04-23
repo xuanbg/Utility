@@ -33,6 +33,9 @@
             this.pbcSend = new DevExpress.XtraEditors.ProgressBarControl();
             this.picTarget = new DevExpress.XtraEditors.PictureEdit();
             this.pceText = new DevExpress.XtraEditors.PanelControl();
+            this.sbeDownload = new DevExpress.XtraEditors.SimpleButton();
+            this.sbeStop = new DevExpress.XtraEditors.SimpleButton();
+            this.sbePlay = new DevExpress.XtraEditors.SimpleButton();
             this.labMessage = new DevExpress.XtraEditors.LabelControl();
             this.picImage = new DevExpress.XtraEditors.PictureEdit();
             this.picMe = new DevExpress.XtraEditors.PictureEdit();
@@ -87,12 +90,50 @@
             // 
             // pceText
             // 
+            this.pceText.Controls.Add(this.sbeDownload);
+            this.pceText.Controls.Add(this.sbeStop);
+            this.pceText.Controls.Add(this.sbePlay);
             this.pceText.Controls.Add(this.labMessage);
             this.pceText.Location = new System.Drawing.Point(70, 5);
             this.pceText.Name = "pceText";
             this.pceText.Size = new System.Drawing.Size(100, 24);
             this.pceText.TabIndex = 0;
             this.pceText.Visible = false;
+            // 
+            // sbeDownload
+            // 
+            this.sbeDownload.AllowFocus = false;
+            this.sbeDownload.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.sbeDownload.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeDownload.ImageOptions.Image")));
+            this.sbeDownload.ImageOptions.ImageIndex = 0;
+            this.sbeDownload.Location = new System.Drawing.Point(78, 2);
+            this.sbeDownload.Name = "sbeDownload";
+            this.sbeDownload.Size = new System.Drawing.Size(20, 20);
+            this.sbeDownload.TabIndex = 0;
+            this.sbeDownload.Visible = false;
+            // 
+            // sbeStop
+            // 
+            this.sbeStop.AllowFocus = false;
+            this.sbeStop.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.sbeStop.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeStop.ImageOptions.Image")));
+            this.sbeStop.ImageOptions.ImageIndex = 0;
+            this.sbeStop.Location = new System.Drawing.Point(78, 2);
+            this.sbeStop.Name = "sbeStop";
+            this.sbeStop.Size = new System.Drawing.Size(20, 20);
+            this.sbeStop.TabIndex = 1;
+            this.sbeStop.Visible = false;
+            // 
+            // sbePlay
+            // 
+            this.sbePlay.AllowFocus = false;
+            this.sbePlay.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.sbePlay.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbePlay.ImageOptions.Image")));
+            this.sbePlay.Location = new System.Drawing.Point(78, 2);
+            this.sbePlay.Name = "sbePlay";
+            this.sbePlay.Size = new System.Drawing.Size(20, 20);
+            this.sbePlay.TabIndex = 0;
+            this.sbePlay.Visible = false;
             // 
             // labMessage
             // 
@@ -163,5 +204,8 @@
         private DevExpress.XtraEditors.PanelControl pceText;
         private DevExpress.XtraEditors.LabelControl labMessage;
         private DevExpress.XtraEditors.ProgressBarControl pbcSend;
+        private DevExpress.XtraEditors.SimpleButton sbePlay;
+        private DevExpress.XtraEditors.SimpleButton sbeDownload;
+        private DevExpress.XtraEditors.SimpleButton sbeStop;
     }
 }
