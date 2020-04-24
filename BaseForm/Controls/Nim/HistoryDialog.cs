@@ -109,7 +109,7 @@ namespace Insight.Utils.Controls.Nim
                 addTime(time);
             }
 
-            var ts = time - messageTime;
+            var ts = messageTime - time;
             if (ts.TotalMinutes > 15) addTime(time);
 
             pceHistory.Height = height;

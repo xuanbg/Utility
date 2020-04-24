@@ -129,7 +129,7 @@ namespace Insight.Utils.Controls.Nim
 
             // 计算气泡宽高
             var th = labMessage.Height + 12;
-            if (th < 50) y = (50 - th) / 2;
+            if (th < 50) y = (60 - th) / 2;
 
             pceText.Width = tw + 10;
             pceText.Height = th;
@@ -201,7 +201,7 @@ namespace Insight.Utils.Controls.Nim
 
             // 计算气泡宽高
             var th = labMessage.Height + 12;
-            if (th < 50) y = (50 - th) / 2;
+            if (th < 50) y = (60 - th) / 2;
 
             pceText.Width = rw + 30;
             pceText.Height = th;
@@ -249,7 +249,7 @@ namespace Insight.Utils.Controls.Nim
 
             // 计算气泡宽高
             var th = labMessage.Height + 12;
-            if (th < 50) y = (50 - th) / 2;
+            if (th < 50) y = (60 - th) / 2;
 
             pceText.Width = tw + 30;
             pceText.Height = th;
@@ -281,25 +281,31 @@ namespace Insight.Utils.Controls.Nim
         /// <param name="message">云信消息数据</param>
         private void showCustomMessage(NimMessage message)
         {
-            var body = (CustomMessage)message.body;
-            image = Util.getImageFromUrl(body.image);
-            picImage.Image = image;
-            picImage.Visible = true;
+            var body = (FileMessage)message.body;
+            var info = body.getAttach;
 
             // 计算字符宽度
-            var info = body.name;
-            var rw = TextRenderer.MeasureText(info, Font).Width;
-            var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
+            var name = $"我想咨询一下产品【{info.name}】";
+            var rw = TextRenderer.MeasureText(name, Font).Width;
+            var tw = rw < maxWidth - 80 ? rw : maxWidth - 80;
             labMessage.Width = tw;
-            labMessage.Text = info;
+            labMessage.Text = name;
 
             // 计算气泡宽高
+            var y = 5;
+            var th = labMessage.Height + 12;
+            if (th < 50) y = (60 - th) / 2;
+
             pceText.Width = tw + 10;
             pceText.Height = labMessage.Height + 12;
-            pceText.Location = new Point(140, 5);
+            pceText.Location = new Point(70, y);
             pceText.Visible = true;
 
-            Height = pceText.Height + 10;
+            // 显示图片
+            image = Util.getImageFromUrl(info.image);
+            picImage.Image = image;
+            picImage.Location = new Point(tw + 85, 5);
+            picImage.Visible = true;
         }
 
         /// <summary>
@@ -406,19 +412,6 @@ namespace Insight.Utils.Controls.Nim
         public string msg { get; set; }
     }
 
-    public class CustomMessage
-    {
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string name { get; set; }
-
-        /// <summary>
-        /// 图片URL
-        /// </summary>
-        public string image { get; set; }
-    }
-
     public class FileMessage
     {
         /// <summary>
@@ -438,6 +431,9 @@ namespace Insight.Utils.Controls.Nim
         [JsonProperty("local_res_path")]
         public string localPath { get; set; }
 
+        /// <summary>
+        /// 获取附件
+        /// </summary>
         public Attach getAttach => Util.deserialize<Attach>(attach);
     }
 
@@ -447,6 +443,11 @@ namespace Insight.Utils.Controls.Nim
         /// 图片名称
         /// </summary>
         public string name { get; set; }
+
+        /// <summary>
+        /// 图片URL
+        /// </summary>
+        public string image { get; set; }
 
         /// <summary>
         /// 文件扩展名

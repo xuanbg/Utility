@@ -82,9 +82,8 @@ namespace Insight.Utils.Controls.Nim
                 case NIMMessageType.kNIMMessageTypeImage:
                 case NIMMessageType.kNIMMessageTypeFile:
                 case NIMMessageType.kNIMMessageTypeAudio:
-                    return Util.deserialize<FileMessage>(str);
                 case NIMMessageType.kNIMMessageTypeCustom:
-                    return Util.deserialize<CustomMessage>(str);
+                    return Util.deserialize<FileMessage>(str);
                 default:
                     return null;
             }

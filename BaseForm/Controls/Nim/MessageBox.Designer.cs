@@ -147,7 +147,6 @@
             // 
             // picImage
             // 
-            this.picImage.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.picImage.Location = new System.Drawing.Point(70, 5);
             this.picImage.Name = "picImage";
             this.picImage.Properties.AllowFocused = false;
