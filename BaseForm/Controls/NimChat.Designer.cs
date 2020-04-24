@@ -45,10 +45,10 @@ namespace Insight.Utils.Controls
             this.sbeImage = new DevExpress.XtraEditors.SimpleButton();
             this.sceMain = new DevExpress.XtraEditors.SplitContainerControl();
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
+            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
             this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
-            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
             ((System.ComponentModel.ISupportInitialize)(this.pceInput)).BeginInit();
             this.pceInput.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mmeInput.Properties)).BeginInit();
@@ -93,6 +93,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeSend
             // 
+            this.sbeSend.AllowFocus = false;
             this.sbeSend.Dock = System.Windows.Forms.DockStyle.Right;
             this.sbeSend.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeSend.ImageOptions.Image")));
             this.sbeSend.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.TopCenter;
@@ -140,6 +141,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeReply
             // 
+            this.sbeReply.AllowFocus = false;
             this.sbeReply.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeReply.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeReply.ImageOptions.Image")));
             this.sbeReply.Location = new System.Drawing.Point(285, 2);
@@ -150,6 +152,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeEmoji
             // 
+            this.sbeEmoji.AllowFocus = false;
             this.sbeEmoji.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeEmoji.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeEmoji.ImageOptions.Image")));
             this.sbeEmoji.Location = new System.Drawing.Point(200, 2);
@@ -160,6 +163,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeFile
             // 
+            this.sbeFile.AllowFocus = false;
             this.sbeFile.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeFile.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeFile.ImageOptions.Image")));
             this.sbeFile.Location = new System.Drawing.Point(115, 2);
@@ -169,6 +173,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeHistroy
             // 
+            this.sbeHistroy.AllowFocus = false;
             this.sbeHistroy.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeHistroy.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeHistroy.ImageOptions.Image")));
             this.sbeHistroy.Location = new System.Drawing.Point(5, 2);
@@ -179,6 +184,7 @@ namespace Insight.Utils.Controls
             // 
             // sbeImage
             // 
+            this.sbeImage.AllowFocus = false;
             this.sbeImage.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.sbeImage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeImage.ImageOptions.Image")));
             this.sbeImage.Location = new System.Drawing.Point(160, 2);
@@ -216,6 +222,14 @@ namespace Insight.Utils.Controls
             this.pceMessage.Size = new System.Drawing.Size(600, 375);
             this.pceMessage.TabIndex = 0;
             // 
+            // mlcMessage
+            // 
+            this.mlcMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mlcMessage.Location = new System.Drawing.Point(2, 2);
+            this.mlcMessage.Name = "mlcMessage";
+            this.mlcMessage.Size = new System.Drawing.Size(596, 371);
+            this.mlcMessage.TabIndex = 0;
+            // 
             // pceBotton
             // 
             this.pceBotton.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -233,14 +247,6 @@ namespace Insight.Utils.Controls
             this.pceSpei.Name = "pceSpei";
             this.pceSpei.Size = new System.Drawing.Size(600, 5);
             this.pceSpei.TabIndex = 0;
-            // 
-            // mlcMessage
-            // 
-            this.mlcMessage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mlcMessage.Location = new System.Drawing.Point(2, 2);
-            this.mlcMessage.Name = "mlcMessage";
-            this.mlcMessage.Size = new System.Drawing.Size(596, 371);
-            this.mlcMessage.TabIndex = 0;
             // 
             // NimChat
             // 

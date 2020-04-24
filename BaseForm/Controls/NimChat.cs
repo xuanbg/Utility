@@ -52,7 +52,7 @@ namespace Insight.Utils.Controls
             target = user;
 
             mlcMessage.init(user);
-            mmeInput.Focus();
+            mmeInput.Select();
         }
 
         /// <summary>

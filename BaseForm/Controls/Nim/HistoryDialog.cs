@@ -42,7 +42,7 @@ namespace Insight.Utils.Controls.Nim
         /// </summary>
         private void getHistory()
         {
-            MessagelogAPI.QueryMsglogOnline(targetId, NIMSessionType.kNIMSessionTypeP2P, 5, 0, endTime, 0, false, true, true, (code, accountId, sType, result) =>
+            MessagelogAPI.QueryMsglogOnline(targetId, NIMSessionType.kNIMSessionTypeP2P, 6, 0, endTime, 0, false, true, true, (code, accountId, sType, result) =>
             {
                 void action()
                 {
@@ -75,7 +75,7 @@ namespace Insight.Utils.Controls.Nim
                         addMessage(message);
                     }
 
-                    if (list.Count < 10) return;
+                    if (list.Count < 6) return;
 
                     endTime = list.Last().TimeStamp;
                     addButton();
