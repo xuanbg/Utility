@@ -1,6 +1,6 @@
-﻿using Insight.Utils.Controls.Nim;
+﻿using Insight.Utils.NetEaseIM.Controls;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.NetEaseIM
 {
     partial class NimChat
     {
@@ -45,7 +45,7 @@ namespace Insight.Utils.Controls
             this.sbeImage = new DevExpress.XtraEditors.SimpleButton();
             this.sceMain = new DevExpress.XtraEditors.SplitContainerControl();
             this.pceMessage = new DevExpress.XtraEditors.PanelControl();
-            this.mlcMessage = new Insight.Utils.Controls.Nim.MessageList();
+            this.mlcMessage = new Insight.Utils.NetEaseIM.Controls.MessageList();
             this.pceBotton = new DevExpress.XtraEditors.PanelControl();
             this.pceSpei = new DevExpress.XtraEditors.PanelControl();
             this.ofdMessage = new System.Windows.Forms.OpenFileDialog();
@@ -95,7 +95,6 @@ namespace Insight.Utils.Controls
             // 
             this.sbeSend.AllowFocus = false;
             this.sbeSend.Dock = System.Windows.Forms.DockStyle.Right;
-            this.sbeSend.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeSend.ImageOptions.Image")));
             this.sbeSend.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.TopCenter;
             this.sbeSend.Location = new System.Drawing.Point(520, 45);
             this.sbeSend.Name = "sbeSend";

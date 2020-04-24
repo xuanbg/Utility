@@ -3,11 +3,11 @@ using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
-using Insight.Utils.Controls.Nim;
+using Insight.Utils.NetEaseIM.Controls;
 using NIM;
 using NIM.Session;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.NetEaseIM
 {
     public partial class NimChat : XtraUserControl
     {
@@ -198,7 +198,7 @@ namespace Insight.Utils.Controls
             var message = new NimMessage
             {
                 id = id,
-                from = myId,
+                @from = myId,
                 to = target.accid,
                 type = type,
                 direction = 0,

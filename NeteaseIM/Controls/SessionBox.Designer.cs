@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Controls.Nim
+﻿namespace Insight.Utils.NetEaseIM.Controls
 {
     partial class SessionBox
     {
@@ -54,6 +54,7 @@
             this.pceSession.Controls.Add(this.picTarget);
             this.pceSession.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceSession.Location = new System.Drawing.Point(0, 0);
+            this.pceSession.LookAndFeel.UseDefaultLookAndFeel = false;
             this.pceSession.Name = "pceSession";
             this.pceSession.Size = new System.Drawing.Size(300, 70);
             this.pceSession.TabIndex = 0;

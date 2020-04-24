@@ -9,7 +9,7 @@ using NIM;
 using NIM.Messagelog;
 using NIM.Session;
 
-namespace Insight.Utils.Controls.Nim
+namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class MessageList : XtraUserControl
     {
@@ -127,7 +127,7 @@ namespace Insight.Utils.Controls.Nim
             {
                 id = msg.ClientMsgID,
                 msgid = msg.ServerMsgId,
-                from = msg.SenderID,
+                @from = msg.SenderID,
                 to = msg.ReceiverID,
                 type = msg.MessageType.GetHashCode(),
                 body = NimUtil.getMsg(msg),

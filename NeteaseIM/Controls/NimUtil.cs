@@ -7,7 +7,7 @@ using Insight.Utils.Common;
 using NIM;
 using NIM.Session;
 
-namespace Insight.Utils.Controls.Nim
+namespace Insight.Utils.NetEaseIM.Controls
 {
     public static class NimUtil
     {

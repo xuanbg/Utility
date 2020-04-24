@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
-using Insight.Utils.Controls.Nim;
+using Insight.Utils.NetEaseIM.Controls;
 using NIM.Messagelog;
 using NIM.Session;
 
-namespace Insight.Utils.Controls
+namespace Insight.Utils.NetEaseIM
 {
     public partial class NimSessions : XtraUserControl
     {
         private readonly List<NimSessionInfo> sessions = new List<NimSessionInfo>();
+        private string id;
 
         /// <summary>
         /// 表示将处理当前点击会话的方法
@@ -177,13 +178,13 @@ namespace Insight.Utils.Controls
                     };
                     control.click += (sender, args) =>
                     {
-                        control.unRead = false;
+                        click(control);
                         resetUnread(i.id);
                         sessionClick?.Invoke(sender, new SessionEventArgs(i.id));
                     };
                     control.doubleClick += (sender, args) =>
                     {
-                        control.unRead = false;
+                        click(control);
                         resetUnread(i.id);
                         sessionDoubleClick?.Invoke(sender, new SessionEventArgs(i.id));
                     };
@@ -209,6 +210,25 @@ namespace Insight.Utils.Controls
             while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
             Invoke((Action)action);
+        }
+
+        /// <summary>
+        /// 点击会话
+        /// </summary>
+        /// <param name="box">会话控件</param>
+        private void click(SessionBox box)
+        {
+            var control = sceMain.Controls[0].Controls[id];
+            if (control != null)
+            {
+                control.BackColor = sceMain.Controls[0].BackColor;
+                control.Refresh();
+            }
+
+            id = box.Name;
+            box.unRead = false;
+            box.BackColor = Color.White;
+            box.Refresh();
         }
 
         /// <summary>

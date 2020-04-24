@@ -3,7 +3,7 @@ using System.Drawing;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.Controls.Nim
+namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class SessionBox : XtraUserControl
     {
@@ -90,20 +90,20 @@ namespace Insight.Utils.Controls.Nim
             InitializeComponent();
 
             // 控件点击
-            pceSession.Click += (sender, args) =>  click?.Invoke(sender, args);
-            picTarget.Click += (sender, args) => click?.Invoke(sender, args);
-            labName.Click += (sender, args) => click?.Invoke(sender, args);
-            labTime.Click += (sender, args) => click?.Invoke(sender, args);
-            labMessage.Click += (sender, args) => click?.Invoke(sender, args);
-            peeUnread.Click += (sender, args) => click?.Invoke(sender, args);
+            pceSession.Click += onClick;
+            picTarget.Click += onClick;
+            labName.Click += onClick;
+            labTime.Click += onClick;
+            labMessage.Click += onClick;
+            peeUnread.Click += onClick;
 
             // 控件双击
-            pceSession.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
-            picTarget.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
-            labName.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
-            labTime.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
-            labMessage.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
-            peeUnread.DoubleClick += (sender, args) => doubleClick?.Invoke(sender, args);
+            pceSession.DoubleClick += onDoubleClick;
+            picTarget.DoubleClick += onDoubleClick;
+            labName.DoubleClick += onDoubleClick;
+            labTime.DoubleClick += onDoubleClick;
+            labMessage.DoubleClick += onDoubleClick;
+            peeUnread.DoubleClick += onDoubleClick;
         }
 
         /// <summary>
@@ -113,6 +113,26 @@ namespace Insight.Utils.Controls.Nim
         {
             var ts = DateTime.Now - _time;
             labTime.Text = _time.ToString(ts.TotalHours > 12 ? "yy-MM-dd" : "HH:mm:ss");
+        }
+
+        /// <summary>
+        /// 单击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void onClick(object sender, EventArgs args)
+        {
+            click?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// 双击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void onDoubleClick(object sender, EventArgs args)
+        {
+            doubleClick?.Invoke(sender, args);
         }
     }
 }

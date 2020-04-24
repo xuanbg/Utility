@@ -1,7 +1,7 @@
 ﻿using System;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.Controls.Nim
+namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class TimeLabel : XtraUserControl
     {

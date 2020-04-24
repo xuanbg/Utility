@@ -56,19 +56,6 @@
       <HintPath>..\FastReport.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NimAudio">
-      <HintPath>..\packages\NIM\NimAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="NimCore">
-      <HintPath>..\packages\NIM\NimCore.dll</HintPath>
-    </Reference>
-    <Reference Include="NimUtility">
-      <HintPath>..\packages\NIM\NimUtility.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -104,68 +91,14 @@
     </Compile>
     <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
-    <Compile Include="Controls\NimChat.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\NimChat.Designer.cs">
-      <DependentUpon>NimChat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\HistoryDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\HistoryDialog.Designer.cs">
-      <DependentUpon>HistoryDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\MessageBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\MessageBox.Designer.cs">
-      <DependentUpon>MessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\MessageList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\MessageList.Designer.cs">
-      <DependentUpon>MessageList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\SessionBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\SessionBox.Designer.cs">
-      <DependentUpon>SessionBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\NimSessions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\NimSessions.Designer.cs">
-      <DependentUpon>NimSessions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\ButtionLabel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\ButtionLabel.Designer.cs">
-      <DependentUpon>ButtionLabel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\ShowImage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\ShowImage.Designer.cs">
       <DependentUpon>ShowImage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Nim\TimeLabel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\Nim\TimeLabel.Designer.cs">
-      <DependentUpon>TimeLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Nim\NimUtil.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Views\Waiting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,37 +138,8 @@
     <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NimChat.resx">
-      <DependentUpon>NimChat.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\HistoryDialog.resx">
-      <DependentUpon>HistoryDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\MessageBox.resx">
-      <DependentUpon>MessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\MessageList.resx">
-      <DependentUpon>MessageList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\SessionBox.resx">
-      <DependentUpon>SessionBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NimSessions.resx">
-      <DependentUpon>NimSessions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\ButtionLabel.resx">
-      <DependentUpon>ButtionLabel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\ShowImage.resx">
       <DependentUpon>ShowImage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Nim\TimeLabel.resx">
-      <DependentUpon>TimeLabel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Waiting.resx">
       <DependentUpon>Waiting.cs</DependentUpon>
@@ -253,9 +157,6 @@
       <Name>Utils</Name>
       <Private>False</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

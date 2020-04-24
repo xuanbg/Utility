@@ -10,7 +10,7 @@ using Insight.Utils.Views;
 using Newtonsoft.Json;
 using NIMAudio;
 
-namespace Insight.Utils.Controls.Nim
+namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class MessageBox : XtraUserControl
     {

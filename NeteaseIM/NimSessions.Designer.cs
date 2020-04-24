@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Controls
+﻿namespace Insight.Utils.NetEaseIM
 {
     partial class NimSessions
     {
