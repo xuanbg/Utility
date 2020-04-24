@@ -287,7 +287,7 @@ namespace Insight.Utils.Controls.Nim
             picImage.Visible = true;
 
             // 计算字符宽度
-            var info = $"编码：{body.code}\r\n名称：{body.name}\r\n规格：{body.spec}\r\n单价：{body.price}";
+            var info = body.name;
             var rw = TextRenderer.MeasureText(info, Font).Width;
             var tw = rw < maxWidth - 10 ? rw : maxWidth - 10;
             labMessage.Width = tw;
@@ -310,7 +310,7 @@ namespace Insight.Utils.Controls.Nim
             if (!AudioAPI.InitModule(Application.StartupPath)) return;
 
             var start = DateTime.Now;
-            var end = start.AddMilliseconds(dur);
+            var end = start.AddMilliseconds(dur + 500);
             var tokenSource = new CancellationTokenSource();
             sbePlay.Visible = false;
             sbeStop.Visible = true;
@@ -409,21 +409,6 @@ namespace Insight.Utils.Controls.Nim
     public class CustomMessage
     {
         /// <summary>
-        /// 商品ID
-        /// </summary>
-        public long id { get; set; }
-
-        /// <summary>
-        /// 商品编码
-        /// </summary>
-        public string code { get; set; }
-
-        /// <summary>
-        /// 规格
-        /// </summary>
-        public string spec { get; set; }
-
-        /// <summary>
         /// 名称
         /// </summary>
         public string name { get; set; }
@@ -432,11 +417,6 @@ namespace Insight.Utils.Controls.Nim
         /// 图片URL
         /// </summary>
         public string image { get; set; }
-
-        /// <summary>
-        /// 单价
-        /// </summary>
-        public decimal price { get; set; }
     }
 
     public class FileMessage

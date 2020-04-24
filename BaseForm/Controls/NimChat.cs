@@ -12,7 +12,7 @@ namespace Insight.Utils.Controls
     public partial class NimChat : XtraUserControl
     {
         private string myId;
-        private string targetId;
+        private NimUser target;
 
         /// <summary>
         /// 构造方法
@@ -23,6 +23,7 @@ namespace Insight.Utils.Controls
 
             sbeFile.Click += (sender, args) => openFile(0);
             sbeImage.Click += (sender, args) => openFile(1);
+            sbeHistroy.Click += (sender, args) => showHistory();
             sbeSend.Click += (sender, args) => sendTextMessage(mmeInput.Text);
             mmeInput.KeyDown += (sender, args) =>
             {
@@ -48,7 +49,7 @@ namespace Insight.Utils.Controls
         public void init(string myId, NimUser user)
         {
             this.myId = myId;
-            targetId = user.accid;
+            target = user;
 
             mlcMessage.init(user);
             mmeInput.Focus();
@@ -69,7 +70,7 @@ namespace Insight.Utils.Controls
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
-            if (args.ArcInfo.TalkId != targetId) return;
+            if (args.ArcInfo.TalkId != target.accid) return;
 
             void action()
             {
@@ -123,7 +124,7 @@ namespace Insight.Utils.Controls
             var message = new NIMTextMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = target.accid,
                 TextContent = msg,
             };
             TalkAPI.SendMessage(message);
@@ -141,7 +142,7 @@ namespace Insight.Utils.Controls
             var message = new NIMFileMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = target.accid,
                 LocalFilePath = fileName,
                 FileAttachment = new NIMMessageAttachment {DisplayName = fileName, FileExtension = ext}
             };
@@ -174,7 +175,7 @@ namespace Insight.Utils.Controls
             var message = new NIMImageMessage
             {
                 SessionType = NIMSessionType.kNIMSessionTypeP2P,
-                ReceiverID = targetId,
+                ReceiverID = target.accid,
                 ImageAttachment = new NIMImageAttachment { DisplayName = fileName, FileExtension = ext },
                 LocalFilePath = fileName,
             };
@@ -198,7 +199,7 @@ namespace Insight.Utils.Controls
             {
                 id = id,
                 from = myId,
-                to = targetId,
+                to = target.accid,
                 type = type,
                 direction = 0,
                 body = body,
@@ -207,6 +208,15 @@ namespace Insight.Utils.Controls
             mlcMessage.addMessage(message);
 
             return id;
+        }
+
+        /// <summary>
+        /// 查看历史消息
+        /// </summary>
+        private void showHistory()
+        {
+            var dialog = new HistoryDialog(target);
+            dialog.ShowDialog();
         }
     }
 }
