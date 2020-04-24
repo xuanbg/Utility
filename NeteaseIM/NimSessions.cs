@@ -64,28 +64,19 @@ namespace Insight.Utils.NetEaseIM
             sessions.Clear();
             SessionAPI.QueryAllRecentSession((count, data) =>
             {
-                if (data?.SessionList == null) return;
+                var list = data?.SessionList;
+                if (list == null || !list.Any()) return;
 
                 var index = 0;
-                var tasks = new Task[data.Count];
-                foreach (var session in data.SessionList)
+                var tasks = new Task[list.Count];
+                foreach (var session in list)
                 {
                     tasks[index] = Task.Run(() => addSession(session));
                     index++;
                 }
 
                 Task.WaitAll(tasks);
-                var info = sessions.OrderBy(i => i.time).Last();
-                info.unRead = false;
                 refresh();
-
-                resetUnread(info.id);
-
-                void action() => sessionClick?.Invoke(this, new SessionEventArgs(info.id));
-
-                while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
-
-                Invoke((Action)action);
             });
         }
 
@@ -138,6 +129,12 @@ namespace Insight.Utils.NetEaseIM
         private void updateSession(SessionInfo info)
         {
             var session = sessions.Find(i => i.id == info.Id);
+            if (session == null)
+            {
+                addSession(info);
+                return;
+            }
+
             session.message = NimUtil.readMsg(info);
             session.time = info.Timetag / 1000;
             session.unRead = true;
@@ -205,6 +202,12 @@ namespace Insight.Utils.NetEaseIM
                     control.Dispose();
                 }
                 show.Controls.Clear();
+                if (id == null) id = sessions.OrderBy(i => i.time).Last().id;
+
+                var box = (SessionBox)sceMain.Controls[0].Controls[id];
+                click(box);
+                resetUnread(id);
+                sessionClick?.Invoke(this, new SessionEventArgs(id));
             }
 
             while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
@@ -229,6 +232,9 @@ namespace Insight.Utils.NetEaseIM
             box.unRead = false;
             box.BackColor = Color.White;
             box.Refresh();
+
+            var session = sessions.Find(i => i.id == id);
+            session.unRead = false;
         }
 
         /// <summary>

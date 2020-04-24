@@ -53,7 +53,6 @@
             this.pceMain0.Name = "pceMain0";
             this.pceMain0.Size = new System.Drawing.Size(320, 540);
             this.pceMain0.TabIndex = 0;
-            this.pceMain0.Visible = false;
             // 
             // pceMain1
             // 

@@ -81,7 +81,7 @@ namespace Insight.Utils.NetEaseIM
                 }
 
                 mmeInput.EditValue = null;
-                mmeInput.Focus();
+                mmeInput.Select();
             }
 
             while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
