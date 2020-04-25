@@ -42,7 +42,10 @@ namespace Insight.Utils.NetEaseIM.Controls
             pceList.Controls.Clear();
             MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
-                foreach (var msg in result.MsglogCollection.OrderBy(i => i.TimeStamp))
+                var list = result.MsglogCollection;
+                if (list == null || list.Length == 0) return;
+
+                foreach (var msg in list.OrderBy(i => i.TimeStamp))
                 {
                     addMessage(msg);
                 }
