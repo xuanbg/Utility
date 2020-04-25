@@ -95,6 +95,7 @@ namespace Insight.Utils.NetEaseIM
             // 
             this.sbeSend.AllowFocus = false;
             this.sbeSend.Dock = System.Windows.Forms.DockStyle.Right;
+            this.sbeSend.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("sbeSend.ImageOptions.Image")));
             this.sbeSend.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.TopCenter;
             this.sbeSend.Location = new System.Drawing.Point(520, 45);
             this.sbeSend.Name = "sbeSend";
