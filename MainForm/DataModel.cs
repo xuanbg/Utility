@@ -58,14 +58,16 @@ namespace Insight.Utils.MainForm
         /// <summary>
         /// 获取服务器上的客户端文件版本信息
         /// </summary>
+        /// <param name="isStart">是否启动</param>
         /// <returns>文件版本信息</returns>
-        internal Update checkUpdate()
+        internal Update checkUpdate(bool isStart)
         {
             var url = $"{Setting.updateUrl}/update.json";
             var client = new HttpRequest();
             if (!client.send(url))
             {
-                Messages.showError("无法获取更新信息，请稍后再试……");
+                if (!isStart) Messages.showError("无法获取更新信息，请稍后再试……");
+
                 return null;
             }
 

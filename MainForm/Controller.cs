@@ -58,7 +58,6 @@ namespace Insight.Utils.MainForm
                         model.hide();
                         mainModel.showMainWindow(dataModel.getNavigators());
                         model.close();
-                        if (Setting.needChangePw) changPassword("123456");
 
                         break;
                     default:
@@ -144,7 +143,7 @@ namespace Insight.Utils.MainForm
         /// <param name="isStart">是否启动</param>
         public void update(bool isStart)
         {
-            var info = dataModel.checkUpdate();
+            var info = dataModel.checkUpdate(isStart);
             if (info == null) return;
 
             if (isStart && !info.update) return;
