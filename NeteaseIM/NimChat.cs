@@ -70,7 +70,7 @@ namespace Insight.Utils.NetEaseIM
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
-            if (args.ArcInfo.TalkId != target.accid) return;
+            if (args.ArcInfo.TalkId != target?.accid) return;
 
             void action()
             {
