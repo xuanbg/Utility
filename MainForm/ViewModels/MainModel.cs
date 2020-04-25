@@ -22,17 +22,14 @@ namespace Insight.Utils.MainForm.ViewModels
         /// <summary>
         /// 模块信息集合
         /// </summary>
-        public readonly List<ModuleDto> navigators;
+        public List<ModuleDto> navigators;
 
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="title">窗体标题</param>
-        /// <param name="navigators">模块信息集合</param>
-        public MainModel(string title, List<ModuleDto> navigators) : base(title)
+        public MainModel(string title) : base(title)
         {
-            this.navigators = navigators;
-
             // 初始化界面
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
 
@@ -51,15 +48,17 @@ namespace Insight.Utils.MainForm.ViewModels
             view.MubUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
             view.MubAbout.ItemClick += (sender, args) => callback("about");
             view.Closing += (sender, args) => exit(args);
-
-            initNavBar();
         }
 
         /// <summary>
         /// 显示主窗体
         /// </summary>
-        public void showMainWindow()
+        /// <param name="navigators">模块信息集合</param>
+        public void showMainWindow(List<ModuleDto> navigators)
         {
+            this.navigators = navigators;
+            initNavBar();
+
             view.StbDept.Caption = Setting.deptName;
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;

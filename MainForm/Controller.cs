@@ -25,8 +25,7 @@ namespace Insight.Utils.MainForm
             update(true);
             login();
 
-            var navigators = dataModel.getNavigators();
-            mainModel = new MainModel(Setting.appName, navigators);
+            mainModel = new MainModel(Setting.appName);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
         }
 
@@ -57,7 +56,7 @@ namespace Insight.Utils.MainForm
                         break;
                     case "loadMainWindow":
                         model.hide();
-                        mainModel.showMainWindow();
+                        mainModel.showMainWindow(dataModel.getNavigators());
                         model.close();
                         if (Setting.needChangePw) changPassword("123456");
 
