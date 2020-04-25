@@ -70,7 +70,7 @@ namespace Insight.Utils.NetEaseIM
         /// <param name="args"></param>
         private void sendMessageResultHandler(object sender, MessageArcEventArgs args)
         {
-            if (args.ArcInfo.TalkId != target.accid) return;
+            if (args.ArcInfo.TalkId != target?.accid) return;
 
             void action()
             {
@@ -198,7 +198,7 @@ namespace Insight.Utils.NetEaseIM
             var message = new NimMessage
             {
                 id = id,
-                @from = myId,
+                from = myId,
                 to = target.accid,
                 type = type,
                 direction = 0,
