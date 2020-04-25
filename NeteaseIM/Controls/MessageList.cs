@@ -127,7 +127,7 @@ namespace Insight.Utils.NetEaseIM.Controls
             {
                 id = msg.ClientMsgID,
                 msgid = msg.ServerMsgId,
-                @from = msg.SenderID,
+                from = msg.SenderID,
                 to = msg.ReceiverID,
                 type = msg.MessageType.GetHashCode(),
                 body = NimUtil.getMsg(msg),

@@ -198,7 +198,7 @@ namespace Insight.Utils.NetEaseIM
             var message = new NimMessage
             {
                 id = id,
-                @from = myId,
+                from = myId,
                 to = target.accid,
                 type = type,
                 direction = 0,
