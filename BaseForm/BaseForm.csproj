@@ -85,6 +85,12 @@
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
+    <Compile Include="Views\ShowImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ShowImage.designer.cs">
+      <DependentUpon>ShowImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Waiting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BaseForms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\ShowImage.resx">
+      <DependentUpon>ShowImage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Waiting.resx">
       <DependentUpon>Waiting.cs</DependentUpon>
