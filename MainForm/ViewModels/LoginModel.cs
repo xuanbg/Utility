@@ -27,7 +27,7 @@ namespace Insight.Utils.MainForm.ViewModels
         public LoginModel(string title) : base(title)
         {
             view.Icon = new Icon("logo.ico");
-            view.BackgroundImage = Util.getImage("bg.png");
+            view.BackgroundImage = Util.getImageFromFile("bg.png");
             view.BackgroundImageLayout = ImageLayout.Stretch;
             view.txtAccount.EditValue = account;
             view.peeDept.Visible = showDept;

@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -453,7 +454,7 @@ namespace Insight.Utils.Common
         {
             if (string.IsNullOrEmpty(path)) return null;
 
-            var image = getImage(path);
+            var image = getImageFromFile(path);
 
             return image == null ? null : new ImageData {image = imageToByteArray(image)};
         }
@@ -555,11 +556,9 @@ namespace Insight.Utils.Common
         /// </summary>
         /// <param name="path">图片路径</param>
         /// <returns>图片对象</returns>
-        public static Image getImage(string path)
+        public static Image getImageFromFile(string path)
         {
-            if (string.IsNullOrEmpty(path)) return null;
-
-            if (!File.Exists(path)) return null;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
 
             try
             {
@@ -570,6 +569,37 @@ namespace Insight.Utils.Common
                 return null;
             }
         }
+
+        /// <summary>
+        /// 获取网络图片
+        /// </summary>
+        /// <param name="url">图片URL</param>
+        /// <returns>Image</returns>
+        public static Image getImageFromUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return null;
+
+            var iconUrl = Uri.UnescapeDataString(url);
+            if (!Uri.IsWellFormedUriString(iconUrl, UriKind.RelativeOrAbsolute)) return null;
+
+            try
+            {
+                using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+                {
+                    if (stream != null)
+                    {
+                        return Image.FromStream(stream);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            return null;
+        }
+
 
         /// <summary>
         /// Image 转换为 byte[]数组

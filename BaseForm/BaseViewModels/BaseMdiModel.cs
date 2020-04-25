@@ -154,7 +154,7 @@ namespace Insight.Utils.BaseViewModels
         /// <param name="module">模块信息</param>
         public void initMdiView(ModuleDto module)
         {
-            var icon = Util.getImage(module.moduleInfo.iconUrl);
+            var icon = Util.getImageFromFile(module.moduleInfo.iconUrl);
             view.ControlBox = module.index > 0;
             view.MdiParent = Application.OpenForms["MainWindow"];
             view.Icon = Icon.FromHandle(new Bitmap(icon).GetHicon());
@@ -176,7 +176,7 @@ namespace Insight.Utils.BaseViewModels
                     Enabled = a.permit ?? false,
                     Name = a.funcInfo.method,
                     Tag = a.permit ?? false,
-                    Glyph = Util.getImage(a.funcInfo.iconUrl),
+                    Glyph = Util.getImageFromFile(a.funcInfo.iconUrl),
                     PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();
             buttons.ForEach(i => i.ItemClick += (sender, args) => callback(args.Item.Name));

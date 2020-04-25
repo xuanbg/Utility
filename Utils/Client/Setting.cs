@@ -1,4 +1,5 @@
-﻿using Insight.Utils.Common;
+﻿using System.Drawing;
+using Insight.Utils.Common;
 
 namespace Insight.Utils.Client
 {
@@ -88,6 +89,11 @@ namespace Insight.Utils.Client
         /// 是否需要修改密码
         /// </summary>
         public static bool needChangePw;
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public static Image myHead;
 
         /// <summary>
         /// 获取是否保存用户名选项设置

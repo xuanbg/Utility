@@ -91,7 +91,7 @@ namespace Insight.Utils.MainForm.ViewModels
                         opens.Add(module.moduleInfo.module);
                     }
 
-                    var icon = Util.getImage(module.moduleInfo.iconUrl);
+                    var icon = Util.getImageFromFile(module.moduleInfo.iconUrl);
                     var navBarItem = new NavBarItem(module.name) { Tag = module.moduleInfo.module, SmallImage = icon };
                     barItem.Add(new NavBarItemLink(navBarItem));
                 }
@@ -100,7 +100,7 @@ namespace Insight.Utils.MainForm.ViewModels
                 {
                     Caption = g.name,
                     Name = g.name,
-                    SmallImage = Util.getImage(g.moduleInfo.iconUrl)
+                    SmallImage = Util.getImageFromFile(g.moduleInfo.iconUrl)
                 };
                 var count = links.Count + barItem.Count;
                 group.Expanded = groups.Count * 55 + count * 32 < height || expand;

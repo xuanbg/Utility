@@ -54,7 +54,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="FastReport">
-      <HintPath>..\FastReport.dll</HintPath>
+      <HintPath>..\packages\FastReport\FastReport.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -155,12 +155,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseForm\BaseForm.csproj">
-      <Project>{71E0AFE5-A5CB-4240-933F-AC3D1E3DA15D}</Project>
+      <Project>{71e0afe5-a5cb-4240-933f-ac3d1e3da15d}</Project>
       <Name>BaseForm</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{0C3F2F08-6816-49FD-BB13-8526E43ACCC6}</Project>
+      <Project>{0c3f2f08-6816-49fd-bb13-8526e43accc6}</Project>
       <Name>Utils</Name>
       <Private>False</Private>
     </ProjectReference>
