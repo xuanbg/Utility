@@ -55,16 +55,16 @@ namespace Insight.Utils.NetEaseIM.Controls
                         pceHistory.Height = height;
                     }
 
-                    if (result.MsglogCollection == null || result.MsglogCollection.Length == 0) return;
+                    var list = result.MsglogCollection;
+                    if (list == null || list.Length == 0) return;
 
-                    var list = result.MsglogCollection.OrderByDescending(i => i.TimeStamp).ToList();
-                    foreach (var msg in list)
+                    foreach (var msg in list.OrderByDescending(i => i.TimeStamp))
                     {
                         var message = new NimMessage
                         {
                             id = msg.ClientMsgID,
                             msgid = msg.ServerMsgId,
-                            @from = msg.SenderID,
+                            from = msg.SenderID,
                             to = msg.ReceiverID,
                             type = msg.MessageType.GetHashCode(),
                             body = NimUtil.getMsg(msg),
@@ -75,7 +75,7 @@ namespace Insight.Utils.NetEaseIM.Controls
                         addMessage(message);
                     }
 
-                    if (list.Count < 6) return;
+                    if (list.Length < 6) return;
 
                     endTime = list.Last().TimeStamp;
                     addButton();
