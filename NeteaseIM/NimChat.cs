@@ -56,6 +56,14 @@ namespace Insight.Utils.NetEaseIM
         }
 
         /// <summary>
+        /// 刷新消息列表
+        /// </summary>
+        public void refresh()
+        {
+            mlcMessage.showHistory();
+        }
+
+        /// <summary>
         /// 显示最新消息
         /// </summary>
         public void showNewMessage()

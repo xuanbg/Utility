@@ -38,7 +38,15 @@ namespace Insight.Utils.NetEaseIM.Controls
             targetId = user.accid;
             targetHead = Util.getImageFromUrl(user.icon);
 
-            // 加载历史消息
+            showHistory();
+        }
+
+        /// <summary>
+        /// 加载历史消息
+        /// </summary>
+        public void showHistory()
+        {
+            height = 0;
             pceList.Controls.Clear();
             MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
@@ -130,7 +138,7 @@ namespace Insight.Utils.NetEaseIM.Controls
             {
                 id = msg.ClientMsgID,
                 msgid = msg.ServerMsgId,
-                from = msg.SenderID,
+                @from = msg.SenderID,
                 to = msg.ReceiverID,
                 type = msg.MessageType.GetHashCode(),
                 body = NimUtil.getMsg(msg),

@@ -16,6 +16,7 @@ namespace Insight.Utils.NetEaseIM
     public partial class NimSessions : XtraUserControl
     {
         private readonly List<NimSessionInfo> sessions = new List<NimSessionInfo>();
+        private string msgId;
         private string id;
 
         /// <summary>
@@ -76,7 +77,17 @@ namespace Insight.Utils.NetEaseIM
                 }
 
                 Task.WaitAll(tasks);
-                refresh();
+
+                void action()
+                {
+                    refresh();
+                    click();
+                    sessionClick?.Invoke(this, new SessionEventArgs(id, true));
+                }
+
+                while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
+                Invoke((Action) action);
             });
         }
 
@@ -87,6 +98,9 @@ namespace Insight.Utils.NetEaseIM
         /// <param name="e"></param>
         private void sessionChanged(object sender, SessionChangedEventArgs e)
         {
+            if (msgId == e.Info.MsgId) return;
+
+            msgId = e.Info.MsgId;
             switch (e.Info.Command)
             {
                 case NIMSessionCommand.kNIMSessionCommandAdd:
@@ -100,7 +114,11 @@ namespace Insight.Utils.NetEaseIM
                     break;
             }
 
-            refresh();
+            void action() => refresh();
+
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
+            Invoke((Action)action);
         }
 
         /// <summary>
@@ -137,7 +155,7 @@ namespace Insight.Utils.NetEaseIM
 
             session.message = NimUtil.readMsg(info);
             session.time = info.Timetag / 1000;
-            session.unRead = true;
+            session.unRead = info.Id == info.Sender;
         }
 
         /// <summary>
@@ -155,101 +173,80 @@ namespace Insight.Utils.NetEaseIM
         /// </summary>
         private void refresh()
         {
-            void action()
+            var show = sceMain.Controls[0];
+            var hide = sceMain.Controls[1];
+            var height = 0;
+            sessions.OrderBy(i => i.time).ToList().ForEach(i =>
             {
-                var show = sceMain.Controls[0];
-                var hide = sceMain.Controls[1];
-                var height = 0;
-                sessions.OrderBy(i => i.time).ToList().ForEach(i =>
+                var control = new SessionBox
                 {
-                    var control = new SessionBox
-                    {
-                        headImage = i.head,
-                        name = i.name,
-                        message = i.message,
-                        time = i.time,
-                        unRead = i.unRead,
-                        Name = i.id,
-                        Location = new Point(0, height),
-                        Dock = DockStyle.Top,
-                    };
-                    control.click += (sender, args) =>
-                    {
-                        click(control);
-                        resetUnread(i.id);
-                        sessionClick?.Invoke(sender, new SessionEventArgs(i.id));
-                    };
-                    control.doubleClick += (sender, args) =>
-                    {
-                        click(control);
-                        resetUnread(i.id);
-                        sessionDoubleClick?.Invoke(sender, new SessionEventArgs(i.id));
-                    };
-                    height = height + control.Size.Height;
-                    hide.Controls.Add(control);
-                });
+                    headImage = i.head,
+                    name = i.name,
+                    message = i.message,
+                    time = i.time,
+                    unRead = i.unRead,
+                    Name = i.id,
+                    Location = new Point(0, height),
+                    Dock = DockStyle.Top,
+                };
+                if (i.id == id) control.BackColor = Color.White;
 
-                hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
-                hide.Height = height;
-                hide.Visible = true;
-                show.Visible = false;
-
-                show.SendToBack();
-                foreach (Control control in show.Controls)
+                control.click += (sender, args) =>
                 {
-                    NimUtil.clearEvent(control, "click");
-                    NimUtil.clearEvent(control, "doubleClick");
-                    control.Dispose();
-                }
-                show.Controls.Clear();
-                if (id == null) id = sessions.OrderBy(i => i.time).Last().id;
+                    sessionClick?.Invoke(sender, new SessionEventArgs(i.id, i.unRead));
+                    click(control);
+                };
+                control.doubleClick += (sender, args) =>
+                {
+                    sessionDoubleClick?.Invoke(sender, new SessionEventArgs(i.id, i.unRead));
+                    click(control);
+                };
 
-                var box = (SessionBox)sceMain.Controls[0].Controls[id];
-                click(box);
-                resetUnread(id);
-                sessionClick?.Invoke(this, new SessionEventArgs(id));
+                height = height + control.Size.Height;
+                hide.Controls.Add(control);
+            });
+
+            hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
+            hide.Height = height;
+            hide.Visible = true;
+            show.Visible = false;
+
+            show.SendToBack();
+            foreach (Control control in show.Controls)
+            {
+                NimUtil.clearEvent(control, "click");
+                NimUtil.clearEvent(control, "doubleClick");
+                control.Dispose();
             }
 
-            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
-
-            Invoke((Action)action);
+            show.Controls.Clear();
         }
 
         /// <summary>
         /// 点击会话
         /// </summary>
         /// <param name="box">会话控件</param>
-        private void click(SessionBox box)
+        private void click(SessionBox box = null)
         {
-            var control = sceMain.Controls[0].Controls[id];
-            if (control != null)
-            {
-                control.BackColor = sceMain.Controls[0].BackColor;
-                control.Refresh();
-            }
+            if (id == null) id = sessions.OrderBy(i => i.time).Last().id;
 
-            id = box.Name;
+            var control = (SessionBox) sceMain.Controls[0].Controls[id];
+            if (control == null) return;
+
+            control.BackColor = sceMain.Controls[0].BackColor;
+            control.Refresh();
+            if (box == null) box = control;
+
             box.unRead = false;
             box.BackColor = Color.White;
             box.Refresh();
 
+            id = box.Name;
             var session = sessions.Find(i => i.id == id);
             session.unRead = false;
-        }
 
-        /// <summary>
-        /// 会话未读数清零
-        /// </summary>
-        /// <param name="id">会话ID</param>
-        private void resetUnread(string id)
-        {
-            SessionAPI.SetUnreadCountZero(NIMSessionType.kNIMSessionTypeP2P, id, (a, b, c) =>
-            {
-            });
-
-            MessagelogAPI.MarkMessagesStatusRead(id, NIMSessionType.kNIMSessionTypeP2P, (a, b, c) =>
-            {
-            });
+            SessionAPI.SetUnreadCountZero(NIMSessionType.kNIMSessionTypeP2P, id, (a, b, c) => { });
+            MessagelogAPI.MarkMessagesStatusRead(id, NIMSessionType.kNIMSessionTypeP2P, (a, b, c) => { });
         }
 
         /// <summary>
@@ -271,13 +268,17 @@ namespace Insight.Utils.NetEaseIM
         /// </summary>
         public string id;
 
+        public bool unread;
+
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="id"></param>
-        public SessionEventArgs(string id)
+        /// <param name="unread">是否未读</param>
+        public SessionEventArgs(string id, bool unread)
         {
             this.id = id;
+            this.unread = unread;
         }
     }
 
