@@ -186,7 +186,6 @@ namespace Insight.Utils.NetEaseIM
                     time = i.time,
                     unRead = i.unRead,
                     Name = i.id,
-                    Location = new Point(0, height),
                     Dock = DockStyle.Top,
                 };
                 if (i.id == id) control.BackColor = Color.White;
@@ -202,7 +201,7 @@ namespace Insight.Utils.NetEaseIM
                     click(control);
                 };
 
-                height = height + control.Size.Height;
+                height = height + control.Height;
                 hide.Controls.Add(control);
             });
 

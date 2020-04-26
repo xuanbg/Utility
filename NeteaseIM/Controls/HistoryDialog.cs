@@ -25,6 +25,7 @@ namespace Insight.Utils.NetEaseIM.Controls
         {
             InitializeComponent();
 
+            sbeNext.Click += (sender, args) => getHistory();
             Closed += (sender, args) => Dispose();
             close.Click += (sender, args) =>
             {
@@ -46,15 +47,6 @@ namespace Insight.Utils.NetEaseIM.Controls
             {
                 void action()
                 {
-                    var control = (ButtonLabel) pceHistory.Controls[endTime.ToString()];
-                    if (control != null)
-                    {
-                        control.click -= (sender, args) => getHistory();
-                        pceHistory.Controls.Remove(control);
-                        height = height - control.Height;
-                        pceHistory.Height = height;
-                    }
-
                     var list = result.MsglogCollection;
                     if (list == null || list.Length == 0) return;
 
@@ -75,10 +67,14 @@ namespace Insight.Utils.NetEaseIM.Controls
                         addMessage(message);
                     }
 
-                    if (list.Length < 6) return;
+                    if (list.Length < 6)
+                    {
+                        sbeNext.Enabled = false;
+                        sbeNext.Text = "已到达终点";
+                        return;
+                    }
 
                     endTime = list.Last().TimeStamp;
-                    addButton();
                 }
 
                 Invoke((Action)action);
@@ -129,23 +125,6 @@ namespace Insight.Utils.NetEaseIM.Controls
                 Dock = DockStyle.Top
             };
 
-            pceHistory.Controls.Add(control);
-
-            height = height + control.Size.Height;
-            pceHistory.Height = height;
-        }
-
-        /// <summary>
-        /// 构造并添加时间控件到消息窗口
-        /// </summary>
-        private void addButton()
-        {
-            var control = new ButtonLabel
-            {
-                Name = endTime.ToString(),
-                Dock = DockStyle.Top
-            };
-            control.click += (sender, args) => getHistory();
             pceHistory.Controls.Add(control);
 
             height = height + control.Size.Height;

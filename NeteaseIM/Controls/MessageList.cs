@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -13,10 +14,8 @@ namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class MessageList : XtraUserControl
     {
+        private readonly List<NimMessage> messages = new List<NimMessage>();
         private string targetId;
-        private string messageId;
-        private DateTime messageTime;
-        private int height;
         private Image targetHead;
 
         /// <summary>
@@ -46,27 +45,38 @@ namespace Insight.Utils.NetEaseIM.Controls
         /// </summary>
         public void showHistory()
         {
-            height = 0;
-            pceList.Controls.Clear();
             MessagelogAPI.QueryMsglogLocally(targetId, NIMSessionType.kNIMSessionTypeP2P, 20, 0, (code, accountId, sType, result) =>
             {
                 var list = result.MsglogCollection;
                 if (list == null || list.Length == 0) return;
 
+                messages.Clear();
                 foreach (var msg in list.OrderBy(i => i.TimeStamp))
                 {
                     addMessage(msg);
                 }
+
+                void action() => refresh();
+
+                while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
+                Invoke((Action)action);
             });
         }
 
         /// <summary>
-        /// 滚动窗口到最新消息
+        /// 新增消息
         /// </summary>
-        public void scrollToView()
+        /// <param name="message">消息对象</param>
+        public void addMessage(NimMessage message)
         {
-            var control = pceList.Controls[messageId];
-            sceMessage.ScrollControlIntoView(control);
+            messages.Add(message);
+
+            void action() => refresh();
+
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
+            Invoke((Action)action);
         }
 
         /// <summary>
@@ -76,43 +86,8 @@ namespace Insight.Utils.NetEaseIM.Controls
         /// <param name="position">进度</param>
         public void setPosition(string id, int position)
         {
-            var control = (MessageBox)pceList.Controls[id];
+            var control = (MessageBox)sceMessage.Controls[0].Controls[id];
             control.position = position;
-        }
-
-        /// <summary>
-        /// 构造并添加消息控件到消息窗口
-        /// </summary>
-        /// <param name="message">云信IM点对点消息</param>
-        public void addMessage(NimMessage message)
-        {
-            messageId = message.id;
-
-            var time = Util.getDateTime(message.timetag);
-            if (messageTime == DateTime.MinValue)
-            {
-                messageTime = time;
-                addTime(time);
-            }
-
-            var ts = time - messageTime;
-            if (ts.TotalMinutes > 15) addTime(time);
-
-            var control = new MessageBox
-            {
-                width = pceList.Width,
-                message = message,
-                targetHead = targetHead,
-                Name = message.id,
-                Location = new Point(0, height),
-                Padding = new Padding(0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
-            };
-            pceList.Controls.Add(control);
-
-            height = height + control.Size.Height;
-            pceList.Height = height;
-            sceMessage.ScrollControlIntoView(control);
         }
 
         /// <summary>
@@ -125,28 +100,12 @@ namespace Insight.Utils.NetEaseIM.Controls
             var type = args.Message.MessageContent.SessionType;
             if (type == NIMSessionType.kNIMSessionTypeP2P && args.Message.MessageContent.SenderID != targetId) return;
 
-            addMessage(args.Message.MessageContent);
-        }
+            var message = args.Message.MessageContent;
+            if (message == null) return;
 
-        /// <summary>
-        /// 将接收到的消息添加到消息列表
-        /// </summary>
-        /// <param name="msg"></param>
-        private void addMessage(NIMIMMessage msg)
-        {
-            var message = new NimMessage
-            {
-                id = msg.ClientMsgID,
-                msgid = msg.ServerMsgId,
-                @from = msg.SenderID,
-                to = msg.ReceiverID,
-                type = msg.MessageType.GetHashCode(),
-                body = NimUtil.getMsg(msg),
-                direction = msg.SenderID == targetId ? 1 : 0,
-                timetag = msg.TimeStamp / 1000
-            };
+            addMessage(message);
 
-            void action() => addMessage(message);
+            void action() => refresh();
 
             while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
@@ -154,26 +113,75 @@ namespace Insight.Utils.NetEaseIM.Controls
         }
 
         /// <summary>
-        /// 构造并添加时间控件到消息窗口
+        /// 将接收到的消息添加到消息列表
         /// </summary>
-        /// <param name="time"></param>
-        private void addTime(DateTime time)
+        /// <param name="msg">云信消息数据</param>
+        private void addMessage(NIMIMMessage msg)
         {
-            var timeControl = new TimeLabel
+            var message = new NimMessage
             {
-                time = time,
-                Name = Util.newId("N"),
-                Size = new Size(pceList.Width, 20),
-                Location = new Point(0, height),
-                Padding = new Padding(0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+                id = msg.ClientMsgID,
+                msgid = msg.ServerMsgId,
+                from = msg.SenderID,
+                to = msg.ReceiverID,
+                type = msg.MessageType.GetHashCode(),
+                body = NimUtil.getMsg(msg),
+                direction = msg.SenderID == targetId ? 1 : 0,
+                timetag = msg.TimeStamp / 1000
             };
+            messages.Add(message);
+        }
 
-            pceList.Controls.Add(timeControl);
+        /// <summary>
+        /// 刷新会话列表
+        /// </summary>
+        private void refresh()
+        {
+            var height = 0;
+            var hide = sceMessage.Controls[1];
+            var messageTime = DateTime.MinValue;
+            MessageBox box = null;
+            messages.OrderBy(i => i.timetag).ToList().ForEach(i =>
+            {
+                var time = Util.getDateTime(i.timetag);
+                var ts = time - messageTime;
+                if (ts.TotalMinutes > 15)
+                {
+                    messageTime = time;
+                    var timeControl = new TimeLabel
+                    {
+                        time = time,
+                        Name = Util.newId("N"),
+                        Size = new Size(hide.Width, 20),
+                        Location = new Point(0, height),
+                        Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right
+                    };
+                    hide.Controls.Add(timeControl);
+                    height = height + timeControl.Height;
+                }
 
-            height = height + timeControl.Size.Height;
-            pceList.Height = height;
-            messageTime = time;
+                box = new MessageBox
+                {
+                    width = hide.Width,
+                    message = i,
+                    targetHead = targetHead,
+                    Name = i.id,
+                    Location = new Point(0, height),
+                    Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right
+                };
+                hide.Controls.Add(box);
+                height = height + box.Height;
+            });
+
+            hide.Dock = height > Height ? DockStyle.Top : DockStyle.Fill;
+            hide.Height = height;
+            hide.Visible = true;
+            sceMessage.ScrollControlIntoView(box);
+
+            var show = sceMessage.Controls[0];
+            show.Visible = false;
+            show.SendToBack();
+            show.Controls.Clear();
         }
     }
 }

@@ -168,7 +168,7 @@ namespace Insight.Utils.NetEaseIM.Controls
             picImage.Image = image;
 
             // 计算控件宽高
-            Height = h > 65 ? h + 5 : 70;
+            Height = h > 60 ? h + 10 : 70;
 
             // 发送图片靠右
             if (isSend)
