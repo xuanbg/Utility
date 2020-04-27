@@ -30,6 +30,7 @@
         {
             this.sceHistory = new DevExpress.XtraEditors.XtraScrollableControl();
             this.pceHistory = new DevExpress.XtraEditors.PanelControl();
+            this.sbeNext = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.panel)).BeginInit();
             this.panel.SuspendLayout();
             this.sceHistory.SuspendLayout();
@@ -39,7 +40,8 @@
             // panel
             // 
             this.panel.Controls.Add(this.sceHistory);
-            this.panel.Size = new System.Drawing.Size(570, 500);
+            this.panel.Location = new System.Drawing.Point(7, 35);
+            this.panel.Size = new System.Drawing.Size(570, 472);
             // 
             // cancel
             // 
@@ -67,7 +69,7 @@
             this.sceHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceHistory.Location = new System.Drawing.Point(2, 2);
             this.sceHistory.Name = "sceHistory";
-            this.sceHistory.Size = new System.Drawing.Size(566, 496);
+            this.sceHistory.Size = new System.Drawing.Size(566, 468);
             this.sceHistory.TabIndex = 0;
             // 
             // pceHistory
@@ -76,16 +78,30 @@
             this.pceHistory.Dock = System.Windows.Forms.DockStyle.Top;
             this.pceHistory.Location = new System.Drawing.Point(0, 0);
             this.pceHistory.Name = "pceHistory";
-            this.pceHistory.Size = new System.Drawing.Size(566, 496);
+            this.pceHistory.Size = new System.Drawing.Size(566, 468);
             this.pceHistory.TabIndex = 0;
+            // 
+            // sbeNext
+            // 
+            this.sbeNext.Location = new System.Drawing.Point(7, 7);
+            this.sbeNext.Name = "sbeNext";
+            this.sbeNext.Size = new System.Drawing.Size(570, 23);
+            this.sbeNext.TabIndex = 0;
+            this.sbeNext.Text = "更多消息……";
             // 
             // HistoryDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 562);
+            this.Controls.Add(this.sbeNext);
             this.Name = "HistoryDialog";
             this.Text = "历史消息";
+            this.Controls.SetChildIndex(this.confirm, 0);
+            this.Controls.SetChildIndex(this.close, 0);
+            this.Controls.SetChildIndex(this.cancel, 0);
+            this.Controls.SetChildIndex(this.panel, 0);
+            this.Controls.SetChildIndex(this.sbeNext, 0);
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
             this.sceHistory.ResumeLayout(false);
@@ -98,5 +114,6 @@
 
         private DevExpress.XtraEditors.XtraScrollableControl sceHistory;
         private DevExpress.XtraEditors.PanelControl pceHistory;
+        public DevExpress.XtraEditors.SimpleButton sbeNext;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
@@ -16,6 +18,8 @@ namespace Insight.Utils.NetEaseIM.Controls
         private readonly Image targetHead;
         private DateTime messageTime;
         private int height;
+        private string playingId;
+        private bool playing;
 
         /// <summary>
         /// 构造方法
@@ -25,6 +29,7 @@ namespace Insight.Utils.NetEaseIM.Controls
         {
             InitializeComponent();
 
+            sbeNext.Click += (sender, args) => getHistory();
             Closed += (sender, args) => Dispose();
             close.Click += (sender, args) =>
             {
@@ -46,15 +51,6 @@ namespace Insight.Utils.NetEaseIM.Controls
             {
                 void action()
                 {
-                    var control = (ButtonLabel) pceHistory.Controls[endTime.ToString()];
-                    if (control != null)
-                    {
-                        control.click -= (sender, args) => getHistory();
-                        pceHistory.Controls.Remove(control);
-                        height = height - control.Height;
-                        pceHistory.Height = height;
-                    }
-
                     var list = result.MsglogCollection;
                     if (list == null || list.Length == 0) return;
 
@@ -75,10 +71,14 @@ namespace Insight.Utils.NetEaseIM.Controls
                         addMessage(message);
                     }
 
-                    if (list.Length < 6) return;
+                    if (list.Length < 6)
+                    {
+                        sbeNext.Enabled = false;
+                        sbeNext.Text = "已到达终点";
+                        return;
+                    }
 
                     endTime = list.Last().TimeStamp;
-                    addButton();
                 }
 
                 Invoke((Action)action);
@@ -96,9 +96,10 @@ namespace Insight.Utils.NetEaseIM.Controls
                 width = pceHistory.Width,
                 message = message,
                 targetHead = targetHead,
-                Name = message.id,
                 Dock = DockStyle.Top
             };
+            control.play += (sender, args) => play(args.id);
+            control.stop += (sender, args) => playing = false;
             pceHistory.Controls.Add(control);
             height = height + control.Size.Height;
 
@@ -136,20 +137,23 @@ namespace Insight.Utils.NetEaseIM.Controls
         }
 
         /// <summary>
-        /// 构造并添加时间控件到消息窗口
+        /// 停止全部语音播放
         /// </summary>
-        private void addButton()
+        /// <param name="id">消息ID</param>
+        private void play(string id)
         {
-            var control = new ButtonLabel
-            {
-                Name = endTime.ToString(),
-                Dock = DockStyle.Top
-            };
-            control.click += (sender, args) => getHistory();
-            pceHistory.Controls.Add(control);
+            var playingBox = pceHistory.Controls[playingId] as MessageBox;
+            playingBox?.stopAudio();
 
-            height = height + control.Size.Height;
-            pceHistory.Height = height;
+            var playBox = (MessageBox) pceHistory.Controls[id];
+            Task.Run(() =>
+            {
+                while (playing) Thread.Sleep(200);
+
+                playingId = id;
+                playing = true;
+                playBox.playAudio();
+            });
         }
     }
 }

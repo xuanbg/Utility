@@ -29,28 +29,42 @@
         private void InitializeComponent()
         {
             this.sceMessage = new DevExpress.XtraEditors.XtraScrollableControl();
-            this.pceList = new DevExpress.XtraEditors.PanelControl();
+            this.pceList0 = new DevExpress.XtraEditors.PanelControl();
+            this.pceList1 = new DevExpress.XtraEditors.PanelControl();
             this.sceMessage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pceList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pceList0)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pceList1)).BeginInit();
             this.SuspendLayout();
             // 
             // sceMessage
             // 
-            this.sceMessage.Controls.Add(this.pceList);
+            this.sceMessage.Controls.Add(this.pceList0);
+            this.sceMessage.Controls.Add(this.pceList1);
             this.sceMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceMessage.Location = new System.Drawing.Point(0, 0);
             this.sceMessage.Name = "sceMessage";
             this.sceMessage.Size = new System.Drawing.Size(400, 400);
             this.sceMessage.TabIndex = 0;
             // 
-            // pceList
+            // pceList0
             // 
-            this.pceList.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pceList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pceList.Location = new System.Drawing.Point(0, 0);
-            this.pceList.Name = "pceList";
-            this.pceList.Size = new System.Drawing.Size(400, 100);
-            this.pceList.TabIndex = 0;
+            this.pceList0.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pceList0.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pceList0.Location = new System.Drawing.Point(0, 0);
+            this.pceList0.Name = "pceList0";
+            this.pceList0.Size = new System.Drawing.Size(400, 100);
+            this.pceList0.TabIndex = 0;
+            // 
+            // pceList1
+            // 
+            this.pceList1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pceList1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.pceList1.Location = new System.Drawing.Point(0, 0);
+            this.pceList1.Name = "pceList1";
+            this.pceList1.Size = new System.Drawing.Size(400, 100);
+            this.pceList1.TabIndex = 0;
             // 
             // MessageList
             // 
@@ -60,7 +74,8 @@
             this.Name = "MessageList";
             this.Size = new System.Drawing.Size(400, 400);
             this.sceMessage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pceList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pceList0)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pceList1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -68,6 +83,7 @@
         #endregion
 
         private DevExpress.XtraEditors.XtraScrollableControl sceMessage;
-        private DevExpress.XtraEditors.PanelControl pceList;
+        private DevExpress.XtraEditors.PanelControl pceList1;
+        private DevExpress.XtraEditors.PanelControl pceList0;
     }
 }

@@ -14,11 +14,42 @@ namespace Insight.Utils.NetEaseIM.Controls
 {
     public partial class MessageBox : XtraUserControl
     {
+        private CancellationTokenSource tokenSource;
         private Image image;
         private int maxWidth;
         private bool isSend;
         private string localFilePath;
         private int dur;
+        private bool stopping;
+
+        /// <summary>
+        /// 播放语音的委托方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void PlayAudioHandle(object sender, PlayEventArgs e);
+
+        /// <summary>
+        /// 停止播放语音的委托方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public delegate void StopAudioHandle(object sender, PlayEventArgs e);
+
+        /// <summary>
+        /// 播放语音的事件
+        /// </summary>
+        public event PlayAudioHandle play;
+
+        /// <summary>
+        /// 停止播放语音的事件
+        /// </summary>
+        public event StopAudioHandle stop;
+
+        /// <summary>
+        /// 消息类型
+        /// </summary>
+        public int type;
 
         /// <summary>
         /// 设置宽度
@@ -39,9 +70,11 @@ namespace Insight.Utils.NetEaseIM.Controls
         {
             set
             {
+                type = value.type;
                 isSend = value.direction == 0;
                 picTarget.Visible = !isSend;
                 picMe.Visible = isSend;
+                Name = value.id;
 
                 switch (value.type)
                 {
@@ -106,9 +139,74 @@ namespace Insight.Utils.NetEaseIM.Controls
                 show.show(image);
                 show.ShowDialog();
             };
-            sbePlay.Click += (sender, args) => playAudio();
-            sbeStop.Click += (sender, args) => AudioAPI.StopPlayAudio();
+            sbePlay.Click += (sender, args) => play?.Invoke(this, new PlayEventArgs(Name));
+            sbeStop.Click += (sender, args) => stopAudio();
             sbeDownload.Click += (sender, args) => saveFile();
+        }
+
+        /// <summary>
+        /// 播放语音
+        /// </summary>
+        public void playAudio()
+        {
+            var start = DateTime.Now;
+            var end = start.AddMilliseconds(dur + 1000);
+            Invoke(new Action(() =>
+            {
+                sbePlay.Visible = false;
+                sbeStop.Visible = true;
+                Refresh();
+            }));
+
+            tokenSource = new CancellationTokenSource();
+            AudioAPI.RegStopPlayCb((z, xx, c, v) =>
+            {
+                stop?.Invoke(this, new PlayEventArgs(Name));
+                if (stopping)
+                {
+                    stopping = false;
+                    return;
+                }
+
+                Invoke(new Action(() =>
+                {
+                    sbePlay.Visible = true;
+                    sbeStop.Visible = false;
+                    Refresh();
+                }));
+            });
+            AudioAPI.PlayAudio(localFilePath, "", "", NIMAudioType.kNIMAudioAAC);
+
+            Task.Run(() =>
+            {
+                while (DateTime.Now.CompareTo(end) < 0)
+                {
+                    if (tokenSource.IsCancellationRequested) break;
+
+                    Thread.Sleep(200);
+                    Invoke(new Action(() =>
+                    {
+                        pbcSend.Position = (int)(100 * (DateTime.Now - start).TotalMilliseconds / dur);
+                        pbcSend.Refresh();
+                    }));
+                }
+            });
+        }
+
+        /// <summary>
+        /// 停止播放
+        /// </summary>
+        public void stopAudio()
+        {
+            if (tokenSource == null || tokenSource.IsCancellationRequested) return;
+
+            AudioAPI.StopPlayAudio();
+            tokenSource.Cancel();
+
+            stopping = true;
+            sbePlay.Visible = true;
+            sbeStop.Visible = false;
+            Refresh();
         }
 
         /// <summary>
@@ -168,7 +266,7 @@ namespace Insight.Utils.NetEaseIM.Controls
             picImage.Image = image;
 
             // 计算控件宽高
-            Height = h > 65 ? h + 5 : 70;
+            Height = h > 60 ? h + 10 : 70;
 
             // 发送图片靠右
             if (isSend)
@@ -187,6 +285,8 @@ namespace Insight.Utils.NetEaseIM.Controls
         /// <param name="message">云信消息数据</param>
         private void showAudioMessage(NimMessage message)
         {
+            if (!AudioAPI.InitModule(Application.StartupPath)) return;
+
             var body = (FileMessage)message.body;
             var x = 70;
             var y = 5;
@@ -309,49 +409,27 @@ namespace Insight.Utils.NetEaseIM.Controls
         }
 
         /// <summary>
-        /// 播放语音
-        /// </summary>
-        private void playAudio()
-        {
-            if (!AudioAPI.InitModule(Application.StartupPath)) return;
-
-            var start = DateTime.Now;
-            var end = start.AddMilliseconds(dur + 500);
-            var tokenSource = new CancellationTokenSource();
-            sbePlay.Visible = false;
-            sbeStop.Visible = true;
-            Refresh();
-
-            void action()
-            {
-                pbcSend.Position = (int)(100 * (DateTime.Now - start).TotalMilliseconds / dur);
-                pbcSend.Refresh();
-            }
-            AudioAPI.RegStopPlayCb((z, xx, c, v) =>
-            {
-                sbePlay.Visible = true;
-                sbeStop.Visible = false;
-
-                tokenSource.Cancel();
-            });
-            AudioAPI.PlayAudio(localFilePath, "", "", NIMAudioType.kNIMAudioAAC);
-            Task.Run(() =>
-            {
-                while (DateTime.Now.CompareTo(end) < 0)
-                {
-                    if (tokenSource.IsCancellationRequested) break;
-
-                    Invoke((Action) action);
-                    Thread.Sleep(200);
-                }
-            }, tokenSource.Token);
-        }
-
-        /// <summary>
         /// 保存文件
         /// </summary>
         private void saveFile()
         {
+        }
+    }
+
+    public class PlayEventArgs : EventArgs
+    {
+        /// <summary>
+        /// 消息ID
+        /// </summary>
+        public readonly string id;
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="id">消息ID</param>
+        public PlayEventArgs(string id)
+        {
+            this.id = id;
         }
     }
 

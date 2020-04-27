@@ -64,14 +64,6 @@ namespace Insight.Utils.NetEaseIM
         }
 
         /// <summary>
-        /// 显示最新消息
-        /// </summary>
-        public void showNewMessage()
-        {
-            mlcMessage.scrollToView();
-        }
-
-        /// <summary>
         /// 检查消息发送结果
         /// </summary>
         /// <param name="sender"></param>

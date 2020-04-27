@@ -78,12 +78,6 @@
     <Compile Include="NimSessions.Designer.cs">
       <DependentUpon>NimSessions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ButtionLabel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ButtionLabel.Designer.cs">
-      <DependentUpon>ButtionLabel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\HistoryDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,9 +118,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NimSessions.resx">
       <DependentUpon>NimSessions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ButtionLabel.resx">
-      <DependentUpon>ButtionLabel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HistoryDialog.resx">
       <DependentUpon>HistoryDialog.cs</DependentUpon>
