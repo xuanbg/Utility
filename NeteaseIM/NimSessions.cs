@@ -267,6 +267,9 @@ namespace Insight.Utils.NetEaseIM
         /// </summary>
         public string id;
 
+        /// <summary>
+        /// 是否已读
+        /// </summary>
         public bool unread;
 
         /// <summary>

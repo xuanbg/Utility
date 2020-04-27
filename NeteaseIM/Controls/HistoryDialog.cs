@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Insight.Utils.BaseForms;
 using Insight.Utils.Common;
@@ -16,6 +18,8 @@ namespace Insight.Utils.NetEaseIM.Controls
         private readonly Image targetHead;
         private DateTime messageTime;
         private int height;
+        private string playingId;
+        private bool playing;
 
         /// <summary>
         /// 构造方法
@@ -92,9 +96,10 @@ namespace Insight.Utils.NetEaseIM.Controls
                 width = pceHistory.Width,
                 message = message,
                 targetHead = targetHead,
-                Name = message.id,
                 Dock = DockStyle.Top
             };
+            control.play += (sender, args) => play(args.id);
+            control.stop += (sender, args) => playing = false;
             pceHistory.Controls.Add(control);
             height = height + control.Size.Height;
 
@@ -129,6 +134,26 @@ namespace Insight.Utils.NetEaseIM.Controls
 
             height = height + control.Size.Height;
             pceHistory.Height = height;
+        }
+
+        /// <summary>
+        /// 停止全部语音播放
+        /// </summary>
+        /// <param name="id">消息ID</param>
+        private void play(string id)
+        {
+            var playingBox = pceHistory.Controls[playingId] as MessageBox;
+            playingBox?.stopAudio();
+
+            var playBox = (MessageBox) pceHistory.Controls[id];
+            Task.Run(() =>
+            {
+                while (playing) Thread.Sleep(200);
+
+                playingId = id;
+                playing = true;
+                playBox.playAudio();
+            });
         }
     }
 }

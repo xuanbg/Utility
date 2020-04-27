@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Utils.Common;
@@ -17,6 +18,8 @@ namespace Insight.Utils.NetEaseIM.Controls
         private readonly List<NimMessage> messages = new List<NimMessage>();
         private string targetId;
         private Image targetHead;
+        private string playingId;
+        private bool playing;
 
         /// <summary>
         /// 构造方法
@@ -165,10 +168,11 @@ namespace Insight.Utils.NetEaseIM.Controls
                     width = hide.Width,
                     message = i,
                     targetHead = targetHead,
-                    Name = i.id,
                     Location = new Point(0, height),
                     Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right
                 };
+                box.play += (sender, args) => stopPlaying(args.id);
+                box.stop += (sender, args) => playing = false;
                 hide.Controls.Add(box);
                 height = height + box.Height;
             });
@@ -182,6 +186,26 @@ namespace Insight.Utils.NetEaseIM.Controls
             show.Visible = false;
             show.SendToBack();
             show.Controls.Clear();
+        }
+
+        /// <summary>
+        /// 停止全部语音播放
+        /// </summary>
+        /// <param name="id">消息ID</param>
+        private void stopPlaying(string id)
+        {
+            var box = sceMessage.Controls[0].Controls[playingId] as MessageBox;
+            box?.stopAudio();
+
+            var playBox = (MessageBox)sceMessage.Controls[0].Controls[id];
+            Task.Run(() =>
+            {
+                while (playing) Thread.Sleep(200);
+
+                playingId = id;
+                playing = true;
+                playBox.playAudio();
+            });
         }
     }
 }
