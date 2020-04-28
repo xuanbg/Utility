@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Insight.Base.BaseForm.BaseViewModels;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
+using Insight.Base.BaseForm.ViewModels;
 using Insight.Base.MainForm.Views;
 using Insight.Utils.Common;
 

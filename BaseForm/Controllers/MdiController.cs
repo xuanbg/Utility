@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using FastReport;
-using Insight.Base.BaseForm.BaseForms;
-using Insight.Base.BaseForm.BaseViewModels;
 using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.Forms;
+using Insight.Base.BaseForm.ViewModels;
 using Insight.Utils.Common;
 
-namespace Insight.Base.BaseForm.BaseControllers
+namespace Insight.Base.BaseForm.Controllers
 {
     public class MdiController<T, TV, TM, DM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV, DM>, new() where DM : new()
     {
@@ -23,15 +23,14 @@ namespace Insight.Base.BaseForm.BaseControllers
         /// 构造方法
         /// </summary>
         /// <param name="module">模块信息</param>
-        /// <param name="functions">功能信息集合</param>
-        protected MdiController(ModuleDto module, IEnumerable<FunctionDto> functions)
+        protected MdiController(ModuleDto module)
         {
             mdiModel = new TM {dataModel = dataModel};
             mdiModel.initMdiView(module);
             mdiModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
             mdiModel.show();
 
-            mdiModel.initToolBar(functions);
+            mdiModel.initToolBar(module.functions);
         }
 
         /// <summary>

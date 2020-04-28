@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Insight.Base.BaseForm.BaseForms;
+using Insight.Base.BaseForm.Forms;
 using Insight.Utils.Common;
 using NIM.Messagelog;
 using NIM.Session;

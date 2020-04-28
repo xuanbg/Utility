@@ -4,7 +4,7 @@ using DevExpress.XtraEditors;
 using Insight.Base.BaseForm.Entities;
 using Insight.Utils.Common;
 
-namespace Insight.Base.BaseForm.BaseViewModels
+namespace Insight.Base.BaseForm.ViewModels
 {
     public class BaseModel<T, TV> where TV : XtraForm, new()
     {

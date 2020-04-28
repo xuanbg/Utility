@@ -3,7 +3,7 @@ using DevExpress.Utils;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 
-namespace Insight.Base.BaseForm.BaseForms
+namespace Insight.Base.BaseForm.Forms
 {
     partial class BaseMdi
     {

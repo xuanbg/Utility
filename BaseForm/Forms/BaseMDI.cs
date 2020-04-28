@@ -1,13 +1,13 @@
 ﻿using DevExpress.XtraEditors;
 
-namespace Insight.Base.BaseForm.BaseForms
+namespace Insight.Base.BaseForm.Forms
 {
-    public partial class BaseWizard : XtraForm
+    public partial class BaseMdi : XtraForm
     {
         /// <summary>
         /// 构造函数
         /// </summary>
-        protected BaseWizard()
+        public BaseMdi()
         {
             InitializeComponent();
         }

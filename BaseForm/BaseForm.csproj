@@ -63,27 +63,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseControllers\BaseController.cs" />
-    <Compile Include="BaseForms\BaseDialog.cs">
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Forms\BaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForms\BaseDialog.Designer.cs">
+    <Compile Include="Forms\BaseDialog.Designer.cs">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForms\BaseMdi.cs">
+    <Compile Include="Forms\BaseMdi.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForms\BaseMdi.Designer.cs">
+    <Compile Include="Forms\BaseMdi.Designer.cs">
       <DependentUpon>BaseMdi.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForms\BaseWizard.cs">
+    <Compile Include="Forms\BaseWizard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BaseForms\BaseWizard.Designer.cs">
+    <Compile Include="Forms\BaseWizard.Designer.cs">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseViewModels\BaseWizardModel.cs" />
-    <Compile Include="BaseViewModels\BaseModel.cs" />
+    <Compile Include="ViewModels\BaseWizardModel.cs" />
+    <Compile Include="ViewModels\BaseModel.cs" />
     <Compile Include="Entities\Catalog.cs" />
     <Compile Include="Entities\LoginDto.cs" />
     <Compile Include="Entities\LookUpMember.cs" />
@@ -111,12 +111,12 @@
     <Compile Include="Views\Waiting.Designer.cs">
       <DependentUpon>Waiting.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseControllers\MdiController.cs" />
+    <Compile Include="Controllers\MdiController.cs" />
     <Compile Include="Controls\Format.cs" />
     <Compile Include="Entities\PrintSetting.cs" />
-    <Compile Include="BaseViewModels\BaseDialogModel.cs" />
+    <Compile Include="ViewModels\BaseDialogModel.cs" />
     <Compile Include="ViewModels\CategoryModel.cs" />
-    <Compile Include="BaseViewModels\BaseMdiModel.cs" />
+    <Compile Include="ViewModels\BaseMdiModel.cs" />
     <Compile Include="Controls\PageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -132,13 +132,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BaseForms\BaseDialog.resx">
+    <EmbeddedResource Include="Forms\BaseDialog.resx">
       <DependentUpon>BaseDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForms\BaseMdi.resx">
+    <EmbeddedResource Include="Forms\BaseMdi.resx">
       <DependentUpon>BaseMdi.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BaseForms\BaseWizard.resx">
+    <EmbeddedResource Include="Forms\BaseWizard.resx">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ShowImage.resx">

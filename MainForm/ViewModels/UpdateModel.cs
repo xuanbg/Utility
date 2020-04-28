@@ -4,8 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.Utils;
-using Insight.Base.BaseForm.BaseViewModels;
 using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.ViewModels;
 using Insight.Base.MainForm.Views;
 
 namespace Insight.Base.MainForm.ViewModels

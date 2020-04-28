@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
-using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.BaseForm.ViewModels;
 using Insight.Base.MainForm.Views;
 
 namespace Insight.Base.MainForm.ViewModels

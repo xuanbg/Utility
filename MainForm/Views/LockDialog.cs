@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using Insight.Base.BaseForm.BaseForms;
+using Insight.Base.BaseForm.Forms;
 
 namespace Insight.Base.MainForm.Views
 {

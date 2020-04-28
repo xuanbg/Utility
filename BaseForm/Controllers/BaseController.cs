@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Insight.Utils.Common;
 
-namespace Insight.Base.BaseForm.BaseControllers
+namespace Insight.Base.BaseForm.Controllers
 {
     public class BaseController
     {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Insight.Base.BaseForm.BaseViewModels;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Views;

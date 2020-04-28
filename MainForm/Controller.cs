@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Insight.Base.BaseForm.BaseControllers;
+using Insight.Base.BaseForm.Controllers;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
 using Insight.Base.MainForm.ViewModels;
@@ -96,9 +96,8 @@ namespace Insight.Base.MainForm
                 return;
             }
 
-            var functions = dataModel.getActions(mod.id);
-            var args = new object[] {mod, functions};
-            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, args, CultureInfo.CurrentCulture, null);
+            mod.functions = dataModel.getActions(mod.id);
+            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
         }
 
         /// <summary>

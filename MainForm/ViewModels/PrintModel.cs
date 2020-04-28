@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Printing;
-using Insight.Base.BaseForm.BaseViewModels;
 using Insight.Base.BaseForm.Utils;
+using Insight.Base.BaseForm.ViewModels;
 using Insight.Base.MainForm.Views;
 
 namespace Insight.Base.MainForm.ViewModels

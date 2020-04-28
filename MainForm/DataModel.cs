@@ -32,7 +32,7 @@ namespace Insight.Base.MainForm
         /// 获取模块功能按钮集合
         /// </summary>
         /// <returns>功能按钮集合</returns>
-        internal IEnumerable<FunctionDto> getActions(string moduleId)
+        internal List<FunctionDto> getActions(string moduleId)
         {
             var url = $"{authService}/v1.0/navigators/{moduleId}/functions";
             var client = new HttpClient<List<FunctionDto>>();
