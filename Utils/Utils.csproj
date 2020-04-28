@@ -47,8 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\CategoryHelper.cs" />
-    <Compile Include="Client\Setting.cs" />
     <Compile Include="Common\RegexHelper.cs" />
     <Compile Include="Common\AliasAttribute.cs" />
     <Compile Include="Common\HttpRequest.cs" />
@@ -56,22 +54,12 @@
     <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
-    <Compile Include="Entity\Catalog.cs" />
     <Compile Include="Entity\Enums.cs" />
-    <Compile Include="Entity\Update.cs" />
     <Compile Include="Entity\ImageData.cs" />
-    <Compile Include="Entity\LoginDto.cs" />
     <Compile Include="Entity\LogInfo.cs" />
-    <Compile Include="Entity\LookUpMember.cs" />
-    <Compile Include="Entity\Modules.cs" />
-    <Compile Include="Entity\PasswordDto.cs" />
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\Reports.cs" />
     <Compile Include="Entity\Result.cs" />
-    <Compile Include="Client\HttpClient.cs" />
-    <Compile Include="Client\LogClient.cs" />
-    <Compile Include="Client\TokenHelper.cs" />
-    <Compile Include="Entity\Tokens.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Util.cs" />
   </ItemGroup>

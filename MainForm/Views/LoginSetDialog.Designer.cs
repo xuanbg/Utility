@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.MainForm.Views
+namespace Insight.Base.MainForm.Views
 {
     public partial class LoginSetDialog
     {

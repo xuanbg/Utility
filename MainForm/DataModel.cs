@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using Insight.Utils.Client;
+using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.Utils;
 using Insight.Utils.Common;
-using Insight.Utils.Entity;
 
-namespace Insight.Utils.MainForm
+namespace Insight.Base.MainForm
 {
     internal class DataModel
     {
@@ -23,6 +24,18 @@ namespace Insight.Utils.MainForm
         {
             var url = $"{authService}/v1.0/navigators";
             var client = new HttpClient<List<ModuleDto>>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
+        /// 获取模块功能按钮集合
+        /// </summary>
+        /// <returns>功能按钮集合</returns>
+        internal IEnumerable<FunctionDto> getActions(string moduleId)
+        {
+            var url = $"{authService}/v1.0/navigators/{moduleId}/functions";
+            var client = new HttpClient<List<FunctionDto>>();
 
             return client.getData(url);
         }
@@ -76,7 +89,7 @@ namespace Insight.Utils.MainForm
             var root = Application.StartupPath;
 
             // 清除本地备份
-            var locals = Util.getClientFiles(".bak");
+            var locals = getClientFiles(".bak");
             locals.ForEach(i =>
             {
                 var filePath = root;
@@ -86,7 +99,7 @@ namespace Insight.Utils.MainForm
             });
 
             // 比较文件版本
-            locals = Util.getClientFiles(".exe|.dll|.frl");
+            locals = getClientFiles(".exe|.dll|.frl");
             var updates = new List<FileVersion>();
             foreach (var ver in info.data)
             {
@@ -134,6 +147,96 @@ namespace Insight.Utils.MainForm
                     return ms.ToArray();
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取模板
+        /// </summary>
+        /// <param name="id">模板ID</param>
+        /// <returns>string 模板内容</returns>
+        internal string getTemplate(string id)
+        {
+            var url = $"/report/v1.0/templates/{id}";
+            var client = new HttpClient<string>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
+        /// 获取选项数据
+        /// </summary>
+        /// <returns>选项数据集合</returns>
+        internal List<ModuleParam> getParams()
+        {
+            var url = "/common/v1.0/params";
+            var client = new HttpClient<List<ModuleParam>>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
+        /// 保存选项数据
+        /// </summary>
+        /// <param name="moduleParams">选项数据集合</param>
+        /// <returns>bool 是否成功</returns>
+        internal void saveParam(List<ModuleParam> moduleParams)
+        {
+            var url = "/common/v1.0/params";
+            var dict = new Dictionary<string, object> { { "list", moduleParams } };
+            var client = new HttpClient<List<ModuleParam>>();
+            client.put(url, dict);
+        }
+        /// <summary>
+        /// 获取本地文件列表
+        /// </summary>
+        /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
+        /// <param name="path">当前目录</param>
+        public static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
+        {
+            // 读取目录下文件信息
+            var root = Application.StartupPath;
+            var dirInfo = new DirectoryInfo(path ?? root);
+            var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
+
+            return files.Select(file => new FileVersion
+            {
+                file = file.Name,
+                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
+                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
+            }).ToList();
+        }
+
+        /// <summary>
+        /// 更新文件
+        /// </summary>
+        /// <param name="version">版本信息</param>
+        /// <param name="bytes">文件字节流</param>
+        /// <returns>bool 是否重命名</returns>
+        public bool updateFile(FileVersion version, byte[] bytes)
+        {
+            var rename = false;
+            var filePath = Application.StartupPath;
+            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
+
+            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+
+            var file = filePath + version.file;
+            try
+            {
+                File.Delete(file);
+            }
+            catch
+            {
+                File.Move(file, file + ".bak");
+                rename = true;
+            }
+
+            using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+
+            return rename;
         }
     }
 }

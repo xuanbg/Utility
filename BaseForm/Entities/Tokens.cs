@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Entity
+﻿namespace Insight.Base.BaseForm.Entities
 {
     public class TokenPackage
     {

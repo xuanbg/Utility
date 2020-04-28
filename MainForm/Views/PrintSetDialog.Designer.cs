@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.MainForm.Views
+﻿namespace Insight.Base.MainForm.Views
 {
     public partial class PrintSetDialog
     {

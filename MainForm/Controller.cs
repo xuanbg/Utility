@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Insight.Utils.BaseControllers;
-using Insight.Utils.Client;
+using Insight.Base.BaseForm.BaseControllers;
+using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.Utils;
+using Insight.Base.MainForm.ViewModels;
 using Insight.Utils.Common;
-using Insight.Utils.Entity;
-using Insight.Utils.MainForm.ViewModels;
 
-namespace Insight.Utils.MainForm
+namespace Insight.Base.MainForm
 {
     public class Controller : BaseController
     {
@@ -96,7 +96,9 @@ namespace Insight.Utils.MainForm
                 return;
             }
 
-            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, new object[] { mod }, CultureInfo.CurrentCulture, null);
+            var functions = dataModel.getActions(mod.id);
+            var args = new object[] {mod, functions};
+            asm.CreateInstance(type.FullName, false, BindingFlags.Default, null, args, CultureInfo.CurrentCulture, null);
         }
 
         /// <summary>
@@ -164,7 +166,8 @@ namespace Insight.Utils.MainForm
                     case "updateFile":
                         var ver = (FileVersion)args.param[0];
                         var file = dataModel.getFile(ver.file);
-                        model.updateFile(ver, file);
+                        var restart = dataModel.updateFile(ver, file);
+                        model.updateFlag(restart);
 
                         break;
                     case "complete" when (bool)args.param[0]:

@@ -1,6 +1,6 @@
-﻿using Insight.Utils.BaseForms;
+﻿using Insight.Base.BaseForm.BaseForms;
 
-namespace Insight.Utils.MainForm.Views
+namespace Insight.Base.MainForm.Views
 {
     public partial class PrintSetDialog : BaseDialog
     {

@@ -9,13 +9,12 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraTreeList;
-using DevExpress.XtraTreeList.Columns;
-using Insight.Utils.Entity;
+using Insight.Base.BaseForm.Entities;
 using DrawFocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle;
 using RowClickEventArgs = DevExpress.XtraGrid.Views.Grid.RowClickEventArgs;
 using ScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility;
 
-namespace Insight.Utils.Controls
+namespace Insight.Base.BaseForm.Controls
 {
     public class Format
     {
@@ -109,7 +108,7 @@ namespace Insight.Utils.Controls
         public static void treeFormat(TreeList tree, bool showColumns = false, bool showIndicator = false)
         {
             // 使列标题文字居中显示
-            foreach (TreeListColumn column in tree.Columns)
+            foreach (var column in tree.Columns)
             {
                 if (column.FieldName == "index") column.SortOrder = SortOrder.Ascending;
 
@@ -298,10 +297,7 @@ namespace Insight.Utils.Controls
         private static void customDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
         {
             e.Appearance.TextOptions.HAlignment = HorzAlignment.Far;
-            if (e.Info.IsRowIndicator && e.RowHandle > -1000)
-            {
-                e.Info.DisplayText = e.RowHandle >= 0 ? (e.RowHandle + 1).ToString() : "G" + e.RowHandle;
-            }
+            if (e.Info.IsRowIndicator && e.RowHandle > -1000) e.Info.DisplayText = e.RowHandle >= 0 ? (e.RowHandle + 1).ToString() : "G" + e.RowHandle;
         }
 
         /// <summary>
@@ -315,13 +311,9 @@ namespace Insight.Utils.Controls
             if (e.X <= view.IndicatorWidth + view.OptionsSelection.CheckBoxSelectorColumnWidth) return;
 
             if (view.IsRowSelected(e.RowHandle))
-            {
                 view.UnselectRow(e.RowHandle);
-            }
             else
-            {
                 view.SelectRow(e.RowHandle);
-            }
         }
     }
 }

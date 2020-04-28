@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using DevExpress.XtraEditors;
+using Insight.Base.BaseForm.Entities;
 
-namespace Insight.Utils.Controls
+namespace Insight.Base.BaseForm.Controls
 {
     public partial class PageControl : XtraUserControl
     {
@@ -240,67 +241,9 @@ namespace Insight.Utils.Controls
 
             // 根据焦点行是否改变触发焦点行改变或刷新列表事件
             if (first || focusedRow == currentRow)
-            {
                 selectDataChanged?.Invoke(this, EventArgs.Empty);
-            }
             else
-            {
                 focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
-            }
-        }
-    }
-
-    /// <summary>
-    /// 焦点行改变事件参数类
-    /// </summary>
-    public class RowHandleEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Row handle
-        /// </summary>
-        public int rowHandle { get; }
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="handel">RowsPerPage</param>
-        public RowHandleEventArgs(int handel)
-        {
-            rowHandle = handel;
-        }
-    }
-
-    /// <summary>
-    /// 页面重载事件参数类
-    /// </summary>
-    public class PageReloadEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Current page
-        /// </summary>
-        public int page { get; }
-
-        /// <summary>
-        /// Page size
-        /// </summary>
-        public int size { get; }
-
-         /// <summary>
-        /// Row handle
-        /// </summary>
-        public int handle { get; }
-
-         /// <summary>
-         /// 构造函数
-         /// </summary>
-         /// <param name="page">Current page</param>
-         /// <param name="size">Page size</param>
-         /// <param name="handle">Row handle</param>
-         public PageReloadEventArgs(int page, int size, int handle)
-        {
-            this.page = page;
-            this.size = size;
-            this.handle = handle;
         }
     }
 }

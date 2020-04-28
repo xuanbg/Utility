@@ -1,6 +1,6 @@
 ﻿using DevExpress.XtraWaitForm;
 
-namespace Insight.Utils.Views
+namespace Insight.Base.BaseForm.Views
 {
     public partial class Waiting : WaitForm
     {

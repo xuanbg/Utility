@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FastReport;
 
-namespace Insight.Utils.Entities
+namespace Insight.Base.BaseForm.Entities
 {
     public class PrintSetting<T>
     {
@@ -26,9 +26,9 @@ namespace Insight.Utils.Entities
         public PagesOnSheet pagesOnSheet { get; set; } = PagesOnSheet.One;
 
         /// <summary>
-        /// 报表模板ID
+        /// 报表模板
         /// </summary>
-        public string templateId { get; set; }
+        public string template { get; set; }
 
         /// <summary>
         /// 报表数据集名称

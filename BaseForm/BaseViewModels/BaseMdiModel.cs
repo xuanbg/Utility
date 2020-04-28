@@ -10,12 +10,12 @@ using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraTreeList;
-using Insight.Utils.BaseForms;
+using Insight.Base.BaseForm.BaseForms;
+using Insight.Base.BaseForm.Controls;
+using Insight.Base.BaseForm.Entities;
 using Insight.Utils.Common;
-using Insight.Utils.Controls;
-using Insight.Utils.Entity;
 
-namespace Insight.Utils.BaseViewModels
+namespace Insight.Base.BaseForm.BaseViewModels
 {
     public class BaseMdiModel<T, TV, DM> : BaseModel<T, TV> where TV : BaseMdi, new()
     {

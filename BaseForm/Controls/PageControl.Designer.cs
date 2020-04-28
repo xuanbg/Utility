@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Controls
+﻿namespace Insight.Base.BaseForm.Controls
 {
     partial class PageControl
     {

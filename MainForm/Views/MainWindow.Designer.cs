@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.MainForm.Views
+﻿namespace Insight.Base.MainForm.Views
 {
     public partial class MainWindow
     {
@@ -61,7 +61,7 @@
             this.mdiManager = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(this.components);
             this.splitterControl = new DevExpress.XtraEditors.SplitterControl();
             this.MyFeel = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
-            this.Loading = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Utils.Views.Waiting), true, true);
+            this.Loading = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Base.BaseForm.Views.Waiting), true, true);
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NavMain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mdiManager)).BeginInit();

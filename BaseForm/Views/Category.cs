@@ -1,6 +1,6 @@
-﻿using Insight.Utils.BaseForms;
+﻿using Insight.Base.BaseForm.BaseForms;
 
-namespace Insight.Utils.Views
+namespace Insight.Base.BaseForm.Views
 {
     public partial class Category : BaseDialog
     {

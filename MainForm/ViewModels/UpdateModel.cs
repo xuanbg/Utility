@@ -4,12 +4,11 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.Utils;
-using Insight.Utils.BaseViewModels;
-using Insight.Utils.Common;
-using Insight.Utils.Entity;
-using Insight.Utils.MainForm.Views;
+using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.BaseForm.Entities;
+using Insight.Base.MainForm.Views;
 
-namespace Insight.Utils.MainForm.ViewModels
+namespace Insight.Base.MainForm.ViewModels
 {
     public class UpdateModel : BaseDialogModel<Update, UpdateDialog>
     {
@@ -39,15 +38,12 @@ namespace Insight.Utils.MainForm.ViewModels
         }
 
         /// <summary>
-        /// 更新本地文件
+        /// 更新重启标识
         /// </summary>
-        /// <param name="version"></param>
-        /// <param name="data">文件数据</param>
-        public void updateFile(FileVersion version, byte[] data)
+        /// <param name="restart">是否需要重启</param>
+        public void updateFlag(bool restart)
         {
-            if (data == null || data.Length == 0) return;
-
-            restart = Util.updateFile(version, data) || restart;
+            this.restart = this.restart || restart;
         }
 
         /// <summary>

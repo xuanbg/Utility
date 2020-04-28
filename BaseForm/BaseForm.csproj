@@ -7,7 +7,7 @@
     <ProjectGuid>{71E0AFE5-A5CB-4240-933F-AC3D1E3DA15D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Insight.Utils</RootNamespace>
+    <RootNamespace>Insight.Base.BaseForm</RootNamespace>
     <AssemblyName>BaseForm</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -83,8 +83,22 @@
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
-    <Compile Include="DataModel.cs" />
     <Compile Include="BaseViewModels\BaseModel.cs" />
+    <Compile Include="Entities\Catalog.cs" />
+    <Compile Include="Entities\LoginDto.cs" />
+    <Compile Include="Entities\LookUpMember.cs" />
+    <Compile Include="Entities\Modules.cs" />
+    <Compile Include="Entities\PasswordDto.cs" />
+    <Compile Include="Entities\Tokens.cs" />
+    <Compile Include="Entities\Update.cs" />
+    <Compile Include="Utils\CategoryHelper.cs" />
+    <Compile Include="Utils\HttpClient.cs" />
+    <Compile Include="Utils\LogClient.cs" />
+    <Compile Include="Utils\Setting.cs" />
+    <Compile Include="Utils\TokenHelper.cs" />
+    <Compile Include="Entities\CallbackEventArgs.cs" />
+    <Compile Include="Entities\PageReloadEventArgs.cs" />
+    <Compile Include="Entities\RowHandleEventArgs.cs" />
     <Compile Include="Views\ShowImage.cs">
       <SubType>Form</SubType>
     </Compile>

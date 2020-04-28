@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Insight.Utils.Entity
+namespace Insight.Base.BaseForm.Entities
 {
     /// <summary>
     /// 模块信息对象实体

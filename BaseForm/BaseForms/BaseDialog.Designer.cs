@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
-using DevExpress.Utils;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.BaseForms
+namespace Insight.Base.BaseForm.BaseForms
 {
     partial class BaseDialog
     {

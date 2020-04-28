@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
-using Insight.Utils.BaseForms;
+using Insight.Base.BaseForm.BaseForms;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.BaseViewModels
+namespace Insight.Base.BaseForm.BaseViewModels
 {
     public class BaseDialogModel<T, TV> : BaseModel<T, TV> where TV : BaseDialog, new()
     {

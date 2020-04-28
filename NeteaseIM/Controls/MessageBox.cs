@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
-using Insight.Utils.Client;
+using Insight.Base.BaseForm.Utils;
+using Insight.Base.BaseForm.Views;
 using Insight.Utils.Common;
-using Insight.Utils.Views;
 using Newtonsoft.Json;
 using NIMAudio;
 

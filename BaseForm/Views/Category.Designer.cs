@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Insight.Utils.Views
+namespace Insight.Base.BaseForm.Views
 {
     partial class Category
     {

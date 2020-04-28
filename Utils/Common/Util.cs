@@ -340,26 +340,6 @@ namespace Insight.Utils.Common
         #region 文件操作
 
         /// <summary>
-        /// 获取本地文件列表
-        /// </summary>
-        /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
-        /// <param name="path">当前目录</param>
-        public static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
-        {
-            // 读取目录下文件信息
-            var root = Application.StartupPath;
-            var dirInfo = new DirectoryInfo(path ?? root);
-            var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
-
-            return files.Select(file => new FileVersion
-            {
-                file = file.Name,
-                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
-            }).ToList();
-        }
-
-        /// <summary>
         /// 保存文件
         /// </summary>
         /// <param name="file">文件内容</param>
@@ -379,39 +359,6 @@ namespace Insight.Utils.Common
             if (!open) return;
 
             Process.Start(path);
-        }
-
-        /// <summary>
-        /// 更新文件
-        /// </summary>
-        /// <param name="version">版本信息</param>
-        /// <param name="bytes">文件字节流</param>
-        /// <returns>bool 是否重命名</returns>
-        public static bool updateFile(FileVersion version, byte[] bytes)
-        {
-            var rename = false;
-            var filePath = Application.StartupPath;
-            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
-
-            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-
-            var file = filePath + version.file;
-            try
-            {
-                File.Delete(file);
-            }
-            catch
-            {
-                File.Move(file, file + ".bak");
-                rename = true;
-            }
-
-            using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
-            {
-                fs.Write(bytes, 0, bytes.Length);
-            }
-
-            return rename;
         }
 
         /// <summary>

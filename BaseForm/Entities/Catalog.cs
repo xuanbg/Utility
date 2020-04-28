@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.Entity
+namespace Insight.Base.BaseForm.Entities
 {
     /// <summary>
     /// 分类

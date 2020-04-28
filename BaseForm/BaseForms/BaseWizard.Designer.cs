@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using DevExpress.Utils;
 
-namespace Insight.Utils.BaseForms
+namespace Insight.Base.BaseForm.BaseForms
 {
     partial class BaseWizard
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Printing;
-using Insight.Utils.BaseViewModels;
-using Insight.Utils.Client;
-using Insight.Utils.MainForm.Views;
+using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.BaseForm.Utils;
+using Insight.Base.MainForm.Views;
 
-namespace Insight.Utils.MainForm.ViewModels
+namespace Insight.Base.MainForm.ViewModels
 {
     public class PrintModel : BaseDialogModel<string, PrintSetDialog>
     {

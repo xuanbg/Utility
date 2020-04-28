@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Insight.Utils.Entity;
+using Insight.Base.BaseForm.Entities;
 
-namespace Insight.Utils.Client
+namespace Insight.Base.BaseForm.Utils
 {
     public class CategoryHelper<T>
     {

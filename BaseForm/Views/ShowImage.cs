@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace Insight.Utils.Views
+namespace Insight.Base.BaseForm.Views
 {
     public partial class ShowImage : XtraForm
     {

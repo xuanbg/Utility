@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
-using Insight.Utils.BaseForms;
+using Insight.Base.BaseForm.BaseForms;
 
-namespace Insight.Utils.MainForm.Views
+namespace Insight.Base.MainForm.Views
 {
     public partial class LockDialog : BaseDialog
     {

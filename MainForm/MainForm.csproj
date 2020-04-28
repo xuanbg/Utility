@@ -7,7 +7,7 @@
     <ProjectGuid>{4547B18B-1C7E-40F9-9375-E4F9C5B324B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Insight.Utils.MainForm</RootNamespace>
+    <RootNamespace>Insight.Base.MainForm</RootNamespace>
     <AssemblyName>MainForm</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

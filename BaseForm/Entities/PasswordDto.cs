@@ -1,6 +1,6 @@
 ﻿using Insight.Utils.Common;
 
-namespace Insight.Utils.Entity
+namespace Insight.Base.BaseForm.Entities
 {
     public class PasswordDto
     {

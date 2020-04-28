@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
-using Insight.Utils.BaseViewModels;
-using Insight.Utils.MainForm.Views;
+using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.MainForm.Views;
 
-namespace Insight.Utils.MainForm.ViewModels
+namespace Insight.Base.MainForm.ViewModels
 {
     public class AboutModel : BaseDialogModel<object, AboutDialog>
     {

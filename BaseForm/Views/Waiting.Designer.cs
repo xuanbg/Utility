@@ -1,4 +1,4 @@
-﻿namespace Insight.Utils.Views
+﻿namespace Insight.Base.BaseForm.Views
 {
     partial class Waiting
     {

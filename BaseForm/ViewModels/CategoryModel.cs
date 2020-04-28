@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Insight.Utils.BaseViewModels;
-using Insight.Utils.Controls;
-using Insight.Utils.Entity;
-using Insight.Utils.Views;
+using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.BaseForm.Controls;
+using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.Views;
 
-namespace Insight.Utils.ViewModels
+namespace Insight.Base.BaseForm.ViewModels
 {
     public class CategoryModel<T> : BaseDialogModel<Catalog<T>, Category>
     {

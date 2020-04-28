@@ -2,7 +2,7 @@
 using Insight.Utils.Common;
 using Insight.Utils.Entity;
 
-namespace Insight.Utils.Client
+namespace Insight.Base.BaseForm.Utils
 {
     public class HttpClient<T>
     {

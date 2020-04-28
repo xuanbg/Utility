@@ -1,9 +1,9 @@
-﻿using Insight.Utils.BaseViewModels;
-using Insight.Utils.Client;
+﻿using Insight.Base.BaseForm.BaseViewModels;
+using Insight.Base.BaseForm.Utils;
+using Insight.Base.MainForm.Views;
 using Insight.Utils.Common;
-using Insight.Utils.MainForm.Views;
 
-namespace Insight.Utils.MainForm.ViewModels
+namespace Insight.Base.MainForm.ViewModels
 {
     public class LockModel : BaseDialogModel<string, LockDialog>
     {

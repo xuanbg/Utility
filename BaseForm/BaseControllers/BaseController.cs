@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.BaseControllers
+namespace Insight.Base.BaseForm.BaseControllers
 {
     public class BaseController
     {
@@ -14,13 +14,9 @@ namespace Insight.Utils.BaseControllers
         {
             var method = GetType().GetMethod(methodName);
             if (method == null)
-            {
                 Messages.showError("对不起，该功能尚未实现！");
-            }
             else
-            {
                 method.Invoke(this, param);
-            }
         }
 
         /// <summary>

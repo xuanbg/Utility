@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Insight.Utils.Entity
+namespace Insight.Base.BaseForm.Entities
 {
     public class Update
     {

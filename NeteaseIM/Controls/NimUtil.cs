@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using Insight.Utils.Client;
+using Insight.Base.BaseForm.Utils;
 using Insight.Utils.Common;
 using NIM;
 using NIM.Session;

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using Insight.Utils.Common;
 
-namespace Insight.Utils.Client
+namespace Insight.Base.BaseForm.Utils
 {
     public static class Setting
     {
