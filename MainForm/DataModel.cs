@@ -17,6 +17,20 @@ namespace Insight.Base.MainForm
         private const string userService = "/base/user";
 
         /// <summary>
+        /// 获取可登录租户列表
+        /// </summary>
+        /// <param name="account">登录账号</param>
+        /// <returns>可登录租户列表</returns>
+        internal List<LookUpMember> getTenants(string account)
+        {
+            var url = $"{authService}/v1.0/{Setting.appId}/tenants";
+            var dict = new Dictionary<string, object> { { "account", account } };
+            var client = new HttpClient<List<LookUpMember>>();
+
+            return client.request(url, dict);
+        }
+
+        /// <summary>
         /// 获取导航数据
         /// </summary>
         /// <returns>导航数据集合</returns>
@@ -38,20 +52,6 @@ namespace Insight.Base.MainForm
             var client = new HttpClient<List<FunctionDto>>();
 
             return client.getData(url);
-        }
-
-        /// <summary>
-        /// 获取可登录部门列表
-        /// </summary>
-        /// <param name="account">登录账号</param>
-        /// <returns>可登录部门列表</returns>
-        internal List<TreeLookUpMember> getDepts(string account)
-        {
-            var url = $"{authService}/v1.0/departments";
-            var dict = new Dictionary<string, object> {{"account", account}};
-            var client = new HttpClient<List<TreeLookUpMember>>();
-
-            return client.request(url, dict);
         }
 
         /// <summary>

@@ -39,14 +39,14 @@ namespace Insight.Base.MainForm
             {
                 switch (args.methodName)
                 {
-                    case "loadDept":
+                    case "loadTenants":
                         var account = (string)args.param[0];
                         if (string.IsNullOrEmpty(account)) return;
 
-                        var list = dataModel.getDepts(account);
+                        var list = dataModel.getTenants(account);
                         if (!list.Any()) return;
 
-                        model.initDepts(list);
+                        model.initTenants(list);
 
                         break;
                     case "setServerIp":

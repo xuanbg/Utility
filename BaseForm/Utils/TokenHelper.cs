@@ -35,11 +35,6 @@ namespace Insight.Base.BaseForm.Utils
         public string account { get; set; }
 
         /// <summary>
-        /// 登录部门ID
-        /// </summary>
-        public string deptId { get; set; }
-
-        /// <summary>
         /// 生成签名
         /// </summary>
         /// <param name="secret">用户密钥(MD5)</param>
@@ -59,7 +54,7 @@ namespace Insight.Base.BaseForm.Utils
             if (code == null) return false;
 
             var key = Util.hash(sign + code);
-            var body = new LoginDto {appId = appId, tenantId = tenantId, deptId = deptId, account = account, signature = key};
+            var body = new LoginDto {appId = appId, tenantId = tenantId, account = account, signature = key};
             var url = "/base/auth/v1.0/tokens";
             var client = new HttpClient<TokenPackage>();
             var data = client.request(url, body, RequestMethod.POST);
@@ -71,7 +66,6 @@ namespace Insight.Base.BaseForm.Utils
             Setting.userId = data.userInfo.id;
             Setting.userName = data.userInfo.name;
             Setting.tenantId = data.userInfo.tenantId;
-            Setting.deptId = data.userInfo.deptId;
 
             return true;
         }

@@ -61,19 +61,9 @@ namespace Insight.Base.BaseForm.Utils
         public static string tenantId;
 
         /// <summary>
-        /// 登录部门ID
+        /// 租户名称
         /// </summary>
-        public static string deptId;
-
-        /// <summary>
-        /// 登录部门编码
-        /// </summary>
-        public static string deptCode;
-
-        /// <summary>
-        /// 登录部门名称
-        /// </summary>
-        public static string deptName;
+        public static string tenantName;
 
         /// <summary>
         /// 用户ID

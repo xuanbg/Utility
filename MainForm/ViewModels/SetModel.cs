@@ -33,7 +33,7 @@ namespace Insight.Base.MainForm.ViewModels
             Setting.saveIsSaveUserInfo(saveUser);
             Setting.saveGateway();
 
-            closeDialog();
+            base.confirm();
         }
     }
 }

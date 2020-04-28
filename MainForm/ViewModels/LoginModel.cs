@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
@@ -15,8 +14,7 @@ namespace Insight.Base.MainForm.ViewModels
     public class LoginModel : BaseModel<object, LoginDialog>
     {
         private readonly TokenHelper tokenHelper = Setting.tokenHelper;
-        private readonly bool showDept = Convert.ToBoolean(Util.getAppSetting("ShowDept"));
-        private List<TreeLookUpMember> depts = new List<TreeLookUpMember>();
+        private readonly bool showTenant = Convert.ToBoolean(Util.getAppSetting("ShowTenant"));
         private string account = Setting.getAccount();
         public string password;
 
@@ -30,8 +28,8 @@ namespace Insight.Base.MainForm.ViewModels
             view.BackgroundImage = Util.getImageFromFile("bg.png");
             view.BackgroundImageLayout = ImageLayout.Stretch;
             view.txtAccount.EditValue = account;
-            view.peeDept.Visible = showDept;
-            view.lueDept.Visible = showDept;
+            view.peeDept.Visible = showTenant;
+            view.lueTenant.Visible = showTenant;
 
             view.sbeSet.Click += (sender, args) => callback("setServerIp");
             view.sbeCacel.Click += (sender, args) => callback("exit");
@@ -46,12 +44,14 @@ namespace Insight.Base.MainForm.ViewModels
 
                 login();
             };
-            if (showDept)
+            if (showTenant)
             {
-                view.txtPassWord.Enter += (sender, args) => callback("loadDept", new object[]{account});
-                view.lueDept.EditValueChanged += (sender, args) => deptChanged();
-
-                Format.initTreeListLookUpEdit(view.lueDept, depts);
+                view.txtPassWord.Enter += (sender, args) => callback("loadTenants", new object[]{account});
+                view.lueTenant.EditValueChanged += (sender, args) =>
+                {
+                    tokenHelper.tenantId = view.lueTenant.EditValue.ToString();
+                    Setting.tenantName = view.lueTenant.Text;
+                };
             }
         }
 
@@ -63,7 +63,7 @@ namespace Insight.Base.MainForm.ViewModels
             view.Show();
             view.panMain.Visible = true;
             view.Refresh();
-            if (!string.IsNullOrEmpty(account)) view.txtPassWord.Focus();
+            if (!string.IsNullOrEmpty(account)) view.txtPassWord.Select();
         }
 
         /// <summary>
@@ -74,21 +74,21 @@ namespace Insight.Base.MainForm.ViewModels
             if (string.IsNullOrEmpty(account))
             {
                 Messages.showMessage("请输入用户名！");
-                view.txtAccount.Focus();
+                view.txtAccount.Select();
                 return;
             }
 
             if (string.IsNullOrEmpty(password))
             {
                 Messages.showWarning("密码不能为空！");
-                view.txtPassWord.Focus();
+                view.txtPassWord.Select();
                 return;
             }
 
-            if (showDept && string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
+            if (showTenant && string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
             {
                 Messages.showWarning("请选择登录的企业/部门！");
-                view.lueDept.Focus();
+                view.lueTenant.Select();
                 return;
             }
 
@@ -117,69 +117,13 @@ namespace Insight.Base.MainForm.ViewModels
         }
 
         /// <summary>
-        /// 初始化可登录部门
+        /// 初始化可登录租户
         /// </summary>
         /// <param name="list">可登录部门</param>
-        public void initDepts(List<TreeLookUpMember> list)
+        public void initTenants(List<LookUpMember> list)
         {
-            depts = list;
-            var tree = view.lueDept.Properties.TreeList;
-            depts.Clear();
-            depts.AddRange(depts);
-            tree.RefreshDataSource();
-            if (depts.Count == 1)
-            {
-                tree.MoveFirst();
-                view.lueDept.EditValue = depts[0].id;
-
-                return;
-            }
-
-            if (depts.Count(i => i.type == 1) > 1) return;
-
-            var id = depts.Single(i => i.type == 1).id;
-            var node = tree.FindNodeByKeyID(id);
-            view.lueDept.Properties.TreeList.FocusedNode = node;
-            view.lueDept.EditValue = id;
-        }
-
-        /// <summary>
-        /// 登录部门变化后更新相关信息
-        /// </summary>
-        private void deptChanged()
-        {
-            var id = view.lueDept.EditValue?.ToString();
-            if (string.IsNullOrEmpty(id))
-            {
-                tokenHelper.tenantId = null;
-                tokenHelper.deptId = null;
-
-                return;
-            }
-
-            var node = view.lueDept.Properties.TreeList.FocusedNode;
-            if (node?.HasChildren ?? false)
-            {
-                Messages.showMessage("请选择部门");
-                view.lueDept.EditValue = null;
-
-                return;
-            }
-
-            var dept = depts.Single(i => i.id == id);
-            if (dept.parentId == null)
-            {
-                tokenHelper.tenantId = id;
-                tokenHelper.deptId = null;
-            }
-            else
-            {
-                tokenHelper.tenantId = dept.remark;
-                tokenHelper.deptId = id;
-                Setting.deptCode = dept.code;
-            }
-
-            Setting.deptName = dept.name;
+            Format.initLookUpEdit(view.lueTenant, list);
+            if (list.Count == 1) view.lueTenant.EditValue = list[0].id;
         }
     }
 }

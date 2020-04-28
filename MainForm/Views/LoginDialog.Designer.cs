@@ -38,25 +38,22 @@ namespace Insight.Base.MainForm.Views
             this.peeDept = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
             this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
-            this.lueDept = new DevExpress.XtraEditors.TreeListLookUpEdit();
-            this.tleDept = new DevExpress.XtraTreeList.TreeList();
-            this.colName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.sbeLogin = new DevExpress.XtraEditors.SimpleButton();
             this.sbeSet = new DevExpress.XtraEditors.SimpleButton();
             this.sbeCacel = new DevExpress.XtraEditors.SimpleButton();
             this.txtPassWord = new DevExpress.XtraEditors.TextEdit();
             this.txtAccount = new DevExpress.XtraEditors.TextEdit();
             this.labLoading = new DevExpress.XtraEditors.LabelControl();
+            this.lueTenant = new DevExpress.XtraEditors.LookUpEdit();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panMain)).BeginInit();
             this.panMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tleDept)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lueTenant.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // OrgTreeNode
@@ -74,12 +71,12 @@ namespace Insight.Base.MainForm.Views
             this.panMain.Controls.Add(this.peeDept);
             this.panMain.Controls.Add(this.pictureEdit2);
             this.panMain.Controls.Add(this.pictureEdit1);
-            this.panMain.Controls.Add(this.lueDept);
             this.panMain.Controls.Add(this.sbeLogin);
             this.panMain.Controls.Add(this.sbeSet);
             this.panMain.Controls.Add(this.sbeCacel);
             this.panMain.Controls.Add(this.txtPassWord);
             this.panMain.Controls.Add(this.txtAccount);
+            this.panMain.Controls.Add(this.lueTenant);
             this.panMain.Location = new System.Drawing.Point(130, 128);
             this.panMain.Name = "panMain";
             this.panMain.Size = new System.Drawing.Size(260, 140);
@@ -129,60 +126,27 @@ namespace Insight.Base.MainForm.Views
             this.pictureEdit1.Size = new System.Drawing.Size(24, 24);
             this.pictureEdit1.TabIndex = 8;
             // 
-            // lueDept
-            // 
-            this.lueDept.Location = new System.Drawing.Point(60, 72);
-            this.lueDept.Name = "lueDept";
-            this.lueDept.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.lueDept.Properties.NullText = "请选择……";
-            this.lueDept.Properties.PopupFormMinSize = new System.Drawing.Size(160, 80);
-            this.lueDept.Properties.PopupFormSize = new System.Drawing.Size(320, 200);
-            this.lueDept.Properties.TreeList = this.tleDept;
-            this.lueDept.Size = new System.Drawing.Size(160, 20);
-            this.lueDept.TabIndex = 0;
-            this.lueDept.Visible = false;
-            // 
-            // treeListLookUpEdit2TreeList
-            // 
-            this.tleDept.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
-            this.colName});
-            this.tleDept.Location = new System.Drawing.Point(-70, -64);
-            this.tleDept.Name = "treeListLookUpEdit2TreeList";
-            this.tleDept.OptionsView.ShowIndentAsRowStyle = true;
-            this.tleDept.SelectImageList = this.OrgTreeNode;
-            this.tleDept.Size = new System.Drawing.Size(400, 200);
-            this.tleDept.TabIndex = 0;
-            // 
-            // colName
-            // 
-            this.colName.Caption = "名称";
-            this.colName.FieldName = "name";
-            this.colName.Name = "colName";
-            this.colName.Visible = true;
-            this.colName.VisibleIndex = 0;
-            // 
-            // loginButton
+            // sbeLogin
             // 
             this.sbeLogin.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.sbeLogin.Appearance.Options.UseFont = true;
             this.sbeLogin.Location = new System.Drawing.Point(180, 117);
-            this.sbeLogin.Name = "loginButton";
+            this.sbeLogin.Name = "sbeLogin";
             this.sbeLogin.Size = new System.Drawing.Size(80, 23);
             this.sbeLogin.TabIndex = 0;
             this.sbeLogin.Text = "登  录";
             // 
-            // setButton
+            // sbeSet
             // 
             this.sbeSet.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.sbeSet.Appearance.Options.UseFont = true;
             this.sbeSet.Location = new System.Drawing.Point(90, 117);
-            this.sbeSet.Name = "setButton";
+            this.sbeSet.Name = "sbeSet";
             this.sbeSet.Size = new System.Drawing.Size(80, 23);
             this.sbeSet.TabIndex = 0;
             this.sbeSet.Text = "设  置";
             // 
-            // closeButton
+            // sbeCacel
             // 
             this.sbeCacel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.sbeCacel.Appearance.Options.UseFont = true;
@@ -193,7 +157,7 @@ namespace Insight.Base.MainForm.Views
             this.sbeCacel.TabIndex = 0;
             this.sbeCacel.Text = "取  消";
             // 
-            // passWord
+            // txtPassWord
             // 
             this.txtPassWord.EditValue = "";
             this.txtPassWord.ImeMode = System.Windows.Forms.ImeMode.Disable;
@@ -204,7 +168,7 @@ namespace Insight.Base.MainForm.Views
             this.txtPassWord.Size = new System.Drawing.Size(160, 21);
             this.txtPassWord.TabIndex = 2;
             // 
-            // account
+            // txtAccount
             // 
             this.txtAccount.EnterMoveNextControl = true;
             this.txtAccount.Location = new System.Drawing.Point(60, 2);
@@ -224,6 +188,18 @@ namespace Insight.Base.MainForm.Views
             this.labLoading.Text = "正在加载应用程序，请稍候…";
             this.labLoading.Visible = false;
             // 
+            // lueTenant
+            // 
+            this.lueTenant.Location = new System.Drawing.Point(60, 72);
+            this.lueTenant.Name = "lueTenant";
+            this.lueTenant.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.lueTenant.Properties.NullText = "请选择……";
+            this.lueTenant.Properties.PopupFormMinSize = new System.Drawing.Size(160, 80);
+            this.lueTenant.Properties.PopupWidth = 320;
+            this.lueTenant.Size = new System.Drawing.Size(160, 20);
+            this.lueTenant.TabIndex = 0;
+            // 
             // LoginDialog
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -240,10 +216,9 @@ namespace Insight.Base.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lueDept.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tleDept)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lueTenant.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -255,14 +230,12 @@ namespace Insight.Base.MainForm.Views
         public PictureEdit peeDept;
         private PictureEdit pictureEdit2;
         private PictureEdit pictureEdit1;
-        private DevExpress.XtraTreeList.TreeList tleDept;
-        private DevExpress.XtraTreeList.Columns.TreeListColumn colName;
         public PanelControl panMain;
-        public TreeListLookUpEdit lueDept;
         public SimpleButton sbeLogin;
         public SimpleButton sbeSet;
         public SimpleButton sbeCacel;
         public TextEdit txtPassWord;
         public TextEdit txtAccount;
+        public LookUpEdit lueTenant;
     }
 }

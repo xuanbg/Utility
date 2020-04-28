@@ -59,8 +59,8 @@ namespace Insight.Base.MainForm.ViewModels
             this.navigators = navigators;
             initNavBar();
 
-            view.StbDept.Caption = Setting.deptName;
-            view.StbDept.Visibility = string.IsNullOrEmpty(Setting.deptName) ? BarItemVisibility.Never : BarItemVisibility.Always;
+            view.StbDept.Caption = Setting.tenantName;
+            view.StbDept.Visibility = string.IsNullOrEmpty(Setting.tenantName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
 
             view.Show();

@@ -32,7 +32,6 @@ namespace Insight.Base.MainForm.Views
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginSetDialog));
             this.SaveUserCheckBox = new System.Windows.Forms.CheckBox();
             this.BaseInupt = new DevExpress.XtraEditors.TextEdit();
             this.labBase = new DevExpress.XtraEditors.LabelControl();
@@ -47,15 +46,20 @@ namespace Insight.Base.MainForm.Views
             this.panel.Controls.Add(this.labBase);
             this.panel.Controls.Add(this.BaseInupt);
             // 
-            // Cancel
+            // cancel
             // 
             this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cancel.Appearance.Options.UseFont = true;
             // 
-            // Confirm
+            // confirm
             // 
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.confirm.Appearance.Options.UseFont = true;
+            // 
+            // close
+            // 
+            this.close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.close.Appearance.Options.UseFont = true;
             // 
             // SaveUserCheckBox
             // 
@@ -72,9 +76,9 @@ namespace Insight.Base.MainForm.Views
             // 
             this.BaseInupt.EnterMoveNextControl = true;
             this.BaseInupt.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.BaseInupt.Location = new System.Drawing.Point(100, 60);
+            this.BaseInupt.Location = new System.Drawing.Point(80, 61);
             this.BaseInupt.Name = "BaseInupt";
-            this.BaseInupt.Size = new System.Drawing.Size(250, 20);
+            this.BaseInupt.Size = new System.Drawing.Size(280, 20);
             this.BaseInupt.TabIndex = 3;
             // 
             // labBase
@@ -85,14 +89,14 @@ namespace Insight.Base.MainForm.Views
             this.labBase.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
             this.labBase.Location = new System.Drawing.Point(0, 60);
             this.labBase.Name = "labBase";
-            this.labBase.Size = new System.Drawing.Size(100, 21);
+            this.labBase.Size = new System.Drawing.Size(80, 21);
             this.labBase.TabIndex = 0;
-            this.labBase.Text = "验证服务地址：";
+            this.labBase.Text = "网关地址：";
             // 
-            // LoginSet
+            // LoginSetDialog
             // 
             this.ClientSize = new System.Drawing.Size(384, 211);
-            this.Name = "LoginSet";
+            this.Name = "LoginSetDialog";
             this.Text = "设置";
             ((System.ComponentModel.ISupportInitialize)(this.panel)).EndInit();
             this.panel.ResumeLayout(false);
