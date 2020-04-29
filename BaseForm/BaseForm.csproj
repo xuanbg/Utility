@@ -114,7 +114,7 @@
       <DependentUpon>Waiting.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\MdiController.cs" />
-    <Compile Include="Controls\Format.cs" />
+    <Compile Include="Utils\Format.cs" />
     <Compile Include="Entities\PrintSetting.cs" />
     <Compile Include="ViewModels\BaseDialogModel.cs" />
     <Compile Include="ViewModels\CategoryModel.cs" />

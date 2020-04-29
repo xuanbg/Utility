@@ -13,6 +13,7 @@ using DevExpress.XtraTreeList;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
+using Insight.Base.BaseForm.Utils;
 using Insight.Utils.Common;
 
 namespace Insight.Base.BaseForm.ViewModels

@@ -14,7 +14,7 @@ using DrawFocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle;
 using RowClickEventArgs = DevExpress.XtraGrid.Views.Grid.RowClickEventArgs;
 using ScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility;
 
-namespace Insight.Base.BaseForm.Controls
+namespace Insight.Base.BaseForm.Utils
 {
     public class Format
     {

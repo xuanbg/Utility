@@ -2,6 +2,7 @@
 using System.Linq;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
+using Insight.Base.BaseForm.Utils;
 using Insight.Base.BaseForm.Views;
 
 namespace Insight.Base.BaseForm.ViewModels
