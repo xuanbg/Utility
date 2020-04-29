@@ -6,9 +6,9 @@ namespace Insight.Base.BaseForm.Utils
     public static class Setting
     {
         /// <summary>
-        /// 应用名称
+        /// 界面主题样式
         /// </summary>
-        public static readonly string appName = Util.getAppSetting("AppName");
+        public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
 
         /// <summary>
         /// 网关地址
@@ -21,29 +21,9 @@ namespace Insight.Base.BaseForm.Utils
         public static readonly string updateUrl = Util.getAppSetting("UpdateUrl");
 
         /// <summary>
-        /// 界面主题样式
+        /// 令牌管理器
         /// </summary>
-        public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
-
-        /// <summary>
-        /// 文档打印机
-        /// </summary>
-        public static string docPrint = Util.getAppSetting("DocPrint");
-
-        /// <summary>
-        /// 标签打印机
-        /// </summary>
-        public static string tagPrint = Util.getAppSetting("TagPrint");
-
-        /// <summary>
-        /// 票据打印机
-        /// </summary>
-        public static string bilPrint = Util.getAppSetting("BilPrint");
-
-        /// <summary>
-        /// 票据是否合并打印
-        /// </summary>
-        public static bool isMergerPrint = bool.Parse(Util.getAppSetting("IsMergerPrint"));
+        public static readonly TokenHelper tokenHelper = new TokenHelper();
 
         /// <summary>
         /// 应用ID
@@ -51,9 +31,9 @@ namespace Insight.Base.BaseForm.Utils
         public static readonly string appId = Util.getAppSetting("AppId");
 
         /// <summary>
-        /// 令牌管理器
+        /// 应用名称
         /// </summary>
-        public static readonly TokenHelper tokenHelper = new TokenHelper {appId = appId};
+        public static readonly string appName = Util.getAppSetting("AppName");
 
         /// <summary>
         /// 租户ID
@@ -76,14 +56,30 @@ namespace Insight.Base.BaseForm.Utils
         public static string userName;
 
         /// <summary>
-        /// 是否需要修改密码
-        /// </summary>
-        public static bool needChangePw;
-
-        /// <summary>
         /// 头像
         /// </summary>
         public static Image myHead;
+
+        /// <summary>
+        /// 文档打印机
+        /// </summary>
+        public static string docPrint = Util.getAppSetting("DocPrint");
+
+        /// <summary>
+        /// 标签打印机
+        /// </summary>
+        public static string tagPrint = Util.getAppSetting("TagPrint");
+
+        /// <summary>
+        /// 票据打印机
+        /// </summary>
+        public static string bilPrint = Util.getAppSetting("BilPrint");
+
+        /// <summary>
+        /// 票据是否合并打印
+        /// </summary>
+        public static bool isMergerPrint = bool.Parse(Util.getAppSetting("IsMergerPrint"));
+
 
         /// <summary>
         /// 获取是否保存用户名选项设置

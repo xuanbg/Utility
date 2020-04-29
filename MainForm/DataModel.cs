@@ -93,9 +93,9 @@ namespace Insight.Base.MainForm
             locals.ForEach(i =>
             {
                 var filePath = root;
-                if (string.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
+                if (String.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
 
-                Util.deleteFile(filePath + i.file);
+                deleteFile(filePath + i.file);
             });
 
             // 比较文件版本
@@ -186,25 +186,6 @@ namespace Insight.Base.MainForm
             var client = new HttpClient<List<ModuleParam>>();
             client.put(url, dict);
         }
-        /// <summary>
-        /// 获取本地文件列表
-        /// </summary>
-        /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
-        /// <param name="path">当前目录</param>
-        public static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
-        {
-            // 读取目录下文件信息
-            var root = Application.StartupPath;
-            var dirInfo = new DirectoryInfo(path ?? root);
-            var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
-
-            return files.Select(file => new FileVersion
-            {
-                file = file.Name,
-                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
-            }).ToList();
-        }
 
         /// <summary>
         /// 更新文件
@@ -216,7 +197,7 @@ namespace Insight.Base.MainForm
         {
             var rename = false;
             var filePath = Application.StartupPath;
-            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
+            if (String.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
 
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
 
@@ -237,6 +218,53 @@ namespace Insight.Base.MainForm
             }
 
             return rename;
+        }
+
+        /// <summary>
+        /// 获取本地文件列表
+        /// </summary>
+        /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
+        /// <param name="path">当前目录</param>
+        private static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
+        {
+            // 读取目录下文件信息
+            var root = Application.StartupPath;
+            var dirInfo = new DirectoryInfo(path ?? root);
+            var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
+
+            return files.Select(file => new FileVersion
+            {
+                file = file.Name,
+                version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
+                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
+            }).ToList();
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="warning">是否显示删除信息</param>
+        /// <returns>bool 是否删除成功</returns>
+        private static void deleteFile(string path, bool warning = false)
+        {
+            if (String.IsNullOrEmpty(path)) return;
+
+            if (!File.Exists(path))
+            {
+                Messages.showWarning("未找到指定的文件！");
+                return;
+            }
+
+            try
+            {
+                File.Delete(path);
+                if (warning) Messages.showMessage("指定的文件已删除！");
+            }
+            catch
+            {
+                Messages.showWarning("未能删除指定的文件！");
+            }
         }
     }
 }

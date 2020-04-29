@@ -361,33 +361,6 @@ namespace Insight.Utils.Common
             Process.Start(path);
         }
 
-        /// <summary>
-        /// 删除文件
-        /// </summary>
-        /// <param name="path">文件路径</param>
-        /// <param name="warning">是否显示删除信息</param>
-        /// <returns>bool 是否删除成功</returns>
-        public static void deleteFile(string path, bool warning = false)
-        {
-            if (string.IsNullOrEmpty(path)) return;
-
-            if (!File.Exists(path))
-            {
-                Messages.showWarning("未找到指定的文件！");
-                return;
-            }
-
-            try
-            {
-                File.Delete(path);
-                if (warning) Messages.showMessage("指定的文件已删除！");
-            }
-            catch
-            {
-                Messages.showWarning("未能删除指定的文件！");
-            }
-        }
-
         #endregion
 
         #region Image
@@ -486,17 +459,6 @@ namespace Insight.Utils.Common
             }
         }
 
-        /// <summary>
-        /// 根据ID获取ImageData对象实体
-        /// </summary>
-        /// <param name="id">电子影像ID</param>
-        /// <returns>ImageData 电子影像对象实体</returns>
-        public static void openAttach(string id)
-        {
-            var img = new ImageData();
-            var fn = img.name + img.id.Substring(23) + img.expand;
-            saveFile(img.image, fn, true);
-        }
 
         /// <summary>
         /// 从文件读取图片数据

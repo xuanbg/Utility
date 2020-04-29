@@ -8,7 +8,6 @@ using Insight.Base.BaseForm.Controllers;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
 using Insight.Base.MainForm.ViewModels;
-using Insight.Utils.Common;
 
 namespace Insight.Base.MainForm
 {

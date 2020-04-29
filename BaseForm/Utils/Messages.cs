@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Insight.Utils.Common
+namespace Insight.Base.BaseForm.Utils
 {
     public class Messages
     {

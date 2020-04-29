@@ -50,8 +50,6 @@
     <Compile Include="Common\RegexHelper.cs" />
     <Compile Include="Common\AliasAttribute.cs" />
     <Compile Include="Common\HttpRequest.cs" />
-    <Compile Include="Common\InputCheck.cs" />
-    <Compile Include="Common\Messages.cs" />
     <Compile Include="Common\ResultExt.cs" />
     <Compile Include="Common\SqlHelper.cs" />
     <Compile Include="Entity\Enums.cs" />

@@ -1,4 +1,4 @@
-﻿using Insight.Utils.Common;
+﻿using Insight.Base.BaseForm.Utils;
 
 namespace Insight.Base.BaseForm.Entities
 {

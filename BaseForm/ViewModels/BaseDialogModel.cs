@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
 using Insight.Base.BaseForm.Forms;
-using Insight.Utils.Common;
+using Insight.Base.BaseForm.Utils;
 
 namespace Insight.Base.BaseForm.ViewModels
 {

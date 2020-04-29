@@ -67,7 +67,7 @@ namespace Insight.Base.MainForm.ViewModels
             view.Refresh();
 
             opens.ForEach(i => callback("openMdiWindow", new object[] { i }));
-            if (Setting.needChangePw) callback("changPassword", new object[] { "123456" });
+            if (Setting.tokenHelper.needChangePw) callback("changPassword", new object[] { "123456" });
         }
 
         /// <summary>

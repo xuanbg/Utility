@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Insight.Base.BaseForm.Entities;
-using Insight.Utils.Common;
+using Insight.Base.BaseForm.Utils;
 
 namespace Insight.Base.BaseForm.ViewModels
 {

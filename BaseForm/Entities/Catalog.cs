@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Insight.Utils.Common;
+using Insight.Base.BaseForm.Utils;
 
 namespace Insight.Base.BaseForm.Entities
 {

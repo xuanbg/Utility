@@ -7,6 +7,7 @@ namespace Insight.Base.BaseForm.Utils
 {
     public class TokenHelper
     {
+        private readonly string appId = Util.getAppSetting("AppId");
         private string refreshToken;
 
         /// <summary>
@@ -25,14 +26,14 @@ namespace Insight.Base.BaseForm.Utils
         public string tenantId { get; set; }
 
         /// <summary>
-        /// 应用ID
-        /// </summary>
-        public string appId { get; set; }
-
-        /// <summary>
         /// 登录账号
         /// </summary>
         public string account { get; set; }
+
+        /// <summary>
+        /// 是否需要修改密码
+        /// </summary>
+        public bool needChangePw => sign == Util.hash(account + Util.hash("123456"));
 
         /// <summary>
         /// 生成签名
@@ -117,7 +118,7 @@ namespace Insight.Base.BaseForm.Utils
         private string getCode()
         {
             var url = "/base/auth/v1.0/tokens/codes";
-            var dict = new Dictionary<string, object>{{"account", account}};
+            var dict = new Dictionary<string, object> {{"account", account}};
             var client = new HttpClient<string>();
 
             return client.getData(url, dict);

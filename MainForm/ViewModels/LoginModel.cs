@@ -100,9 +100,7 @@ namespace Insight.Base.MainForm.ViewModels
                 return;
             }
 
-            Setting.needChangePw = password == "123456";
             Setting.saveUserName(account);
-
             callback("loadMainWindow");
         }
 

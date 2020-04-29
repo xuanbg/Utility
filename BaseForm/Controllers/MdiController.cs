@@ -2,8 +2,8 @@
 using FastReport;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
+using Insight.Base.BaseForm.Utils;
 using Insight.Base.BaseForm.ViewModels;
-using Insight.Utils.Common;
 
 namespace Insight.Base.BaseForm.Controllers
 {

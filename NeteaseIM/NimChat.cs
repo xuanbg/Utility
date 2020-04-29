@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Insight.Base.BaseForm.Utils;
 using Insight.Utils.Common;
 using Insight.Utils.NetEaseIM.Controls;
 using NIM;
