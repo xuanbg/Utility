@@ -93,7 +93,7 @@ namespace Insight.Base.MainForm
             locals.ForEach(i =>
             {
                 var filePath = root;
-                if (String.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
+                if (string.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
 
                 deleteFile(filePath + i.file);
             });
@@ -129,23 +129,30 @@ namespace Insight.Base.MainForm
         internal byte[] getFile(string file)
         {
             var url = $"{Setting.updateUrl}/{file}";
-            using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+            try
             {
-                if (stream == null) return null;
-
-                var buffer = new byte[1024];
-                using (var ms = new MemoryStream())
+                using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
                 {
-                    int actual;
-                    while ((actual = stream.Read(buffer, 0, 1024)) > 0)
+                    if (stream == null) return null;
+
+                    var buffer = new byte[1024];
+                    using (var ms = new MemoryStream())
                     {
-                        ms.Write(buffer, 0, actual);
+                        int actual;
+                        while ((actual = stream.Read(buffer, 0, 1024)) > 0)
+                        {
+                            ms.Write(buffer, 0, actual);
+                        }
+
+                        ms.Position = 0;
+
+                        return ms.ToArray();
                     }
-
-                    ms.Position = 0;
-
-                    return ms.ToArray();
                 }
+            }
+            catch(Exception)
+            {
+                return null;
             }
         }
 
@@ -195,9 +202,11 @@ namespace Insight.Base.MainForm
         /// <returns>bool 是否重命名</returns>
         public bool updateFile(FileVersion version, byte[] bytes)
         {
+            if (bytes == null || bytes.Length == 0) return false;
+
             var rename = false;
             var filePath = Application.StartupPath;
-            if (String.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
+            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
 
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
 
@@ -248,7 +257,7 @@ namespace Insight.Base.MainForm
         /// <returns>bool 是否删除成功</returns>
         private static void deleteFile(string path, bool warning = false)
         {
-            if (String.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path)) return;
 
             if (!File.Exists(path))
             {
