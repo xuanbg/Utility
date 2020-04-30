@@ -152,6 +152,7 @@ namespace Insight.Base.MainForm
             }
             catch(Exception)
             {
+                Messages.showError($"下载文件【{file}】失败，已跳过该文件。");
                 return null;
             }
         }
