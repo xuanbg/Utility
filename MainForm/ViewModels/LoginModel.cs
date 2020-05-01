@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
 using Insight.Base.BaseForm.ViewModels;
@@ -44,15 +44,14 @@ namespace Insight.Base.MainForm.ViewModels
 
                 login();
             };
-            if (showTenant)
+            if (!showTenant) return;
+
+            view.txtPassWord.Enter += (sender, args) => callback("loadTenants", new object[] {account});
+            view.lueTenant.EditValueChanged += (sender, args) =>
             {
-                view.txtPassWord.Enter += (sender, args) => callback("loadTenants", new object[]{account});
-                view.lueTenant.EditValueChanged += (sender, args) =>
-                {
-                    tokenHelper.tenantId = view.lueTenant.EditValue.ToString();
-                    Setting.tenantName = view.lueTenant.Text;
-                };
-            }
+                tokenHelper.tenantId = view.lueTenant.EditValue.ToString();
+                Setting.tenantName = view.lueTenant.Text;
+            };
         }
 
         /// <summary>
@@ -75,6 +74,7 @@ namespace Insight.Base.MainForm.ViewModels
             {
                 Messages.showMessage("请输入用户名！");
                 view.txtAccount.Select();
+
                 return;
             }
 
@@ -82,13 +82,15 @@ namespace Insight.Base.MainForm.ViewModels
             {
                 Messages.showWarning("密码不能为空！");
                 view.txtPassWord.Select();
+
                 return;
             }
 
             if (showTenant && string.IsNullOrEmpty(Setting.tokenHelper.tenantId))
             {
-                Messages.showWarning("请选择登录的企业/部门！");
+                Messages.showWarning("请选择登录的企业！");
                 view.lueTenant.Select();
+
                 return;
             }
 
@@ -120,8 +122,18 @@ namespace Insight.Base.MainForm.ViewModels
         /// <param name="list">可登录部门</param>
         public void initTenants(List<LookUpMember> list)
         {
-            Format.initLookUpEdit(view.lueTenant, list);
-            if (list.Count == 1) view.lueTenant.EditValue = list[0].id;
+            if (list.Any())
+            {
+                Format.initLookUpEdit(view.lueTenant, list);
+                if (list.Count == 1) view.lueTenant.EditValue = list[0].id;
+
+                return;
+            }
+
+            Messages.showError("该用户无法登录此系统，请更换用户");
+            view.lueTenant.Properties.DataSource = null;
+            view.txtAccount.EditValue = null;
+            view.txtAccount.Select();
         }
     }
 }

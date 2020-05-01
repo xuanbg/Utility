@@ -97,6 +97,7 @@ namespace Insight.Base.MainForm.ViewModels
             }
 
             view.confirm.Text = restart ? "重  启" : "关  闭";
+            view.confirm.Select();
             view.LabFile.Text = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
             view.LabFile.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             view.confirm.Visible = true;
