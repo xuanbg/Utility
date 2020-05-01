@@ -43,13 +43,12 @@ namespace Insight.Base.MainForm
                         if (string.IsNullOrEmpty(account)) return;
 
                         var list = dataModel.getTenants(account);
-                        if (!list.Any()) return;
-
                         model.initTenants(list);
 
                         break;
                     case "setServerIp":
-                        var setModel = new SetModel("服务器设置");
+                        var setModel = new SetModel("网关设置");
+                        setModel.callbackEvent += (o, eventArgs) => setModel.closeDialog();
                         setModel.showDialog();
 
                         break;

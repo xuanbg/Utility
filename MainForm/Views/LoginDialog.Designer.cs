@@ -36,21 +36,21 @@ namespace Insight.Base.MainForm.Views
             this.OrgTreeNode = new DevExpress.Utils.ImageCollection(this.components);
             this.panMain = new DevExpress.XtraEditors.PanelControl();
             this.peeDept = new DevExpress.XtraEditors.PictureEdit();
-            this.pictureEdit2 = new DevExpress.XtraEditors.PictureEdit();
-            this.pictureEdit1 = new DevExpress.XtraEditors.PictureEdit();
+            this.peePassword = new DevExpress.XtraEditors.PictureEdit();
+            this.peeAccount = new DevExpress.XtraEditors.PictureEdit();
             this.sbeLogin = new DevExpress.XtraEditors.SimpleButton();
             this.sbeSet = new DevExpress.XtraEditors.SimpleButton();
             this.sbeCacel = new DevExpress.XtraEditors.SimpleButton();
             this.txtPassWord = new DevExpress.XtraEditors.TextEdit();
             this.txtAccount = new DevExpress.XtraEditors.TextEdit();
-            this.labLoading = new DevExpress.XtraEditors.LabelControl();
             this.lueTenant = new DevExpress.XtraEditors.LookUpEdit();
+            this.labLoading = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.OrgTreeNode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panMain)).BeginInit();
             this.panMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peePassword.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peeAccount.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueTenant.Properties)).BeginInit();
@@ -69,8 +69,8 @@ namespace Insight.Base.MainForm.Views
             this.panMain.Appearance.Options.UseBackColor = true;
             this.panMain.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.panMain.Controls.Add(this.peeDept);
-            this.panMain.Controls.Add(this.pictureEdit2);
-            this.panMain.Controls.Add(this.pictureEdit1);
+            this.panMain.Controls.Add(this.peePassword);
+            this.panMain.Controls.Add(this.peeAccount);
             this.panMain.Controls.Add(this.sbeLogin);
             this.panMain.Controls.Add(this.sbeSet);
             this.panMain.Controls.Add(this.sbeCacel);
@@ -95,36 +95,36 @@ namespace Insight.Base.MainForm.Views
             this.peeDept.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
             this.peeDept.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
             this.peeDept.Size = new System.Drawing.Size(24, 24);
-            this.peeDept.TabIndex = 6;
+            this.peeDept.TabIndex = 0;
             this.peeDept.Visible = false;
             // 
-            // pictureEdit2
+            // peePassword
             // 
-            this.pictureEdit2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureEdit2.EditValue = ((object)(resources.GetObject("pictureEdit2.EditValue")));
-            this.pictureEdit2.Location = new System.Drawing.Point(30, 35);
-            this.pictureEdit2.Name = "pictureEdit2";
-            this.pictureEdit2.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
-            this.pictureEdit2.Properties.Appearance.Options.UseBackColor = true;
-            this.pictureEdit2.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pictureEdit2.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            this.pictureEdit2.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
-            this.pictureEdit2.Size = new System.Drawing.Size(24, 24);
-            this.pictureEdit2.TabIndex = 7;
+            this.peePassword.Cursor = System.Windows.Forms.Cursors.Default;
+            this.peePassword.EditValue = ((object)(resources.GetObject("peePassword.EditValue")));
+            this.peePassword.Location = new System.Drawing.Point(30, 35);
+            this.peePassword.Name = "peePassword";
+            this.peePassword.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.peePassword.Properties.Appearance.Options.UseBackColor = true;
+            this.peePassword.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.peePassword.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.peePassword.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.peePassword.Size = new System.Drawing.Size(24, 24);
+            this.peePassword.TabIndex = 0;
             // 
-            // pictureEdit1
+            // peeAccount
             // 
-            this.pictureEdit1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureEdit1.EditValue = ((object)(resources.GetObject("pictureEdit1.EditValue")));
-            this.pictureEdit1.Location = new System.Drawing.Point(30, 0);
-            this.pictureEdit1.Name = "pictureEdit1";
-            this.pictureEdit1.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
-            this.pictureEdit1.Properties.Appearance.Options.UseBackColor = true;
-            this.pictureEdit1.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.pictureEdit1.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            this.pictureEdit1.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
-            this.pictureEdit1.Size = new System.Drawing.Size(24, 24);
-            this.pictureEdit1.TabIndex = 8;
+            this.peeAccount.Cursor = System.Windows.Forms.Cursors.Default;
+            this.peeAccount.EditValue = ((object)(resources.GetObject("peeAccount.EditValue")));
+            this.peeAccount.Location = new System.Drawing.Point(30, 0);
+            this.peeAccount.Name = "peeAccount";
+            this.peeAccount.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.peeAccount.Properties.Appearance.Options.UseBackColor = true;
+            this.peeAccount.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.peeAccount.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
+            this.peeAccount.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Stretch;
+            this.peeAccount.Size = new System.Drawing.Size(24, 24);
+            this.peeAccount.TabIndex = 0;
             // 
             // sbeLogin
             // 
@@ -177,17 +177,6 @@ namespace Insight.Base.MainForm.Views
             this.txtAccount.Size = new System.Drawing.Size(160, 21);
             this.txtAccount.TabIndex = 1;
             // 
-            // labLoading
-            // 
-            this.labLoading.Appearance.ForeColor = System.Drawing.Color.White;
-            this.labLoading.Appearance.Options.UseForeColor = true;
-            this.labLoading.Location = new System.Drawing.Point(183, 153);
-            this.labLoading.Name = "labLoading";
-            this.labLoading.Size = new System.Drawing.Size(154, 14);
-            this.labLoading.TabIndex = 0;
-            this.labLoading.Text = "正在加载应用程序，请稍候…";
-            this.labLoading.Visible = false;
-            // 
             // lueTenant
             // 
             this.lueTenant.Location = new System.Drawing.Point(60, 72);
@@ -195,10 +184,19 @@ namespace Insight.Base.MainForm.Views
             this.lueTenant.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.lueTenant.Properties.NullText = "请选择……";
-            this.lueTenant.Properties.PopupFormMinSize = new System.Drawing.Size(160, 80);
-            this.lueTenant.Properties.PopupWidth = 320;
-            this.lueTenant.Size = new System.Drawing.Size(160, 20);
-            this.lueTenant.TabIndex = 0;
+            this.lueTenant.Size = new System.Drawing.Size(160, 44);
+            this.lueTenant.TabIndex = 3;
+            // 
+            // labLoading
+            // 
+            this.labLoading.Appearance.ForeColor = System.Drawing.Color.White;
+            this.labLoading.Appearance.Options.UseForeColor = true;
+            this.labLoading.Location = new System.Drawing.Point(183, 153);
+            this.labLoading.Name = "labLoading";
+            this.labLoading.Size = new System.Drawing.Size(308, 29);
+            this.labLoading.TabIndex = 0;
+            this.labLoading.Text = "正在加载应用程序，请稍候…";
+            this.labLoading.Visible = false;
             // 
             // LoginDialog
             // 
@@ -214,8 +212,8 @@ namespace Insight.Base.MainForm.Views
             ((System.ComponentModel.ISupportInitialize)(this.panMain)).EndInit();
             this.panMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.peeDept.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peePassword.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.peeAccount.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPassWord.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAccount.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lueTenant.Properties)).EndInit();
@@ -228,8 +226,8 @@ namespace Insight.Base.MainForm.Views
         protected DevExpress.Utils.ImageCollection OrgTreeNode;
         public LabelControl labLoading;
         public PictureEdit peeDept;
-        private PictureEdit pictureEdit2;
-        private PictureEdit pictureEdit1;
+        private PictureEdit peePassword;
+        private PictureEdit peeAccount;
         public PanelControl panMain;
         public SimpleButton sbeLogin;
         public SimpleButton sbeSet;
