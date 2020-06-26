@@ -88,6 +88,7 @@
     <Compile Include="Forms\BaseWizard.Designer.cs">
       <DependentUpon>BaseWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\BaseDataModel.cs" />
     <Compile Include="Utils\InputCheck.cs" />
     <Compile Include="Utils\Messages.cs" />
     <Compile Include="ViewModels\BaseMdiFormModel.cs" />

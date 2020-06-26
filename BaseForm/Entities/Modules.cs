@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Insight.Base.BaseForm.Entities
 {
@@ -64,12 +63,7 @@ namespace Insight.Base.BaseForm.Entities
         /// <summary>
         /// 是否默认启动
         /// </summary>
-        public bool? autoLoad { get; set; }
-
-        /// <summary>
-        /// 是否拥有选项
-        /// </summary>
-        public bool? hasParams { get; set; }
+        public bool autoLoad { get; set; }
     }
 
     /// <summary>
@@ -153,45 +147,25 @@ namespace Insight.Base.BaseForm.Entities
         /// ID，唯一标识
         /// </summary>
         public string id { get; set; }
-
-        /// <summary>
-        /// 租户ID
-        /// </summary>
-        public string tenantId { get; set; }
-
+        
         /// <summary>
         /// 模块ID
         /// </summary>
         public string moduleId { get; set; }
 
         /// <summary>
-        /// 选项ID
+        /// 选项键
         /// </summary>
-        public string code { get; set; }
+        public string key { get; set; }
+
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public string userId { get; set; }
 
         /// <summary>
         /// 选项参数值
         /// </summary>
         public string value { get; set; }
-
-        /// <summary>
-        /// 创建部门ID
-        /// </summary>
-        public string deptId { get; set; }
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public string creator { get; set; }
-
-        /// <summary>
-        /// 创建人ID
-        /// </summary>
-        public string creatorId { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime createdTime { get; set; }
     }
 }

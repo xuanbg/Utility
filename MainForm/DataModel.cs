@@ -158,44 +158,6 @@ namespace Insight.Base.MainForm
         }
 
         /// <summary>
-        /// 获取模板
-        /// </summary>
-        /// <param name="id">模板ID</param>
-        /// <returns>string 模板内容</returns>
-        internal string getTemplate(string id)
-        {
-            var url = $"/report/v1.0/templates/{id}";
-            var client = new HttpClient<string>();
-
-            return client.getData(url);
-        }
-
-        /// <summary>
-        /// 获取选项数据
-        /// </summary>
-        /// <returns>选项数据集合</returns>
-        internal List<ModuleParam> getParams()
-        {
-            var url = "/common/v1.0/params";
-            var client = new HttpClient<List<ModuleParam>>();
-
-            return client.getData(url);
-        }
-
-        /// <summary>
-        /// 保存选项数据
-        /// </summary>
-        /// <param name="moduleParams">选项数据集合</param>
-        /// <returns>bool 是否成功</returns>
-        internal void saveParam(List<ModuleParam> moduleParams)
-        {
-            var url = "/common/v1.0/params";
-            var dict = new Dictionary<string, object> { { "list", moduleParams } };
-            var client = new HttpClient<List<ModuleParam>>();
-            client.put(url, dict);
-        }
-
-        /// <summary>
         /// 更新文件
         /// </summary>
         /// <param name="version">版本信息</param>

@@ -25,6 +25,8 @@ namespace Insight.Base.BaseForm.Controllers
         /// <param name="module">模块信息</param>
         protected MdiController(ModuleDto module)
         {
+            mdiModel.moduleId = module.id;
+
             mdiModel = new TM {dataModel = dataModel};
             mdiModel.initMdiView(module);
             mdiModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
@@ -95,19 +97,19 @@ namespace Insight.Base.BaseForm.Controllers
         /// <typeparam name="TE">数据类型</typeparam>
         /// <param name="set">打印设置</param>
         /// <returns>string 电子影像文件名</returns>
-        public string print<TE>(PrintSetting<TE> set)
+        public void print<TE>(PrintSetting<TE> set)
         {
             if (string.IsNullOrEmpty(set.template))
             {
                 Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
-                return null;
+                return;
             }
 
             var report = buildReport(set);
             if (report == null || !report.Prepare())
             {
                 Messages.showError("生成报表失败！");
-                return null;
+                return;
             }
 
             report.PrintSettings.Copies = set.copies;
@@ -128,8 +130,6 @@ namespace Insight.Base.BaseForm.Controllers
             }
 
             report.PrintPrepared();
-
-            return report.FileName;
         }
 
         /// <summary>

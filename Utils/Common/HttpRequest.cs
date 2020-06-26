@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Text;
 using Insight.Utils.Entity;
@@ -70,7 +69,14 @@ namespace Insight.Utils.Common
             if (body != null)
             {
                 var dict = Util.convertTo<Dictionary<string, object>>(body);
-                var param = dict.Aggregate("?", (c, p) => c + $"&{p.Key}={p.Value}");
+                var param = "?";
+                foreach (var o in dict)
+                {
+                    if (o.Value == null || string.IsNullOrEmpty(o.Value.ToString())) continue;
+
+                    param = param + $"&{o.Key}={o.Value}";
+                }
+
                 url += param.Replace("?&", "?");
             }
 

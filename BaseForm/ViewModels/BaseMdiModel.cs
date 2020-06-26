@@ -31,9 +31,9 @@ namespace Insight.Base.BaseForm.ViewModels
         public DM dataModel;
 
         /// <summary>
-        /// 模块选项集合
+        /// Module ID
         /// </summary>
-        public List<ModuleParam> moduleParams;
+        public string moduleId;
 
         /// <summary>
         /// 主列表分页控件
@@ -43,7 +43,7 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <summary>
         /// 搜索关键词
         /// </summary>
-        public string keyWord;
+        public string keyword;
 
         /// <summary>
         /// 列表数据
@@ -72,7 +72,7 @@ namespace Insight.Base.BaseForm.ViewModels
         {
             search.Click += (sender, args) => call(getDataMethod, new object[] {1, 0});
             input.Properties.Click += (sender, args) => input.EditValue = null;
-            input.EditValueChanged += (sender, args) => keyWord = input.EditValue as string;
+            input.EditValueChanged += (sender, args) => keyword = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
@@ -185,15 +185,6 @@ namespace Insight.Base.BaseForm.ViewModels
         }
 
         /// <summary>
-        /// 初始化模块选项集合
-        /// </summary>
-        /// <param name="moduleParams">模块选项集合</param>
-        public void initParams(List<ModuleParam> moduleParams)
-        {
-            this.moduleParams = moduleParams;
-        }
-
-        /// <summary>
         /// 切换工具栏按钮状态
         /// </summary>
         /// <param name="dict"></param>
@@ -285,53 +276,6 @@ namespace Insight.Base.BaseForm.ViewModels
             var menu = new ContextMenuStrip();
             menu.Items.Add(tsmi);
             return menu;
-        }
-
-        /// <summary>
-        /// 获取选项数据
-        /// </summary>
-        /// <param name="keys">选项代码集</param>
-        /// <returns>ModuleParam 选项数据</returns>
-        protected List<ModuleParam> getParams(IEnumerable<Dictionary<string, string>> keys)
-        {
-            var datas = new List<ModuleParam>();
-            foreach (var key in keys)
-            {
-                var code = key.ContainsKey("code") ? key["code"] : null;
-                var deptId = key.ContainsKey("deptId") ? key["deptId"] : null;
-                var userId = key.ContainsKey("userId") ? key["userId"] : null;
-                var moduleId = key.ContainsKey("moduleId") ? key["moduleId"] : null;
-                var data = getParam(code, deptId, userId, moduleId);
-                datas.Add(data);
-            }
-
-            return datas;
-        }
-
-        /// <summary>
-        /// 获取选项数据
-        /// </summary>
-        /// <param name="key">选项代码</param>
-        /// <param name="deptId">部门ID</param>
-        /// <param name="userId">用户ID</param>
-        /// <param name="moduleId">模块ID</param>
-        /// <returns>ModuleParam 选项数据</returns>
-        protected ModuleParam getParam(string key, string deptId = null, string userId = null, string moduleId = null)
-        {
-            var param = moduleParams.FirstOrDefault(i => i.deptId == deptId && i.creatorId == userId && i.code == key && (string.IsNullOrEmpty(moduleId) || i.moduleId == moduleId));
-            if (param != null) return param;
-
-            param = new ModuleParam
-            {
-                id = Util.newId(),
-                moduleId = moduleId,
-                code = key,
-                deptId = deptId,
-                creatorId = userId
-            };
-            moduleParams.Add(param);
-
-            return param;
         }
     }
 }
