@@ -25,9 +25,7 @@ namespace Insight.Base.BaseForm.Controllers
         /// <param name="module">模块信息</param>
         protected MdiController(ModuleDto module)
         {
-            mdiModel.moduleId = module.id;
-
-            mdiModel = new TM {dataModel = dataModel};
+            mdiModel = new TM {dataModel = dataModel, moduleId = module.id};
             mdiModel.initMdiView(module);
             mdiModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
             mdiModel.show();
