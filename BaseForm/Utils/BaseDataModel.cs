@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Insight.Base.BaseForm.Entities;
 
 namespace Insight.Base.BaseForm.Utils
@@ -9,14 +10,18 @@ namespace Insight.Base.BaseForm.Utils
         /// 获取选项数据
         /// </summary>
         /// <param name="moduleId">模块ID</param>
+        /// <param name="keys">参数键集合</param>
+        /// <param name="userId">用户ID</param>
         /// <returns>ModuleParam 选项数据</returns>
-        public List<ModuleParam> getParams(string moduleId)
+        public List<ModuleParam> getParams(string moduleId, IEnumerable<string> keys, string userId = null)
         {
             const string url = "/common/param/v1.0/params";
             var dict = new Dictionary<string, object> {{"moduleId", moduleId}};
             var client = new HttpClient<List<ModuleParam>>();
+            var list = client.getData(url, dict);
 
-            return client.getData(url, dict);
+            return keys.Select(key => list.FirstOrDefault(i => i.key == key && i.userId == userId)
+                                      ?? new ModuleParam {moduleId = moduleId, key = key, userId = userId}).ToList();
         }
 
         /// <summary>

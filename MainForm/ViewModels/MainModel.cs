@@ -84,7 +84,7 @@ namespace Insight.Base.MainForm.ViewModels
                 var barItem = new List<NavBarItemLink>();
                 foreach (var module in navigators.Where(i => i.parentId == g.id))
                 {
-                    if (module.moduleInfo.autoLoad)
+                    if (module.moduleInfo.autoLoad ?? false)
                     {
                         expand = true;
                         opens.Add(module.moduleInfo.module);
