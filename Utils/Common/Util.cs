@@ -15,7 +15,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
 
@@ -364,101 +363,6 @@ namespace Insight.Utils.Common
         #endregion
 
         #region Image
-
-        /// <summary>
-        /// 将指定的文件读取为电子影像数据
-        /// </summary>
-        /// <param name="path">文件路径</param>
-        /// <returns>ImageData 电子影像数据</returns>
-        public static ImageData getImageData(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return null;
-
-            var image = getImageFromFile(path);
-
-            return image == null ? null : new ImageData {image = imageToByteArray(image)};
-        }
-
-        /// <summary>
-        /// 将打开的本地文档转换成电子影像
-        /// </summary>
-        /// <param name="slv">附件涉密等级</param>
-        /// <param name="uid">登录用户ID</param>
-        /// <param name="did">登录部门ID</param>
-        /// <param name="type">附件类型（默认0：附件）</param>
-        /// <returns>ImageData 电子影像数据</returns>
-        public static ImageData addFile(string slv, string uid, string did = null, int type = 0)
-        {
-            using (var dialog = new OpenFileDialog())
-            {
-                if (dialog.ShowDialog() != DialogResult.OK) return null;
-
-                var fileName = dialog.FileName;
-                using (var fs = new FileStream(fileName, FileMode.Open))
-                {
-                    var br = new BinaryReader(fs);
-                    var bf = br.ReadBytes((int)fs.Length);
-
-                    return new ImageData
-                    {
-                        id = newId(),
-                        imageType = type,
-                        name = Path.GetFileNameWithoutExtension(fileName),
-                        expand = Path.GetExtension(fileName),
-                        secrecyDegree = slv,
-                        size = bf.LongLength,
-                        image = bf,
-                        creatorDeptId = did,
-                        creatorId = uid
-                    };
-                }
-            }
-        }
-
-        /// <summary>
-        /// 将打开的本地文档转换成电子影像
-        /// </summary>
-        /// <param name="slv">附件涉密等级</param>
-        /// <param name="uid">登录用户ID</param>
-        /// <param name="did">登录部门ID</param>
-        /// <param name="type">附件类型（默认0：附件）</param>
-        /// <returns>ImageData List 电子影像数据集</returns>
-        public static List<ImageData> addFiles(string slv, string uid, string did = null, int type = 0)
-        {
-            var imgs = new List<ImageData>();
-            using (var dialog = new OpenFileDialog())
-            {
-                dialog.Multiselect = true;
-                if (dialog.ShowDialog() != DialogResult.OK) return null;
-
-                var array = dialog.FileNames;
-                foreach (var fileName in array)
-                {
-                    using (var fs = new FileStream(fileName, FileMode.Open))
-                    {
-                        var br = new BinaryReader(fs);
-                        var bf = br.ReadBytes((int) fs.Length);
-
-                        var img = new ImageData
-                        {
-                            id = newId(),
-                            imageType = type,
-                            name = Path.GetFileNameWithoutExtension(fileName),
-                            expand = Path.GetExtension(fileName),
-                            secrecyDegree = slv,
-                            size = bf.LongLength,
-                            image = bf,
-                            creatorDeptId = did,
-                            creatorId = uid
-                        };
-                        imgs.Add(img);
-                    }
-                }
-
-                return imgs;
-            }
-        }
-
 
         /// <summary>
         /// 从文件读取图片数据
