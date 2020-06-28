@@ -32,29 +32,6 @@ namespace Insight.Base.BaseForm.Controllers
 
             mdiModel.initToolBar(module.functions);
         }
-
-        /// <summary>
-        /// 设计报表
-        /// </summary>
-        /// <typeparam name="TE">类型</typeparam>
-        /// <param name="set">打印设置</param>
-        public void design<TE>(PrintSetting<TE> set)
-        {
-            if (string.IsNullOrEmpty(set.template))
-            {
-                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
-                return;
-            }
-
-            var report = buildReport(set);
-            if (report == null)
-            {
-                Messages.showError("初始化报表失败！");
-                return;
-            }
-
-            report.Design();
-        }
         
         /// <summary>
         /// 打印预览
