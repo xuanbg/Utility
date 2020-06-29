@@ -7,6 +7,20 @@ namespace Insight.Base.BaseForm.Utils
     public class BaseDataModel
     {
         /// <summary>
+        /// 获取指定键名的键值集合
+        /// </summary>
+        /// <param name="key">字典键名</param>
+        /// <returns>键值集合</returns>
+        public string getDictValues(string key)
+        {
+            const string url = "/common/dict/v1.0/dicts/values";
+            var dict = new Dictionary<string, object> {{"key", key}};
+            var client = new HttpClient<string>();
+
+            return client.getData(url, dict);
+        }
+
+        /// <summary>
         /// 获取选项数据
         /// </summary>
         /// <param name="moduleId">模块ID</param>
