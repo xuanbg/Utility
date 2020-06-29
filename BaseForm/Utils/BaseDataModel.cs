@@ -33,7 +33,7 @@ namespace Insight.Base.BaseForm.Utils
         /// <returns>ModuleParam 选项参数</returns>
         public ModuleParam getParam(string moduleId, string key, string userId = null)
         {
-            const string url = "/common/param/v1.0/params";
+            const string url = "/common/param/v1.0/params/value";
             var dict = new Dictionary<string, object> {{"moduleId", moduleId}, {"keyword", key}, {"userId", userId}};
             var client = new HttpClient<ModuleParam>();
 

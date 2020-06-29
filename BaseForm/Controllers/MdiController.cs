@@ -36,16 +36,10 @@ namespace Insight.Base.BaseForm.Controllers
         /// <summary>
         /// 打印预览
         /// </summary>
-        /// <typeparam name="TE">数据类型</typeparam>
+        /// <typeparam name="E">数据类型</typeparam>
         /// <param name="set">打印设置</param>
-        public void preview<TE>(PrintSetting<TE> set)
+        protected void preview<E>(PrintSetting<E> set)
         {
-            if (string.IsNullOrEmpty(set.template))
-            {
-                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
-                return;
-            }
-
             var report = buildReport(set);
             if (report == null || !report.Prepare())
             {
@@ -53,14 +47,14 @@ namespace Insight.Base.BaseForm.Controllers
                 return;
             }
 
-            if (set.pagesOnSheet != PagesOnSheet.One)
+            if (set.pagesOnSheet == PagesOnSheet.One)
             {
-                report.PrintSettings.PrintMode = PrintMode.Scale;
-                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+                report.PrintSettings.PrintMode = set.printMode;
             }
             else
             {
-                report.PrintSettings.PrintMode = set.printMode;
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
             }
 
             report.ShowPrepared(true);
@@ -69,17 +63,11 @@ namespace Insight.Base.BaseForm.Controllers
         /// <summary>
         /// 打印
         /// </summary>
-        /// <typeparam name="TE">数据类型</typeparam>
+        /// <typeparam name="E">数据类型</typeparam>
         /// <param name="set">打印设置</param>
         /// <returns>string 电子影像文件名</returns>
-        public void print<TE>(PrintSetting<TE> set)
+        protected void print<E>(PrintSetting<E> set)
         {
-            if (string.IsNullOrEmpty(set.template))
-            {
-                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
-                return;
-            }
-
             var report = buildReport(set);
             if (report == null || !report.Prepare())
             {
@@ -87,40 +75,54 @@ namespace Insight.Base.BaseForm.Controllers
                 return;
             }
 
-            report.PrintSettings.Copies = set.copies;
+            if (set.pagesOnSheet == PagesOnSheet.One)
+            {
+                report.PrintSettings.PrintMode = set.printMode;
+            }
+            else
+            {
+                report.PrintSettings.PrintMode = PrintMode.Scale;
+                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+            }
+
             if (!string.IsNullOrEmpty(set.printer))
             {
                 report.PrintSettings.ShowDialog = false;
                 report.PrintSettings.Printer = set.printer;
             }
 
-            if (set.pagesOnSheet != PagesOnSheet.One)
-            {
-                report.PrintSettings.PrintMode = PrintMode.Scale;
-                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
-            }
-            else
-            {
-                report.PrintSettings.PrintMode = set.printMode;
-            }
-
+            report.PrintSettings.Copies = set.copies;
             report.PrintPrepared();
         }
 
         /// <summary>
         /// 生成报表
         /// </summary>
-        /// <typeparam name="TE">类型</typeparam>
+        /// <typeparam name="E">类型</typeparam>
         /// <param name="set">打印参数集</param>
         /// <returns>Report FastReport报表</returns>
-        private static Report buildReport<TE>(PrintSetting<TE> set)
+        private static Report buildReport<E>(PrintSetting<E> set)
         {
-            if (set.template == null) return null;
+            if (string.IsNullOrEmpty(set.template))
+            {
+                Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
+                return null;
+            }
 
             var report = new Report();
             report.LoadFromString(set.template);
-            report.RegisterData(set.data, set.dataName);
-            foreach (var i in set.parameter ?? new Dictionary<string, object>()) report.SetParameterValue(i.Key, i.Value);
+            if (set.data != null)
+            {
+                report.RegisterData(set.data, set.dataName);
+            }
+
+            if (set.parameter != null)
+            {
+                foreach (var i in set.parameter ?? new Dictionary<string, object>())
+                {
+                    report.SetParameterValue(i.Key, i.Value);
+                }
+            }
 
             return report;
         }
