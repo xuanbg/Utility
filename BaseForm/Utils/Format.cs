@@ -141,6 +141,7 @@ namespace Insight.Base.BaseForm.Utils
         {
             control.Properties.ImmediatePopup = true;
             control.Properties.PopupFormMinSize = new Size(60, 0);
+            control.Properties.PopupFormWidth = control.Width;
             control.Properties.Items.Clear();
             if (list == null) return;
 
@@ -182,6 +183,7 @@ namespace Insight.Base.BaseForm.Utils
         {
             control.Properties.ImmediatePopup = true;
             control.Properties.PopupFormMinSize = new Size(60, 0);
+            control.Properties.PopupFormWidth = control.Width;
             control.Properties.Items.Clear();
             if (list == null) return;
 
