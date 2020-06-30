@@ -131,11 +131,10 @@ namespace Insight.Base.BaseForm.Utils
             customDrawNodeImages(tree);
         }
 
-
         /// <summary>
-        /// 初始化LookUpEdit
+        /// 初始化ComboBoxEdit
         /// </summary>
-        /// <param name="control">LookUpEdit</param>
+        /// <param name="control">ComboBoxEdit</param>
         /// <param name="list">MemberSelect集合</param>
         /// <param name="index">选中项索引，默认不选中</param>
         public static void initComboBoxEdit(ComboBoxEdit control, List<LookUpMember> list, int index = -1)
@@ -155,9 +154,9 @@ namespace Insight.Base.BaseForm.Utils
         }
 
         /// <summary>
-        /// 初始化LookUpEdit
+        /// 初始化ComboBoxEdit
         /// </summary>
-        /// <param name="control">LookUpEdit</param>
+        /// <param name="control">RepositoryItemComboBox</param>
         /// <param name="list">MemberSelect集合</param>
         public static void initComboBoxEdit(RepositoryItemComboBox control, List<LookUpMember> list)
         {
@@ -169,6 +168,47 @@ namespace Insight.Base.BaseForm.Utils
             foreach (var i in list)
             {
                 var item = new ImageComboBoxItem { Value = i.name };
+                control.Items.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// 初始化ComboBoxEdit
+        /// </summary>
+        /// <param name="control">ComboBoxEdit</param>
+        /// <param name="list">字典键值集合</param>
+        /// <param name="index">选中项索引，默认不选中</param>
+        public static void initComboBoxEdit(ComboBoxEdit control, List<DictKeyDto> list, int index = -1)
+        {
+            control.Properties.ImmediatePopup = true;
+            control.Properties.PopupFormMinSize = new Size(60, 0);
+            control.Properties.Items.Clear();
+            if (list == null) return;
+
+            foreach (var i in list)
+            {
+                var item = new ImageComboBoxItem { Value = i.value };
+                control.Properties.Items.Add(item);
+            }
+
+            control.SelectedIndex = index;
+        }
+
+        /// <summary>
+        /// 初始化ComboBoxEdit
+        /// </summary>
+        /// <param name="control">RepositoryItemComboBox</param>
+        /// <param name="list">字典键值集合</param>
+        public static void initComboBoxEdit(RepositoryItemComboBox control, List<DictKeyDto> list)
+        {
+            control.ImmediatePopup = true;
+            control.PopupFormMinSize = new Size(60, 0);
+            control.Items.Clear();
+            if (list == null) return;
+
+            foreach (var i in list)
+            {
+                var item = new ImageComboBoxItem { Value = i.value };
                 control.Items.Add(item);
             }
         }
