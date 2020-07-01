@@ -6,11 +6,6 @@ namespace Insight.Base.BaseForm.Utils
     public static class Setting
     {
         /// <summary>
-        /// 界面主题样式
-        /// </summary>
-        public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
-
-        /// <summary>
         /// 网关地址
         /// </summary>
         public static string gateway = Util.getAppSetting("Gateway");
@@ -18,12 +13,7 @@ namespace Insight.Base.BaseForm.Utils
         /// <summary>
         /// 客户端更新URL
         /// </summary>
-        public static readonly string updateUrl = Util.getAppSetting("UpdateUrl");
-
-        /// <summary>
-        /// 令牌管理器
-        /// </summary>
-        public static readonly TokenHelper tokenHelper = new TokenHelper();
+        public static readonly string updateUrl = $"{gateway}/client/{Util.getAppSetting("AppAlias")}";
 
         /// <summary>
         /// 应用ID
@@ -34,6 +24,16 @@ namespace Insight.Base.BaseForm.Utils
         /// 应用名称
         /// </summary>
         public static readonly string appName = Util.getAppSetting("AppName");
+
+        /// <summary>
+        /// 界面主题样式
+        /// </summary>
+        public static readonly string lookAndFeel = Util.getAppSetting("DefaultLookAndFeel");
+
+        /// <summary>
+        /// 令牌管理器
+        /// </summary>
+        public static readonly TokenHelper tokenHelper = new TokenHelper();
 
         /// <summary>
         /// 租户ID
