@@ -526,8 +526,25 @@ namespace Insight.Utils.ExcelHelper
                 {
                     case "DateTime":
                         var isFormat = !string.IsNullOrEmpty(field.dateFormat);
-                        cell.SetCellValue(isFormat ? string.Format(field.dateFormat, DateTime.Parse(value)) : value);
+                        var val = isFormat ? DateTime.Parse(value).ToString(field.dateFormat) : value;
+                        cell.SetCellValue(val);
                         break;
+
+                    case "Int16":
+                    case "Int32":
+                    case "Int64":
+                    case "Single":
+                        cell.SetCellValue(long.Parse(value));
+                        cell.SetCellType(CellType.Numeric);
+                        break;
+
+                    case "Float":
+                    case "Double":
+                    case "Decimal":
+                        cell.SetCellValue(double.Parse(value));
+                        cell.SetCellType(CellType.Numeric);
+                        break;
+
                     default:
                         cell.SetCellValue(value);
                         break;
@@ -548,6 +565,7 @@ namespace Insight.Utils.ExcelHelper
                 case "Int32":
                 case "Int64":
                 case "Single":
+                case "Float":
                 case "Double":
                 case "Decimal":
                     return CellType.Numeric;

@@ -102,8 +102,8 @@ namespace Insight.Base.BaseForm.ViewModels
             };
             endEdit.EditValueChanged += (sender, args) =>
             {
-                endDate = endEdit.DateTime;
-                startEdit.Properties.MaxValue = endDate;
+                endDate = endEdit.DateTime.AddDays(1);
+                startEdit.Properties.MaxValue = endDate.AddDays(-1);
             };
 
             startEdit.DateTime = DateTime.Today.AddMonths(-1).AddDays(1);
