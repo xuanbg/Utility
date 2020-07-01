@@ -41,6 +41,21 @@ namespace Insight.Base.BaseForm.ViewModels
         public PageControl tab;
 
         /// <summary>
+        /// 状态
+        /// </summary>
+        public int? status;
+
+        /// <summary>
+        /// 开始日期
+        /// </summary>
+        public DateTime startDate;
+
+        /// <summary>
+        /// 截至日期
+        /// </summary>
+        public DateTime endDate;
+
+        /// <summary>
         /// 搜索关键词
         /// </summary>
         public string keyword;
@@ -60,6 +75,40 @@ namespace Insight.Base.BaseForm.ViewModels
                 view.Refresh();
                 callback("refresh");
             };
+        }
+
+        /// <summary>
+        /// 初始化状态控件
+        /// </summary>
+        /// <param name="statusEdit">状态控件</param>
+        /// <param name="members">下拉列表</param>
+        protected void initStatus(LookUpEdit statusEdit, List<LookUpMember> members)
+        {
+            Format.initLookUpEdit(statusEdit, members);
+            statusEdit.EditValueChanged += (sender, args) => status = statusEdit.EditValue == null ? (int?) null : Convert.ToInt32(statusEdit.EditValue);
+        }
+
+        /// <summary>
+        /// 初始化日期控件
+        /// </summary>
+        /// <param name="startEdit">开始日期控件</param>
+        /// <param name="endEdit">截至日期控件</param>
+        protected void initDate(DateEdit startEdit, DateEdit endEdit)
+        {
+            startEdit.EditValueChanged += (sender, args) =>
+            {
+                startDate = startEdit.DateTime;
+                endEdit.Properties.MinValue = startDate;
+            };
+            endEdit.EditValueChanged += (sender, args) =>
+            {
+                endDate = endEdit.DateTime;
+                startEdit.Properties.MaxValue = endDate;
+            };
+
+            startEdit.DateTime = DateTime.Today.AddMonths(-1).AddDays(1);
+            endEdit.DateTime = DateTime.Today;
+            endEdit.Properties.MaxValue = DateTime.Today;
         }
 
         /// <summary>
