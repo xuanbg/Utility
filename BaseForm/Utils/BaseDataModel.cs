@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Insight.Base.BaseForm.Entities;
+using Insight.Utils.Entity;
 
 namespace Insight.Base.BaseForm.Utils
 {
@@ -87,6 +88,82 @@ namespace Insight.Base.BaseForm.Utils
             var client = new HttpClient<string>();
 
             return client.getData(url);
+        }
+
+        /// <summary>
+        /// 获取全部省级行政区划
+        /// </summary>
+        /// <returns>省级行政区划集合</returns>
+        public List<LookUpMember> getProvinces()
+        {
+            const string url = "/common/area/v1.0/areas/provinces";
+            var client = new HttpClient<List<LookUpMember>>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
+        /// 获取指定上级ID的行政区划集合数据
+        /// </summary>
+        /// <param name="id">上级区划ID</param>
+        /// <returns>行政区划集合</returns>
+        public List<Region> getRegions(string id)
+        {
+            var url = $"/common/area/v1.0/areas/{id}/subs";
+            var client = new HttpClient<List<Region>>();
+
+            return client.getData(url);
+        }
+
+        /// <summary>
+        /// 获取提交数据用临时Token
+        /// </summary>
+        /// <param name="key">接口Hash: MD5(userId:method:url)</param>
+        /// <returns>临时Token</returns>
+        public string getToken(string key)
+        {
+            const string url = "/base/auth/v1.0/tokens";
+            var dict = new Dictionary<string, object> {{"key", key}};
+            var client = new HttpClient<string>();
+
+            return client.getData(url, dict);
+        }
+
+        /// <summary>
+        /// 发送短信验证码
+        /// </summary>
+        /// <param name="type">验证码类型:0.验证手机号;1.用户注册;2.重置密码;3.修改支付密码;4.修改手机号</param>
+        /// <param name="mobile">手机号</param>
+        /// <param name="length">验证码长度</param>
+        /// <param name="minutes">验证码有效时长(分钟)</param>
+        /// <returns>临时Token</returns>
+        public bool seedSmsCode(int type, string mobile, int length = 6, int minutes = 15)
+        {
+            const string url = "/common/message/v1.0/codes";
+            var dict = new Dictionary<string, object>
+            {
+                {"type", type},
+                {"mobile", mobile},
+                {"length", length},
+                {"minutes", minutes}
+            };
+            var client = new HttpClient<string>();
+
+            return client.post(url, dict);
+        }
+
+        /// <summary>
+        /// 验证短信验证码
+        /// </summary>
+        /// <param name="key">验证参数,MD5(type + mobile + code)</param>
+        /// <returns>临时Token</returns>
+        public string verifySmsCode(string key)
+        {
+            var url = $"/common/message/v1.0/codes/{key}/status";
+            var dict = new Dictionary<string, object> {{"isCheck", true}};
+            var client = new HttpClient<string>();
+
+            return client.getData(url, dict);
         }
     }
 }
