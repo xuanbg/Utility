@@ -157,13 +157,14 @@ namespace Insight.Base.BaseForm.Utils
         /// </summary>
         /// <param name="key">验证参数,MD5(type + mobile + code)</param>
         /// <returns>临时Token</returns>
-        public string verifySmsCode(string key)
+        public bool verifySmsCode(string key)
         {
             var url = $"/common/message/v1.0/codes/{key}/status";
             var dict = new Dictionary<string, object> {{"isCheck", true}};
             var client = new HttpClient<string>();
+            var result = client.getResult(url, dict);
 
-            return client.getData(url, dict);
+            return result.success;
         }
     }
 }
