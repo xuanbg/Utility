@@ -15,7 +15,7 @@ namespace Insight.Base.BaseForm.Controls
         /// <summary>
         /// 总页数
         /// </summary>
-        private int pages => size == 0 ? 0 : rows / size;
+        private int pages => size == 0 ? 0 : (rows - 1) / size;
 
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
