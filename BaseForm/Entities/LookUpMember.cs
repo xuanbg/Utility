@@ -12,6 +12,11 @@
         public string id { get; set; }
 
         /// <summary>
+        /// 编码
+        /// </summary>
+        public string code { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string name { get; set; }
@@ -19,7 +24,7 @@
         /// <summary>
         /// 描述
         /// </summary>
-        public string alias { get; set; }
+        public string remark { get; set; }
     }
 
     /// <summary>

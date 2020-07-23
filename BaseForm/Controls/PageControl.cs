@@ -52,7 +52,12 @@ namespace Insight.Base.BaseForm.Controls
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public delegate void PageReloadHandle(object sender, PageReloadEventArgs e);
-        
+
+        /// <summary>
+        /// 排序方式
+        /// </summary>
+        public OrderBy orderBy { get; set; } = OrderBy.POSITIVE;
+
         /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
@@ -172,9 +177,9 @@ namespace Insight.Base.BaseForm.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
-            var focusedRow = currentRow;
+            var focusedRow = orderBy == OrderBy.POSITIVE ? currentRow : 0;
             rows += count;
-            currentRow = rows - 1;
+            currentRow = orderBy == OrderBy.POSITIVE ? rows - 1 : 0;
 
             refresh(focusedRow);
             selectDataChanged?.Invoke(this, EventArgs.Empty);
@@ -245,5 +250,14 @@ namespace Insight.Base.BaseForm.Controls
             else
                 focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
         }
+    }
+
+    /// <summary>
+    /// 排序方式
+    /// </summary>
+    public enum OrderBy
+    {
+        POSITIVE,
+        REVERSE
     }
 }
