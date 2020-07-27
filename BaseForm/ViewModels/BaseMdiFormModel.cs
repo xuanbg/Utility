@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Forms;
@@ -19,36 +20,48 @@ namespace Insight.Base.BaseForm.ViewModels
             view.MdiParent = Application.OpenForms["MainWindow"];
             view.Name = title;
         }
-        
+
         /// <summary>
         /// 初始化列表控件
         /// </summary>
-        /// <param name="grid">列表View控件</param>
+        /// <param name="grid"></param>
+        /// <param name="gridView">列表View控件</param>
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="pageControl">列表分页控件</param>
         /// <param name="getDataMethod">列表获取数据方法名称</param>
-        public void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
+        public void initGrid(GridControl grid, GridView gridView, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
         {
-            grid.FocusedRowObjectChanged += (sender, args) =>
+            gridView.FocusedRowObjectChanged += (sender, args) =>
             {
-                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
-
-                call(callMethod, new object[] { args.FocusedRowHandle });
+                call(callMethod, new object[] {args.FocusedRowHandle});
+                if (pageControl != null) pageControl.rowHandle = args.FocusedRowHandle;
             };
-            grid.DoubleClick += (sender, args) =>
+            gridView.DoubleClick += (sender, args) =>
             {
                 if (callbackMethod == null) return;
 
                 callback(callbackMethod);
             };
+            grid.MouseDown += (sender, args) => mouseDownEvent(gridView, args);
 
-            Format.gridFormat(grid);
+            Format.gridFormat(gridView);
+            grid.ContextMenuStrip = createContextMenu(gridView);
+
+            // 注册分页事件
             if (pageControl == null) return;
 
-            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] { args.page, args.handle });
-            pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
-            pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
+            pageControl.focusedRowChanged += (sender, args) => gridView.FocusedRowHandle = args.rowHandle;
+            pageControl.selectDataChanged += (sender, args) =>
+            {
+                gridView.RefreshData();
+                gridView.FocusedRowHandle = args.rowHandle;
+            };
+            pageControl.pageReload += (sender, args) =>
+            {
+                call(getDataMethod, new object[] { args.page });
+                gridView.FocusedRowHandle = args.handle;
+            };
         }
     }
 }

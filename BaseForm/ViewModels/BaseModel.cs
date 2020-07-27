@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
 
@@ -8,6 +11,8 @@ namespace Insight.Base.BaseForm.ViewModels
 {
     public class BaseModel<T, TV> where TV : XtraForm, new()
     {
+        private GridHitInfo hitInfo = new GridHitInfo();
+
         /// <summary>
         /// 回调
         /// </summary>
@@ -65,6 +70,43 @@ namespace Insight.Base.BaseForm.ViewModels
                 Messages.showError("对不起，该功能尚未实现！");
             else
                 method.Invoke(this, param);
+        }
+
+        /// <summary>
+        /// 鼠标点击事件
+        /// </summary>
+        /// <param name="gridView">GridView</param>
+        /// <param name="args">MouseEventArgs</param>
+        protected void mouseDownEvent(GridView gridView, MouseEventArgs args)
+        {
+            if (args.Button != MouseButtons.Right) return;
+
+            var point = new Point(args.X, args.Y);
+            hitInfo = gridView.CalcHitInfo(point);
+        }
+
+        /// <summary>
+        /// 创建右键菜单并注册事件
+        /// </summary>
+        /// <param name="gridView">GridView</param>
+        /// <returns>ContextMenuStrip</returns>
+        protected ContextMenuStrip createContextMenu(GridView gridView)
+        {
+            var tsmi = new ToolStripMenuItem { Text = @"复制" };
+            tsmi.Click += (sender, args) =>
+            {
+                if (hitInfo.Column == null) return;
+
+                var content = gridView.GetRowCellDisplayText(hitInfo.RowHandle, hitInfo.Column);
+                if (string.IsNullOrEmpty(content)) return;
+
+                Clipboard.Clear();
+                Clipboard.SetData(DataFormats.Text, content);
+            };
+
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(tsmi);
+            return menu;
         }
 
         /// <summary>

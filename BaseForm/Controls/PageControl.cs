@@ -8,14 +8,14 @@ namespace Insight.Base.BaseForm.Controls
     public partial class PageControl : XtraUserControl
     {
         private Collection<string> pageSizes = new Collection<string> {"20", "40", "60", "80", "100"};
-        private int currentRow;
         private int currentPage;
+        private int currentRow;
         private int rows;
 
         /// <summary>
         /// 总页数
         /// </summary>
-        private int pages => size == 0 ? 0 : (rows - 1) / size;
+        private int pages => size > 0 ? (rows - 1) / size : 0;
 
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
@@ -27,7 +27,7 @@ namespace Insight.Base.BaseForm.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public delegate void SelectDataChangedHandle(object sender, EventArgs e);
+        public delegate void SelectDataChangedHandle(object sender, RowHandleEventArgs e);
 
         /// <summary>  
         /// 当前焦点行发生改变，通知修改焦点行
@@ -54,11 +54,6 @@ namespace Insight.Base.BaseForm.Controls
         public delegate void PageReloadHandle(object sender, PageReloadEventArgs e);
 
         /// <summary>
-        /// 排序方式
-        /// </summary>
-        public OrderBy orderBy { get; set; } = OrderBy.POSITIVE;
-
-        /// <summary>
         /// 每页行数下拉列表选项
         /// </summary>
         public Collection<string> pageSizeItems
@@ -74,32 +69,14 @@ namespace Insight.Base.BaseForm.Controls
         }
 
         /// <summary>
-        /// 总行数
+        /// 排序方式
         /// </summary>
-        public int totalRows
-        {
-            set
-            {
-                rows = value;
-                refresh(0, false, true);
-            }
-        }
+        public OrderBy orderBy { get; set; } = OrderBy.POSITIVE;
 
         /// <summary>
-        /// 当前页
+        /// 页码
         /// </summary>
-        public int page
-        {
-            get => currentPage + 1;
-            set
-            {
-                var handle = focusedRowHandle;
-                currentPage = value - 1;
-                currentRow = currentPage * size + handle;
-
-                refresh(currentRow, false, true);
-            } 
-        }
+        public int page => currentPage + 1;
 
         /// <summary>
         /// 当前每页行数
@@ -107,12 +84,24 @@ namespace Insight.Base.BaseForm.Controls
         public int size { get; private set; }
 
         /// <summary>
-        /// 当前选中行Handle
+        /// 当前选中行
         /// </summary>
-        public int focusedRowHandle
+        public int rowHandle
         {
-            get => currentRow - size * currentPage;
-            set => currentRow = size * currentPage + value;
+            private get => rows > 0 ? currentRow - size * currentPage : -1;
+            set => currentRow = currentPage * size + value;
+        }
+
+        /// <summary>
+        /// 总行数
+        /// </summary>
+        public int totalRows
+        {
+            set
+            {
+                rows = value;
+                refresh();
+            }
         }
 
         /// <summary>
@@ -126,7 +115,7 @@ namespace Insight.Base.BaseForm.Controls
             cbeRows.EditValueChanged += (sender, args) =>
             {
                 size = int.Parse(cbeRows.Text);
-                refresh(currentRow, true);
+                refresh(true);
             };
 
             // 导航按钮点击事件
@@ -177,12 +166,14 @@ namespace Insight.Base.BaseForm.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
-            var focusedRow = orderBy == OrderBy.POSITIVE ? currentRow : 0;
             rows += count;
             currentRow = orderBy == OrderBy.POSITIVE ? rows - 1 : 0;
+            if (orderBy == OrderBy.REVERSE)
+            {
+                focusedRowChanged?.Invoke(this, new RowHandleEventArgs(0));
+            }
 
-            refresh(focusedRow);
-            selectDataChanged?.Invoke(this, EventArgs.Empty);
+            refresh();
         }
 
         /// <summary>
@@ -191,11 +182,10 @@ namespace Insight.Base.BaseForm.Controls
         /// <param name="count">减少数量，默认1个</param>
         public void removeItems(int count = 1)
         {
-            var focusedRow = currentRow;
             rows -= count;
+            if (currentRow >= rows) currentRow = rows - 1;
 
-            refresh(focusedRow);
-            selectDataChanged?.Invoke(this, EventArgs.Empty);
+            refresh(currentPage < rows / size);
         }
 
         /// <summary>
@@ -206,23 +196,20 @@ namespace Insight.Base.BaseForm.Controls
         {
             currentRow = page * size;
             currentPage = page;
-            pageReload?.Invoke(this, new PageReloadEventArgs(this.page, size, focusedRowHandle));
+            txtPage.EditValue = this.page;
+
+            pageReload?.Invoke(this, new PageReloadEventArgs(this.page, size, rowHandle));
         }
 
         /// <summary>
         /// 刷新控件
         /// </summary>
-        /// <param name="focusedRow">当前焦点行</param>
-        /// <param name="reload">是否强制重新加载</param>
-        /// <param name="first">是否首次加载</param>
-        private void refresh(int focusedRow, bool reload = false, bool first = false)
+        /// <param name="reload">页数据是否重新加载</param>
+        private void refresh(bool reload = false)
         {
             labRows.Text = $@" 行/页 | 共 {rows} 行 | 分 {pages + 1} 页";
             labRows.Refresh();
             labRows.Focus();
-
-            // 对当前选中行的异常值进行修正
-            if (currentRow >= rows && orderBy == OrderBy.POSITIVE) currentRow = rows - 1;
 
             // 根据当前选中行定位当前页并刷新导航按钮可用状态
             var cp = currentPage;
@@ -238,20 +225,20 @@ namespace Insight.Base.BaseForm.Controls
             btnJump.Text = page.ToString();
 
             // 根据当前页是否改变或页内容是否需要重新加载触发重新加载事件
-            if (!first && (reload || currentPage != cp))
+            if (reload || currentPage != cp)
             {
-                pageReload?.Invoke(this, new PageReloadEventArgs(page, size, focusedRowHandle));
+                pageReload?.Invoke(this, new PageReloadEventArgs(page, size, rowHandle));
                 return;
             }
 
             // 根据焦点行是否改变触发焦点行改变或刷新列表事件
-            if (orderBy == OrderBy.REVERSE || focusedRow != currentRow)
+            if (rowHandle < 0 || rowHandle == currentRow % size)
             {
-                focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
+                selectDataChanged?.Invoke(this, new RowHandleEventArgs(rowHandle));
             }
-            else if (orderBy == OrderBy.REVERSE || first || focusedRow == currentRow)
+            else
             {
-                selectDataChanged?.Invoke(this, EventArgs.Empty);
+                focusedRowChanged?.Invoke(this, new RowHandleEventArgs(rowHandle));
             }
         }
     }

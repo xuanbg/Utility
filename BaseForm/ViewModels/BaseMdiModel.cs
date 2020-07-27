@@ -8,7 +8,6 @@ using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
-using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using DevExpress.XtraTreeList;
 using Insight.Base.BaseForm.Controls;
 using Insight.Base.BaseForm.Entities;
@@ -20,7 +19,6 @@ namespace Insight.Base.BaseForm.ViewModels
 {
     public class BaseMdiModel<T, TV, DM> : BaseModel<T, TV> where TV : BaseMdi, new()
     {
-        private GridHitInfo hitInfo = new GridHitInfo();
         private List<BarButtonItem> buttons;
         private int waits;
         private DateTime wait;
@@ -141,32 +139,28 @@ namespace Insight.Base.BaseForm.ViewModels
         protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string callbackMethod = "editItem", string callMethod = "itemChanged")
         {
             this.tab = tab;
-
-            grid.MouseDown += (sender, args) => mouseDownEvent(gridView, args);
-
             grid.DataSource = list;
-            grid.ContextMenuStrip = createContextMenu(gridView);
 
-            initGrid(gridView, callMethod, callbackMethod, this.tab);
+            initGrid(grid, gridView, callMethod: callMethod, callbackMethod: callbackMethod, pageControl: this.tab);
         }
 
         /// <summary>
         /// 初始化列表控件
         /// </summary>
-        /// <param name="grid">列表View控件</param>
+        /// <param name="grid">列表控件</param>
+        /// <param name="gridView">列表View控件</param>
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
         /// <param name="pageControl">列表分页控件</param>
         /// <param name="getDataMethod">列表获取数据方法名称</param>
-        protected void initGrid(GridView grid, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
+        protected void initGrid(GridControl grid, GridView gridView, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
         {
-            grid.FocusedRowObjectChanged += (sender, args) =>
+            gridView.FocusedRowObjectChanged += (sender, args) =>
             {
-                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
-
                 call(callMethod, new object[] {args.FocusedRowHandle});
+                if (pageControl != null) pageControl.rowHandle = args.FocusedRowHandle;
             };
-            grid.DoubleClick += (sender, args) =>
+            gridView.DoubleClick += (sender, args) =>
             {
                 if (callbackMethod == null) return;
 
@@ -175,13 +169,25 @@ namespace Insight.Base.BaseForm.ViewModels
 
                 callback(callbackMethod);
             };
+            grid.MouseDown += (sender, args) => mouseDownEvent(gridView, args);
 
-            Format.gridFormat(grid);
+            Format.gridFormat(gridView);
+            grid.ContextMenuStrip = createContextMenu(gridView);
+
+            // 注册分页事件
             if (pageControl == null) return;
 
-            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] {args.page, args.handle});
-            pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
-            pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
+            pageControl.focusedRowChanged += (sender, args) => gridView.FocusedRowHandle = args.rowHandle;
+            pageControl.selectDataChanged += (sender, args) =>
+            {
+                gridView.RefreshData();
+                gridView.FocusedRowHandle = args.rowHandle;
+            };
+            pageControl.pageReload += (sender, args) =>
+            {
+                call(getDataMethod, new object[] {args.page});
+                gridView.FocusedRowHandle = args.handle;
+            };
         }
 
         /// <summary>
@@ -290,41 +296,5 @@ namespace Insight.Base.BaseForm.ViewModels
             view.Wait.CloseWaitForm();
         }
 
-        /// <summary>
-        /// 鼠标点击事件
-        /// </summary>
-        /// <param name="gridView">GridView</param>
-        /// <param name="args">MouseEventArgs</param>
-        protected void mouseDownEvent(GridView gridView, MouseEventArgs args)
-        {
-            if (args.Button != MouseButtons.Right) return;
-
-            var point = new Point(args.X, args.Y);
-            hitInfo = gridView.CalcHitInfo(point);
-        }
-
-        /// <summary>
-        /// 创建右键菜单并注册事件
-        /// </summary>
-        /// <param name="gridView">GridView</param>
-        /// <returns>ContextMenuStrip</returns>
-        protected ContextMenuStrip createContextMenu(GridView gridView)
-        {
-            var tsmi = new ToolStripMenuItem {Text = @"复制"};
-            tsmi.Click += (sender, args) =>
-            {
-                if (hitInfo.Column == null) return;
-
-                var content = gridView.GetRowCellDisplayText(hitInfo.RowHandle, hitInfo.Column);
-                if (string.IsNullOrEmpty(content)) return;
-
-                Clipboard.Clear();
-                Clipboard.SetData(DataFormats.Text, content);
-            };
-
-            var menu = new ContextMenuStrip();
-            menu.Items.Add(tsmi);
-            return menu;
-        }
     }
 }
