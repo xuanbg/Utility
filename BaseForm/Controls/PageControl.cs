@@ -222,7 +222,7 @@ namespace Insight.Base.BaseForm.Controls
             labRows.Focus();
 
             // 对当前选中行的异常值进行修正
-            if (currentRow >= rows) currentRow = rows - 1;
+            if (currentRow >= rows && orderBy == OrderBy.POSITIVE) currentRow = rows - 1;
 
             // 根据当前选中行定位当前页并刷新导航按钮可用状态
             var cp = currentPage;
@@ -245,10 +245,14 @@ namespace Insight.Base.BaseForm.Controls
             }
 
             // 根据焦点行是否改变触发焦点行改变或刷新列表事件
-            if (first || focusedRow == currentRow)
-                selectDataChanged?.Invoke(this, EventArgs.Empty);
-            else
+            if (orderBy == OrderBy.REVERSE || focusedRow != currentRow)
+            {
                 focusedRowChanged?.Invoke(this, new RowHandleEventArgs(focusedRowHandle));
+            }
+            else if (orderBy == OrderBy.REVERSE || first || focusedRow == currentRow)
+            {
+                selectDataChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 
