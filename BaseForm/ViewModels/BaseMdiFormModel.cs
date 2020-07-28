@@ -51,13 +51,12 @@ namespace Insight.Base.BaseForm.ViewModels
             // 注册分页事件
             if (pageControl == null) return;
 
-            pageControl.focusedRowChanged += (sender, args) => gridView.FocusedRowHandle = args.rowHandle;
-            pageControl.selectDataChanged += (sender, args) =>
+            pageControl.dataChanged += (sender, args) =>
             {
                 gridView.RefreshData();
                 gridView.FocusedRowHandle = args.rowHandle;
             };
-            pageControl.pageReload += (sender, args) =>
+            pageControl.reloadPage += (sender, args) =>
             {
                 call(getDataMethod, new object[] { args.page });
                 gridView.FocusedRowHandle = args.handle;

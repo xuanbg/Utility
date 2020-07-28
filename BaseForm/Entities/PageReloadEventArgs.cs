@@ -5,7 +5,7 @@ namespace Insight.Base.BaseForm.Entities
     /// <summary>
     /// 页面重载事件参数类
     /// </summary>
-    public class PageReloadEventArgs : EventArgs
+    public class ReloadPageEventArgs : EventArgs
     {
         /// <summary>
         /// Current page
@@ -28,7 +28,7 @@ namespace Insight.Base.BaseForm.Entities
         /// <param name="page">Current page</param>
         /// <param name="size">Page size</param>
         /// <param name="handle">Row handle</param>
-        public PageReloadEventArgs(int page, int size, int handle)
+        public ReloadPageEventArgs(int page, int size, int handle)
         {
             this.page = page;
             this.size = size;
