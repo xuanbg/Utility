@@ -112,8 +112,11 @@ namespace Insight.Base.BaseForm.Forms
             this.xtraScrollable.Appearance.Options.UseBackColor = true;
             this.xtraScrollable.AutoScrollMinSize = new System.Drawing.Size(1200, 720);
             this.xtraScrollable.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xtraScrollable.Location = new System.Drawing.Point(0, 29);
             this.xtraScrollable.Name = "xtraScrollable";
             this.xtraScrollable.Padding = new System.Windows.Forms.Padding(5);
+            this.xtraScrollable.Size = new System.Drawing.Size(1496, 867);
+            this.xtraScrollable.TabIndex = 0;
             // 
             // BaseMdi
             // 
@@ -137,10 +140,10 @@ namespace Insight.Base.BaseForm.Forms
         public Bar ToolBar;
         protected XtraScrollableControl xtraScrollable;
         private BarManager BarManager;
+        internal DevExpress.XtraSplashScreen.SplashScreenManager Wait;
         private BarDockControl barDockControlTop;
         private BarDockControl barDockControlBottom;
         private BarDockControl barDockControlLeft;
         private BarDockControl barDockControlRight;
-        internal DevExpress.XtraSplashScreen.SplashScreenManager Wait;
     }
 }
