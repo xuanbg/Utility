@@ -49,7 +49,7 @@
             this.pceTop.Location = new System.Drawing.Point(0, 0);
             this.pceTop.Name = "pceTop";
             this.pceTop.Size = new System.Drawing.Size(300, 2);
-            this.pceTop.TabIndex = 2;
+            this.pceTop.TabIndex = 0;
             // 
             // btnFirst
             // 
@@ -60,7 +60,7 @@
             this.btnFirst.Location = new System.Drawing.Point(194, 2);
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
-            this.btnFirst.TabIndex = 10;
+            this.btnFirst.TabIndex = 0;
             this.btnFirst.ToolTip = "首页";
             // 
             // txtPage
@@ -75,7 +75,7 @@
             this.txtPage.Properties.Mask.EditMask = "d";
             this.txtPage.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.txtPage.Size = new System.Drawing.Size(62, 20);
-            this.txtPage.TabIndex = 17;
+            this.txtPage.TabIndex = 0;
             this.txtPage.Visible = false;
             // 
             // btnPrev
@@ -87,7 +87,7 @@
             this.btnPrev.Location = new System.Drawing.Point(216, 2);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
-            this.btnPrev.TabIndex = 11;
+            this.btnPrev.TabIndex = 0;
             this.btnPrev.ToolTipTitle = "上一页";
             // 
             // btnJump
@@ -98,7 +98,7 @@
             this.btnJump.Location = new System.Drawing.Point(238, 2);
             this.btnJump.Name = "btnJump";
             this.btnJump.Size = new System.Drawing.Size(18, 22);
-            this.btnJump.TabIndex = 12;
+            this.btnJump.TabIndex = 0;
             this.btnJump.ToolTipTitle = "指定页";
             // 
             // btnNext
@@ -110,7 +110,7 @@
             this.btnNext.Location = new System.Drawing.Point(256, 2);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(22, 22);
-            this.btnNext.TabIndex = 13;
+            this.btnNext.TabIndex = 0;
             this.btnNext.ToolTipTitle = "下一页";
             // 
             // btnLast
@@ -122,21 +122,21 @@
             this.btnLast.Location = new System.Drawing.Point(278, 2);
             this.btnLast.Name = "btnLast";
             this.btnLast.Size = new System.Drawing.Size(22, 22);
-            this.btnLast.TabIndex = 14;
+            this.btnLast.TabIndex = 0;
             this.btnLast.ToolTipTitle = "末页";
             // 
             // labRows
             // 
-            this.labRows.Location = new System.Drawing.Point(45, 4);
+            this.labRows.Location = new System.Drawing.Point(45, 5);
             this.labRows.Name = "labRows";
             this.labRows.Size = new System.Drawing.Size(133, 14);
-            this.labRows.TabIndex = 15;
+            this.labRows.TabIndex = 0;
             this.labRows.Text = "行/页 | 共 0 行 | 分 1 页";
             // 
             // cbeRows
             // 
             this.cbeRows.EditValue = "";
-            this.cbeRows.Location = new System.Drawing.Point(0, 2);
+            this.cbeRows.Location = new System.Drawing.Point(0, 3);
             this.cbeRows.Name = "cbeRows";
             this.cbeRows.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.cbeRows.Properties.Appearance.Options.UseBackColor = true;
@@ -146,7 +146,7 @@
             this.cbeRows.Properties.DropDownRows = 5;
             this.cbeRows.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cbeRows.Size = new System.Drawing.Size(45, 20);
-            this.cbeRows.TabIndex = 16;
+            this.cbeRows.TabIndex = 0;
             // 
             // PageControl
             // 

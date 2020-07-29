@@ -129,7 +129,7 @@ namespace Insight.Base.BaseForm.Controls
             btnJump.Click += (sender, args) =>
             {
                 txtPage.Visible = true;
-                txtPage.Focus();
+                txtPage.Select();
             };
 
             // 页跳转输入事件
@@ -151,7 +151,7 @@ namespace Insight.Base.BaseForm.Controls
 
                 if (string.IsNullOrEmpty(txtPage.Text)) return;
 
-                var val = int.Parse(txtPage.Text);
+                var val = int.Parse(txtPage.Text.Trim());
                 if (val < 1 || val > pages || val == page)
                 {
                     txtPage.EditValue = null;
@@ -159,6 +159,7 @@ namespace Insight.Base.BaseForm.Controls
                 }
 
                 txtPage.Visible = false;
+                btnJump.Text = val.ToString();
                 changePage(val);
             };
         }
@@ -195,7 +196,6 @@ namespace Insight.Base.BaseForm.Controls
         {
             currentRow = (page - 1) * size;
             currentPage = page - 1;
-            txtPage.EditValue = page;
 
             reloadPage?.Invoke(this, new ReloadPageEventArgs(page, size, rowHandle));
         }
