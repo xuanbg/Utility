@@ -49,13 +49,13 @@ namespace Insight.Base.BaseForm.Forms
             this.xtraScrollable.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xtraScrollable.Location = new System.Drawing.Point(0, 0);
             this.xtraScrollable.Name = "xtraScrollable";
-            this.xtraScrollable.Size = new System.Drawing.Size(1496, 896);
+            this.xtraScrollable.Size = new System.Drawing.Size(1420, 860);
             this.xtraScrollable.TabIndex = 0;
             // 
             // BaseMdiForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1496, 896);
+            this.ClientSize = new System.Drawing.Size(1420, 860);
             this.Controls.Add(this.xtraScrollable);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BaseMdiForm";

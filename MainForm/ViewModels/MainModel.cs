@@ -34,19 +34,19 @@ namespace Insight.Base.MainForm.ViewModels
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
 
             view.Icon = new Icon("logo.ico");
-            view.WindowState = SystemInformation.WorkingArea.Height > 1050 ? FormWindowState.Normal : FormWindowState.Maximized;
-            view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
+            view.WindowState = SystemInformation.WorkingArea.Height > 1000 ? FormWindowState.Normal : FormWindowState.Maximized;
+            view.myFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             view.StbServer.Caption = Setting.gateway;
 
             // 订阅主窗体菜单事件
-            view.MubChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
-            view.MubLock.ItemClick += (sender, args) => callback("lockWindow");
-            view.MubLogout.ItemClick += (sender, args) => logout();
-            view.MubExit.ItemClick += (sender, args) => view.Close();
-            view.MubPrintSet.ItemClick += (sender, args) => callback("printSet");
-            view.MubUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
-            view.MubAbout.ItemClick += (sender, args) => callback("about");
+            view.bmiChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
+            view.bmiLock.ItemClick += (sender, args) => callback("lockWindow");
+            view.bmiLogout.ItemClick += (sender, args) => logout();
+            view.bmiExit.ItemClick += (sender, args) => view.Close();
+            view.bmiPrintSet.ItemClick += (sender, args) => callback("printSet");
+            view.bmiUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
+            view.bmiAbout.ItemClick += (sender, args) => callback("about");
             view.Closing += (sender, args) => exit(args);
         }
 
@@ -140,7 +140,7 @@ namespace Insight.Base.MainForm.ViewModels
                 return;
             }
 
-            Setting.saveLookAndFeel(view.MyFeel.LookAndFeel.SkinName);
+            Setting.saveLookAndFeel(view.myFeel.LookAndFeel.SkinName);
             Setting.tokenHelper.deleteToken();
             Application.Exit();
         }
