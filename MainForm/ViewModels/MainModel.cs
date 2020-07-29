@@ -34,7 +34,7 @@ namespace Insight.Base.MainForm.ViewModels
             Res.LoadLocale("Components\\Chinese (Simplified).frl");
 
             view.Icon = new Icon("logo.ico");
-            view.WindowState = SystemInformation.WorkingArea.Height > 755 ? FormWindowState.Normal : FormWindowState.Maximized;
+            view.WindowState = SystemInformation.WorkingArea.Height > 1050 ? FormWindowState.Normal : FormWindowState.Maximized;
             view.MyFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
             view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             view.StbServer.Caption = Setting.gateway;

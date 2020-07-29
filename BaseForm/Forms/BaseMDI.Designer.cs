@@ -33,18 +33,16 @@ namespace Insight.Base.BaseForm.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BaseMdi));
+            this.components = new System.ComponentModel.Container();
             this.Wait = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Base.BaseForm.Views.Waiting), true, true);
-            this.BarManager = new DevExpress.XtraBars.BarManager();
+            this.BarManager = new DevExpress.XtraBars.BarManager(this.components);
             this.ToolBar = new DevExpress.XtraBars.Bar();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.FolderNode = new DevExpress.Utils.ImageCollection();
             this.xtraScrollable = new DevExpress.XtraEditors.XtraScrollableControl();
             ((System.ComponentModel.ISupportInitialize)(this.BarManager)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).BeginInit();
             this.SuspendLayout();
             // 
             // Wait
@@ -82,15 +80,15 @@ namespace Insight.Base.BaseForm.Forms
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.BarManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(1080, 29);
+            this.barDockControlTop.Size = new System.Drawing.Size(1496, 29);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 631);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 896);
             this.barDockControlBottom.Manager = this.BarManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1080, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1496, 0);
             // 
             // barDockControlLeft
             // 
@@ -98,36 +96,29 @@ namespace Insight.Base.BaseForm.Forms
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 29);
             this.barDockControlLeft.Manager = this.BarManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 602);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 867);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1080, 29);
+            this.barDockControlRight.Location = new System.Drawing.Point(1496, 29);
             this.barDockControlRight.Manager = this.BarManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 602);
-            // 
-            // FolderNode
-            // 
-            this.FolderNode.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("FolderNode.ImageStream")));
-            this.FolderNode.Images.SetKeyName(0, "Item.png");
-            this.FolderNode.Images.SetKeyName(1, "Folder.png");
-            this.FolderNode.Images.SetKeyName(2, "FolderOpen.png");
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 867);
             // 
             // xtraScrollable
             // 
-            this.xtraScrollable.AutoScrollMinSize = new System.Drawing.Size(1060, 580);
+            this.xtraScrollable.Appearance.BackColor = System.Drawing.Color.Transparent;
+            this.xtraScrollable.Appearance.Options.UseBackColor = true;
+            this.xtraScrollable.AutoScrollMinSize = new System.Drawing.Size(1200, 720);
             this.xtraScrollable.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xtraScrollable.Location = new System.Drawing.Point(0, 29);
             this.xtraScrollable.Name = "xtraScrollable";
-            this.xtraScrollable.Size = new System.Drawing.Size(1080, 602);
-            this.xtraScrollable.TabIndex = 0;
+            this.xtraScrollable.Padding = new System.Windows.Forms.Padding(5);
             // 
-            // BaseMDI
+            // BaseMdi
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1080, 631);
+            this.ClientSize = new System.Drawing.Size(1496, 896);
             this.Controls.Add(this.xtraScrollable);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
@@ -136,7 +127,6 @@ namespace Insight.Base.BaseForm.Forms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BaseMdi";
             ((System.ComponentModel.ISupportInitialize)(this.BarManager)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.FolderNode)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,6 +142,5 @@ namespace Insight.Base.BaseForm.Forms
         private BarDockControl barDockControlLeft;
         private BarDockControl barDockControlRight;
         internal DevExpress.XtraSplashScreen.SplashScreenManager Wait;
-        protected ImageCollection FolderNode;
     }
 }

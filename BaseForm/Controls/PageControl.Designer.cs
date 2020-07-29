@@ -55,7 +55,7 @@
             this.btnFirst.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnFirst.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnFirst.ImageOptions.Image")));
             this.btnFirst.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnFirst.Location = new System.Drawing.Point(214, 0);
+            this.btnFirst.Location = new System.Drawing.Point(194, 0);
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
             this.btnFirst.TabIndex = 0;
@@ -67,7 +67,7 @@
             this.btnPrev.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnPrev.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.ImageOptions.Image")));
             this.btnPrev.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnPrev.Location = new System.Drawing.Point(236, 0);
+            this.btnPrev.Location = new System.Drawing.Point(216, 0);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
             this.btnPrev.TabIndex = 0;
@@ -79,7 +79,7 @@
             this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnNext.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.ImageOptions.Image")));
             this.btnNext.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnNext.Location = new System.Drawing.Point(276, 0);
+            this.btnNext.Location = new System.Drawing.Point(256, 0);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(22, 22);
             this.btnNext.TabIndex = 0;
@@ -91,7 +91,7 @@
             this.btnLast.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnLast.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnLast.ImageOptions.Image")));
             this.btnLast.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnLast.Location = new System.Drawing.Point(298, 0);
+            this.btnLast.Location = new System.Drawing.Point(278, 0);
             this.btnLast.Name = "btnLast";
             this.btnLast.Size = new System.Drawing.Size(22, 22);
             this.btnLast.TabIndex = 0;
@@ -117,7 +117,7 @@
             this.btnJump.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnJump.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnJump.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnJump.Location = new System.Drawing.Point(258, 0);
+            this.btnJump.Location = new System.Drawing.Point(238, 0);
             this.btnJump.Name = "btnJump";
             this.btnJump.Size = new System.Drawing.Size(18, 22);
             this.btnJump.TabIndex = 0;
@@ -127,7 +127,7 @@
             // 
             this.txtPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPage.Location = new System.Drawing.Point(236, 2);
+            this.txtPage.Location = new System.Drawing.Point(216, 2);
             this.txtPage.Name = "txtPage";
             this.txtPage.Properties.Appearance.Options.UseTextOptions = true;
             this.txtPage.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -150,9 +150,9 @@
             this.Controls.Add(this.labRows);
             this.Controls.Add(this.cbeRows);
             this.MaximumSize = new System.Drawing.Size(0, 22);
-            this.MinimumSize = new System.Drawing.Size(320, 22);
+            this.MinimumSize = new System.Drawing.Size(300, 22);
             this.Name = "PageControl";
-            this.Size = new System.Drawing.Size(320, 22);
+            this.Size = new System.Drawing.Size(300, 22);
             ((System.ComponentModel.ISupportInitialize)(this.cbeRows.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPage.Properties)).EndInit();
             this.ResumeLayout(false);

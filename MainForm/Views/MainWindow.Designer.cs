@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.barManager = new DevExpress.XtraBars.BarManager(this.components);
+            this.barManager = new DevExpress.XtraBars.BarManager();
             this.meuMain = new DevExpress.XtraBars.Bar();
             this.bmuUser = new DevExpress.XtraBars.BarSubItem();
             this.MubChangPassWord = new DevExpress.XtraBars.BarButtonItem();
@@ -58,9 +57,9 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.NavMain = new DevExpress.XtraNavBar.NavBarControl();
-            this.mdiManager = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager(this.components);
+            this.mdiManager = new DevExpress.XtraTabbedMdi.XtraTabbedMdiManager();
             this.splitterControl = new DevExpress.XtraEditors.SplitterControl();
-            this.MyFeel = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
+            this.MyFeel = new DevExpress.LookAndFeel.DefaultLookAndFeel();
             this.Loading = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::Insight.Base.BaseForm.Views.Waiting), true, true);
             ((System.ComponentModel.ISupportInitialize)(this.barManager)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NavMain)).BeginInit();
@@ -345,15 +344,15 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager;
-            this.barDockControlTop.Size = new System.Drawing.Size(1264, 24);
+            this.barDockControlTop.Size = new System.Drawing.Size(1664, 24);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 695);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 984);
             this.barDockControlBottom.Manager = this.barManager;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1264, 27);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1664, 27);
             // 
             // barDockControlLeft
             // 
@@ -361,24 +360,23 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 24);
             this.barDockControlLeft.Manager = this.barManager;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 671);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 960);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1264, 24);
+            this.barDockControlRight.Location = new System.Drawing.Point(1664, 24);
             this.barDockControlRight.Manager = this.barManager;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 671);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 960);
             // 
             // NavMain
             // 
-            this.NavMain.ActiveGroup = null;
             this.NavMain.Dock = System.Windows.Forms.DockStyle.Left;
             this.NavMain.Location = new System.Drawing.Point(0, 24);
             this.NavMain.Name = "NavMain";
             this.NavMain.OptionsNavPane.ExpandedWidth = 165;
-            this.NavMain.Size = new System.Drawing.Size(165, 671);
+            this.NavMain.Size = new System.Drawing.Size(165, 960);
             this.NavMain.StoreDefaultPaintStyleName = true;
             this.NavMain.TabIndex = 1;
             // 
@@ -394,7 +392,7 @@
             this.splitterControl.MinExtra = 880;
             this.splitterControl.MinSize = 120;
             this.splitterControl.Name = "splitterControl";
-            this.splitterControl.Size = new System.Drawing.Size(5, 671);
+            this.splitterControl.Size = new System.Drawing.Size(5, 960);
             this.splitterControl.TabIndex = 0;
             this.splitterControl.TabStop = false;
             // 
@@ -402,10 +400,10 @@
             // 
             this.Loading.ClosingDelay = 500;
             // 
-            // view
+            // MainWindow
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1264, 722);
+            this.ClientSize = new System.Drawing.Size(1664, 1011);
             this.Controls.Add(this.splitterControl);
             this.Controls.Add(this.NavMain);
             this.Controls.Add(this.barDockControlLeft);
