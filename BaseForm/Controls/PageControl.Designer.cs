@@ -53,6 +53,7 @@
             // 
             // btnFirst
             // 
+            this.btnFirst.AllowFocus = false;
             this.btnFirst.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnFirst.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnFirst.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnFirst.ImageOptions.Image")));
@@ -80,6 +81,7 @@
             // 
             // btnPrev
             // 
+            this.btnPrev.AllowFocus = false;
             this.btnPrev.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnPrev.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnPrev.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.ImageOptions.Image")));
@@ -92,6 +94,7 @@
             // 
             // btnJump
             // 
+            this.btnJump.AllowFocus = false;
             this.btnJump.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnJump.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnJump.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
@@ -103,6 +106,7 @@
             // 
             // btnNext
             // 
+            this.btnNext.AllowFocus = false;
             this.btnNext.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnNext.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.ImageOptions.Image")));
@@ -115,6 +119,7 @@
             // 
             // btnLast
             // 
+            this.btnLast.AllowFocus = false;
             this.btnLast.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnLast.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnLast.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnLast.ImageOptions.Image")));
@@ -138,6 +143,7 @@
             this.cbeRows.EditValue = "";
             this.cbeRows.Location = new System.Drawing.Point(0, 3);
             this.cbeRows.Name = "cbeRows";
+            this.cbeRows.Properties.AllowFocused = false;
             this.cbeRows.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.cbeRows.Properties.Appearance.Options.UseBackColor = true;
             this.cbeRows.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
