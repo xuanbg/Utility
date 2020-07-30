@@ -117,14 +117,14 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <param name="getDataMethod">列表获取数据方法名称</param>
         protected void initSearch(ButtonEdit input, SimpleButton search, string getDataMethod = "loadData")
         {
-            search.Click += (sender, args) => call(getDataMethod, new object[] {1, 0});
+            search.Click += (sender, args) => call(getDataMethod, new object[] {1});
             input.Properties.Click += (sender, args) => input.EditValue = null;
             input.EditValueChanged += (sender, args) => keyword = input.EditValue as string;
             input.KeyPress += (sender, args) =>
             {
                 if (args.KeyChar != 13) return;
 
-                call(getDataMethod, new object[] {1, 0});
+                call(getDataMethod, new object[] {1});
             };
         }
 

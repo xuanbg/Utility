@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PageControl));
-            this.pceTop = new DevExpress.XtraEditors.PanelControl();
             this.btnFirst = new DevExpress.XtraEditors.SimpleButton();
             this.txtPage = new DevExpress.XtraEditors.TextEdit();
             this.btnPrev = new DevExpress.XtraEditors.SimpleButton();
@@ -38,18 +37,9 @@
             this.btnLast = new DevExpress.XtraEditors.SimpleButton();
             this.labRows = new DevExpress.XtraEditors.LabelControl();
             this.cbeRows = new DevExpress.XtraEditors.ComboBoxEdit();
-            ((System.ComponentModel.ISupportInitialize)(this.pceTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtPage.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbeRows.Properties)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pceTop
-            // 
-            this.pceTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pceTop.Location = new System.Drawing.Point(0, 0);
-            this.pceTop.Name = "pceTop";
-            this.pceTop.Size = new System.Drawing.Size(300, 2);
-            this.pceTop.TabIndex = 0;
             // 
             // btnFirst
             // 
@@ -58,7 +48,7 @@
             this.btnFirst.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnFirst.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnFirst.ImageOptions.Image")));
             this.btnFirst.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnFirst.Location = new System.Drawing.Point(194, 2);
+            this.btnFirst.Location = new System.Drawing.Point(194, 0);
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(22, 22);
             this.btnFirst.TabIndex = 0;
@@ -68,7 +58,7 @@
             // 
             this.txtPage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPage.Location = new System.Drawing.Point(216, 4);
+            this.txtPage.Location = new System.Drawing.Point(216, 2);
             this.txtPage.Name = "txtPage";
             this.txtPage.Properties.Appearance.Options.UseTextOptions = true;
             this.txtPage.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -86,7 +76,7 @@
             this.btnPrev.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnPrev.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.ImageOptions.Image")));
             this.btnPrev.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnPrev.Location = new System.Drawing.Point(216, 2);
+            this.btnPrev.Location = new System.Drawing.Point(216, 0);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(22, 22);
             this.btnPrev.TabIndex = 0;
@@ -98,7 +88,7 @@
             this.btnJump.ButtonStyle = DevExpress.XtraEditors.Controls.BorderStyles.UltraFlat;
             this.btnJump.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnJump.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnJump.Location = new System.Drawing.Point(238, 2);
+            this.btnJump.Location = new System.Drawing.Point(238, 0);
             this.btnJump.Name = "btnJump";
             this.btnJump.Size = new System.Drawing.Size(18, 22);
             this.btnJump.TabIndex = 0;
@@ -111,7 +101,7 @@
             this.btnNext.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnNext.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.ImageOptions.Image")));
             this.btnNext.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnNext.Location = new System.Drawing.Point(256, 2);
+            this.btnNext.Location = new System.Drawing.Point(256, 0);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(22, 22);
             this.btnNext.TabIndex = 0;
@@ -124,7 +114,7 @@
             this.btnLast.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnLast.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnLast.ImageOptions.Image")));
             this.btnLast.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnLast.Location = new System.Drawing.Point(278, 2);
+            this.btnLast.Location = new System.Drawing.Point(278, 0);
             this.btnLast.Name = "btnLast";
             this.btnLast.Size = new System.Drawing.Size(22, 22);
             this.btnLast.TabIndex = 0;
@@ -132,7 +122,7 @@
             // 
             // labRows
             // 
-            this.labRows.Location = new System.Drawing.Point(45, 5);
+            this.labRows.Location = new System.Drawing.Point(45, 3);
             this.labRows.Name = "labRows";
             this.labRows.Size = new System.Drawing.Size(133, 14);
             this.labRows.TabIndex = 0;
@@ -141,7 +131,7 @@
             // cbeRows
             // 
             this.cbeRows.EditValue = "";
-            this.cbeRows.Location = new System.Drawing.Point(0, 3);
+            this.cbeRows.Location = new System.Drawing.Point(0, 1);
             this.cbeRows.Name = "cbeRows";
             this.cbeRows.Properties.AllowFocused = false;
             this.cbeRows.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
@@ -165,12 +155,10 @@
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnLast);
             this.Controls.Add(this.cbeRows);
-            this.Controls.Add(this.pceTop);
-            this.MaximumSize = new System.Drawing.Size(0, 24);
-            this.MinimumSize = new System.Drawing.Size(300, 24);
+            this.MaximumSize = new System.Drawing.Size(0, 22);
+            this.MinimumSize = new System.Drawing.Size(300, 22);
             this.Name = "PageControl";
-            this.Size = new System.Drawing.Size(300, 24);
-            ((System.ComponentModel.ISupportInitialize)(this.pceTop)).EndInit();
+            this.Size = new System.Drawing.Size(300, 22);
             ((System.ComponentModel.ISupportInitialize)(this.txtPage.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbeRows.Properties)).EndInit();
             this.ResumeLayout(false);
@@ -179,7 +167,6 @@
         }
 
         #endregion
-        private DevExpress.XtraEditors.PanelControl pceTop;
         private DevExpress.XtraEditors.SimpleButton btnFirst;
         private DevExpress.XtraEditors.TextEdit txtPage;
         private DevExpress.XtraEditors.SimpleButton btnPrev;
