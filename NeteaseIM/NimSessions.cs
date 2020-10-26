@@ -81,6 +81,7 @@ namespace Insight.Utils.NetEaseIM
 
                 void action()
                 {
+                    ppcSession.totalRows = sessions.Count;
                     refresh();
                     click();
                     sessionClick?.Invoke(this, new SessionEventArgs(id, true));
@@ -114,6 +115,12 @@ namespace Insight.Utils.NetEaseIM
                     removeSession(e.Info);
                     break;
             }
+
+            void action() => ppcSession.totalRows = sessions.Count;
+
+            while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
+
+            Invoke((Action)action);
         }
 
         /// <summary>
