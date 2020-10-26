@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NimSessions));
             this.sceMain = new DevExpress.XtraEditors.XtraScrollableControl();
             this.pceMain0 = new DevExpress.XtraEditors.PanelControl();
             this.pceMain1 = new DevExpress.XtraEditors.PanelControl();
+            this.ppcSession = new Insight.Utils.Controls.PageControl();
             this.sceMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pceMain0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pceMain1)).BeginInit();
@@ -43,7 +45,7 @@
             this.sceMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sceMain.Location = new System.Drawing.Point(0, 0);
             this.sceMain.Name = "sceMain";
-            this.sceMain.Size = new System.Drawing.Size(320, 540);
+            this.sceMain.Size = new System.Drawing.Size(320, 518);
             this.sceMain.TabIndex = 0;
             // 
             // pceMain0
@@ -51,7 +53,7 @@
             this.pceMain0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain0.Location = new System.Drawing.Point(0, 0);
             this.pceMain0.Name = "pceMain0";
-            this.pceMain0.Size = new System.Drawing.Size(320, 540);
+            this.pceMain0.Size = new System.Drawing.Size(320, 518);
             this.pceMain0.TabIndex = 0;
             // 
             // pceMain1
@@ -59,15 +61,29 @@
             this.pceMain1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain1.Location = new System.Drawing.Point(0, 0);
             this.pceMain1.Name = "pceMain1";
-            this.pceMain1.Size = new System.Drawing.Size(320, 540);
+            this.pceMain1.Size = new System.Drawing.Size(320, 518);
             this.pceMain1.TabIndex = 0;
             this.pceMain1.Visible = false;
+            // 
+            // ppcSession
+            // 
+            this.ppcSession.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ppcSession.focusedRowHandle = 0;
+            this.ppcSession.Location = new System.Drawing.Point(0, 518);
+            this.ppcSession.MaximumSize = new System.Drawing.Size(0, 22);
+            this.ppcSession.MinimumSize = new System.Drawing.Size(320, 22);
+            this.ppcSession.Name = "ppcSession";
+            this.ppcSession.page = 1;
+            this.ppcSession.pageSizeItems = ((System.Collections.ObjectModel.Collection<string>)(resources.GetObject("ppcSession.pageSizeItems")));
+            this.ppcSession.Size = new System.Drawing.Size(320, 22);
+            this.ppcSession.TabIndex = 1;
             // 
             // NimSessions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.sceMain);
+            this.Controls.Add(this.ppcSession);
             this.MinimumSize = new System.Drawing.Size(320, 540);
             this.Name = "NimSessions";
             this.Size = new System.Drawing.Size(320, 540);
@@ -83,5 +99,6 @@
         private DevExpress.XtraEditors.XtraScrollableControl sceMain;
         private DevExpress.XtraEditors.PanelControl pceMain0;
         private DevExpress.XtraEditors.PanelControl pceMain1;
+        public Utils.Controls.PageControl ppcSession;
     }
 }

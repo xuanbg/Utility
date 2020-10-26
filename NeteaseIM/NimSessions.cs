@@ -55,6 +55,7 @@ namespace Insight.Utils.NetEaseIM
 
             timer.Elapsed += refreshTime;
             SessionAPI.RecentSessionChangedHandler += sessionChanged;
+            ppcSession.pageReload += (sender, args) => refresh(args.page - 1);
         }
 
         /// <summary>
@@ -80,6 +81,7 @@ namespace Insight.Utils.NetEaseIM
 
                 void action()
                 {
+                    ppcSession.totalRows = sessions.Count;
                     refresh();
                     click();
                     sessionClick?.Invoke(this, new SessionEventArgs(id, true));
@@ -114,7 +116,7 @@ namespace Insight.Utils.NetEaseIM
                     break;
             }
 
-            void action() => refresh();
+            void action() => ppcSession.totalRows = sessions.Count;
 
             while (!(Parent?.IsHandleCreated ?? false)) Thread.Sleep(100);
 
@@ -171,12 +173,13 @@ namespace Insight.Utils.NetEaseIM
         /// <summary>
         /// 刷新会话列表
         /// </summary>
-        private void refresh()
+        /// <param name="page">页码</param>
+        private void refresh(int page = 0)
         {
             var show = sceMain.Controls[0];
             var hide = sceMain.Controls[1];
             var height = 0;
-            sessions.OrderBy(i => i.time).ToList().ForEach(i =>
+            sessions.OrderBy(i => i.time).Skip(page * ppcSession.size).Take(ppcSession.size).ToList().ForEach(i =>
             {
                 var control = new SessionBox
                 {
