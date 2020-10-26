@@ -50,6 +50,7 @@
             // 
             // pceMain0
             // 
+            this.pceMain0.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pceMain0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain0.Location = new System.Drawing.Point(0, 0);
             this.pceMain0.Name = "pceMain0";
@@ -58,6 +59,7 @@
             // 
             // pceMain1
             // 
+            this.pceMain1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pceMain1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain1.Location = new System.Drawing.Point(0, 0);
             this.pceMain1.Name = "pceMain1";

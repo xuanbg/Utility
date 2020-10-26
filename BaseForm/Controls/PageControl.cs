@@ -197,7 +197,7 @@ namespace Insight.Base.BaseForm.Controls
             currentRow = (page - 1) * size;
             currentPage = page - 1;
 
-            reloadPage?.Invoke(this, new ReloadPageEventArgs(page, size, rowHandle));
+            refresh(true);
         }
 
         /// <summary>
