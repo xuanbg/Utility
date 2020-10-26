@@ -124,7 +124,7 @@ namespace Insight.Utils.BaseViewModels
         {
             grid.FocusedRowObjectChanged += (sender, args) =>
             {
-                if (pageControl != null) pageControl.focusedRowHandle = args.FocusedRowHandle;
+                if (pageControl != null) pageControl.rowHandle = args.FocusedRowHandle;
 
                 call(callMethod, new object[] {args.FocusedRowHandle});
             };
@@ -141,9 +141,8 @@ namespace Insight.Utils.BaseViewModels
             Format.gridFormat(grid);
             if (pageControl == null) return;
 
-            pageControl.pageReload += (sender, args) => call(getDataMethod, new object[] {args.page, args.handle});
-            pageControl.focusedRowChanged += (sender, args) => grid.FocusedRowHandle = args.rowHandle;
-            pageControl.selectDataChanged += (sender, args) => grid.RefreshData();
+            pageControl.reloadPage += (sender, args) => call(getDataMethod, new object[] {args.page, args.handle});
+            pageControl.dataChanged += (sender, args) => grid.RefreshData();
         }
 
         /// <summary>

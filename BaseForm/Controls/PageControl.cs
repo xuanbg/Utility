@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using DevExpress.XtraEditors;
+using Insight.Base.BaseForm.Entities;
 
 namespace Insight.Utils.Controls
 {
@@ -196,7 +197,7 @@ namespace Insight.Utils.Controls
             currentRow = (page - 1) * size;
             currentPage = page - 1;
 
-            reloadPage?.Invoke(this, new ReloadPageEventArgs(page, size, rowHandle));
+            refresh(true);
         }
 
         /// <summary>

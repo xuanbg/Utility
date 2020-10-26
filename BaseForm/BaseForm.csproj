@@ -90,6 +90,8 @@
     </Compile>
     <Compile Include="BaseViewModels\BaseMdiDialogModel.cs" />
     <Compile Include="BaseViewModels\BaseWizardModel.cs" />
+    <Compile Include="Entities\PageReloadEventArgs.cs" />
+    <Compile Include="Entities\RowHandleEventArgs.cs" />
     <Compile Include="Views\ShowImage.cs">
       <SubType>Form</SubType>
     </Compile>

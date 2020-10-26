@@ -50,6 +50,7 @@
             // 
             // pceMain0
             // 
+            this.pceMain0.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pceMain0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain0.Location = new System.Drawing.Point(0, 0);
             this.pceMain0.Name = "pceMain0";
@@ -58,6 +59,7 @@
             // 
             // pceMain1
             // 
+            this.pceMain1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pceMain1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pceMain1.Location = new System.Drawing.Point(0, 0);
             this.pceMain1.Name = "pceMain1";
@@ -68,15 +70,14 @@
             // ppcSession
             // 
             this.ppcSession.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ppcSession.focusedRowHandle = 0;
             this.ppcSession.Location = new System.Drawing.Point(0, 518);
             this.ppcSession.MaximumSize = new System.Drawing.Size(0, 22);
             this.ppcSession.MinimumSize = new System.Drawing.Size(320, 22);
             this.ppcSession.Name = "ppcSession";
-            this.ppcSession.page = 1;
+            this.ppcSession.orderBy = Insight.Utils.Controls.OrderBy.POSITIVE;
             this.ppcSession.pageSizeItems = ((System.Collections.ObjectModel.Collection<string>)(resources.GetObject("ppcSession.pageSizeItems")));
             this.ppcSession.Size = new System.Drawing.Size(320, 22);
-            this.ppcSession.TabIndex = 1;
+            this.ppcSession.TabIndex = 0;
             // 
             // NimSessions
             // 

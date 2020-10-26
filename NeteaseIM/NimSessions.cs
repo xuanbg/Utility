@@ -55,7 +55,7 @@ namespace Insight.Utils.NetEaseIM
 
             timer.Elapsed += refreshTime;
             SessionAPI.RecentSessionChangedHandler += sessionChanged;
-            ppcSession.pageReload += (sender, args) => refresh(args.page - 1);
+            ppcSession.reloadPage += (sender, args) => refresh(args.page - 1);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Insight.Utils.NetEaseIM
             var show = sceMain.Controls[0];
             var hide = sceMain.Controls[1];
             var height = 0;
-            sessions.OrderBy(i => i.time).Skip(page * ppcSession.size).Take(ppcSession.size).ToList().ForEach(i =>
+            sessions.OrderByDescending(i => i.time).Skip(page * ppcSession.size).Take(ppcSession.size).OrderBy(i => i.time).ToList().ForEach(i =>
             {
                 var control = new SessionBox
                 {
