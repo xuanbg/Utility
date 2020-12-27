@@ -10,6 +10,7 @@ namespace Insight.Utils.Common
 {
     public class HttpRequest
     {
+        private string url;
         private readonly string token;
 
         /// <summary>
@@ -45,25 +46,26 @@ namespace Insight.Utils.Common
         /// <summary>
         /// HttpRequest方法，用于客户端请求接口
         /// </summary>
+        /// <param name="url">URL</param>
         /// <param name="token">AccessToken</param>
-        public HttpRequest(string token = null)
+        public HttpRequest(string url, string token = null)
         {
+            this.url = url;
             this.token = token;
         }
 
         /// <summary>
         /// 发送Http请求
         /// </summary>
-        /// <param name="url">请求地址</param>
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool send(string url, RequestMethod method, object body)
+        public bool send(RequestMethod method, object body)
         {
             if (method != RequestMethod.GET)
             {
                 var json = Util.serialize(body);
-                return send(url, method, json);
+                return send(method, json);
             }
 
             if (body != null)
@@ -80,17 +82,16 @@ namespace Insight.Utils.Common
                 url += param.Replace("?&", "?");
             }
 
-            return send(url);
+            return send();
         }
 
         /// <summary>
         /// 发送Http请求
         /// </summary>
-        /// <param name="url">请求地址</param>
         /// <param name="method">请求方法，默认GET</param>
         /// <param name="body">BODY数据</param>
         /// <returns>bool 是否成功</returns>
-        public bool send(string url, RequestMethod method = RequestMethod.GET, string body = null)
+        public bool send(RequestMethod method = RequestMethod.GET, string body = null)
         {
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);

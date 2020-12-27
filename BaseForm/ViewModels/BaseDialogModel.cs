@@ -71,7 +71,19 @@ namespace Insight.Base.BaseForm.ViewModels
                 return;
             }
 
+            view.confirm.Enabled = false;
+            view.Refresh();
+
             callback("confirm", new object[] {item});
+        }
+
+        /// <summary>
+        /// 启用确认按钮
+        /// </summary>
+        public void enableConfirm()
+        {
+            view.confirm.Enabled = true;
+            view.Refresh();
         }
 
         /// <summary>

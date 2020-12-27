@@ -43,8 +43,8 @@ namespace Insight.Base.BaseForm.Utils
                 {"key", info.key},
                 {"userid", info.userId}
             };
-            var request = new HttpRequest(info.token);
-            request.send(info.logUrl, RequestMethod.POST, dict);
+            var request = new HttpRequest(info.logUrl, info.token);
+            request.send(RequestMethod.POST, dict);
         }
 
         /// <summary>

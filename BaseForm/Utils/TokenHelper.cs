@@ -57,10 +57,11 @@ namespace Insight.Base.BaseForm.Utils
             var key = Util.hash(sign + code);
             var body = new LoginDto {appId = appId, tenantId = tenantId, account = account, signature = key};
             var url = "/base/auth/v1.0/tokens";
-            var client = new HttpClient<TokenPackage>();
-            var data = client.request(url, body, RequestMethod.POST);
-            if (!client.success) return false;
+            var client = new HttpClient<TokenPackage>(url);
+            var result = client.request(RequestMethod.POST, body);
+            if (!result.success) return false;
 
+            var data = result.data;
             accessToken = data.accessToken;
             refreshToken = data.refreshToken;
 
@@ -78,8 +79,8 @@ namespace Insight.Base.BaseForm.Utils
         {
             accessToken = null;
             var url = $"{Setting.gateway}/base/auth/v1.0/tokens";
-            var request = new HttpRequest(refreshToken);
-            if (!request.send(url, RequestMethod.PUT))
+            var request = new HttpRequest(url, refreshToken);
+            if (!request.send(RequestMethod.PUT))
             {
                 Messages.showError(request.message);
                 return false;
@@ -103,9 +104,9 @@ namespace Insight.Base.BaseForm.Utils
         /// </summary>
         public void deleteToken()
         {
-            var url = "/base/auth/v1.0/tokens";
-            var client = new HttpClient<object>();
-            client.commit(url, null, RequestMethod.DELETE);
+            const string url = "/base/auth/v1.0/tokens";
+            var client = new HttpClient<object>(url);
+            if (!client.delete()) return;
 
             accessToken = null;
             refreshToken = null;
@@ -119,9 +120,9 @@ namespace Insight.Base.BaseForm.Utils
         {
             var url = "/base/auth/v1.0/tokens/codes";
             var dict = new Dictionary<string, object> {{"account", account}};
-            var client = new HttpClient<string>();
+            var client = new HttpClient<string>(url);
 
-            return client.getData(url, dict);
+            return client.getData(dict);
         }
     }
 }

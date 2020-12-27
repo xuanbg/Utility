@@ -21,9 +21,9 @@ namespace Insight.Utils.NetEaseIM.Controls
             if (string.IsNullOrEmpty(id)) return new NimUser{name = "未知好友"};
 
             var url = $"{Setting.gateway}/common/message/v1.0/nimusers/{id}";
-            var client = new HttpClient<NimUser>();
+            var client = new HttpClient<NimUser>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>

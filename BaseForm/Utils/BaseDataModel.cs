@@ -16,9 +16,9 @@ namespace Insight.Base.BaseForm.Utils
         {
             const string url = "/common/dict/v1.0/dicts/values";
             var dict = new Dictionary<string, object> {{"key", key}};
-            var client = new HttpClient<List<DictKeyDto>>();
+            var client = new HttpClient<List<DictKeyDto>>(url);
 
-            return client.getData(url, dict);
+            return client.getData(dict);
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace Insight.Base.BaseForm.Utils
         {
             const string url = "/common/param/v1.0/params";
             var dict = new Dictionary<string, object> {{"moduleId", moduleId}};
-            var client = new HttpClient<List<ModuleParam>>();
-            var list = client.getData(url, dict);
+            var client = new HttpClient<List<ModuleParam>>(url);
+            var list = client.getData(dict);
 
             return keys.Select(key => list.FirstOrDefault(i => i.key == key && i.userId == userId)
                                       ?? new ModuleParam {moduleId = moduleId, key = key, userId = userId}).ToList();
@@ -50,9 +50,9 @@ namespace Insight.Base.BaseForm.Utils
         {
             const string url = "/common/param/v1.0/params/value";
             var dict = new Dictionary<string, object> {{"moduleId", moduleId}, {"keyword", key}, {"userId", userId}};
-            var client = new HttpClient<ModuleParam>();
+            var client = new HttpClient<ModuleParam>(url);
 
-            var param = client.getData(url, dict);
+            var param = client.getData(dict);
             if (param != null) return param;
 
             return new ModuleParam
@@ -71,10 +71,9 @@ namespace Insight.Base.BaseForm.Utils
         public bool setParam(List<ModuleParam> moduleParams)
         {
             const string url = "/common/param/v1.0/params";
-            var msg = "保存选项数据失败！";
-            var client = new HttpClient<object>();
+            var client = new HttpClient<object>(url);
 
-            return client.put(url, moduleParams, msg);
+            return client.put(moduleParams);
         }
 
         /// <summary>
@@ -85,9 +84,9 @@ namespace Insight.Base.BaseForm.Utils
         public string getTemplate(string id)
         {
             var url = $"/common/report/v1.0/templates/{id}/content";
-            var client = new HttpClient<string>();
+            var client = new HttpClient<string>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>
@@ -97,9 +96,9 @@ namespace Insight.Base.BaseForm.Utils
         public List<LookUpMember> getProvinces()
         {
             const string url = "/common/area/v1.0/areas/provinces";
-            var client = new HttpClient<List<LookUpMember>>();
+            var client = new HttpClient<List<LookUpMember>>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>
@@ -110,9 +109,9 @@ namespace Insight.Base.BaseForm.Utils
         public List<Region> getRegions(string id)
         {
             var url = $"/common/area/v1.0/areas/{id}/subs";
-            var client = new HttpClient<List<Region>>();
+            var client = new HttpClient<List<Region>>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>
@@ -124,9 +123,9 @@ namespace Insight.Base.BaseForm.Utils
         {
             const string url = "/base/auth/v1.0/tokens";
             var dict = new Dictionary<string, object> {{"key", key}};
-            var client = new HttpClient<string>();
+            var client = new HttpClient<string>(url);
 
-            return client.getData(url, dict);
+            return client.getData(dict);
         }
 
         /// <summary>
@@ -147,9 +146,9 @@ namespace Insight.Base.BaseForm.Utils
                 {"length", length},
                 {"minutes", minutes}
             };
-            var client = new HttpClient<string>();
+            var client = new HttpClient<string>(url);
 
-            return client.post(url, dict);
+            return client.post(dict);
         }
 
         /// <summary>
@@ -161,8 +160,8 @@ namespace Insight.Base.BaseForm.Utils
         {
             var url = $"/common/message/v1.0/codes/{key}/status";
             var dict = new Dictionary<string, object> {{"isCheck", true}};
-            var client = new HttpClient<string>();
-            var result = client.getResult(url, dict);
+            var client = new HttpClient<string>(url);
+            var result = client.getResult(dict);
 
             return result.success;
         }

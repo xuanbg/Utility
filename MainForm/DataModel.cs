@@ -24,10 +24,10 @@ namespace Insight.Base.MainForm
         internal List<LookUpMember> getTenants(string account)
         {
             var url = $"{authService}/v1.0/{Setting.appId}/tenants";
-            var dict = new Dictionary<string, object> { { "account", account } };
-            var client = new HttpClient<List<LookUpMember>>();
+            var dict = new Dictionary<string, object> {{"account", account}};
+            var client = new HttpClient<List<LookUpMember>>(url);
 
-            return client.request(url, dict);
+            return client.getData(dict);
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace Insight.Base.MainForm
         internal List<ModuleDto> getNavigators()
         {
             var url = $"{authService}/v1.0/navigators";
-            var client = new HttpClient<List<ModuleDto>>();
+            var client = new HttpClient<List<ModuleDto>>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace Insight.Base.MainForm
         internal List<FunctionDto> getActions(string moduleId)
         {
             var url = $"{authService}/v1.0/navigators/{moduleId}/functions";
-            var client = new HttpClient<List<FunctionDto>>();
+            var client = new HttpClient<List<FunctionDto>>(url);
 
-            return client.getData(url);
+            return client.getData();
         }
 
         /// <summary>
@@ -61,11 +61,10 @@ namespace Insight.Base.MainForm
         /// <returns></returns>
         internal bool changPassword(PasswordDto dto)
         {
-            const string msg = "更换密码失败！请检查网络状况，并再次进行更换密码操作。";
             var url = $"{userService}/v1.0/users/password";
-            var client = new HttpClient<object>();
+            var client = new HttpClient<object>(url);
 
-            return client.put(url, dto, msg);
+            return client.put(dto);
         }
 
         /// <summary>
@@ -76,8 +75,8 @@ namespace Insight.Base.MainForm
         internal Update checkUpdate(bool isStart)
         {
             var url = $"{Setting.updateUrl}/update.json";
-            var client = new HttpRequest();
-            if (!client.send(url))
+            var client = new HttpRequest(url);
+            if (!client.send())
             {
                 if (!isStart) Messages.showError("无法获取更新信息，请稍后再试……");
 
