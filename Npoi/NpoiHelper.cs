@@ -517,10 +517,18 @@ namespace Insight.Utils.ExcelHelper
                 var field = exportFields[i];
                 var cell = row.CreateCell(i, getCellType(field.typeName));
                 var property = propertys.First(p => p.Name == field.fieldName);
-                if (!property.CanRead) continue;
+                if (!property.CanRead)
+                {
+                    cell.SetCellValue(string.Empty);
+                    continue;
+                }
 
                 var value = property.GetValue(item, null)?.ToString();
-                if (string.IsNullOrEmpty(value)) continue;
+                if (string.IsNullOrEmpty(value))
+                {
+                    cell.SetCellValue(value);
+                    continue;
+                }
 
                 switch (field.typeName)
                 {
