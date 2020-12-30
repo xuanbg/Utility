@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FastReport;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
@@ -68,31 +69,38 @@ namespace Insight.Base.BaseForm.Controllers
         /// <returns>string 电子影像文件名</returns>
         protected void print<E>(PrintSetting<E> set)
         {
-            var report = buildReport(set);
-            if (report == null || !report.Prepare())
+            try
             {
-                Messages.showError("生成报表失败！");
-                return;
-            }
+                var report = buildReport(set);
+                if (report == null || !report.Prepare())
+                {
+                    Messages.showError("生成报表失败！");
+                    return;
+                }
 
-            if (set.pagesOnSheet == PagesOnSheet.One)
-            {
-                report.PrintSettings.PrintMode = set.printMode;
-            }
-            else
-            {
-                report.PrintSettings.PrintMode = PrintMode.Scale;
-                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
-            }
+                if (set.pagesOnSheet == PagesOnSheet.One)
+                {
+                    report.PrintSettings.PrintMode = set.printMode;
+                }
+                else
+                {
+                    report.PrintSettings.PrintMode = PrintMode.Scale;
+                    report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+                }
 
-            if (!string.IsNullOrEmpty(set.printer))
-            {
-                report.PrintSettings.ShowDialog = false;
-                report.PrintSettings.Printer = set.printer;
-            }
+                if (!string.IsNullOrEmpty(set.printer))
+                {
+                    report.PrintSettings.ShowDialog = false;
+                    report.PrintSettings.Printer = set.printer;
+                }
 
-            report.PrintSettings.Copies = set.copies;
-            report.PrintPrepared();
+                report.PrintSettings.Copies = set.copies;
+                report.PrintPrepared();
+            }
+            catch (Exception e)
+            {
+                Messages.showError(e.Message);
+            }
         }
 
         /// <summary>
