@@ -170,8 +170,8 @@ namespace Insight.Base.BaseForm.Controls
         /// <param name="count">增加数量，默认1个</param>
         public void addItems(int count = 1)
         {
+            currentRow = orderBy == OrderBy.POSITIVE ? rows : 0;
             rows += count;
-            currentRow = orderBy == OrderBy.POSITIVE ? rows - 1 : 0;
 
             refresh();
         }
@@ -183,6 +183,8 @@ namespace Insight.Base.BaseForm.Controls
         public void removeItems(int count = 1)
         {
             rows -= count;
+            if (rows > 0 && currentRow < 0) currentRow = 0;
+
             if (currentRow >= rows) currentRow = rows - 1;
 
             refresh(currentPage < rows / size);
