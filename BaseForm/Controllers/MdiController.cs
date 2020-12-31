@@ -41,24 +41,31 @@ namespace Insight.Base.BaseForm.Controllers
         /// <param name="set">打印设置</param>
         protected void preview<E>(PrintSetting<E> set)
         {
-            var report = buildReport(set);
-            if (report == null || !report.Prepare())
+            try
             {
-                Messages.showError("生成报表失败！");
-                return;
-            }
+                var report = buildReport(set);
+                if (report == null || !report.Prepare())
+                {
+                    Messages.showError("生成报表失败！");
+                    return;
+                }
 
-            if (set.pagesOnSheet == PagesOnSheet.One)
-            {
-                report.PrintSettings.PrintMode = set.printMode;
-            }
-            else
-            {
-                report.PrintSettings.PrintMode = PrintMode.Scale;
-                report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
-            }
+                if (set.pagesOnSheet == PagesOnSheet.One)
+                {
+                    report.PrintSettings.PrintMode = set.printMode;
+                }
+                else
+                {
+                    report.PrintSettings.PrintMode = PrintMode.Scale;
+                    report.PrintSettings.PagesOnSheet = set.pagesOnSheet;
+                }
 
-            report.ShowPrepared(true);
+                report.ShowPrepared(true);
+            }
+            catch (Exception e)
+            {
+                Messages.showError(e.Message);
+            }
         }
         
         /// <summary>

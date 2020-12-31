@@ -77,6 +77,31 @@ namespace Insight.Base.BaseForm.Utils
         }
 
         /// <summary>
+        /// 获取七牛Token
+        /// </summary>
+        /// <returns>七牛Token</returns>
+        public string getQiniuToken()
+        {
+            const string url = "/common/file/v1.0/token";
+            var client = new HttpClient<string>(url);
+
+            return client.getData();
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="data">文件DTO</param>
+        /// <returns>是否成功</returns>
+        public bool uploadFile(FileDto data)
+        {
+            const string url = "/common/file/v1.0/data";
+            var client = new HttpClient<string>(url);
+
+            return client.post(data);
+        }
+
+        /// <summary>
         /// 获取模板
         /// </summary>
         /// <param name="id">模板ID</param>

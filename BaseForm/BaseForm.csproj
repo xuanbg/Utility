@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Entities\Dict.cs" />
+    <Compile Include="Entities\FileDto.cs" />
     <Compile Include="Forms\BaseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
