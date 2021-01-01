@@ -399,12 +399,15 @@ namespace Insight.Utils.Common
 
             try
             {
-                using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Timeout = 10000;
+                var response = (HttpWebResponse)request.GetResponse();
+                using (var stream = response.GetResponseStream())
                 {
                     return stream == null ? null : Image.FromStream(stream);
                 }
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;

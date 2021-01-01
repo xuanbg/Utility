@@ -96,6 +96,7 @@ namespace Insight.Utils.Common
             // 初始化请求对象及默认请求头
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.ServicePoint.Expect100Continue = false;
+            request.Timeout = 10000;
             request.Method = method.ToString();
             request.Accept = "application/json";
             request.ContentType = contentType;
