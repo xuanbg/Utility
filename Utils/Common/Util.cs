@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
 
@@ -377,8 +378,9 @@ namespace Insight.Utils.Common
             {
                 return Image.FromFile(path);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -399,20 +401,15 @@ namespace Insight.Utils.Common
             {
                 using (var stream = WebRequest.Create(url).GetResponse().GetResponseStream())
                 {
-                    if (stream != null)
-                    {
-                        return Image.FromStream(stream);
-                    }
+                    return stream == null ? null : Image.FromStream(stream);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ignored
+                MessageBox.Show(ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
-
-            return null;
         }
-
 
         /// <summary>
         /// Image 转换为 byte[]数组
