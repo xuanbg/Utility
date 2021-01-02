@@ -11,6 +11,11 @@ namespace Insight.Base.BaseForm.Utils
         public static string gateway = Util.getAppSetting("Gateway");
 
         /// <summary>
+        /// 对象存储服务器地址
+        /// </summary>
+        public static string oss = Util.getAppSetting("OSS");
+
+        /// <summary>
         /// 客户端更新URL
         /// </summary>
         public static readonly string updateUrl = $"{gateway}/client/{Util.getAppSetting("AppAlias")}";
