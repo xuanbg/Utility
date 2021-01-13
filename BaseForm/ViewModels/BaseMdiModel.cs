@@ -24,7 +24,7 @@ namespace Insight.Base.BaseForm.ViewModels
         private DateTime wait;
 
         /// <summary>
-        /// MDI Model
+        /// Data Model
         /// </summary>
         public DM dataModel;
 
@@ -64,6 +64,11 @@ namespace Insight.Base.BaseForm.ViewModels
         public readonly List<T> list = new List<T>();
 
         /// <summary>
+        /// 选项参数集合
+        /// </summary>
+        public List<ModuleParam> parms;
+
+        /// <summary>
         /// 构造方法
         /// </summary>
         protected BaseMdiModel() : base(null)
@@ -76,6 +81,17 @@ namespace Insight.Base.BaseForm.ViewModels
         }
 
         /// <summary>
+        /// 获取选项值
+        /// </summary>
+        /// <param name="key">选项KEY</param>
+        /// <param name="userId">用户ID</param>
+        /// <returns>选项值</returns>
+        public string getParam(string key, string userId = null)
+        {
+            return parms?.SingleOrDefault(i => i.key == key && i.userId == userId)?.value;
+        }
+
+        /// <summary>
         /// 初始化状态控件
         /// </summary>
         /// <param name="statusEdit">状态控件</param>
@@ -84,6 +100,21 @@ namespace Insight.Base.BaseForm.ViewModels
         {
             Format.initLookUpEdit(statusEdit, members);
             statusEdit.EditValueChanged += (sender, args) => status = statusEdit.EditValue == null ? (int?) null : Convert.ToInt32(statusEdit.EditValue);
+        }
+
+        /// <summary>
+        /// 初始化状态控件
+        /// </summary>
+        /// <param name="statusEdit">状态控件</param>
+        /// <param name="getDataMethod">列表获取数据方法名称</param>
+        protected void initStatus(ComboBoxEdit statusEdit, string getDataMethod = "loadData")
+        {
+            statusEdit.SelectedIndexChanged += (sender, args) =>
+            {
+                var index = statusEdit.SelectedIndex;
+                status = index == 0 ? (int?) null : index - 1;
+                call(getDataMethod, new object[] {1});
+            };
         }
 
         /// <summary>
@@ -141,7 +172,7 @@ namespace Insight.Base.BaseForm.ViewModels
             this.tab = tab;
             grid.DataSource = list;
 
-            initGrid(grid, gridView, callMethod: callMethod, callbackMethod: callbackMethod, pageControl: this.tab);
+            initGrid(grid, gridView, callbackMethod, callMethod, tab);
         }
 
         /// <summary>
@@ -149,11 +180,11 @@ namespace Insight.Base.BaseForm.ViewModels
         /// </summary>
         /// <param name="grid">列表控件</param>
         /// <param name="gridView">列表View控件</param>
-        /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="callbackMethod">列表控件双击事件回调方法名称</param>
+        /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="pageControl">列表分页控件</param>
         /// <param name="getDataMethod">列表获取数据方法名称</param>
-        protected void initGrid(GridControl grid, GridView gridView, string callMethod = null, string callbackMethod = null, PageControl pageControl = null, string getDataMethod = "loadData")
+        protected void initGrid(GridControl grid, GridView gridView, string callbackMethod = null, string callMethod = "detailChanged", PageControl pageControl = null, string getDataMethod = "loadData")
         {
             gridView.FocusedRowObjectChanged += (sender, args) =>
             {
@@ -294,6 +325,5 @@ namespace Insight.Base.BaseForm.ViewModels
 
             view.Wait.CloseWaitForm();
         }
-
     }
 }
