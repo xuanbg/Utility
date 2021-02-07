@@ -120,12 +120,12 @@ namespace Insight.Base.BaseForm.Controllers
                     Stream stream = new MemoryStream();
                     report.SavePrepared(stream);
 
-                    var content = new byte[stream.Length];
+                    var bytes = new byte[stream.Length];
                     stream.Seek(0, SeekOrigin.Begin);
-                    stream.Read(content, 0, content.Length);
+                    stream.Read(bytes, 0, bytes.Length);
 
                     const string url = "/common/report/v1.0/reports";
-                    var data = new ReportDto {id = (long) id, content = Util.serialize(content)};
+                    var data = new ReportDto {id = (long) id, bytes = bytes};
                     var client = new HttpClient<object>(url);
 
                     client.post(data);
@@ -204,8 +204,9 @@ namespace Insight.Base.BaseForm.Controllers
 
             try
             {
+                var bytes = Util.deserialize<byte[]>(content);
                 var report = new Report();
-                report.LoadPrepared(new MemoryStream(Util.deserialize<byte[]>(content)));
+                report.LoadPrepared(new MemoryStream(bytes));
 
                 return report;
             }
