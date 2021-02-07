@@ -7,14 +7,17 @@ namespace Insight.Base.BaseForm.Utils
     public class HttpClient<T>
     {
         private readonly string url;
+        private readonly bool showError;
 
         /// <summary>
         /// 构造方法
         /// </summary>
-        /// <param name="url"></param>
-        public HttpClient(string url)
+        /// <param name="url">请求URL</param>
+        /// <param name="showError">是否显示错误信息</param>
+        public HttpClient(string url, bool showError = true)
         {
             this.url = url;
+            this.showError = showError;
         }
 
         /// <summary>
@@ -127,12 +130,14 @@ namespace Insight.Base.BaseForm.Utils
                         case 421:
                             continue;
                         default:
-                            Messages.showError(result.message);
+                            if (showError) Messages.showError(result.message);
+
                             return result;
                     }
                 }
 
-                Messages.showError(request.message);
+                if (showError) Messages.showError(request.message);
+
                 return new Result<T>().badRequest(request.message);
             }
         }

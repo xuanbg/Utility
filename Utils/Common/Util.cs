@@ -533,9 +533,7 @@ namespace Insight.Utils.Common
             try
             {
                 var json = JsonConvert.SerializeObject(obj);
-                if (Regex.IsMatch(json, "^[\\[|\\{].*[\\}|\\]]$")) return json;
-
-                return obj.ToString();
+                return Regex.IsMatch(json, "^[\\[|\\{|\"].*[\\}|\\]|\"]$") ? json : obj.ToString();
             }
             catch (Exception)
             {

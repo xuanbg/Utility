@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using FastReport;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
 using Insight.Base.BaseForm.Utils;
 using Insight.Base.BaseForm.ViewModels;
+using Insight.Utils.Common;
 
 namespace Insight.Base.BaseForm.Controllers
 {
@@ -33,7 +35,20 @@ namespace Insight.Base.BaseForm.Controllers
 
             mdiModel.initToolBar(module.functions);
         }
-        
+
+        /// <summary>
+        /// 打印预览
+        /// </summary>
+        /// <param name="id">报表ID</param>
+        protected bool preview(long id)
+        {
+            var report = buildReport(id);
+            if (report == null) return false;
+
+            report.ShowPrepared(true);
+            return true;
+        }
+
         /// <summary>
         /// 打印预览
         /// </summary>
@@ -67,14 +82,29 @@ namespace Insight.Base.BaseForm.Controllers
                 Messages.showError(e.Message);
             }
         }
-        
+
+        /// <summary>
+        /// 打印
+        /// </summary>
+        /// <param name="id">报表ID</param>
+        /// <returns>string 电子影像文件名</returns>
+        protected bool print(long id)
+        {
+            var report = buildReport(id);
+            if (report == null) return false;
+
+            report.PrintPrepared();
+            return true;
+        }
+
         /// <summary>
         /// 打印
         /// </summary>
         /// <typeparam name="E">数据类型</typeparam>
         /// <param name="set">打印设置</param>
+        /// <param name="id">报表ID</param>
         /// <returns>string 电子影像文件名</returns>
-        protected void print<E>(PrintSetting<E> set)
+        protected void print<E>(PrintSetting<E> set, long? id = null)
         {
             try
             {
@@ -83,6 +113,22 @@ namespace Insight.Base.BaseForm.Controllers
                 {
                     Messages.showError("生成报表失败！");
                     return;
+                }
+
+                if (id != null)
+                {
+                    Stream stream = new MemoryStream();
+                    report.SavePrepared(stream);
+
+                    var content = new byte[stream.Length];
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.Read(content, 0, content.Length);
+
+                    const string url = "/common/report/v1.0/reports";
+                    var data = new ReportDto {id = (long) id, content = Util.serialize(content)};
+                    var client = new HttpClient<object>(url);
+
+                    client.post(data);
                 }
 
                 if (set.pagesOnSheet == PagesOnSheet.One)
@@ -104,9 +150,9 @@ namespace Insight.Base.BaseForm.Controllers
                 report.PrintSettings.Copies = set.copies;
                 report.PrintPrepared();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Messages.showError(e.Message);
+                Messages.showError(ex.Message);
             }
         }
 
@@ -140,6 +186,34 @@ namespace Insight.Base.BaseForm.Controllers
             }
 
             return report;
+        }
+
+        /// <summary>
+        /// 生成报表
+        /// </summary>
+        /// <param name="id">报表ID</param>
+        /// <returns>Report FastReport报表</returns>
+        private static Report buildReport(long? id)
+        {
+            if (id == null) return null;
+
+            var url = $"/common/report/v1.0/reports/{id}";
+            var client = new HttpClient<ReportDto>(url, false);
+            var content = client.getData()?.content;
+            if (string.IsNullOrEmpty(content)) return null;
+
+            try
+            {
+                var report = new Report();
+                report.LoadPrepared(new MemoryStream(Util.deserialize<byte[]>(content)));
+
+                return report;
+            }
+            catch (Exception ex)
+            {
+                Messages.showError(ex.Message);
+                return null;
+            }
         }
     }
 }
