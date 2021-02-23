@@ -23,6 +23,8 @@ namespace Insight.Base.BaseForm.ViewModels
         private int waits;
         private DateTime wait;
 
+        public Dictionary<string, bool> buttonStatus;
+
         /// <summary>
         /// Data Model
         /// </summary>
@@ -39,11 +41,6 @@ namespace Insight.Base.BaseForm.ViewModels
         public PageControl tab;
 
         /// <summary>
-        /// 状态
-        /// </summary>
-        public int? status;
-
-        /// <summary>
         /// 开始日期
         /// </summary>
         public DateTime startDate;
@@ -52,6 +49,11 @@ namespace Insight.Base.BaseForm.ViewModels
         /// 截至日期
         /// </summary>
         public DateTime endDate;
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public int? status;
 
         /// <summary>
         /// 搜索关键词
@@ -272,10 +274,9 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <summary>
         /// 切换工具栏按钮状态
         /// </summary>
-        /// <param name="dict"></param>
-        protected void switchItemStatus(Dictionary<string, bool> dict)
+        protected void refreshToolBar()
         {
-            foreach (var obj in dict)
+            foreach (var obj in buttonStatus)
             {
                 var button = buttons.SingleOrDefault(b => b.Name == obj.Key);
                 if (button == null) continue;
