@@ -23,12 +23,19 @@ namespace Insight.Base.BaseForm.Controllers
         protected readonly TM mdiModel;
 
         /// <summary>
+        /// Manage Item
+        /// </summary>
+        protected T item;
+
+        /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="module">模块信息</param>
         protected MdiController(ModuleDto module)
         {
             mdiModel = new TM {dataModel = dataModel, moduleId = module.id};
+            item = mdiModel.item;
+
             mdiModel.initMdiView(module);
             mdiModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
             mdiModel.show();
