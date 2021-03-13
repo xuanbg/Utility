@@ -67,43 +67,4 @@
         /// </summary>
         public string remark { get; set; }
     }
-
-    /// <summary>
-    /// ComboBox列表对象
-    /// </summary>
-    public class ComboBoxItem
-    {
-
-        private readonly int index;
-        private readonly string name;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="name"></param>
-        public ComboBoxItem(int index, string name)
-        {
-            this.index = index;
-            this.name = name;
-        }
-
-        /// <summary>
-        /// 重写ToString()方法，返回Name值
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return name;
-        }
-
-        /// <summary>
-        /// 重写GetHashCode()，返回Index值
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return index;
-        }
-    }
 }

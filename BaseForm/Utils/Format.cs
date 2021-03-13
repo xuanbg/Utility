@@ -147,7 +147,7 @@ namespace Insight.Base.BaseForm.Utils
 
             foreach (var i in list)
             {
-                var item = new ImageComboBoxItem { Value = i.name };
+                var item = new ComboBoxItem { Value = i.name };
                 control.Properties.Items.Add(item);
             }
 
@@ -168,7 +168,7 @@ namespace Insight.Base.BaseForm.Utils
 
             foreach (var i in list)
             {
-                var item = new ImageComboBoxItem { Value = i.name };
+                var item = new ComboBoxItem { Value = i.name };
                 control.Items.Add(item);
             }
         }
@@ -179,7 +179,7 @@ namespace Insight.Base.BaseForm.Utils
         /// <param name="control">ComboBoxEdit</param>
         /// <param name="list">字典键值集合</param>
         /// <param name="index">选中项索引，默认不选中</param>
-        public static void initComboBoxEdit(ComboBoxEdit control, List<DictKeyDto> list, int index = -1)
+        public static void initComboBoxEdit<T>(ComboBoxEdit control, List<DictKeyDto<T>> list, int index = -1)
         {
             control.Properties.ImmediatePopup = true;
             control.Properties.PopupFormMinSize = new Size(60, 0);
@@ -189,7 +189,7 @@ namespace Insight.Base.BaseForm.Utils
 
             foreach (var i in list)
             {
-                var item = new ImageComboBoxItem { Value = i.value };
+                var item = new ComboBoxItem { Value = i.value };
                 control.Properties.Items.Add(item);
             }
 
@@ -201,7 +201,7 @@ namespace Insight.Base.BaseForm.Utils
         /// </summary>
         /// <param name="control">RepositoryItemComboBox</param>
         /// <param name="list">字典键值集合</param>
-        public static void initComboBoxEdit(RepositoryItemComboBox control, List<DictKeyDto> list)
+        public static void initComboBoxEdit<T>(RepositoryItemComboBox control, List<DictKeyDto<T>> list)
         {
             control.ImmediatePopup = true;
             control.PopupFormMinSize = new Size(60, 0);
@@ -210,7 +210,7 @@ namespace Insight.Base.BaseForm.Utils
 
             foreach (var i in list)
             {
-                var item = new ImageComboBoxItem { Value = i.value };
+                var item = new ComboBoxItem { Value = i.value };
                 control.Items.Add(item);
             }
         }

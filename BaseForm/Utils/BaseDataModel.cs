@@ -11,11 +11,11 @@ namespace Insight.Base.BaseForm.Utils
         /// </summary>
         /// <param name="key">字典键名</param>
         /// <returns>键值集合</returns>
-        public List<DictKeyDto> getDictValues(string key)
+        public List<DictKeyDto<T>> getDictValues<T>(string key)
         {
             const string url = "/common/dict/v1.0/dicts/values";
             var dict = new Dictionary<string, object> {{"key", key}};
-            var client = new HttpClient<List<DictKeyDto>>(url);
+            var client = new HttpClient<List<DictKeyDto<T>>>(url);
 
             return client.getData(dict);
         }

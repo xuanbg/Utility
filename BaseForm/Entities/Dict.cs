@@ -37,10 +37,10 @@ namespace Insight.Base.BaseForm.Entities
         /// <summary>
         /// 键值集合
         /// </summary>
-        public List<DictKeyDto> keys { get; set; } = new List<DictKeyDto>();
+        public List<DictKeyDto<object>> keys { get; set; } = new List<DictKeyDto<object>>();
     }
 
-    public class DictKeyDto
+    public class DictKeyDto<T>
     {
         /// <summary>
         /// 唯一ID
@@ -75,7 +75,7 @@ namespace Insight.Base.BaseForm.Entities
         /// <summary>
         /// 扩展数据
         /// </summary>
-        public object extend { get; set; }
+        public T extend { get; set; }
 
         /// <summary>
         /// 备注
