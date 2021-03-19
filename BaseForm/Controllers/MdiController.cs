@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FastReport;
+using FastReport.Utils;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
 using Insight.Base.BaseForm.Utils;
@@ -186,6 +187,7 @@ namespace Insight.Base.BaseForm.Controllers
                 }
             }
 
+            Config.PreviewSettings.Buttons = PreviewButtons.Save | PreviewButtons.Email | PreviewButtons.Navigator | PreviewButtons.Close;
             return report;
         }
 
@@ -208,6 +210,7 @@ namespace Insight.Base.BaseForm.Controllers
                 var bytes = Util.deserialize<byte[]>(content);
                 var report = new Report();
                 report.LoadPrepared(new MemoryStream(bytes));
+                Config.PreviewSettings.Buttons = PreviewButtons.Save | PreviewButtons.Email | PreviewButtons.Navigator | PreviewButtons.Close;
 
                 return report;
             }
