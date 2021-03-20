@@ -173,6 +173,12 @@ namespace Insight.Base.BaseForm.Controllers
         /// <returns>Report FastReport报表</returns>
         private Report buildReport()
         {
+            if (set == null)
+            {
+                Messages.showError("未生成打印设置，请先预览或打印！");
+                return null;
+            }
+
             if (string.IsNullOrEmpty(set.template))
             {
                 Messages.showError("未配置打印模板，请先在选项中设置对应的打印模板！");
