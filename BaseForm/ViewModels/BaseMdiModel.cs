@@ -167,14 +167,15 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <param name="grid">主列表控件</param>
         /// <param name="gridView">主列表View控件</param>
         /// <param name="tab">主列表分页控件</param>
+        /// <param name="getDataMethod">列表获取数据方法名称</param>
         /// <param name="callbackMethod">主列表控件双击事件回调方法名称</param>
         /// <param name="callMethod">主列表数据改变事件调用方法名称</param>
-        protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string callbackMethod = "editItem", string callMethod = "itemChanged")
+        protected void initMainGrid(GridControl grid, GridView gridView, PageControl tab = null, string getDataMethod = "loadData", string callbackMethod = "editItem", string callMethod = "itemChanged")
         {
             this.tab = tab;
             grid.DataSource = list;
 
-            initGrid(grid, gridView, callbackMethod, callMethod, tab);
+            initGrid(grid, gridView, callbackMethod, callMethod, tab, getDataMethod);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <param name="callMethod">列表数据改变事件调用方法名称</param>
         /// <param name="pageControl">列表分页控件</param>
         /// <param name="getDataMethod">列表获取数据方法名称</param>
-        protected void initGrid(GridControl grid, GridView gridView, string callbackMethod = null, string callMethod = "detailChanged", PageControl pageControl = null, string getDataMethod = "loadData")
+        protected void initGrid(GridControl grid, GridView gridView, string callbackMethod = null, string callMethod = "detailChanged", PageControl pageControl = null, string getDataMethod = null)
         {
             gridView.FocusedRowObjectChanged += (sender, args) =>
             {
