@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using FastReport;
-using FastReport.Utils;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Forms;
 using Insight.Base.BaseForm.Utils;
@@ -11,7 +10,7 @@ using Insight.Utils.Common;
 
 namespace Insight.Base.BaseForm.Controllers
 {
-    public class MdiController<T, TV, TM, DM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV, DM>, new() where DM : new()
+    public class MdiController<T, E, TV, TM, DM> : BaseController where TV : BaseMdi, new() where TM : BaseMdiModel<T, TV, DM>, new() where DM : new()
     {
         /// <summary>
         /// Data Model
@@ -22,6 +21,11 @@ namespace Insight.Base.BaseForm.Controllers
         /// MDI Model
         /// </summary>
         protected readonly TM mdiModel;
+
+        /// <summary>
+        /// 打印参数
+        /// </summary>
+        protected PrintSetting<E> set;
 
         /// <summary>
         /// 构造方法
@@ -54,13 +58,11 @@ namespace Insight.Base.BaseForm.Controllers
         /// <summary>
         /// 打印预览
         /// </summary>
-        /// <typeparam name="E">数据类型</typeparam>
-        /// <param name="set">打印设置</param>
-        protected void preview<E>(PrintSetting<E> set)
+        protected void preview()
         {
             try
             {
-                var report = buildReport(set);
+                var report = buildReport();
                 if (report == null || !report.Prepare())
                 {
                     Messages.showError("生成报表失败！");
@@ -102,35 +104,15 @@ namespace Insight.Base.BaseForm.Controllers
         /// <summary>
         /// 打印
         /// </summary>
-        /// <typeparam name="E">数据类型</typeparam>
-        /// <param name="set">打印设置</param>
-        /// <param name="id">报表ID</param>
-        /// <returns>string 电子影像文件名</returns>
-        protected void print<E>(PrintSetting<E> set, long? id = null)
+        protected void print()
         {
             try
             {
-                var report = buildReport(set);
+                var report = buildReport();
                 if (report == null || !report.Prepare())
                 {
                     Messages.showError("生成报表失败！");
                     return;
-                }
-
-                if (id != null)
-                {
-                    Stream stream = new MemoryStream();
-                    report.SavePrepared(stream);
-
-                    var bytes = new byte[stream.Length];
-                    stream.Seek(0, SeekOrigin.Begin);
-                    stream.Read(bytes, 0, bytes.Length);
-
-                    const string url = "/common/report/v1.0/reports";
-                    var data = new ReportDto {id = (long) id, bytes = bytes};
-                    var client = new HttpClient<object>(url);
-
-                    client.post(data);
                 }
 
                 if (set.pagesOnSheet == PagesOnSheet.One)
@@ -159,12 +141,37 @@ namespace Insight.Base.BaseForm.Controllers
         }
 
         /// <summary>
+        /// 保存报表
+        /// </summary>
+        /// <param name="id">报表ID</param>
+        protected void saveReport(long id)
+        {
+            var report = buildReport();
+            if (report == null || !report.Prepare())
+            {
+                Messages.showError("生成报表失败！");
+                return;
+            }
+
+            Stream stream = new MemoryStream();
+            report.SavePrepared(stream);
+
+            var bytes = new byte[stream.Length];
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Read(bytes, 0, bytes.Length);
+
+            const string url = "/common/report/v1.0/reports";
+            var data = new ReportDto {id = id, bytes = bytes};
+            var client = new HttpClient<object>(url);
+
+            client.post(data);
+        }
+
+        /// <summary>
         /// 生成报表
         /// </summary>
-        /// <typeparam name="E">类型</typeparam>
-        /// <param name="set">打印参数集</param>
         /// <returns>Report FastReport报表</returns>
-        private static Report buildReport<E>(PrintSetting<E> set)
+        private Report buildReport()
         {
             if (string.IsNullOrEmpty(set.template))
             {
@@ -187,7 +194,6 @@ namespace Insight.Base.BaseForm.Controllers
                 }
             }
 
-            Config.PreviewSettings.Buttons = PreviewButtons.Save | PreviewButtons.Email | PreviewButtons.Navigator | PreviewButtons.Close;
             return report;
         }
 
@@ -210,7 +216,6 @@ namespace Insight.Base.BaseForm.Controllers
                 var bytes = Util.deserialize<byte[]>(content);
                 var report = new Report();
                 report.LoadPrepared(new MemoryStream(bytes));
-                Config.PreviewSettings.Buttons = PreviewButtons.Save | PreviewButtons.Email | PreviewButtons.Navigator | PreviewButtons.Close;
 
                 return report;
             }
