@@ -70,25 +70,13 @@ namespace Insight.Base.MainForm
         /// <summary>
         /// 获取服务器上的客户端文件版本信息
         /// </summary>
-        /// <param name="isStart">是否启动</param>
         /// <returns>文件版本信息</returns>
-        internal Update checkUpdate(bool isStart)
+        internal Update checkUpdate()
         {
-            var url = $"{Setting.updateUrl}/update.json";
-            var client = new HttpRequest(url);
-            if (!client.send())
-            {
-                if (!isStart) Messages.showError("无法获取更新信息，请稍后再试……");
-
-                return null;
-            }
-
-            // 获取更新信息
-            var info = Util.deserialize<Update>(client.data);
-            var root = Application.StartupPath;
-
             // 清除本地备份
-            var locals = getClientFiles(".bak");
+            var root = Application.StartupPath;
+            var locals = new List<FileVersion>(); 
+            getClientFiles(locals, ".bak");
             locals.ForEach(i =>
             {
                 var filePath = root;
@@ -97,17 +85,32 @@ namespace Insight.Base.MainForm
                 deleteFile(filePath + i.file);
             });
 
+            // 获取更新信息
+            var url = $"{Setting.updateUrl}/update.json";
+            var client = new HttpRequest(url);
+            if (!client.send())
+            {
+                Messages.showError("无法获取更新信息，请稍后再试……");
+                return new Update {update = false};
+            }
+
+            var info = Util.deserialize<Update>(client.data);
+            if (!info.update) return info;
+
             // 比较文件版本
-            locals = getClientFiles(".exe|.dll|.frl");
             var updates = new List<FileVersion>();
+            locals.Clear(); 
+            getClientFiles(locals, ".exe|.dll|.frl|.png|.jpg|.ico");
             foreach (var ver in info.data)
             {
-                var cf = locals.FirstOrDefault(i => i.file == ver.file && i.localPath == ver.localPath);
+                var cf = locals.FirstOrDefault(i => i.file == ver.file && i.localPath == (ver.localPath ?? ""));
                 if (cf == null)
                 {
                     updates.Add(ver);
                     continue;
                 }
+
+                if (string.IsNullOrEmpty(ver.version)) continue;
 
                 var cv = new Version(cf.version);
                 var sv = new Version(ver.version);
@@ -115,8 +118,8 @@ namespace Insight.Base.MainForm
 
                 updates.Add(ver);
             }
-            info.data = updates;
 
+            info.data = updates;
             return info;
         }
 
@@ -168,11 +171,10 @@ namespace Insight.Base.MainForm
 
             var rename = false;
             var filePath = Application.StartupPath;
-            if (string.IsNullOrEmpty(version.localPath)) filePath = $"{filePath}\\{version.localPath}\\";
-
+            filePath += string.IsNullOrEmpty(version.localPath) ? "" : $"\\{version.localPath}";
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
 
-            var file = filePath + version.file;
+            var file = $"{filePath}\\{version.file}";
             try
             {
                 File.Delete(file);
@@ -194,21 +196,29 @@ namespace Insight.Base.MainForm
         /// <summary>
         /// 获取本地文件列表
         /// </summary>
+        /// <param name="list">本地文件列表</param>
         /// <param name="ext">扩展名，默认为*.*，表示全部文件；否则列举扩展名，例如：".exe|.dll"</param>
         /// <param name="path">当前目录</param>
-        private static List<FileVersion> getClientFiles(string ext = "*.*", string path = null)
+        private static void getClientFiles(List<FileVersion> list, string ext = "*.*", string path = null)
         {
             // 读取目录下文件信息
             var root = Application.StartupPath;
             var dirInfo = new DirectoryInfo(path ?? root);
             var files = dirInfo.GetFiles().Where(f => f.DirectoryName != null && (ext == "*.*" || ext.Contains(f.Extension)));
-
-            return files.Select(file => new FileVersion
+            var infoList = files.Select(file => new FileVersion
             {
                 file = file.Name,
                 version = FileVersionInfo.GetVersionInfo(file.FullName).FileVersion,
-                localPath = file.DirectoryName == root ? null : file.DirectoryName?.Replace(root, "")
+                localPath = file.DirectoryName == root ? "" : file.DirectoryName?.Replace(root + "\\", "")
             }).ToList();
+            list.AddRange(infoList);
+
+            // 递归子目录
+            var dirs = Directory.GetDirectories(path ?? root);
+            foreach (var dir in dirs)
+            {
+                getClientFiles(list, ext, dir);
+            }
         }
 
         /// <summary>

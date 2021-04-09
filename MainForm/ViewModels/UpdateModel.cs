@@ -8,8 +8,6 @@ namespace Insight.Base.MainForm.ViewModels
 {
     public class UpdateModel : BaseDialogModel<Update, UpdateDialog>
     {
-        public bool restart;
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -34,20 +32,11 @@ namespace Insight.Base.MainForm.ViewModels
         }
 
         /// <summary>
-        /// 更新重启标识
-        /// </summary>
-        /// <param name="restart">是否需要重启</param>
-        public void updateFlag(bool restart)
-        {
-            this.restart = this.restart || restart;
-        }
-
-        /// <summary>
         /// 完成更新
         /// </summary>
         public new void confirm()
         {
-            callback("complete", new object[] { restart });
+            callback("complete");
         }
 
         /// <summary>
@@ -71,10 +60,7 @@ namespace Insight.Base.MainForm.ViewModels
                 view.pceUpdate.Refresh();
             }
 
-            view.confirm.Text = restart ? "重  启" : "关  闭";
             view.confirm.Select();
-            view.LabFile.Text = restart ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
-            view.LabFile.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             view.confirm.Visible = true;
             view.sbeUpdate.Visible = false;
             view.Refresh();

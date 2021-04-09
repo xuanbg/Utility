@@ -14,6 +14,7 @@ namespace Insight.Base.MainForm
     {
         private readonly DataModel dataModel = new DataModel();
         private readonly MainModel mainModel;
+        public bool exit;
 
         /// <summary>
         /// 构造函数
@@ -21,10 +22,49 @@ namespace Insight.Base.MainForm
         public Controller()
         {
             update(true);
-            login();
+            if (exit)
+            {
+                Messages.showMessage("已完成更新！请重新启动应用程序。");
+                return;
+            }
 
+            login();
             mainModel = new MainModel(Setting.appName);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
+        }
+
+        /// <summary>
+        /// 点击菜单项：检查更新，如有更新，提示是否更新
+        /// </summary>
+        /// <param name="isStart">是否启动</param>
+        public void update(bool isStart)
+        {
+            var info = dataModel.checkUpdate();
+            if (!info.update || !info.data.Any())
+            {
+                if (!isStart) Messages.showMessage("您的系统是最新版本！");
+
+                return;
+            }
+
+            var model = new UpdateModel("更新文件", info);
+            model.callbackEvent += (sender, args) =>
+            {
+                switch (args.methodName)
+                {
+                    case "updateFile":
+                        var ver = (FileVersion)args.param[0];
+                        var file = dataModel.getFile($"{ver.localPath}/{ver.file}");
+                        exit = exit || dataModel.updateFile(ver, file);
+
+                        break;
+                    default:
+                        model.closeDialog();
+                        break;
+                }
+            };
+
+            model.showDialog();
         }
 
         /// <summary>
@@ -132,50 +172,6 @@ namespace Insight.Base.MainForm
         public void printSet()
         {
             var model = new PrintModel("设置打印机");
-            model.showDialog();
-        }
-
-        /// <summary>
-        /// 点击菜单项：检查更新，如有更新，提示是否更新
-        /// </summary>
-        /// <param name="isStart">是否启动</param>
-        public void update(bool isStart)
-        {
-            var info = dataModel.checkUpdate(isStart);
-            if (info == null) return;
-
-            if (isStart && !info.update) return;
-
-            if (!info.data.Any())
-            {
-                if (isStart) return;
-
-                Messages.showMessage("您的系统是最新版本！");
-                return;
-            }
-
-            var model = new UpdateModel("更新文件", info);
-            model.callbackEvent += (sender, args) =>
-            {
-                switch (args.methodName)
-                {
-                    case "updateFile":
-                        var ver = (FileVersion)args.param[0];
-                        var file = dataModel.getFile(ver.file);
-                        var restart = dataModel.updateFile(ver, file);
-                        model.updateFlag(restart);
-
-                        break;
-                    case "complete" when (bool)args.param[0]:
-                        Messages.showMessage("请重新启动应用程序完成更新！");
-                        Application.Exit();
-
-                        break;
-                    case "complete":
-                        model.closeDialog();
-                        break;
-                }
-            };
             model.showDialog();
         }
 

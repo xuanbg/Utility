@@ -13,7 +13,7 @@ namespace Insight.Base.BaseForm.ViewModels
         /// <param name="title">对话框标题</param>
         /// <param name="item">对话框数据对象</param>
         /// <param name="isShow">是否查看模式</param>
-        protected BaseDialogModel(string title, T item = default(T), bool isShow = false) : base(title)
+        protected BaseDialogModel(string title, T item = default, bool isShow = false) : base(title)
         {
             this.item = item;
             view.confirm.Visible = !isShow;
