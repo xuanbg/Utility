@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Threading;
 using DevExpress.Utils;
 using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.ViewModels;
@@ -44,27 +40,6 @@ namespace Insight.Base.MainForm.ViewModels
         public void updateFlag(bool restart)
         {
             this.restart = this.restart || restart;
-        }
-
-        /// <summary>
-        /// 生成批处理文件
-        /// </summary>
-        public ProcessStartInfo createBat()
-        {
-            using (var bat = File.CreateText("restart.bat"))
-            {
-                bat.WriteLine(@"start """" ""{0}""", Application.ExecutablePath);
-                bat.WriteLine("del /s /q *.bak");
-                bat.WriteLine("del %0%");
-            }
-
-            return new ProcessStartInfo
-            {
-                UseShellExecute = true,
-                WorkingDirectory = Environment.CurrentDirectory,
-                FileName = "restart.bat",
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
         }
 
         /// <summary>

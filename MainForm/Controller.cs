@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -168,7 +167,7 @@ namespace Insight.Base.MainForm
 
                         break;
                     case "complete" when (bool)args.param[0]:
-                        Process.Start(model.createBat());
+                        Messages.showMessage("请重新启动应用程序完成更新！");
                         Application.Exit();
 
                         break;

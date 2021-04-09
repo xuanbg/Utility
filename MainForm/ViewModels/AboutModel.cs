@@ -18,7 +18,7 @@ namespace Insight.Base.MainForm.ViewModels
             view.labVer.Text = fileVersion.FileVersion;
             view.labDev.Text = fileVersion.CompanyName;
 
-            view.txtDescription.Text = "程序设计：宣炳刚\r\n联系电话：13958085903";
+            view.txtDescription.Text = "";
             view.txtDescription.Enabled = false;
         }
     }
