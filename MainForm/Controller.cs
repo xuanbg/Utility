@@ -14,6 +14,10 @@ namespace Insight.Base.MainForm
     {
         private readonly DataModel dataModel = new DataModel();
         private readonly MainModel mainModel;
+
+        /**
+         * 是否需要退出应用
+         */
         public bool exit;
 
         /// <summary>
@@ -22,11 +26,7 @@ namespace Insight.Base.MainForm
         public Controller()
         {
             update(true);
-            if (exit)
-            {
-                Messages.showMessage("已完成更新！请重新启动应用程序。");
-                return;
-            }
+            if (exit) return;
 
             login();
             mainModel = new MainModel(Setting.appName);
@@ -53,9 +53,15 @@ namespace Insight.Base.MainForm
                 switch (args.methodName)
                 {
                     case "updateFile":
-                        var ver = (FileVersion)args.param[0];
+                        var ver = (FileVersion) args.param[0];
                         var file = dataModel.getFile($"{ver.localPath}/{ver.file}");
                         exit = exit || dataModel.updateFile(ver, file);
+                        model.exit = exit;
+
+                        break;
+                    case "complete" when exit:
+                        model.closeDialog();
+                        if (!isStart) Application.Exit();
 
                         break;
                     default:

@@ -8,6 +8,8 @@ namespace Insight.Base.MainForm.ViewModels
 {
     public class UpdateModel : BaseDialogModel<Update, UpdateDialog>
     {
+        public bool exit;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -20,23 +22,16 @@ namespace Insight.Base.MainForm.ViewModels
             view.sbeUpdate.Click += (sender, args) => startUpdate();
             view.Shown += (sender, args) =>
             {
-                if (item.update)
+                if (!item.update)
                 {
-                    startUpdate();
+                    view.LabFile.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+                    view.LabFile.Text = $"有{item.data.Count}个文件需要更新，请点击更新按钮开始更新。";
+
                     return;
                 }
 
-                view.LabFile.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
-                view.LabFile.Text = $"有{item.data.Count}个文件需要更新，请点击更新按钮开始更新。";
+                startUpdate();
             };
-        }
-
-        /// <summary>
-        /// 完成更新
-        /// </summary>
-        public new void confirm()
-        {
-            callback("complete");
         }
 
         /// <summary>
@@ -60,9 +55,13 @@ namespace Insight.Base.MainForm.ViewModels
                 view.pceUpdate.Refresh();
             }
 
-            view.confirm.Select();
-            view.confirm.Visible = true;
             view.sbeUpdate.Visible = false;
+            view.confirm.Text = exit ? "重  启" : "关  闭";
+            view.confirm.Visible = true;
+            view.confirm.Select();
+
+            view.LabFile.Text = exit ? "已更新关键文件，需要重新运行客户端程序！" : "更新完成！";
+            view.LabFile.Appearance.TextOptions.HAlignment = HorzAlignment.Center; view.confirm.Select();
             view.Refresh();
         }
     }

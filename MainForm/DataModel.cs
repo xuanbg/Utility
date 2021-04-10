@@ -79,10 +79,8 @@ namespace Insight.Base.MainForm
             getClientFiles(locals, ".bak");
             locals.ForEach(i =>
             {
-                var filePath = root;
-                if (string.IsNullOrEmpty(i.localPath)) filePath = $"{filePath}\\{i.localPath}\\";
-
-                deleteFile(filePath + i.file);
+                var dir = string.IsNullOrEmpty(i.localPath) ? root : $"{root}\\{i.localPath}";
+                deleteFile($"{dir}\\{i.file}");
             });
 
             // 获取更新信息
@@ -100,7 +98,7 @@ namespace Insight.Base.MainForm
             // 比较文件版本
             var updates = new List<FileVersion>();
             locals.Clear(); 
-            getClientFiles(locals, ".exe|.dll|.frl|.png|.jpg|.ico");
+            getClientFiles(locals);
             foreach (var ver in info.data)
             {
                 var cf = locals.FirstOrDefault(i => i.file == ver.file && i.localPath == (ver.localPath ?? ""));
@@ -170,22 +168,22 @@ namespace Insight.Base.MainForm
             if (bytes == null || bytes.Length == 0) return false;
 
             var rename = false;
-            var filePath = Application.StartupPath;
-            filePath += string.IsNullOrEmpty(version.localPath) ? "" : $"\\{version.localPath}";
-            if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+            var root = Application.StartupPath;
+            var dir = string.IsNullOrEmpty(version.localPath) ? root : $"{root}\\{version.localPath}";
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
-            var file = $"{filePath}\\{version.file}";
+            var filePath = $"{dir}\\{version.file}";
             try
             {
-                File.Delete(file);
+                File.Delete(filePath);
             }
             catch
             {
-                File.Move(file, file + ".bak");
+                File.Move(filePath, filePath + ".bak");
                 rename = true;
             }
 
-            using (var fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(bytes, 0, bytes.Length);
             }
