@@ -64,7 +64,7 @@ namespace Insight.Utils.Common
         {
             if (method != RequestMethod.GET)
             {
-                var json = Util.serialize(body);
+                var json = body == null ? null : body is string s ? s : Util.serialize(body);
                 return send(method, json);
             }
 
