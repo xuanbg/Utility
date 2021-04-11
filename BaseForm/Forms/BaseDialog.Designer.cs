@@ -45,7 +45,7 @@ namespace Insight.Base.BaseForm.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel.Location = new System.Drawing.Point(7, 7);
             this.panel.Name = "panel";
-            this.panel.Size = new System.Drawing.Size(370, 150);
+            this.panel.Size = new System.Drawing.Size(370, 149);
             this.panel.TabIndex = 0;
             // 
             // confirm
@@ -53,7 +53,7 @@ namespace Insight.Base.BaseForm.Forms
             this.confirm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.confirm.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.confirm.Appearance.Options.UseFont = true;
-            this.confirm.Location = new System.Drawing.Point(290, 174);
+            this.confirm.Location = new System.Drawing.Point(290, 173);
             this.confirm.Name = "confirm";
             this.confirm.Size = new System.Drawing.Size(80, 23);
             this.confirm.TabIndex = 101;
@@ -65,7 +65,7 @@ namespace Insight.Base.BaseForm.Forms
             this.cancel.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cancel.Appearance.Options.UseFont = true;
             this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(200, 174);
+            this.cancel.Location = new System.Drawing.Point(200, 173);
             this.cancel.Name = "cancel";
             this.cancel.Size = new System.Drawing.Size(80, 23);
             this.cancel.TabIndex = 102;
@@ -76,7 +76,7 @@ namespace Insight.Base.BaseForm.Forms
             this.close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.close.Appearance.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.close.Appearance.Options.UseFont = true;
-            this.close.Location = new System.Drawing.Point(290, 174);
+            this.close.Location = new System.Drawing.Point(290, 173);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(80, 23);
             this.close.TabIndex = 103;
@@ -87,7 +87,7 @@ namespace Insight.Base.BaseForm.Forms
             this.AcceptButton = this.confirm;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(384, 212);
+            this.ClientSize = new System.Drawing.Size(384, 211);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.close);

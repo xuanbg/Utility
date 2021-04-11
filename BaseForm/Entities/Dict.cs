@@ -1,45 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace Insight.Base.BaseForm.Entities
+﻿namespace Insight.Base.BaseForm.Entities
 {
-    public class DictDto
-    {
-        /// <summary>
-        /// 唯一ID
-        /// </summary>
-        public string id { get; set; }
-
-        /// <summary>
-        /// 应用ID
-        /// </summary>
-        public string appId { get; set; }
-
-        /// <summary>
-        /// 应用名称
-        /// </summary>
-        public string appName { get; set; }
-
-        /// <summary>
-        /// 编码
-        /// </summary>
-        public string code { get; set; }
-
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string name { get; set; }
-
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string remark { get; set; }
-
-        /// <summary>
-        /// 键值集合
-        /// </summary>
-        public List<DictKeyDto<object>> keys { get; set; } = new List<DictKeyDto<object>>();
-    }
-
     public class DictKeyDto<T>
     {
         /// <summary>
