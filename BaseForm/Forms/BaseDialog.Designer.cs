@@ -87,7 +87,7 @@ namespace Insight.Base.BaseForm.Forms
             this.AcceptButton = this.confirm;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.CancelButton = this.cancel;
-            this.ClientSize = new System.Drawing.Size(384, 211);
+            this.ClientSize = new System.Drawing.Size(390, 218);
             this.Controls.Add(this.panel);
             this.Controls.Add(this.cancel);
             this.Controls.Add(this.close);
