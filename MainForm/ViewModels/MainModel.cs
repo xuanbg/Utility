@@ -36,8 +36,6 @@ namespace Insight.Base.MainForm.ViewModels
             view.Icon = new Icon("logo.ico");
             view.WindowState = SystemInformation.WorkingArea.Height > 1000 ? FormWindowState.Normal : FormWindowState.Maximized;
             view.myFeel.LookAndFeel.SkinName = Setting.lookAndFeel;
-            view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            view.StbServer.Caption = Setting.gateway;
 
             // 订阅主窗体菜单事件
             view.bmiChangPassWord.ItemClick += (sender, args) => callback("changPassword", new object[]{null});
@@ -62,6 +60,8 @@ namespace Insight.Base.MainForm.ViewModels
             view.StbDept.Caption = Setting.tenantName;
             view.StbDept.Visibility = string.IsNullOrEmpty(Setting.tenantName) ? BarItemVisibility.Never : BarItemVisibility.Always;
             view.StbUser.Caption = Setting.userName;
+            view.StbTime.Caption = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            view.StbServer.Caption = Setting.gateway;
 
             view.Show();
             view.Refresh();

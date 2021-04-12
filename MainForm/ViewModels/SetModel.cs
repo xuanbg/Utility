@@ -6,7 +6,7 @@ namespace Insight.Base.MainForm.ViewModels
 {
     public class SetModel : BaseDialogModel<object, LoginSetDialog>
     {
-        private bool saveUser = Setting.isSaveUserInfo();
+        private bool saveUser;
 
         /// <summary>
         /// 构造函数，初始化视图
@@ -15,12 +15,12 @@ namespace Insight.Base.MainForm.ViewModels
         /// <param name="title">窗体标题</param>
         public SetModel(string title) : base(title)
         {
-            view.BaseInupt.EditValue = Setting.gateway;
-            view.SaveUserCheckBox.Checked = saveUser;
-
             // 订阅控件事件实现数据双向绑定
             view.BaseInupt.EditValueChanged += (sender, args) => Setting.gateway = view.BaseInupt.Text.Trim();
             view.SaveUserCheckBox.CheckStateChanged += (sender, args) => saveUser = view.SaveUserCheckBox.Checked;
+
+            view.BaseInupt.EditValue = Setting.gateway;
+            view.SaveUserCheckBox.Checked = Setting.isSaveUserInfo();
         }
 
         /// <summary>
