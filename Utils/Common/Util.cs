@@ -14,10 +14,10 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Insight.Utils.Common
 {
@@ -530,10 +530,12 @@ namespace Insight.Utils.Common
         {
             if (obj == null) return null;
 
+            if (obj is string s) return s;
+
             try
             {
-                var json = JsonConvert.SerializeObject(obj);
-                return Regex.IsMatch(json, "^[\\[|\\{|\"].*[\\}|\\]|\"]$") ? json : obj.ToString();
+                var timeConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
+                return JsonConvert.SerializeObject(obj, Formatting.Indented, timeConverter);
             }
             catch (Exception)
             {
@@ -549,7 +551,7 @@ namespace Insight.Utils.Common
         /// <returns>T 反序列化的对象</returns>
         public static T deserialize<T>(string json)
         {
-            if (string.IsNullOrEmpty(json)) return default(T);
+            if (string.IsNullOrEmpty(json)) return default;
 
             try
             {
@@ -557,7 +559,7 @@ namespace Insight.Utils.Common
             }
             catch (Exception)
             {
-                return default(T);
+                return default;
             }
         }
 
