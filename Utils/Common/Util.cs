@@ -17,7 +17,6 @@ using System.Text;
 using System.Windows.Forms;
 using Insight.Utils.Entity;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Insight.Utils.Common
 {
@@ -528,18 +527,14 @@ namespace Insight.Utils.Common
         /// <returns>string Json字符串</returns>
         public static string serialize(object obj)
         {
-            if (obj == null) return null;
-
-            if (obj is string s) return s;
-
-            try
+            switch (obj)
             {
-                var timeConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };
-                return JsonConvert.SerializeObject(obj, Formatting.Indented, timeConverter);
-            }
-            catch (Exception)
-            {
-                return null;
+                case null:
+                    return null;
+                case string s:
+                    return s;
+                default:
+                    return JsonConvert.SerializeObject(obj);
             }
         }
 

@@ -62,11 +62,7 @@ namespace Insight.Utils.Common
         /// <returns>bool 是否成功</returns>
         public bool send(RequestMethod method, object body)
         {
-            if (method != RequestMethod.GET)
-            {
-                var json = body == null ? null : body is string s ? s : Util.serialize(body);
-                return send(method, json);
-            }
+            if (method != RequestMethod.GET) return send(method, Util.serialize(body));
 
             if (body != null)
             {
@@ -123,7 +119,7 @@ namespace Insight.Utils.Common
             // 上传数据
             if (method != RequestMethod.GET)
             {
-                var buffer = encodingBody(body ?? "");
+                var buffer = encodingBody(body);
                 request.ContentLength = buffer.Length;
                 using (var stream = request.GetRequestStream())
                 {
@@ -168,6 +164,8 @@ namespace Insight.Utils.Common
         /// <returns>byte[]</returns>
         private byte[] encodingBody(string body)
         {
+            if (string.IsNullOrEmpty(body)) return new byte[0];
+
             var buffer = Encoding.UTF8.GetBytes(body);
             var ms = new MemoryStream();
             switch (contentEncoding)
