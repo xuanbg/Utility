@@ -130,12 +130,12 @@ namespace Insight.Base.BaseForm.Entities
         /// <summary>
         /// 是否开始分组
         /// </summary>
-        public bool beginGroup { get; set; }
+        public bool? beginGroup { get; set; }
 
         /// <summary>
         /// 是否隐藏文字
         /// </summary>
-        public bool hideText { get; set; }
+        public bool? hideText { get; set; }
     }
 
     /// <summary>

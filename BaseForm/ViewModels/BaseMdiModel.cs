@@ -260,13 +260,13 @@ namespace Insight.Base.BaseForm.ViewModels
             buttons = (from a in functions
                 select new BarButtonItem
                 {
-                    AllowDrawArrow = a.funcInfo.beginGroup,
+                    AllowDrawArrow = a.funcInfo.beginGroup ?? false,
                     Caption = a.name,
                     Enabled = a.permit ?? false,
                     Name = a.funcInfo.method,
                     Tag = a.permit ?? false,
                     Glyph = Util.getImageFromFile(a.funcInfo.iconUrl),
-                    PaintStyle = a.funcInfo.hideText ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
+                    PaintStyle = a.funcInfo.hideText ?? false ? BarItemPaintStyle.Standard : BarItemPaintStyle.CaptionGlyph
                 }).ToList();
             buttons.ForEach(i => i.ItemClick += (sender, args) => callback(args.Item.Name));
             buttons.ForEach(i => view.ToolBar.ItemLinks.Add(i, i.AllowDrawArrow));
