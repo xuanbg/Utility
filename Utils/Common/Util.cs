@@ -393,9 +393,6 @@ namespace Insight.Utils.Common
         {
             if (string.IsNullOrEmpty(url)) return null;
 
-            var iconUrl = Uri.UnescapeDataString(url);
-            if (!Uri.IsWellFormedUriString(iconUrl, UriKind.RelativeOrAbsolute)) return null;
-
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(url);
