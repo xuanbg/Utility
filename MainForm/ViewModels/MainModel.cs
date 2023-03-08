@@ -43,7 +43,6 @@ namespace Insight.Base.MainForm.ViewModels
             view.bmiLogout.ItemClick += (sender, args) => logout();
             view.bmiExit.ItemClick += (sender, args) => view.Close();
             view.bmiPrintSet.ItemClick += (sender, args) => callback("printSet");
-            view.bmiUpdate.ItemClick += (sender, args) => callback("update", new object[]{false});
             view.bmiAbout.ItemClick += (sender, args) => callback("about");
             view.Closing += (sender, args) => exit(args);
         }

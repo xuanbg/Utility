@@ -25,52 +25,9 @@ namespace Insight.Base.MainForm
         /// </summary>
         public Controller()
         {
-            update(true);
-            if (exit) return;
-
             login();
             mainModel = new MainModel(Setting.appName);
             mainModel.callbackEvent += (sender, args) => buttonClick(args.methodName, args.param);
-        }
-
-        /// <summary>
-        /// 点击菜单项：检查更新，如有更新，提示是否更新
-        /// </summary>
-        /// <param name="isStart">是否启动</param>
-        public void update(bool isStart)
-        {
-            var info = dataModel.checkUpdate();
-            if (!info.update || !info.data.Any())
-            {
-                if (!isStart) Messages.showMessage("您的系统是最新版本！");
-
-                return;
-            }
-
-            var model = new UpdateModel("更新文件", info);
-            model.callbackEvent += (sender, args) =>
-            {
-                switch (args.methodName)
-                {
-                    case "updateFile":
-                        var ver = (FileVersion) args.param[0];
-                        var file = dataModel.getFile($"{ver.localPath}/{ver.file}");
-                        exit = exit || dataModel.updateFile(ver, file);
-                        model.exit = exit;
-
-                        break;
-                    case "complete" when exit:
-                        model.closeDialog();
-                        if (!isStart) Application.Exit();
-
-                        break;
-                    default:
-                        model.closeDialog();
-                        break;
-                }
-            };
-
-            model.showDialog();
         }
 
         /// <summary>
