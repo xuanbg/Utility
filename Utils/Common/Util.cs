@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Management;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
@@ -264,76 +259,6 @@ namespace Insight.Utils.Common
             return deserialize<T>(str);
         }
 
-        /// <summary>
-        /// 将List转为DataTable
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static DataTable convertToDataTable<T>(List<T> list)
-        {
-            if (list == null) return null;
-
-            var table = new DataTable();
-            var propertys = typeof(T).GetProperties().ToList();
-            propertys.ForEach(p => table.Columns.Add(getPropertyName(p), p.PropertyType));
-
-            foreach (var item in list)
-            {
-                var row = table.NewRow();
-                propertys.ForEach(p => row[getPropertyName(p)] = p.GetValue(item, null));
-                table.Rows.Add(row);
-            }
-
-            return table;
-        }
-
-        /// <summary>
-        /// 将DataTable转为List
-        /// </summary>
-        /// <param name="table">DataTable</param>
-        /// <returns>List</returns>
-        public static List<T> convertToList<T>(DataTable table) where T : new()
-        {
-            if (table == null) return null;
-
-            var list = new List<T>();
-            var propertys = typeof(T).GetProperties();
-            foreach (DataRow row in table.Rows)
-            {
-                var obj = new T();
-                foreach (var p in propertys)
-                {
-                    var name = getPropertyName(p);
-                    if (!p.CanWrite || !table.Columns.Contains(name)) continue;
-
-                    var value = row[name];
-                    if (value == DBNull.Value) continue;
-
-                    p.SetValue(obj, value, null);
-                }
-                list.Add(obj);
-            }
-
-            return list;
-        }
-
-        /// <summary>
-        /// 获取属性别名或名称
-        /// </summary>
-        /// <param name="info">PropertyInfo</param>
-        /// <returns>string 属性别名或名称</returns>
-        public static string getPropertyName(PropertyInfo info)
-        {
-            if (info == null) return null;
-
-            var attributes = info.GetCustomAttributes(typeof(AliasAttribute), false);
-            if (attributes.Length <= 0) return info.Name;
-
-            var type = (AliasAttribute)attributes[0];
-            return type.alias;
-        }
-
         #endregion
 
         #region Image
@@ -445,46 +370,6 @@ namespace Insight.Utils.Common
         private static bool callback()
         {
             return false;
-        }
-
-        #endregion
-
-        #region Management
-
-        /// <summary>
-        /// 获取CPU序列号
-        /// </summary>
-        /// <returns>String 序列号</returns>
-        public static string getCpuId()
-        {
-            var myCpu = new ManagementClass("win32_Processor").GetInstances();
-            var data = from ManagementObject cpu in myCpu
-                       select cpu.Properties["ProcessorId"].Value;
-            return data.Aggregate("", (current, val) => current + (val?.ToString() ?? ""));
-        }
-
-        /// <summary>
-        /// 获取主板序列号
-        /// </summary>
-        /// <returns>String 序列号</returns>
-        public static string getMbId()
-        {
-            var myMb = new ManagementClass("Win32_BaseBoard").GetInstances();
-            var data = from ManagementObject mb in myMb
-                       select mb.Properties["SerialNumber"].Value;
-            return data.Aggregate("", (current, val) => current + (val?.ToString() ?? ""));
-        }
-
-        /// <summary>
-        /// 获取硬盘序列号
-        /// </summary>
-        /// <returns>String 序列号</returns>
-        public static string getHdId()
-        {
-            var lpm = new ManagementClass("Win32_PhysicalMedia").GetInstances();
-            var data = from ManagementObject hd in lpm
-                       select hd.Properties["SerialNumber"].Value;
-            return data.Aggregate("", (current, val) => current + (val?.ToString().Trim() ?? ""));
         }
 
         #endregion
@@ -685,34 +570,6 @@ namespace Insight.Utils.Common
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        #endregion
-
-        #region Loger
-
-        /// <summary>
-        /// 将事件消息写入系统日志
-        /// </summary>
-        /// <param name="source">事件源</param>
-        /// <param name="message"></param>
-        /// <param name="type"></param>
-        public static string logToEvent(string source, string message, EventLogEntryType type)
-        {
-            try
-            {
-                if (!EventLog.Exists("应用程序") || !EventLog.SourceExists(source))
-                {
-                    EventLog.CreateEventSource(source, "应用程序");
-                }
-
-                EventLog.WriteEntry(source, message, type);
-                return null;
-            }
-            catch (ArgumentException ex)
-            {
-                return ex.Message;
             }
         }
 
