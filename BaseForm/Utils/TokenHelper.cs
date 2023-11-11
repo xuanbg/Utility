@@ -118,11 +118,13 @@ namespace Insight.Base.BaseForm.Utils
         /// <returns>string Code</returns>
         private string getCode()
         {
-            var url = "/base/auth/v1.0/tokens/codes";
+            var url = "/base/auth/v1.0/codes";
             var dict = new Dictionary<string, object> {{"account", account}};
             var client = new HttpClient<string>(url);
+            var result = client.request(RequestMethod.POST, dict);
+            if (!result.success) return null;
 
-            return client.getData(dict);
+            return result.data;
         }
     }
 }
