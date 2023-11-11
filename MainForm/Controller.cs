@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Insight.Base.BaseForm.Controllers;
-using Insight.Base.BaseForm.Entities;
 using Insight.Base.BaseForm.Utils;
 using Insight.Base.MainForm.ViewModels;
 
