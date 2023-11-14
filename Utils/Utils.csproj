@@ -51,13 +51,12 @@
     <Compile Include="Common\RegexHelper.cs" />
     <Compile Include="Common\HttpRequest.cs" />
     <Compile Include="Common\ResultExt.cs" />
-    <Compile Include="Common\SqlHelper.cs" />
+    <Compile Include="Common\Util.cs" />
     <Compile Include="Entity\Enums.cs" />
     <Compile Include="Entity\LogInfo.cs" />
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

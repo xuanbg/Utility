@@ -46,21 +46,5 @@ namespace Insight.Base.BaseForm.Utils
             var request = new HttpRequest(info.logUrl, info.token);
             request.send(RequestMethod.POST, dict);
         }
-
-        /// <summary>
-        /// 将事件消息写入系统日志
-        /// </summary>
-        public void logToEvent()
-        {
-            var error = Util.logToEvent(info.eventSource, info.message, info.eventType);
-            if (error == null)
-            {
-                result.success();
-            }
-            else
-            {
-                result.badRequest(error);
-            }
-        }
     }
 }
