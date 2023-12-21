@@ -16,11 +16,6 @@ namespace Insight.Base.BaseForm.Utils
         public static string oss = Util.getAppSetting("OSS");
 
         /// <summary>
-        /// 客户端更新URL
-        /// </summary>
-        public static readonly string updateUrl = $"{gateway}/client/{Util.getAppSetting("AppAlias")}";
-
-        /// <summary>
         /// 应用ID
         /// </summary>
         public static readonly string appId = Util.getAppSetting("AppId");

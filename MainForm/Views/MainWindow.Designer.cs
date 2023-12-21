@@ -43,6 +43,7 @@
             this.mdiList = new DevExpress.XtraBars.BarMdiChildrenListItem();
             this.bmuHelp = new DevExpress.XtraBars.BarSubItem();
             this.bmiHelp = new DevExpress.XtraBars.BarButtonItem();
+            this.bmiUpdate = new DevExpress.XtraBars.BarButtonItem();
             this.bmiAbout = new DevExpress.XtraBars.BarButtonItem();
             this.barStatus = new DevExpress.XtraBars.Bar();
             this.StbTime = new DevExpress.XtraBars.BarButtonItem();
@@ -95,6 +96,7 @@
             this.bmiPrintSet,
             this.bmiSkin,
             this.bmiHelp,
+            this.bmiUpdate,
             this.bmiAbout,
             this.StbTime,
             this.StbDept,
@@ -140,8 +142,8 @@
             this.bmiChangPassWord.Caption = "更换密码";
             this.bmiChangPassWord.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiChangPassWord.Id = 8;
-            this.bmiChangPassWord.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiChangPassWord.ImageOptions.Image")));
-            this.bmiChangPassWord.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bmiChangPassWord.ImageOptions.LargeImage")));
+            this.bmiChangPassWord.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubChangPassWord.ImageOptions.Image")));
+            this.bmiChangPassWord.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubChangPassWord.ImageOptions.LargeImage")));
             this.bmiChangPassWord.Name = "bmiChangPassWord";
             // 
             // bmiLock
@@ -149,7 +151,7 @@
             this.bmiLock.Caption = "锁定";
             this.bmiLock.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiLock.Id = 9;
-            this.bmiLock.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiLock.ImageOptions.Image")));
+            this.bmiLock.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubLock.ImageOptions.Image")));
             this.bmiLock.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O));
             this.bmiLock.Name = "bmiLock";
             this.bmiLock.ShortcutKeyDisplayString = "Ctrl+O";
@@ -159,8 +161,8 @@
             this.bmiLogout.Caption = "注销";
             this.bmiLogout.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiLogout.Id = 10;
-            this.bmiLogout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiLogout.ImageOptions.Image")));
-            this.bmiLogout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bmiLogout.ImageOptions.LargeImage")));
+            this.bmiLogout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubLogout.ImageOptions.Image")));
+            this.bmiLogout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubLogout.ImageOptions.LargeImage")));
             this.bmiLogout.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L));
             this.bmiLogout.Name = "bmiLogout";
             this.bmiLogout.ShortcutKeyDisplayString = "Ctrl+L";
@@ -170,7 +172,7 @@
             this.bmiExit.Caption = "退出";
             this.bmiExit.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiExit.Id = 11;
-            this.bmiExit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiExit.ImageOptions.Image")));
+            this.bmiExit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubExit.ImageOptions.Image")));
             this.bmiExit.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4));
             this.bmiExit.Name = "bmiExit";
             this.bmiExit.ShortcutKeyDisplayString = "Alt+F4";
@@ -191,8 +193,8 @@
             this.bmiPrintSet.Caption = "设置打印机";
             this.bmiPrintSet.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiPrintSet.Id = 14;
-            this.bmiPrintSet.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiPrintSet.ImageOptions.Image")));
-            this.bmiPrintSet.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bmiPrintSet.ImageOptions.LargeImage")));
+            this.bmiPrintSet.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubPrintSet.ImageOptions.Image")));
+            this.bmiPrintSet.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubPrintSet.ImageOptions.LargeImage")));
             this.bmiPrintSet.Name = "bmiPrintSet";
             // 
             // bmiSkin
@@ -200,7 +202,7 @@
             this.bmiSkin.Caption = "更换皮肤";
             this.bmiSkin.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiSkin.Id = 37;
-            this.bmiSkin.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiSkin.ImageOptions.Image")));
+            this.bmiSkin.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("mubSkin.ImageOptions.Image")));
             this.bmiSkin.Name = "bmiSkin";
             // 
             // mdiList
@@ -218,6 +220,7 @@
             this.bmuHelp.Id = 5;
             this.bmuHelp.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bmiHelp),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bmiUpdate, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.bmiAbout)});
             this.bmuHelp.Name = "bmuHelp";
             this.bmuHelp.ShortcutKeyDisplayString = "H";
@@ -227,19 +230,30 @@
             this.bmiHelp.Caption = "查看帮助";
             this.bmiHelp.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiHelp.Id = 12;
-            this.bmiHelp.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiHelp.ImageOptions.Image")));
-            this.bmiHelp.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bmiHelp.ImageOptions.LargeImage")));
+            this.bmiHelp.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubHelp.ImageOptions.Image")));
+            this.bmiHelp.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubHelp.ImageOptions.LargeImage")));
             this.bmiHelp.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H));
             this.bmiHelp.Name = "bmiHelp";
             this.bmiHelp.ShortcutKeyDisplayString = "Ctrl+H";
+            // 
+            // bmiUpdate
+            // 
+            this.bmiUpdate.Caption = "检查更新";
+            this.bmiUpdate.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
+            this.bmiUpdate.Id = 53;
+            this.bmiUpdate.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubUpdate.ImageOptions.Image")));
+            this.bmiUpdate.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubUpdate.ImageOptions.LargeImage")));
+            this.bmiUpdate.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U));
+            this.bmiUpdate.Name = "bmiUpdate";
+            this.bmiUpdate.ShortcutKeyDisplayString = "Ctrl+U";
             // 
             // bmiAbout
             // 
             this.bmiAbout.Caption = "关于";
             this.bmiAbout.CategoryGuid = new System.Guid("ba703b74-a3ae-461f-94c8-943ed9da4cdc");
             this.bmiAbout.Id = 13;
-            this.bmiAbout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bmiAbout.ImageOptions.Image")));
-            this.bmiAbout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bmiAbout.ImageOptions.LargeImage")));
+            this.bmiAbout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MubAbout.ImageOptions.Image")));
+            this.bmiAbout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("MubAbout.ImageOptions.LargeImage")));
             this.bmiAbout.Name = "bmiAbout";
             // 
             // barStatus
@@ -413,6 +427,7 @@
         internal DevExpress.XtraBars.BarButtonItem bmiExit;
         internal DevExpress.XtraBars.BarButtonItem bmiPrintSet;
         internal DevExpress.XtraBars.BarButtonItem bmiHelp;
+        internal DevExpress.XtraBars.BarButtonItem bmiUpdate;
         internal DevExpress.XtraBars.BarButtonItem bmiAbout;
         internal DevExpress.XtraBars.BarButtonItem StbTime;
         internal DevExpress.XtraBars.BarButtonItem StbDept;

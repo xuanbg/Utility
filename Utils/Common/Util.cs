@@ -263,6 +263,32 @@ namespace Insight.Utils.Common
 
         #endregion
 
+        #region 文件操作
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        /// <param name="file">文件内容</param>
+        /// <param name="name">文件名</param>
+        /// <param name="open">是否打开文件，默认不打开</param>
+        public static void saveFile(byte[] file, string name, bool open = false)
+        {
+            var path = Path.GetTempPath() + name;
+            if (!File.Exists(path))
+            {
+                var bw = new BinaryWriter(File.Create(path));
+                bw.Write(file);
+                bw.Flush();
+                bw.Close();
+            }
+
+            if (!open) return;
+
+            Process.Start(path);
+        }
+
+        #endregion
+
         #region Image
 
         /// <summary>
